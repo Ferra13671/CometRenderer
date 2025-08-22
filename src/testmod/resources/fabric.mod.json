@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "comet",
+  "version": "${version}",
+  "name": "Comet Renderer Test",
+  "description": "",
+  "authors": ["bebra_tyan"],
+  "contact": {
+    "repo": ""
+  },
+  "license": "MIT",
+  "icon": "",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.ferra13671.cometrenderer.test.TestMod"
+    ]
+  },
+  "mixins": [
+    "comet-renderer-test.mixins.json"
+  ],
+  "depends": {}
+}
