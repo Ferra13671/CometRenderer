@@ -6,6 +6,9 @@
   "mixins": [
   ],
   "client": [
+    "GameRendererMixin",
+    "IGlGpuBuffer",
+    "ProjectionMatrix2Accessor"
   ],
   "injectors": {
     "defaultRequire": 1
