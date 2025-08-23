@@ -1,11 +1,13 @@
 package com.ferra13671.cometrenderer.test;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.schema.GlProgramBuilder;
 import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippetBuilder;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
+import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.render.BufferBuilder;
@@ -29,6 +31,7 @@ public class TestMod implements ModInitializer, Mc {
     @Override
     public void onInitialize() {
         LoggerFactory.getLogger(TestMod.class).info("Test");
+        CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId());
     }
 
     public static void render() {
@@ -39,7 +42,7 @@ public class TestMod implements ModInitializer, Mc {
                     .fragmentShader("test-fragment", "position.fsh")
                     .build();
 
-        RenderUtils.bindDefaultFrameBufferAttachment();
+        CometRenderer.bindMainFrameBuffer();
 
         BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 
@@ -52,7 +55,7 @@ public class TestMod implements ModInitializer, Mc {
         program.getUniform("color", Vec4GlUniform.class).set(new Vector4f(1f, 1f, 0f, 1f));
 
         program.bind();
-        RenderUtils.drawBuffer(buffer.end());
+        CometRenderer.drawBuffer(buffer.end());
         program.unBind();
     }
 }
