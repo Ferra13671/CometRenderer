@@ -1,5 +1,6 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'java-library'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -35,6 +36,7 @@ repositories {
 }
 
 dependencies {
+
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -43,19 +45,6 @@ dependencies {
     implementation "com.ferra13671:gl-texture-utils:1.6.1"
 
     testmodImplementation sourceSets.main.output
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
-    }
 }
 
 java {

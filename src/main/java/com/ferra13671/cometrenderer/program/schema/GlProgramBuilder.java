@@ -2,37 +2,36 @@ package com.ferra13671.cometrenderer.program.schema;
 
 import com.ferra13671.cometrenderer.exceptions.BuildProgramException;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.loader.GlProgramLoader;
+import com.ferra13671.cometrenderer.program.GlobalGlProgramLoader;
 import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /*
  * Билдер схемы программы.
  * Что-то схожее с RenderPipeline.Builder.
  */
-public class GlProgramBuilder {
+public class GlProgramBuilder<T> {
     private String name;
-    private ShaderSchema vertexShader;
-    private ShaderSchema fragmentShader;
+    private ShaderSchema<T> vertexShader;
+    private ShaderSchema<T> fragmentShader;
     private final List<GlUniformSchema> uniforms = new ArrayList<>();
+    private final Function<T, String> contentGetter;
 
-    public static GlProgramBuilder builder(GlProgramSnippet... snippets) {
-        GlProgramBuilder builder = new GlProgramBuilder();
-
+    public GlProgramBuilder(Function<T, String> contentGetter, GlProgramSnippet... snippets) {
         for (GlProgramSnippet snippet : snippets)
-            builder.uniforms.addAll(snippet.uniforms());
-
-        return builder;
+            uniforms.addAll(snippet.uniforms());
+        this.contentGetter = contentGetter;
     }
 
     /*
      * Устанавливает имя программе
      */
-    public GlProgramBuilder name(String name) {
+    public GlProgramBuilder<T> name(String name) {
         this.name = name;
         return this;
     }
@@ -40,23 +39,23 @@ public class GlProgramBuilder {
     /*
      * Устанавливает вертексный шейдер программе
      */
-    public GlProgramBuilder vertexShader(String name, String vertexShaderId) {
-        this.vertexShader = new ShaderSchema(name, vertexShaderId, ShaderType.Vertex);
+    public GlProgramBuilder<T> vertexShader(String name, T shaderPath) {
+        this.vertexShader = new ShaderSchema<>(name, contentGetter, shaderPath, ShaderType.Vertex);
         return this;
     }
 
     /*
      * Устанавливает фрагментный шейдер программе
      */
-    public GlProgramBuilder fragmentShader(String name, String fragmentShaderId) {
-        this.fragmentShader = new ShaderSchema(name, fragmentShaderId, ShaderType.Fragment);
+    public GlProgramBuilder<T> fragmentShader(String name, T shaderPath) {
+        this.fragmentShader = new ShaderSchema<>(name, contentGetter, shaderPath, ShaderType.Fragment);
         return this;
     }
 
     /*
      * Добавляет униформу программе
      */
-    public GlProgramBuilder uniform(String name, UniformType uniformType) {
+    public GlProgramBuilder<T> uniform(String name, UniformType uniformType) {
         uniforms.add(new GlUniformSchema(name, uniformType));
         return this;
     }
@@ -64,7 +63,7 @@ public class GlProgramBuilder {
     /*
      * Добавляет семплер программе
      */
-    public GlProgramBuilder sampler(String name) {
+    public GlProgramBuilder<T> sampler(String name) {
         //Да, семплер это тоже униформа
         uniforms.add(new GlUniformSchema(name, UniformType.SAMPLER));
         return this;
@@ -81,6 +80,6 @@ public class GlProgramBuilder {
         if (fragmentShader == null)
             throw new BuildProgramException(String.format("Missing fragment shader in program '%s'.", name));
 
-        return GlProgramLoader.loadProgram(new GlProgramSchema(name, vertexShader, fragmentShader, uniforms));
+        return GlobalGlProgramLoader.loadProgram(new GlProgramSchema(name, vertexShader, fragmentShader, uniforms));
     }
 }

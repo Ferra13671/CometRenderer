@@ -8,7 +8,7 @@
   "client": [
     "GameRendererMixin",
     "IGlGpuBuffer",
-    "ProjectionMatrix2Accessor"
+    "IProjectionMatrix2"
   ],
   "injectors": {
     "defaultRequire": 1

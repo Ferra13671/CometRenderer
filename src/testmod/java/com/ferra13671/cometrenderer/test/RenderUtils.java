@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.test;
 
-import com.ferra13671.cometrenderer.test.mixins.ProjectionMatrix2Accessor;
+import com.ferra13671.cometrenderer.test.mixins.IProjectionMatrix2;
 import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.ProjectionMatrix2;
@@ -18,7 +18,7 @@ public class RenderUtils implements Mc {
         float height = mc.getWindow().getFramebufferHeight() / (float) 2;
 
         RenderSystem.setProjectionMatrix(matrix.set(width, height), ProjectionType.ORTHOGRAPHIC);
-        projectionMatrix.set(((ProjectionMatrix2Accessor) matrix)._getMatrix(width, height));
+        projectionMatrix.set(((IProjectionMatrix2) matrix)._getMatrix(width, height));
     }
 
     /*
@@ -29,6 +29,6 @@ public class RenderUtils implements Mc {
         float height = (float) (mc.getWindow().getFramebufferHeight() / 2f);
 
         RenderSystem.setProjectionMatrix(matrix.set(width, height), ProjectionType.PERSPECTIVE);
-        projectionMatrix.set(((ProjectionMatrix2Accessor) matrix)._getMatrix(width, height));
+        projectionMatrix.set(((IProjectionMatrix2) matrix)._getMatrix(width, height));
     }
 }

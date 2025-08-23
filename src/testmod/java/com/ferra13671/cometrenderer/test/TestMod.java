@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.test;
 
+import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.schema.GlProgramBuilder;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ModInitializer;
@@ -26,7 +26,7 @@ public class TestMod implements ModInitializer, Mc {
 
     public static void render() {
         if (program == null)
-            program = GlProgramBuilder.builder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
+            program = CometLoaders.IN_JAR.createBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
                     .name("test")
                     .vertexShader("test-vertex", "position.vsh")
                     .fragmentShader("test-fragment", "position.fsh")
