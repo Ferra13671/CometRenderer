@@ -1,6 +1,14 @@
 package com.ferra13671.cometrenderer;
 
+import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippet;
+import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippetBuilder;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,6 +20,7 @@ import net.minecraft.client.gl.GlBackend;
 import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.texture.GlTexture;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GL32;
 
@@ -19,19 +28,99 @@ import java.util.function.Function;
 
 public class CometRenderer {
     private static boolean initialized = false;
+    //Геттер анди буффера
     private static Function<GlGpuBuffer, Integer> bufferIdGetter;
+    //Шейдерный цвет, который биндится шейдеру, если он ему нужен
+    private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
+    //Сниппет для шейдеров, использующих матрицы для модификации координат вершин
+    private static final GlProgramSnippet matrixSnippet = GlProgramSnippetBuilder.builder()
+            .uniform("Projection", UniformType.BUFFER)
+            .uniform("modelViewMat", UniformType.MATRIX)
+            .build();
+    //Сниппет для шейдеров, использующих глобальный цвет шейдера
+    private static final GlProgramSnippet colorSnippet = GlProgramSnippetBuilder.builder()
+            .uniform("color", UniformType.VEC4)
+            .build();
 
+    /*
+     * Инициализация комет рендерера
+     */
     public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter) {
+        //Не ну ты долбаеб если второй раз будешь инициализировать рендерер
         if (initialized)
             throw new IllegalStateException("CometRenderer has already initialized");
 
+
+        //Устанавливаем геттер айди буффера
         CometRenderer.bufferIdGetter = bufferIdGetter;
 
         initialized = true;
     }
 
+    /*
+     * Возвращает геттер айди буффера
+     */
     public static Function<GlGpuBuffer, Integer> getBufferIdGetter() {
         return bufferIdGetter;
+    }
+
+    /*
+     * Возвращает текущий цвет шейдера
+     */
+    public static Vector4f getShaderColor() {
+        return shaderColor;
+    }
+
+    /*
+     * Устанавливает текущий цвет шейдера
+     */
+    public static void setShaderColor(Vector4f shaderColor) {
+        CometRenderer.shaderColor = shaderColor;
+    }
+
+    /*
+     * Устанавливает цвет шейдера по умолчанию
+     */
+    public static void resetColor() {
+        setShaderColor(new Vector4f(1f, 1f, 1f, 1f));
+    }
+
+    /*
+     * Возвращает сниппет для матриц
+     */
+    public static GlProgramSnippet getMatrixSnippet() {
+        return matrixSnippet;
+    }
+
+    /*
+     * Возвращает сниппет для глобального цвета шейдера
+     */
+    public static GlProgramSnippet getColorSnippet() {
+        return colorSnippet;
+    }
+
+    /*
+     * Устанавлиает юниформы матриц, если шейдер использовал соответствующий сниппет
+     */
+    public static void initMatrix(GlProgram program) {
+        BufferUniform projectionUniform = program.getUniform("Projection", BufferUniform.class);
+        if (projectionUniform != null) {
+            GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
+            projectionUniform.set(slice);
+        }
+
+        Matrix4fGlUniform modelViewUniform = program.getUniform("modelViewMat", Matrix4fGlUniform.class);
+        if (modelViewUniform != null)
+            modelViewUniform.set(RenderSystem.getModelViewMatrix());
+    }
+
+    /*
+     * Устанавливает униформу шейдерного цвета, если шейдер использовал соответствующий сниппет
+     */
+    public static void initShaderColor(GlProgram program) {
+        Vec4GlUniform colorUniform = program.getUniform("color", Vec4GlUniform.class);
+        if (colorUniform != null)
+            colorUniform.set(getShaderColor());
     }
 
     /*
@@ -76,17 +165,23 @@ public class CometRenderer {
             throw new UnsupportedOperationException("Textures with multiple depths or layers are not yet supported as an attachment");
     }
 
+    /*
+     * Рисует буффер и автоматически закрывает его
+     */
     public static void drawBuffer(BuiltBuffer builtBuffer) {
         drawBuffer(builtBuffer, true);
     }
 
+    /*
+     * Рисует буффер и по выбору закрывает его
+     */
     public static void drawBuffer(BuiltBuffer builtBuffer, boolean close) {
         BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
 
         if (drawParameters.indexCount() > 0) {
             RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawParameters.mode());
 
-            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "BufferRenderer vertex buffer", 40, builtBuffer.getBuffer());
+            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex buffer", 40, builtBuffer.getBuffer());
             GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawParameters.indexCount());
             VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
