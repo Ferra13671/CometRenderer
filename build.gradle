@@ -1,23 +1,50 @@
 plugins {
     id 'java-library'
+    id 'java-gradle-plugin'
     id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = project.mod_version
-group = project.maven_group
+version = 1.0
+group = "com.ferra13671"
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = "CometRenderer"
+}
+
+gradlePlugin {
+    plugins {
+        cometrenderer {
+            displayName = 'CometRenderer'
+            group = 'com.ferra13671'
+            id = 'com.ferra13671'
+            implementationClass = 'com.ferra13671.cometrenderer.plugin.CometRendererPlugin'
+            description = 'The cometrenderer gradle plugin, providing a custom renderer for minecraft.'
+            tags.set(['cometrenderer'])
+        }
+    }
 }
 
 sourceSets {
+    //Основной sourceSets, хранит в себе плагин для загрузки рендерера в gradle проекты
+    main {
+        java.srcDirs = ['src/plugin/java']
+        resources.srcDirs = ['src/plugin/resources']
+    }
+    //SourceSets, хранящий в себе непосредственно сам рендерер
+    renderer {
+        compileClasspath += main.compileClasspath
+    }
+    //SourceSets, хранящий в себе программу для тестирования рендерера
     testmod {
+        compileClasspath += renderer.compileClasspath
+        runtimeClasspath += renderer.runtimeClasspath
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
 }
 
+//Добавляем в gradle проект задачу для запуска майнкрафта с программой для тестирования рендерера
 loom {
     runs {
         testmodClient {
@@ -33,29 +60,34 @@ repositories {
         name = 'ferra13671-maven'
         url = 'https://ferra13671.github.io/maven/'
     }
+    mavenCentral()
 }
 
 dependencies {
-
-    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     implementation "com.ferra13671:gl-texture-utils:1.6.1"
 
+    //Добавляем зависимости для плагина
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    compileOnly gradleApi()
+    compileOnly 'org.codehaus.groovy:groovy-all:3.0.9'
+
+    //Добавляем в зависимости для программы для тестирования рендерера
+    testmodImplementation sourceSets.renderer.output
     testmodImplementation sourceSets.main.output
 }
 
-java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
+jar {
+    //Добавляем в джарку плагина все файлы рендерера
+    from('src/renderer/java') {
+        include '**/*.java'
+    }
 }
 
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
+test {
+    useJUnitPlatform()
 }
