@@ -12,6 +12,8 @@ import net.minecraft.client.render.VertexFormats;
 import org.joml.Vector4f;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 public class TestMod implements ModInitializer, Mc {
 
     private static GlProgram program;
@@ -39,12 +41,14 @@ public class TestMod implements ModInitializer, Mc {
         buffer.vertex(400, 400, 0);
         buffer.vertex(400, 200, 0);
 
-        CometRenderer.setShaderColor(new Vector4f(1f, 1f, 0f, 1f));
-        CometRenderer.initMatrix(program);
-        CometRenderer.initShaderColor(program);
+        CometRenderer.setCurrentProgram(program);
 
-        program.bind();
+        Random random = new Random();
+
+        CometRenderer.setShaderColor(new Vector4f(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1f));
+        CometRenderer.initMatrix();
+        CometRenderer.initShaderColor();
+
         CometRenderer.drawBuffer(buffer.end());
-        program.unBind();
     }
 }

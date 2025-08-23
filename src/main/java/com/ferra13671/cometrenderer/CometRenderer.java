@@ -41,6 +41,7 @@ public class CometRenderer {
     private static final GlProgramSnippet colorSnippet = GlProgramSnippetBuilder.builder()
             .uniform("color", UniformType.VEC4)
             .build();
+    private static GlProgram currentProgram;
 
     /*
      * Инициализация комет рендерера
@@ -102,14 +103,14 @@ public class CometRenderer {
     /*
      * Устанавлиает юниформы матриц, если шейдер использовал соответствующий сниппет
      */
-    public static void initMatrix(GlProgram program) {
-        BufferUniform projectionUniform = program.getUniform("Projection", BufferUniform.class);
+    public static void initMatrix() {
+        BufferUniform projectionUniform = currentProgram.getUniform("Projection", BufferUniform.class);
         if (projectionUniform != null) {
             GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
             projectionUniform.set(slice);
         }
 
-        Matrix4fGlUniform modelViewUniform = program.getUniform("modelViewMat", Matrix4fGlUniform.class);
+        Matrix4fGlUniform modelViewUniform = currentProgram.getUniform("modelViewMat", Matrix4fGlUniform.class);
         if (modelViewUniform != null)
             modelViewUniform.set(RenderSystem.getModelViewMatrix());
     }
@@ -117,10 +118,24 @@ public class CometRenderer {
     /*
      * Устанавливает униформу шейдерного цвета, если шейдер использовал соответствующий сниппет
      */
-    public static void initShaderColor(GlProgram program) {
-        Vec4GlUniform colorUniform = program.getUniform("color", Vec4GlUniform.class);
+    public static void initShaderColor() {
+        Vec4GlUniform colorUniform = currentProgram.getUniform("color", Vec4GlUniform.class);
         if (colorUniform != null)
             colorUniform.set(getShaderColor());
+    }
+
+    /*
+     * Устанавливает текущую программу
+     */
+    public static void setCurrentProgram(GlProgram currentProgram) {
+        CometRenderer.currentProgram = currentProgram;
+    }
+
+    /*
+     * Возвращает текущую программу
+     */
+    public static GlProgram getCurrentProgram() {
+        return currentProgram;
     }
 
     /*
@@ -176,6 +191,8 @@ public class CometRenderer {
      * Рисует буффер и по выбору закрывает его
      */
     public static void drawBuffer(BuiltBuffer builtBuffer, boolean close) {
+        currentProgram.bind();
+
         BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
 
         if (drawParameters.indexCount() > 0) {
@@ -191,6 +208,8 @@ public class CometRenderer {
         }
         if (close)
             builtBuffer.close();
+
+        currentProgram.unBind();
     }
 
     private static void drawIndexed(int baseVertex, int firstIndex, int count, int instanceCount, BuiltBuffer.DrawParameters drawParameters, VertexFormat.IndexType indexType, GpuBuffer vertexBuffer, GpuBuffer indexBuffer) {
