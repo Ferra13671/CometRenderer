@@ -19,14 +19,23 @@ public class Shader {
         this.shaderType = shaderType;
     }
 
+    /*
+     * Возвращает имя шейдера
+     */
     public String getName() {
         return name;
     }
 
+    /*
+     * Возвращает айди шейдера в OpenGL
+     */
     public int getId() {
         return id;
     }
 
+    /*
+     * Возвращает тип шейдера
+     */
     public ShaderType getShaderType() {
         return shaderType;
     }
