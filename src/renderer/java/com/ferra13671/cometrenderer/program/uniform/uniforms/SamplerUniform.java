@@ -39,10 +39,16 @@ public class SamplerUniform extends GlUniform {
     @Override
     public void upload() {
         if (value instanceof GlTex glTexture) {
+            if (GlProgram.ACTIVE_PROGRAM == null)
+                GlStateManager._glUniform1i(location, getSamplerId());
+
             GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + getSamplerId());
             GlStateManager._bindTexture(glTexture.getTexId());
         } else
         if (value instanceof GlTextureView glTextureView) {
+            if (GlProgram.ACTIVE_PROGRAM == null)
+                GlStateManager._glUniform1i(location, getSamplerId());
+
             GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + getSamplerId());
             GlTexture glTexture = glTextureView.texture();
             int o;

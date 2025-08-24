@@ -16,6 +16,8 @@ import java.util.List;
 
 
 public class GlProgram {
+    public static GlProgram ACTIVE_PROGRAM = null;
+
     private final String name;
     private final int id;
     private final List<GlUniform> uniforms = new ArrayList<>();
@@ -44,6 +46,8 @@ public class GlProgram {
 
         for (GlUniform glUniform : uniforms)
             glUniform.upload();
+
+        ACTIVE_PROGRAM = this;
     }
 
     /*
@@ -51,6 +55,8 @@ public class GlProgram {
      */
     public void unBind() {
         GL20.glUseProgram(0);
+
+        ACTIVE_PROGRAM = null;
     }
 
     /*

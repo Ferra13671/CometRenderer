@@ -41,7 +41,7 @@ public class CometRenderer {
     private static final GlProgramSnippet colorSnippet = GlProgramSnippetBuilder.builder()
             .uniform("color", UniformType.VEC4)
             .build();
-    private static GlProgram currentProgram;
+    private static GlProgram globalProgram;
 
     /*
      * Инициализация комет рендерера
@@ -104,13 +104,13 @@ public class CometRenderer {
      * Устанавлиает юниформы матриц, если шейдер использовал соответствующий сниппет
      */
     public static void initMatrix() {
-        BufferUniform projectionUniform = currentProgram.getUniform("Projection", BufferUniform.class);
+        BufferUniform projectionUniform = globalProgram.getUniform("Projection", BufferUniform.class);
         if (projectionUniform != null) {
             GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
             projectionUniform.set(slice);
         }
 
-        Matrix4fGlUniform modelViewUniform = currentProgram.getUniform("modelViewMat", Matrix4fGlUniform.class);
+        Matrix4fGlUniform modelViewUniform = globalProgram.getUniform("modelViewMat", Matrix4fGlUniform.class);
         if (modelViewUniform != null)
             modelViewUniform.set(RenderSystem.getModelViewMatrix());
     }
@@ -119,7 +119,7 @@ public class CometRenderer {
      * Устанавливает униформу шейдерного цвета, если шейдер использовал соответствующий сниппет
      */
     public static void initShaderColor() {
-        Vec4GlUniform colorUniform = currentProgram.getUniform("color", Vec4GlUniform.class);
+        Vec4GlUniform colorUniform = globalProgram.getUniform("color", Vec4GlUniform.class);
         if (colorUniform != null)
             colorUniform.set(getShaderColor());
     }
@@ -127,15 +127,15 @@ public class CometRenderer {
     /*
      * Устанавливает текущую программу
      */
-    public static void setCurrentProgram(GlProgram currentProgram) {
-        CometRenderer.currentProgram = currentProgram;
+    public static void setGlobalProgram(GlProgram globalProgram) {
+        CometRenderer.globalProgram = globalProgram;
     }
 
     /*
      * Возвращает текущую программу
      */
-    public static GlProgram getCurrentProgram() {
-        return currentProgram;
+    public static GlProgram getGlobalProgram() {
+        return globalProgram;
     }
 
     /*
@@ -191,7 +191,7 @@ public class CometRenderer {
      * Рисует буффер и по выбору закрывает его
      */
     public static void drawBuffer(BuiltBuffer builtBuffer, boolean close) {
-        currentProgram.bind();
+        globalProgram.bind();
 
         BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
 
@@ -209,7 +209,7 @@ public class CometRenderer {
         if (close)
             builtBuffer.close();
 
-        currentProgram.unBind();
+        globalProgram.unBind();
     }
 
     private static void drawIndexed(int baseVertex, int firstIndex, int count, int instanceCount, BuiltBuffer.DrawParameters drawParameters, VertexFormat.IndexType indexType, GpuBuffer vertexBuffer, GpuBuffer indexBuffer) {

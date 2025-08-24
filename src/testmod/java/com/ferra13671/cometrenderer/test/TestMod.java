@@ -41,7 +41,7 @@ public class TestMod implements ModInitializer, Mc {
         buffer.vertex(400, 400, 0);
         buffer.vertex(400, 200, 0);
 
-        CometRenderer.setCurrentProgram(program);
+        CometRenderer.setGlobalProgram(program);
 
         Random random = new Random();
 
