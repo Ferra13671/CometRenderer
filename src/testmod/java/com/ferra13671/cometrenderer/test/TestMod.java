@@ -21,7 +21,7 @@ public class TestMod implements ModInitializer, Mc {
     @Override
     public void onInitialize() {
         LoggerFactory.getLogger(TestMod.class).info("Test");
-        CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId());
+        CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId(), () -> mc.getWindow().getScaleFactor());
     }
 
     public static void render() {

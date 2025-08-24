@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
+import com.ferra13671.cometrenderer.scissor.ScissorStack;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
@@ -21,15 +22,16 @@ import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.texture.GlTexture;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL31;
-import org.lwjgl.opengl.GL32;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class CometRenderer {
     private static boolean initialized = false;
     //Геттер анди буффера
     private static Function<GlGpuBuffer, Integer> bufferIdGetter;
+    //Геттер для 2д скейла
+    private static Supplier<Integer> scaleGetter;
     //Шейдерный цвет, который биндится шейдеру, если он ему нужен
     private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
     //Сниппет для шейдеров, использующих матрицы для модификации координат вершин
@@ -41,12 +43,15 @@ public class CometRenderer {
     private static final GlProgramSnippet colorSnippet = GlProgramSnippetBuilder.builder()
             .uniform("color", UniformType.VEC4)
             .build();
+    //Глобальная программа рендерера, используемая при рендере
     private static GlProgram globalProgram;
+    //Стек областей ножниц
+    private static final ScissorStack scissorStack = new ScissorStack();
 
     /*
      * Инициализация комет рендерера
      */
-    public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter) {
+    public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
         //Не ну ты долбаеб если второй раз будешь инициализировать рендерер
         if (initialized)
             throw new IllegalStateException("CometRenderer has already initialized");
@@ -54,6 +59,8 @@ public class CometRenderer {
 
         //Устанавливаем геттер айди буффера
         CometRenderer.bufferIdGetter = bufferIdGetter;
+        //Устанавлиаем геттер 2д скейла
+        CometRenderer.scaleGetter = scaleGetter;
 
         initialized = true;
     }
@@ -63,6 +70,13 @@ public class CometRenderer {
      */
     public static Function<GlGpuBuffer, Integer> getBufferIdGetter() {
         return bufferIdGetter;
+    }
+
+    /*
+     * Возвращает геттер 2д скейла
+     */
+    public static Supplier<Integer> getScaleGetter() {
+        return scaleGetter;
     }
 
     /*
@@ -139,6 +153,13 @@ public class CometRenderer {
     }
 
     /*
+     * Возвращает стек области ножниц
+     */
+    public static ScissorStack getScissorStack() {
+        return scissorStack;
+    }
+
+    /*
      * Биндит основной фреймбуффер майнкрафта
      */
     public static void bindMainFrameBuffer() {
@@ -191,6 +212,12 @@ public class CometRenderer {
      * Рисует буффер и по выбору закрывает его
      */
     public static void drawBuffer(BuiltBuffer builtBuffer, boolean close) {
+        if (scissorStack.current() != null) {
+            GlStateManager._enableScissorTest();
+            scissorStack.current().bind();
+        } else
+            GlStateManager._disableScissorTest();
+
         globalProgram.bind();
 
         BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
@@ -202,7 +229,7 @@ public class CometRenderer {
             GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawParameters.indexCount());
             VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
-            drawIndexed(0, 0, drawParameters.indexCount(), 1, drawParameters, indexType, vertexBuffer, indexBuffer);
+            drawIndexed(drawParameters.indexCount(), drawParameters, indexType, vertexBuffer, indexBuffer);
 
             vertexBuffer.close();
         }
@@ -212,31 +239,14 @@ public class CometRenderer {
         globalProgram.unBind();
     }
 
-    private static void drawIndexed(int baseVertex, int firstIndex, int count, int instanceCount, BuiltBuffer.DrawParameters drawParameters, VertexFormat.IndexType indexType, GpuBuffer vertexBuffer, GpuBuffer indexBuffer) {
+    private static void drawIndexed(int count, BuiltBuffer.DrawParameters drawParameters, VertexFormat.IndexType indexType, GpuBuffer vertexBuffer, GpuBuffer indexBuffer) {
         ((GlBackend) RenderSystem.getDevice()).getVertexBufferManager().setupBuffer(drawParameters.format(), (GlGpuBuffer) vertexBuffer);
         if (indexType != null) {
             GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, bufferIdGetter.apply((GlGpuBuffer) indexBuffer));
-            if (instanceCount > 1) {
-                if (baseVertex > 0) {
-                    GL32.glDrawElementsInstancedBaseVertex(
-                            GlConst.toGl(drawParameters.mode()), count, GlConst.toGl(indexType), (long)firstIndex * indexType.size, instanceCount, baseVertex
-                    );
-                } else {
-                    GL31.glDrawElementsInstanced(
-                            GlConst.toGl(drawParameters.mode()), count, GlConst.toGl(indexType), (long)firstIndex * indexType.size, instanceCount
-                    );
-                }
-            } else if (baseVertex > 0) {
-                GL32.glDrawElementsBaseVertex(
-                        GlConst.toGl(drawParameters.mode()), count, GlConst.toGl(indexType), (long)firstIndex * indexType.size, baseVertex
-                );
-            } else {
-                GlStateManager._drawElements(GlConst.toGl(drawParameters.mode()), count, GlConst.toGl(indexType), (long)firstIndex * indexType.size);
-            }
-        } else if (instanceCount > 1) {
-            GL31.glDrawArraysInstanced(GlConst.toGl(drawParameters.mode()), baseVertex, count, instanceCount);
+
+            GlStateManager._drawElements(GlConst.toGl(drawParameters.mode()), count, GlConst.toGl(indexType), 0);
         } else {
-            GlStateManager._drawArrays(GlConst.toGl(drawParameters.mode()), baseVertex, count);
+            GlStateManager._drawArrays(GlConst.toGl(drawParameters.mode()), 0, count);
         }
     }
 }
