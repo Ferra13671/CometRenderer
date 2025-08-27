@@ -1,36 +1,17 @@
 plugins {
     id 'java-library'
-    id 'java-gradle-plugin'
     id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = 1.1
+version = 1.2
 group = "com.ferra13671"
 
 base {
     archivesName = "CometRenderer"
 }
 
-gradlePlugin {
-    plugins {
-        cometrenderer {
-            displayName = 'CometRenderer'
-            group = 'com.ferra13671'
-            id = 'com.ferra13671'
-            implementationClass = 'com.ferra13671.cometrenderer.plugin.CometRendererPlugin'
-            description = 'The cometrenderer gradle plugin, providing a custom renderer for minecraft.'
-            tags.set(['cometrenderer'])
-        }
-    }
-}
-
 sourceSets {
-    //Основной sourceSets, хранит в себе плагин для загрузки рендерера в gradle проекты
-    main {
-        java.srcDirs = ['src/plugin/java']
-        resources.srcDirs = ['src/plugin/resources']
-    }
     //SourceSets, хранящий в себе непосредственно сам рендерер
     renderer {
         compileClasspath += main.compileClasspath
@@ -73,8 +54,6 @@ dependencies {
     //Добавляем зависимости для плагина
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    compileOnly gradleApi()
-    compileOnly 'org.codehaus.groovy:groovy-all:3.0.9'
 
     //Добавляем в зависимости для программы для тестирования рендерера
     testmodImplementation sourceSets.renderer.output
