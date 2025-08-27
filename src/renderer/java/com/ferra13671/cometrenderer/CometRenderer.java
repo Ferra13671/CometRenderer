@@ -163,7 +163,15 @@ public class CometRenderer {
     }
 
     /*
-     * Включает смешивание цветов, если оно не включено, и устанавливает ему функцию
+     * Включает смешивание цветов, если оно не включено, и устанавливает ему основную функцию
+     */
+    public static void applyDefaultBlend() {
+        GlStateManager._enableBlend();
+        GL11.glBlendFunc(SrcFactor.SRC_ALPHA.value, DstFactor.ONE_MINUS_SRC_ALPHA.value);
+    }
+
+    /*
+     * Включает смешивание цветов, если оно не включено, и устанавливает ему кастомную функцию
      */
     public static void applyBlend(SrcFactor srcFactor, DstFactor dstFactor) {
         GlStateManager._enableBlend();
