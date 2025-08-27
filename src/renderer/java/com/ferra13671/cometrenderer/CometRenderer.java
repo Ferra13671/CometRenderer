@@ -1,5 +1,7 @@
 package com.ferra13671.cometrenderer;
 
+import com.ferra13671.cometrenderer.blend.DstFactor;
+import com.ferra13671.cometrenderer.blend.SrcFactor;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippetBuilder;
@@ -22,6 +24,7 @@ import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.texture.GlTexture;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -157,6 +160,21 @@ public class CometRenderer {
      */
     public static ScissorStack getScissorStack() {
         return scissorStack;
+    }
+
+    /*
+     * Включает смешивание цветов, если оно не включено, и устанавливает ему функцию
+     */
+    public static void applyBlend(SrcFactor srcFactor, DstFactor dstFactor) {
+        GlStateManager._enableBlend();
+        GL11.glBlendFunc(srcFactor.value, dstFactor.value);
+    }
+
+    /*
+     * Отключает смешивание цветов
+     */
+    public static void disableBlend() {
+        GlStateManager._disableBlend();
     }
 
     /*
