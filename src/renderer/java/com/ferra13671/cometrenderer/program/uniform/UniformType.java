@@ -11,6 +11,8 @@ import org.apache.commons.lang3.function.TriFunction;
 public enum UniformType {
     INT(IntUniform::new),
     FLOAT(FloatUniform::new),
+    INT_ARRAY(IntArrayUniform::new),
+    FLOAT_ARRAY(FloatArrayUniform::new),
     VEC2(Vec2GlUniform::new),
     VEC3(Vec3GlUniform::new),
     VEC4(Vec4GlUniform::new),
