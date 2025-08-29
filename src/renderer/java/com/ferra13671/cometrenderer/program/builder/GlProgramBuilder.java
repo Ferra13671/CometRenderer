@@ -1,9 +1,9 @@
-package com.ferra13671.cometrenderer.program.schema;
+package com.ferra13671.cometrenderer.program.builder;
 
 import com.ferra13671.cometrenderer.exceptions.BuildProgramException;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.GlobalGlProgramLoader;
-import com.ferra13671.cometrenderer.program.schema.snippet.GlProgramSnippet;
+import com.ferra13671.cometrenderer.global.GlobalCometLoader;
+import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
@@ -80,6 +80,6 @@ public class GlProgramBuilder<T> {
         if (fragmentShader == null)
             throw new BuildProgramException(String.format("Missing fragment shader in program '%s'.", name));
 
-        return GlobalGlProgramLoader.loadProgram(new GlProgramSchema(name, vertexShader, fragmentShader, uniforms));
+        return GlobalCometLoader.loadProgram(new GlProgramSchema<>(name, vertexShader, fragmentShader, uniforms));
     }
 }

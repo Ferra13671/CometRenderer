@@ -1,6 +1,6 @@
-package com.ferra13671.cometrenderer.program.schema.snippet;
+package com.ferra13671.cometrenderer.program.builder.snippet;
 
-import com.ferra13671.cometrenderer.program.schema.GlUniformSchema;
+import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.program.schema;
+package com.ferra13671.cometrenderer.program.builder;
 
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import org.lwjgl.opengl.GL20;
