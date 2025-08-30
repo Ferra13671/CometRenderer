@@ -1,8 +1,9 @@
 package com.ferra13671.cometrenderer.global;
 
-import com.ferra13671.cometrenderer.exceptions.CompileProgramException;
-import com.ferra13671.cometrenderer.exceptions.CompileShaderException;
-import com.ferra13671.cometrenderer.exceptions.IllegalShaderFormatException;
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.CompileProgramException;
+import com.ferra13671.cometrenderer.exceptions.impl.CompileShaderException;
+import com.ferra13671.cometrenderer.exceptions.impl.IllegalShaderFormatException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
@@ -25,9 +26,9 @@ public class GlobalCometCompiler {
      */
     public static GlProgram compileProgram(String name, GlShader vertexShader, GlShader fragmentShader, List<GlUniformSchema> uniforms) {
         if (vertexShader.getShaderType() != ShaderType.Vertex)
-            throw new IllegalShaderFormatException(String.format("'%s' is not a vertex shader.", vertexShader.getName()));
+            ExceptionPrinter.printAndExit(new IllegalShaderFormatException(vertexShader.getName(), "vertex"));
         if (fragmentShader.getShaderType() != ShaderType.Fragment)
-            throw new IllegalShaderFormatException(String.format("'%s' is not a fragment shader.", fragmentShader.getName()));
+            ExceptionPrinter.printAndExit(new IllegalShaderFormatException(fragmentShader.getName(), "fragment"));
 
         int programId = GL20.glCreateProgram();
         GL20.glAttachShader(programId, vertexShader.getId());
@@ -35,8 +36,9 @@ public class GlobalCometCompiler {
         GL20.glLinkProgram(programId);
 
         CompileResult compileResult = CompileStatusChecker.checkProgramCompile(programId);
+
         if (compileResult.isFailure())
-            throw new CompileProgramException(String.format("Error compiling program '%s', reason: %s", name, compileResult.message()));
+            ExceptionPrinter.printAndExit(new CompileProgramException(name, compileResult.message()));
 
         return new GlProgram(name, programId, uniforms);
     }
@@ -50,8 +52,9 @@ public class GlobalCometCompiler {
         GL20.glCompileShader(shaderId);
 
         CompileResult compileResult = CompileStatusChecker.checkShaderCompile(shaderId);
+
         if (compileResult.isFailure())
-            throw new CompileShaderException(String.format("Error compiling shader '%s', reason: %s", name, compileResult.message()));
+            ExceptionPrinter.printAndExit(new CompileShaderException(name, compileResult.message()));
 
         return new GlShader(name, shaderId, shaderType);
     }

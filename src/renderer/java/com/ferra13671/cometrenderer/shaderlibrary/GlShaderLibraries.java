@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.shaderlibrary;
 
-import com.ferra13671.cometrenderer.exceptions.NoSuchShaderLibraryException;
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.NoSuchShaderLibraryException;
 
 import java.util.HashMap;
 
@@ -24,7 +25,7 @@ public final class GlShaderLibraries {
     public static GlShaderLibrary getLibrary(String name) {
         GlShaderLibrary library = libraries.get(name);
         if (library == null)
-            throw new NoSuchShaderLibraryException(String.format("Cannot find shader library '%s' in global library list.", name));
+            ExceptionPrinter.printAndExit(new NoSuchShaderLibraryException(name));
         return library;
     }
 }

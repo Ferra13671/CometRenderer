@@ -1,7 +1,10 @@
 package com.ferra13671.cometrenderer.program;
 
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ public class GlProgram {
 
         for (GlUniformSchema glUniformSchema : uniforms) {
             GlUniform uniform = glUniformSchema.uniformType().uniformCreator.apply(glUniformSchema.name(), glUniformSchema.getIdFromProgram(this.id), this);
+            if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
+                ExceptionPrinter.printAndExit(new NoSuchUniformException(uniform.getName(), this.name));
             this.uniforms.add(uniform);
             this.uniformsByName.put(glUniformSchema.name(), uniform);
         }
@@ -71,7 +76,10 @@ public class GlProgram {
      * Возвращает юниформу по её имени и типу
      */
     public <T extends GlUniform> T getUniform(String name, Class<T> clazz) {
-        return (T) uniformsByName.get(name);
+        T uniform = (T) uniformsByName.get(name);
+        if (uniform == null)
+            ExceptionPrinter.printAndExit(new NoSuchUniformException(name, this.name));
+        return uniform;
     }
 
     /*

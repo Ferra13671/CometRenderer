@@ -1,7 +1,8 @@
 package com.ferra13671.cometrenderer.program.builder;
 
+import com.ferra13671.cometrenderer.ExceptionPrinter;
 import com.ferra13671.cometrenderer.global.GlobalCometLoader;
-import com.ferra13671.cometrenderer.exceptions.BuildLibraryException;
+import com.ferra13671.cometrenderer.exceptions.impl.IllegalLibraryBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
@@ -60,9 +61,9 @@ public class GlShaderLibraryBuilder<T> {
      */
     public GlShaderLibrary build() {
         if (name == null)
-            throw new BuildLibraryException("Missing name in shader library builder.");
+            ExceptionPrinter.printAndExit(new IllegalLibraryBuilderArgumentException("Missing name in shader library builder."));
         if (libraryPath == null)
-            throw new BuildLibraryException(String.format("Missing libraryPath in library '%s'.", name));
+            ExceptionPrinter.printAndExit(new IllegalLibraryBuilderArgumentException(String.format("Missing libraryPath in library '%s'.", name)));
 
         return GlobalCometLoader.loadLibrary(new GlShaderLibrarySchema<>(name, contentGetter, libraryPath, uniforms));
     }

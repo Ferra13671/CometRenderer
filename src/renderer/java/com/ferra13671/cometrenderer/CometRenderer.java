@@ -25,12 +25,15 @@ import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.texture.GlTexture;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CometRenderer {
     private static boolean initialized = false;
+    private static final Logger logger = LoggerFactory.getLogger("CometRenderer");
     //Геттер анди буффера
     private static Function<GlGpuBuffer, Integer> bufferIdGetter;
     //Геттер для 2д скейла
@@ -66,6 +69,10 @@ public class CometRenderer {
         CometRenderer.scaleGetter = scaleGetter;
 
         initialized = true;
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 
     /*

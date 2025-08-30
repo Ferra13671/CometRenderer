@@ -1,7 +1,8 @@
 package com.ferra13671.cometrenderer.program.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.exceptions.UniformException;
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
@@ -20,7 +21,8 @@ public class BufferUniform extends OneTypeGlUniform<GpuBufferSlice> {
 
         int index = GL31.glGetUniformBlockIndex(glProgram.getId(), name);
         if (index == -1) {
-            throw new UniformException(String.format("Cannot find buffer uniform '%s' in program '%s'.", name, glProgram.getName()));
+            ExceptionPrinter.printAndExit(new NoSuchUniformException(name, glProgram.getName()));
+            blockBinding = -1;
         } else {
             blockBinding = glProgram.getBuffersBindingsAmount() + 1;
             glProgram.setBuffersBindingsAmount(blockBinding);

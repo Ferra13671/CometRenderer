@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.exceptions.LoadLibraryContentException;
-import com.ferra13671.cometrenderer.exceptions.LoadShaderContentException;
+import com.ferra13671.cometrenderer.exceptions.impl.LoadLibraryContentException;
+import com.ferra13671.cometrenderer.exceptions.impl.LoadShaderContentException;
 import com.ferra13671.cometrenderer.program.builder.GlProgramBuilder;
 import com.ferra13671.cometrenderer.program.builder.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
@@ -16,11 +16,11 @@ public abstract class CometLoader<T> {
      */
     public GlProgramBuilder<T> createProgramBuilder(GlProgramSnippet... snippets) {
         return new GlProgramBuilder<>(path -> {
-            String content;
+            String content = null;
             try {
                 content = getContent(path);
             } catch (Exception e) {
-                throw new LoadShaderContentException(e);
+                ExceptionPrinter.printAndExit(new LoadShaderContentException(e));
             }
             return content;
         }, snippets);
@@ -31,11 +31,11 @@ public abstract class CometLoader<T> {
      */
     public GlShaderLibraryBuilder<T> createLibraryBuilder(GlProgramSnippet... snippets) {
         return new GlShaderLibraryBuilder<>(path -> {
-            String content;
+            String content = null;
             try {
                 content = getContent(path);
             } catch (Exception e) {
-                throw new LoadLibraryContentException(e);
+                ExceptionPrinter.printAndExit(new LoadLibraryContentException(e));
             }
             return content;
         }, snippets);

@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.program.builder;
 
-import com.ferra13671.cometrenderer.exceptions.BuildProgramException;
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.global.GlobalCometLoader;
 import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
@@ -74,11 +75,11 @@ public class GlProgramBuilder<T> {
      */
     public GlProgram build() {
         if (name == null)
-            throw new BuildProgramException("Missing name in program builder.");
+            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException("Missing name in program builder."));
         if (vertexShader == null)
-            throw new BuildProgramException(String.format("Missing vertex shader in program '%s'.", name));
+            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", name)));
         if (fragmentShader == null)
-            throw new BuildProgramException(String.format("Missing fragment shader in program '%s'.", name));
+            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", name)));
 
         return GlobalCometLoader.loadProgram(new GlProgramSchema<>(name, vertexShader, fragmentShader, uniforms));
     }
