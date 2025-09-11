@@ -8,15 +8,16 @@ import net.minecraft.client.texture.GlTextureView;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class SamplerAppliers {
 
-    public static final Function<GlTex, SamplerApplier> GL_TEX = gltex -> (sampler) -> {
+    public static final Function<GlTex, Consumer<SamplerUniform>> GL_TEX = gltex -> (sampler) -> {
         GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + sampler.getSamplerId());
         GlStateManager._bindTexture(gltex.getTexId());
     };
-    public static final Function<GlTextureView, SamplerApplier> GL_TEXTURE_VIEW = textureView -> (sampler) -> {
+    public static final Function<GlTextureView, Consumer<SamplerUniform>> GL_TEXTURE_VIEW = textureView -> (sampler) -> {
         GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + sampler.getSamplerId());
         GlTexture glTexture = textureView.texture();
         int o;
@@ -32,7 +33,7 @@ public final class SamplerAppliers {
         GlStateManager._texParameter(o, GL12.GL_TEXTURE_MAX_LEVEL, textureView.baseMipLevel() + textureView.mipLevels() - 1);
         glTexture.checkDirty(o);
     };
-    public static final Function<Integer, SamplerApplier> TEXTURE_ID = id -> (sampler) -> {
+    public static final Function<Integer, Consumer<SamplerUniform>> TEXTURE_ID = id -> (sampler) -> {
         GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + sampler.getSamplerId());
         GlStateManager._bindTexture(id);
     };

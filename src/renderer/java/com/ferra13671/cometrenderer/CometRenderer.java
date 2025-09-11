@@ -25,6 +25,7 @@ import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.texture.GlTexture;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,6 +184,14 @@ public class CometRenderer {
     public static void applyBlend(SrcFactor srcFactor, DstFactor dstFactor) {
         GlStateManager._enableBlend();
         GL11.glBlendFunc(srcFactor.value, dstFactor.value);
+    }
+
+    /*
+     * Включает смешивание цветов, если оно не включено, и устанавливает ему кастомную функцию
+     */
+    public static void applyBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
+        GlStateManager._enableBlend();
+        GL14.glBlendFuncSeparate(srcColor.value, dstColor.value, srcAlpha.value, dstAlpha.value);
     }
 
     /*

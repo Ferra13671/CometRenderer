@@ -6,12 +6,14 @@ import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.texture.GlTextureView;
 
+import java.util.function.Consumer;
+
 /*
  * Униформа, хранящая в себе текстуру
  */
 public class SamplerUniform extends GlUniform {
     private final int samplerId;
-    private SamplerApplier applier;
+    private Consumer<SamplerUniform> applier;
 
     public SamplerUniform(String name, int location, GlProgram glProgram) {
         super(name, location, glProgram);
@@ -44,7 +46,7 @@ public class SamplerUniform extends GlUniform {
     /*
      * Устанавливает текстуру кастомным установщиком
      */
-    public void set(SamplerApplier applier) {
+    public void set(Consumer<SamplerUniform> applier) {
         this.applier = applier;
     }
 
@@ -58,6 +60,6 @@ public class SamplerUniform extends GlUniform {
             GlStateManager._glUniform1i(this.location, getSamplerId());
 
         //В зависимости от установщика устанавливаем текстуру в семплер
-        this.applier.apply(this);
+        this.applier.accept(this);
     }
 }
