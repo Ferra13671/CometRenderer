@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.exceptions.impl;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
 /*
- * Это исключение вызывается, когда произошла ошибка при работе с юниформом программы.
+ * Это исключение вызывается, когда не удалось найти юниформу в программе.
  */
 public class NoSuchUniformException extends CometException {
     @java.io.Serial

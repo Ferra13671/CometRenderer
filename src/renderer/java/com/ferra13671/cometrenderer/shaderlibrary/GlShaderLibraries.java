@@ -16,7 +16,7 @@ public final class GlShaderLibraries {
      */
     public static void addLibraries(GlShaderLibrary... libraries) {
         for (GlShaderLibrary library : libraries)
-            GlShaderLibraries.libraries.put(library.name(), library);
+            GlShaderLibraries.libraries.put(library.libraryEntry().name(), library);
     }
 
     /*

@@ -1,6 +1,8 @@
 package com.ferra13671.cometrenderer.program.builder;
 
+import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.global.GlobalCometLoader;
@@ -10,7 +12,6 @@ import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /*
  * Билдер схемы программы.
@@ -18,15 +19,15 @@ import java.util.function.Function;
  */
 public class GlProgramBuilder<T> {
     private String name;
-    private ShaderSchema<T> vertexShader;
-    private ShaderSchema<T> fragmentShader;
+    private ShaderSchema vertexShader;
+    private ShaderSchema fragmentShader;
     private final List<GlUniformSchema> uniforms = new ArrayList<>();
-    private final Function<T, String> contentGetter;
+    private final CometLoader<T> loader;
 
-    public GlProgramBuilder(Function<T, String> contentGetter, GlProgramSnippet... snippets) {
+    public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
         for (GlProgramSnippet snippet : snippets)
             uniforms.addAll(snippet.uniforms());
-        this.contentGetter = contentGetter;
+        this.loader = loader;
     }
 
     /*
@@ -41,7 +42,15 @@ public class GlProgramBuilder<T> {
      * Устанавливает вертексный шейдер программе
      */
     public GlProgramBuilder<T> vertexShader(String name, T shaderPath) {
-        this.vertexShader = new ShaderSchema<>(name, contentGetter, shaderPath, ShaderType.Vertex);
+        this.vertexShader = new ShaderSchema(loader.createShaderEntry(name, shaderPath), ShaderType.Vertex);
+        return this;
+    }
+
+    /*
+     * Устанавливает вертексный шейдер программе
+     */
+    public GlProgramBuilder<T> vertexShader(GlslFileEntry shaderEntry) {
+        this.vertexShader = new ShaderSchema(shaderEntry, ShaderType.Vertex);
         return this;
     }
 
@@ -49,7 +58,15 @@ public class GlProgramBuilder<T> {
      * Устанавливает фрагментный шейдер программе
      */
     public GlProgramBuilder<T> fragmentShader(String name, T shaderPath) {
-        this.fragmentShader = new ShaderSchema<>(name, contentGetter, shaderPath, ShaderType.Fragment);
+        this.fragmentShader = new ShaderSchema(loader.createShaderEntry(name, shaderPath), ShaderType.Fragment);
+        return this;
+    }
+
+    /*
+     * Устанавливает фрагментный шейдер программе
+     */
+    public GlProgramBuilder<T> fragmentShader(GlslFileEntry shaderEntry) {
+        this.fragmentShader = new ShaderSchema(shaderEntry, ShaderType.Fragment);
         return this;
     }
 
@@ -81,6 +98,6 @@ public class GlProgramBuilder<T> {
         if (fragmentShader == null)
             ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", name)));
 
-        return GlobalCometLoader.loadProgram(new GlProgramSchema<>(name, vertexShader, fragmentShader, uniforms));
+        return GlobalCometLoader.loadProgram(new GlProgramSchema(name, vertexShader, fragmentShader, uniforms));
     }
 }

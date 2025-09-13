@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.test;
 
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
@@ -21,6 +22,8 @@ public class TestMod implements ModInitializer, Mc {
     private final Logger logger = LoggerFactory.getLogger(TestMod.class);
 
     private static GlProgram program;
+    private static final GlslFileEntry vertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex", "position.vsh");
+    private static final GlslFileEntry fragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment", "position.fsh");
 
     @Override
     public void onInitialize() {
@@ -47,8 +50,8 @@ public class TestMod implements ModInitializer, Mc {
         if (program == null)
             program = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
                     .name("test")
-                    .vertexShader("test-vertex", "position.vsh")
-                    .fragmentShader("test-fragment", "position.fsh")
+                    .vertexShader(vertexEntry)
+                    .fragmentShader(fragmentEntry)
                     .build();
 
         CometRenderer.bindMainFrameBuffer();

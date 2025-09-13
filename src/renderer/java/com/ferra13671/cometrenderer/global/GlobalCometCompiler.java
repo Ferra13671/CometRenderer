@@ -9,11 +9,14 @@ import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatusChecker;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
+import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
+import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
 import org.lwjgl.opengl.GL20;
 
 import java.util.List;
+import java.util.function.Function;
 
 /*
  * Глобальный компилятор
@@ -46,17 +49,40 @@ public class GlobalCometCompiler {
     /*
      * Компилирует шейдер.
      */
-    public static GlShader compileShader(String name, String content, ShaderType shaderType) {
+    public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType) {
         int shaderId = GL20.glCreateShader(shaderType.getId());
-        GL20.glShaderSource(shaderId, includeShaderLibraries(content));
+        GL20.glShaderSource(shaderId, shaderEntry.content());
         GL20.glCompileShader(shaderId);
 
         CompileResult compileResult = CompileStatusChecker.checkShaderCompile(shaderId);
 
         if (compileResult.isFailure())
-            ExceptionPrinter.printAndExit(new CompileShaderException(name, compileResult.message()));
+            ExceptionPrinter.printAndExit(new CompileShaderException(shaderEntry.name(), compileResult.message()));
 
-        return new GlShader(name, shaderId, shaderType);
+        return new GlShader(shaderEntry.name(), shaderId, shaderType);
+    }
+
+    /*
+     * Компилирует данные шейдера для последующего их применения
+     */
+    public static <T> GlslFileEntry compileShaderEntry(String name, Function<T, String> contentGetter, T shaderPath) {
+        //Внедряем в контент шейдера необходимые библиотеки
+        String content = includeShaderLibraries(contentGetter.apply(shaderPath));
+
+        return new GlslFileEntry(name, content);
+    }
+
+    /*
+     * Компилирует шейдерную библиотеку при помощи её данных
+     */
+    public static <T> GlShaderLibrary compileShaderLibrary(String name, Function<T, String> contentGetter, T libraryPath, List<GlUniformSchema> uniforms) {
+        return new GlShaderLibrary(
+                new GlslFileEntry(
+                        name,
+                        contentGetter.apply(libraryPath)
+                ),
+                uniforms
+        );
     }
 
     /*
@@ -86,7 +112,7 @@ public class GlobalCometCompiler {
             }
             if (ch == '>' && writeLibName) {
                 writeLibName = false;
-                content = content.replace(includeLibAction.concat("<").concat(s.toString()).concat(">"), GlShaderLibraries.getLibrary(s.toString()).libraryContent());
+                content = content.replace(includeLibAction.concat("<").concat(s.toString()).concat(">"), GlShaderLibraries.getLibrary(s.toString()).libraryEntry().content());
                 i -= "#".concat(includeLibAction).concat("<").concat(s.toString()).length();
                 s = new StringBuilder();
                 continue;
