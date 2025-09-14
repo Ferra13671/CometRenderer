@@ -9,8 +9,6 @@ import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import org.joml.Vector4f;
 import org.slf4j.Logger;
@@ -56,13 +54,6 @@ public class TestMod implements ModInitializer, Mc {
 
         CometRenderer.bindMainFrameBuffer();
 
-        BufferBuilder buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-
-        buffer.vertex(200, 200, 0);
-        buffer.vertex(200, 400, 0);
-        buffer.vertex(400, 400, 0);
-        buffer.vertex(400, 200, 0);
-
         CometRenderer.setGlobalProgram(program);
 
         Random random = new Random();
@@ -71,6 +62,11 @@ public class TestMod implements ModInitializer, Mc {
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
 
-        CometRenderer.drawBuffer(buffer.end());
+        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION, buffer -> {
+            buffer.vertex(200, 200, 0);
+            buffer.vertex(200, 400, 0);
+            buffer.vertex(400, 400, 0);
+            buffer.vertex(400, 200, 0);
+        }));
     }
 }

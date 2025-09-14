@@ -10,6 +10,7 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
+import com.ferra13671.cometrenderer.vertex.VertexBuilder;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
@@ -29,6 +30,7 @@ import org.lwjgl.opengl.GL14;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -241,6 +243,16 @@ public class CometRenderer {
 
         if (gpuTextureView.texture().getDepthOrLayers() > 1)
             throw new UnsupportedOperationException("Textures with multiple depths or layers are not yet supported as an attachment");
+    }
+
+    /*
+     * Создаёт готовый буффер с вершинами. Перед построением буффера вызывается buildConsumer, что бы записать в билдер данные о вершинах.
+     * Если в итоге в билдер ничего не было записано, то вернётся null.
+     */
+    public static BuiltBuffer createBuiltBuffer(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Consumer<VertexBuilder> buildConsumer) {
+        VertexBuilder vertexBuilder = VertexBuilder.create(drawMode, vertexFormat);
+        buildConsumer.accept(vertexBuilder);
+        return vertexBuilder.endNullable();
     }
 
     /*
