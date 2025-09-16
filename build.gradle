@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = "1.4"
+version = "1.4.0.1"
 group = "com.ferra13671"
 
 base {
