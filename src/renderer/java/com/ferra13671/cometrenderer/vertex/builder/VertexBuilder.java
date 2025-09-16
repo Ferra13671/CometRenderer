@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import net.minecraft.client.util.BufferAllocator;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.util.stream.Collectors;
@@ -133,7 +133,7 @@ public class VertexBuilder {
     }
 
     public VertexBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
-        Vector4f vec = matrix4f.transform(new Vector4f(x, y, z, 0));
+        Vector3f vec = matrix4f.transformPosition(x, y, z, new Vector3f());
         return vertex(vec.x, vec.y, vec.z);
     }
 
