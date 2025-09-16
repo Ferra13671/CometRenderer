@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.program.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
@@ -23,6 +24,7 @@ public class Matrix4fGlUniform extends GlUniform {
     }
 
     @Override
+    @OverriddenMethod
     public void upload() {
         GL20.glUniformMatrix4fv(getLocation(), false, buffer);
     }

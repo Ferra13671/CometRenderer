@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.program.uniform.uniforms.sampler;
 import com.ferra13671.TextureUtils.GlTex;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.texture.GlTextureView;
 
@@ -55,6 +56,7 @@ public class SamplerUniform extends GlUniform {
     }
 
     @Override
+    @OverriddenMethod
     public void upload() {
         if (GlProgram.ACTIVE_PROGRAM == null)
             GlStateManager._glUniform1i(this.location, getSamplerId());

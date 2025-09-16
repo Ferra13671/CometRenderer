@@ -1,27 +1,45 @@
 package com.ferra13671.cometrenderer.test;
 
+import com.ferra13671.TextureUtils.builder.GLTextureBuilder;
+import com.ferra13671.TextureUtils.loader.TextureLoader;
+import com.ferra13671.TextureUtils.loader.TextureLoaders;
+import com.ferra13671.TextureUtils.texture.GLTexture;
+import com.ferra13671.TextureUtils.texture.TextureFiltering;
+import com.ferra13671.TextureUtils.texture.TextureWrapping;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
+import com.ferra13671.cometrenderer.vertex.format.CometVertexFormats;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.render.VertexFormats;
 import org.joml.Vector4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Random;
+import java.util.function.Function;
 
 public class TestMod implements ModInitializer, Mc {
     private final Logger logger = LoggerFactory.getLogger(TestMod.class);
 
-    private static GlProgram program;
-    private static final GlslFileEntry vertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex", "position.vsh");
-    private static final GlslFileEntry fragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment", "position.fsh");
+    private static final Function<String, TextureLoader> textureLoader = path -> TextureLoaders.INPUT_STREAM.apply(TestMod.class.getClassLoader().getResourceAsStream(path));
+
+    private static GlProgram positionProgram;
+    private static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex", "position.vsh");
+    private static final GlslFileEntry positionFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment", "position.fsh");
+    private static GlProgram positionColorProgram;
+    private static final GlslFileEntry positionColorVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex2", "position-colored.vsh");
+    private static final GlslFileEntry positionColorFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment2", "position-colored.fsh");
+    private static GlProgram positionColorTextureProgram;
+    private static final GlslFileEntry positionColorTextureVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex3", "texture-colored.vsh");
+    private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment3", "texture-colored.fsh");
+    private static GLTexture texture;
 
     @Override
     public void onInitialize() {
@@ -45,28 +63,83 @@ public class TestMod implements ModInitializer, Mc {
     }
 
     public static void render() {
-        if (program == null)
-            program = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                    .name("test")
-                    .vertexShader(vertexEntry)
-                    .fragmentShader(fragmentEntry)
+        if (positionProgram == null)
+            positionProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
+                    .name("test1")
+                    .vertexShader(positionVertexEntry)
+                    .fragmentShader(positionFragmentEntry)
+                    .build();
+        if (positionColorProgram == null)
+            positionColorProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
+                    .name("test2")
+                    .vertexShader(positionColorVertexEntry)
+                    .fragmentShader(positionColorFragmentEntry)
+                    .build();
+        if (positionColorTextureProgram == null)
+            positionColorTextureProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
+                    .name("test3")
+                    .vertexShader(positionColorTextureVertexEntry)
+                    .fragmentShader(positionColorTextureFragmentEntry)
+                    .sampler("u_Texture")
+                    .build();
+        if (texture == null)
+            texture =
+                    GLTextureBuilder.builder()
+                    .name("Test-texture")
+                    .loader(textureLoader.apply("texture.jpg"))
+                    .filtering(TextureFiltering.SMOOTH)
+                    .wrapping(TextureWrapping.DEFAULT)
                     .build();
 
         CometRenderer.bindMainFrameBuffer();
 
-        CometRenderer.setGlobalProgram(program);
-
+        //------ Rect with random color with position program ------//
+        CometRenderer.setGlobalProgram(positionProgram);
         Random random = new Random();
-
         CometRenderer.setShaderColor(new Vector4f(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1f));
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
 
-        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION, buffer -> {
+        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION, buffer -> {
             buffer.vertex(200, 200, 0);
             buffer.vertex(200, 400, 0);
             buffer.vertex(400, 400, 0);
             buffer.vertex(400, 200, 0);
+        }));
+
+        //------ multi-colored rect with position-color program ------//
+        CometRenderer.setGlobalProgram(positionColorProgram);
+        CometRenderer.resetColor();
+        CometRenderer.initMatrix();
+        CometRenderer.initShaderColor();
+
+        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR, buffer -> {
+            buffer.vertex(400, 200, 0).element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f);
+            buffer.vertex(400, 250, 0).element("Color", VertexElementType.FLOAT, 1f, 0f, 0f, 1f);
+            buffer.vertex(450, 250, 0).element("Color", VertexElementType.FLOAT, 0f, 1f, 0f, 1f);
+            buffer.vertex(450, 200, 0).element("Color", VertexElementType.FLOAT, 0f, 0f, 0f, 1f);
+        }));
+
+        //------ multi-colored textured rect with position-color-texture program ------//
+        CometRenderer.setGlobalProgram(positionColorTextureProgram);
+        CometRenderer.resetColor();
+        CometRenderer.initMatrix();
+        CometRenderer.initShaderColor();
+        positionColorTextureProgram.getUniform("u_Texture", SamplerUniform.class).set(texture);
+
+        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
+            buffer.vertex(400, 250, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 0f, 0f);
+            buffer.vertex(400, 300, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 0f, 1f);
+            buffer.vertex(450, 300, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 1f, 1f);
+            buffer.vertex(450, 250, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 1f, 0f);
         }));
     }
 }

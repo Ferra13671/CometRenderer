@@ -10,14 +10,15 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
-import com.ferra13671.cometrenderer.vertex.VertexBuilder;
-import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.builder.BuiltVertexBuffer;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import com.ferra13671.cometrenderer.vertex.builder.VertexBuilder;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.GlBackend;
@@ -30,6 +31,7 @@ import org.lwjgl.opengl.GL14;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -249,7 +251,7 @@ public class CometRenderer {
      * Создаёт готовый буффер с вершинами. Перед построением буффера вызывается buildConsumer, что бы записать в билдер данные о вершинах.
      * Если в итоге в билдер ничего не было записано, то вернётся null.
      */
-    public static BuiltBuffer createBuiltBuffer(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Consumer<VertexBuilder> buildConsumer) {
+    public static BuiltVertexBuffer createBuiltBuffer(DrawMode drawMode, VertexFormat vertexFormat, Consumer<VertexBuilder> buildConsumer) {
         VertexBuilder vertexBuilder = VertexBuilder.create(drawMode, vertexFormat);
         buildConsumer.accept(vertexBuilder);
         return vertexBuilder.endNullable();
@@ -259,13 +261,31 @@ public class CometRenderer {
      * Рисует буффер и автоматически закрывает его
      */
     public static void drawBuffer(BuiltBuffer builtBuffer) {
-        drawBuffer(builtBuffer, true);
+        drawBuffer(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, true);
     }
 
     /*
      * Рисует буффер и по выбору закрывает его
      */
     public static void drawBuffer(BuiltBuffer builtBuffer, boolean close) {
+        drawBuffer(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, close);
+    }
+
+    /*
+     * Рисует буффер и автоматически закрывает его
+     */
+    public static void drawBuffer(BuiltVertexBuffer builtBuffer) {
+        drawBuffer(BufferRenderers.COMET_BUFFER, builtBuffer, true);
+    }
+
+    /*
+     * Рисует буффер и по выбору закрывает его
+     */
+    public static void drawBuffer(BuiltVertexBuffer builtBuffer, boolean close) {
+        drawBuffer(BufferRenderers.COMET_BUFFER, builtBuffer, close);
+    }
+
+    private static <T> void drawBuffer(BiConsumer<T, Boolean> renderConsumer, T builtBuffer, boolean close) {
         if (scissorStack.current() != null) {
             GlStateManager._enableScissorTest();
             scissorStack.current().bind();
@@ -274,33 +294,8 @@ public class CometRenderer {
 
         globalProgram.bind();
 
-        BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
-
-        if (drawParameters.indexCount() > 0) {
-            RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawParameters.mode());
-
-            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex buffer", 40, builtBuffer.getBuffer());
-            GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawParameters.indexCount());
-            VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
-
-            drawIndexed(drawParameters.indexCount(), drawParameters, indexType, vertexBuffer, indexBuffer);
-
-            vertexBuffer.close();
-        }
-        if (close)
-            builtBuffer.close();
+        renderConsumer.accept(builtBuffer, close);
 
         globalProgram.unBind();
-    }
-
-    private static void drawIndexed(int count, BuiltBuffer.DrawParameters drawParameters, VertexFormat.IndexType indexType, GpuBuffer vertexBuffer, GpuBuffer indexBuffer) {
-        ((GlBackend) RenderSystem.getDevice()).getVertexBufferManager().setupBuffer(drawParameters.format(), (GlGpuBuffer) vertexBuffer);
-        if (indexType != null) {
-            GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, bufferIdGetter.apply((GlGpuBuffer) indexBuffer));
-
-            GlStateManager._drawElements(GlConst.toGl(drawParameters.mode()), count, GlConst.toGl(indexType), 0);
-        } else {
-            GlStateManager._drawArrays(GlConst.toGl(drawParameters.mode()), 0, count);
-        }
     }
 }

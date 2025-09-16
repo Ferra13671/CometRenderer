@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
 import net.minecraft.client.gl.GlGpuBuffer;
@@ -35,6 +36,7 @@ public class BufferUniform extends OneTypeGlUniform<GpuBufferSlice> {
     }
 
     @Override
+    @OverriddenMethod
     public void upload() {
         GL32.glBindBufferRange(GlConst.GL_UNIFORM_BUFFER, getBlockBinding(), CometRenderer.getBufferIdGetter().apply((GlGpuBuffer) value.buffer()), value.offset(), value.length());
     }
