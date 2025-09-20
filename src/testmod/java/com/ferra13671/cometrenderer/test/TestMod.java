@@ -117,7 +117,7 @@ public class TestMod implements ModInitializer, Mc {
             buffer.vertex(400, 200, 0).element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f);
             buffer.vertex(400, 250, 0).element("Color", VertexElementType.FLOAT, 1f, 0f, 0f, 1f);
             buffer.vertex(450, 250, 0).element("Color", VertexElementType.FLOAT, 0f, 1f, 0f, 1f);
-            buffer.vertex(450, 200, 0).element("Color", VertexElementType.FLOAT, 0f, 0f, 0f, 1f);
+            buffer.vertex(450, 200, 0).element("Color", VertexElementType.FLOAT, 0f, 0f, 1f, 1f);
         }));
 
         //------ multi-colored textured rect with position-color-texture program ------//
