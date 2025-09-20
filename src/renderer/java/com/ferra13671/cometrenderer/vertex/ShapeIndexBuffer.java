@@ -9,6 +9,16 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 
 public final class ShapeIndexBuffer {
+	public static final ShapeIndexBuffer sharedSequential = new ShapeIndexBuffer(1, 1, IntConsumer::accept);
+	public static final ShapeIndexBuffer sharedSequentialQuad = new ShapeIndexBuffer(4, 6, (indexConsumer, firstVertexIndex) -> {
+		indexConsumer.accept(firstVertexIndex);
+		indexConsumer.accept(firstVertexIndex + 1);
+		indexConsumer.accept(firstVertexIndex + 2);
+		indexConsumer.accept(firstVertexIndex + 2);
+		indexConsumer.accept(firstVertexIndex + 3);
+		indexConsumer.accept(firstVertexIndex);
+	});
+
 	private final int vertexCountInShape;
 	private final int vertexCountInTriangulated;
 	private final Triangulator triangulator;
@@ -71,9 +81,5 @@ public final class ShapeIndexBuffer {
 
 	public IndexType getIndexType() {
 		return this.indexType;
-	}
-
-	public interface Triangulator {
-		void accept(IntConsumer indexConsumer, int firstVertexIndex);
 	}
 }

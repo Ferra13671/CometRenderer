@@ -11,7 +11,7 @@ public class IllegalLibraryBuilderArgumentException extends CometException {
 
     public IllegalLibraryBuilderArgumentException(String message) {
         super(
-                "Illegal argument in library builder..",
+                "Illegal argument in library builder.",
                 message,
                 new String[]{
                         "You did not specify all the required arguments before building library builder",

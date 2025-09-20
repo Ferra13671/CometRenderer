@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.exceptions.impl.LoadLibraryContentException;
-import com.ferra13671.cometrenderer.exceptions.impl.LoadShaderContentException;
+import com.ferra13671.cometrenderer.exceptions.impl.load.LoadLibraryContentException;
+import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderContentException;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.builder.GlProgramBuilder;
 import com.ferra13671.cometrenderer.program.builder.GlShaderLibraryBuilder;

@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.global;
 
 import com.ferra13671.cometrenderer.ExceptionPrinter;
-import com.ferra13671.cometrenderer.exceptions.impl.CompileProgramException;
-import com.ferra13671.cometrenderer.exceptions.impl.CompileShaderException;
+import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
+import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalShaderFormatException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.exceptions.impl;
+package com.ferra13671.cometrenderer.exceptions.impl.compile;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
 

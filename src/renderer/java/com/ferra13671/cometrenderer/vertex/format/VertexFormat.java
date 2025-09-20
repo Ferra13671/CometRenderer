@@ -1,5 +1,7 @@
 package com.ferra13671.cometrenderer.vertex.format;
 
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 
 import java.util.HashMap;
@@ -71,15 +73,16 @@ public class VertexFormat {
      * Возвращает элемент структуры вершины по его имени
      */
     public VertexElement getVertexElement(String name) {
-        //TODO сделать исключение NoSuchVertexElementException, вызываемое, если элемент не найден в формате
-        return vertexMap.get(name);
+        VertexElement vertexElement = vertexMap.get(name);
+        if (vertexElement == null)
+            ExceptionPrinter.printAndExit(new NoSuchVertexElementException(name));
+        return vertexElement;
     }
 
     /*
      * Возвращает имя элемента структуры вершины
      */
     public String getVertexElementName(VertexElement vertexElement) {
-        //TODO здесь тоже
         return namesMap.get(vertexElement);
     }
 

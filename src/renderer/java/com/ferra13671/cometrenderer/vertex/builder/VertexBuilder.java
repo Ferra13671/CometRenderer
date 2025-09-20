@@ -1,5 +1,9 @@
 package com.ferra13671.cometrenderer.vertex.builder;
 
+import com.ferra13671.cometrenderer.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalVertexBuilderStateException;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -42,10 +46,17 @@ public class VertexBuilder {
         this.requiredMask = vertexFormat.getElementsMask() & ~1;
     }
 
-    //TODO сделать исключение VertexBuilderNotBuildingException
     private void ensureBuilding() {
         if (!this.building) {
-            throw new IllegalStateException("Not building!");
+            ExceptionPrinter.printAndExit(new IllegalVertexBuilderStateException(
+                    "Attempt to interact with VertexBuilder, which does not building.",
+                    new String[]{
+                            "You are trying to use VertexBuilder after it has been built."
+                    },
+                    new String[]{
+                            "Check your build or usage VertexBuilder method and fix it."
+                    }
+            ));
         }
     }
 
@@ -59,11 +70,19 @@ public class VertexBuilder {
         return builtBuffer;
     }
 
-    public BuiltVertexBuffer end() {
+    public BuiltVertexBuffer endThrowable() {
         BuiltVertexBuffer builtBuffer = this.endNullable();
         if (builtBuffer == null) {
-            //TODO сделать исключение EmptyVertexBuilderException
-            throw new IllegalStateException("VertexBuilder was empty");
+            ExceptionPrinter.printAndExit(new IllegalVertexBuilderStateException(
+                    "VertexBuilder was empty.",
+                    new String[]{
+                            "You haven't built any vertices in VertexBuilder and called VertexBuilder build via the 'endThrowable' method, which throw an exception about the VertexBuilder being empty."
+                    },
+                    new String[]{
+                            "If your rendering method assumes an empty VertexBuilder, call the builder via the 'endNullable' method. If not, check your vertex builder method and fix it."
+                    }
+            ));
+            return null;
         } else {
             return builtBuffer;
         }
@@ -88,8 +107,8 @@ public class VertexBuilder {
         this.ensureBuilding();
         this.endVertex();
         if (this.vertexCount >= MAX_VERTICES) {
-            //TODO сделать исключение IllegalVertexCountException
-            throw new IllegalStateException("Trying to write too many vertices (>16777215) into BufferBuilder");
+            ExceptionPrinter.printAndExit(new VertexOverflowException());
+            return -1L;
         } else {
             this.vertexCount++;
             long l = this.bufferAllocator.allocate(this.vertexSize);
@@ -101,8 +120,7 @@ public class VertexBuilder {
     private void endVertex() {
         if (this.vertexCount != 0 && this.currentMask != 0) {
             String string = vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getVertexElementName).collect(Collectors.joining(", "));
-            //TODO сделать исключение BadVertexStructureException
-            throw new IllegalStateException("Missing elements in vertex: " + string);
+            ExceptionPrinter.printAndExit(new BadVertexStructureException(string));
         }
     }
 
@@ -115,8 +133,16 @@ public class VertexBuilder {
             this.currentMask = j;
             long l = this.vertexPointer;
             if (l == -1L) {
-                //TODO сделать исключение VertexBuilderNotBuildingVertexException
-                throw new IllegalArgumentException("Not currently building vertex");
+                ExceptionPrinter.printAndExit(new IllegalVertexBuilderStateException(
+                        "Not currently building vertex.",
+                        new String[]{
+                                "You are trying to add data to vertex that has already been built."
+                        },
+                        new String[]{
+                                "Check your vertex building method and fix it."
+                        }
+                ));
+                return -1L;
             } else {
                 return l + this.elementOffsets[element.getId()];
             }
