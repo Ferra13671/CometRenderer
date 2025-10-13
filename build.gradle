@@ -11,9 +11,21 @@ base {
     archivesName = "CometRenderer"
 }
 
+void registerSourceSet(String name) {
+    sourceSets.renderer.java.srcDirs += "src/renderer/" + name + "/java"
+
+    jar {
+        from('src/renderer/' + name + '/java') {
+            include '**/*.java'
+        }
+    }
+}
+
 sourceSets {
     //SourceSets, хранящий в себе непосредственно сам рендерер
     renderer {
+        java.srcDirs = ["src/renderer/main/java"]
+        resources.srcDirs = ["src/renderer/main/resources"]
         compileClasspath += main.compileClasspath
     }
     //SourceSets, хранящий в себе программу для тестирования рендерера
@@ -23,6 +35,12 @@ sourceSets {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
+
+    registerSourceSet("main")
+    registerSourceSet("exeptions")
+    registerSourceSet("program")
+    registerSourceSet("vertex")
+    registerSourceSet("utils")
 }
 
 //Добавляем в gradle проект задачу для запуска майнкрафта с программой для тестирования рендерера
@@ -60,13 +78,6 @@ dependencies {
     //Добавляем в зависимости для программы для тестирования рендерера
     testmodImplementation sourceSets.renderer.output
     testmodImplementation sourceSets.main.output
-}
-
-jar {
-    //Добавляем в джарку плагина все файлы рендерера
-    from('src/renderer/java') {
-        include '**/*.java'
-    }
 }
 
 test {
