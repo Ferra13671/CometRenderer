@@ -31,7 +31,7 @@ public class TestMod implements ModInitializer, Mc {
     private static final Function<String, TextureLoader> textureLoader = path -> TextureLoaders.INPUT_STREAM.apply(TestMod.class.getClassLoader().getResourceAsStream(path));
 
     private static GlProgram positionProgram;
-    private static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex", "position.vsh");
+    public static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex", "position.vsh");
     private static final GlslFileEntry positionFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment", "position.fsh");
     private static GlProgram positionColorProgram;
     private static final GlslFileEntry positionColorVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex2", "position-colored.vsh");
@@ -92,6 +92,13 @@ public class TestMod implements ModInitializer, Mc {
                     .build();
 
         CometRenderer.bindMainFrameBuffer();
+
+        if (TestPostEffect.handsFrameBuffer.textureWidth != mc.getFramebuffer().textureWidth || TestPostEffect.handsFrameBuffer.textureHeight != mc.getFramebuffer().textureHeight) {
+            TestPostEffect.handsFrameBuffer.resize(mc.getFramebuffer().textureWidth, mc.getFramebuffer().textureHeight);
+            TestPostEffect.handsFrameBuffer.clearColorTexture();
+        }
+
+        TestPostEffect.postEffect.execute(mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 
         //------ Rect with random color with position program ------//
         CometRenderer.setGlobalProgram(positionProgram);

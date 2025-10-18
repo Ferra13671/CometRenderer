@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class GlProgram {
     private final int id;
     private final List<GlUniform> uniforms = new ArrayList<>();
     private final HashMap<String, GlUniform> uniformsByName = new HashMap<>();
+    private final List<SamplerUniform> samplers = new ArrayList<>();
     //Количество семплеров (Юниформ с типом SAMPLER)
     private int samplersAmount = 0;
     //Количество забинженных буфферов (Юниформ с типом BUFFER)
@@ -29,11 +31,20 @@ public class GlProgram {
         this.id = id;
 
         for (GlUniformSchema glUniformSchema : uniforms) {
-            GlUniform uniform = glUniformSchema.uniformType().uniformCreator.apply(glUniformSchema.name(), glUniformSchema.getIdFromProgram(this.id), this);
+            GlUniform uniform = glUniformSchema.uniformType().uniformCreator.apply(
+                    glUniformSchema.name(),
+                    glUniformSchema.getIdFromProgram(this.id),
+                    this
+            );
+
             if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
                 ExceptionPrinter.printAndExit(new NoSuchUniformException(uniform.getName(), this.name));
+
             this.uniforms.add(uniform);
             this.uniformsByName.put(glUniformSchema.name(), uniform);
+
+            if (uniform instanceof SamplerUniform sampler)
+                samplers.add(sampler);
         }
     }
 
@@ -73,13 +84,30 @@ public class GlProgram {
     }
 
     /*
-     * Возвращает юниформу по её имени и типу
+     * Возвращает юниформу по её имени и типу, если юниформа не была найдена, то выдем ошибку
      */
     public <T extends GlUniform> T getUniform(String name, Class<T> clazz) {
-        T uniform = (T) uniformsByName.get(name);
+        T uniform = getUniformNullable(name, clazz);
         if (uniform == null)
             ExceptionPrinter.printAndExit(new NoSuchUniformException(name, this.name));
         return uniform;
+    }
+
+    /*
+     * Возвращает юниформу по её имени и типу
+     */
+    public <T extends GlUniform> T getUniformNullable(String name, Class<T> clazz) {
+        return (T) uniformsByName.get(name);
+    }
+
+    /*
+     * Возвращает семплер по его айдишнику
+     */
+    public SamplerUniform getSampler(int samplerId) {
+        SamplerUniform sampler = samplers.get(samplerId);
+        if (sampler == null)
+            ExceptionPrinter.printAndExit(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
+        return sampler;
     }
 
     /*

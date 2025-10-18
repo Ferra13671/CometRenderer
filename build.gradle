@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = "1.4.1"
+version = "1.5"
 group = "com.ferra13671"
 
 base {
@@ -37,7 +37,9 @@ sourceSets {
     }
 
     registerSourceSet("main")
+    registerSourceSet("framebuffer")
     registerSourceSet("exeptions")
+    registerSourceSet("posteffect")
     registerSourceSet("program")
     registerSourceSet("vertex")
     registerSourceSet("utils")

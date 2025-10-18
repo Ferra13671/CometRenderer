@@ -1,0 +1,64 @@
+package com.ferra13671.cometrenderer.posteffect.minecraft;
+
+import com.ferra13671.cometrenderer.framebuffer.CometFrameBuffer;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+
+/*
+ * Модификация обычного VertexConsumerProvider.Immediate, необходимая для дополнительной отрисовки всего контента в другой фреймбуффер.
+ * Необходимо для пост эффектных шейдеров.
+ */
+public class OverrideFrameBufferVertexConsumerProvider extends VertexConsumerProvider.Immediate {
+    //Родительный VertexConsumerProvider.Immediate (с которого мы будем "пиздить" рендер)
+    private final Immediate parent;
+    //Фреймбуффер, в который будем перенаправлять рендер
+    private final CometFrameBuffer overrideFrameBuffer;
+    //Изначальный фреймбуффер
+    private final Framebuffer outputFrameBuffer;
+    //Очищать глубину или нет
+    private final boolean clearDepth;
+
+    /*
+     * parent — родительный VertexConsumerProvider.Immediate (с которого мы будем "пиздить" рендер)
+     * overrideFrameBuffer — фреймбуффер, в который будет дополнительно отрисован весь контент
+     * outputFrameBuffer — изначальный фреймбуффер
+     * clearDepth — очищать глубину фреймбуффера или нет (true для рук)
+     */
+    public OverrideFrameBufferVertexConsumerProvider(Immediate parent, CometFrameBuffer overrideFrameBuffer, Framebuffer outputFrameBuffer, boolean clearDepth) {
+        super(null, null);
+        this.parent = parent;
+        this.overrideFrameBuffer = overrideFrameBuffer;
+        this.outputFrameBuffer = outputFrameBuffer;
+        this.clearDepth = clearDepth;
+    }
+
+    @Override
+    public VertexConsumer getBuffer(RenderLayer renderLayer) {
+        return this.parent.getBuffer(renderLayer);
+    }
+
+    @Override
+    public void draw() {
+        //Очищает текстуру цвета
+        overrideFrameBuffer.clearColorTexture();
+
+        //Перенаправляем рендер
+        RenderSystem.outputColorTextureOverride = overrideFrameBuffer.getColorAttachmentView();
+        RenderSystem.outputDepthTextureOverride = overrideFrameBuffer.getDepthAttachmentView();
+        this.parent.draw();
+
+        //Возвращаем всё обратно
+        RenderSystem.outputColorTextureOverride = null;
+        RenderSystem.outputDepthTextureOverride = null;
+
+        //Очищаем глубину при необходимости
+        if (clearDepth)
+            overrideFrameBuffer.clearDepthTexture();
+
+        //Отрисовываем то, что получили, в изначальный фреймбуффер
+        overrideFrameBuffer.drawBlit(outputFrameBuffer.getColorAttachmentView());
+    }
+}
