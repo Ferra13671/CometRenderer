@@ -19,20 +19,22 @@ public class OverrideFrameBufferVertexConsumerProvider extends VertexConsumerPro
     //Изначальный фреймбуффер
     private final Framebuffer outputFrameBuffer;
     //Очищать глубину или нет
-    private final boolean clearDepth;
+    private final boolean clearDepth, drawBack;
 
     /*
      * parent — родительный VertexConsumerProvider.Immediate (с которого мы будем "пиздить" рендер)
      * overrideFrameBuffer — фреймбуффер, в который будет дополнительно отрисован весь контент
      * outputFrameBuffer — изначальный фреймбуффер
      * clearDepth — очищать глубину фреймбуффера или нет (true для рук)
+     * drawBack — отрисовывать ли обратно в фреймбуффер то, что мы спиздили, или нет
      */
-    public OverrideFrameBufferVertexConsumerProvider(Immediate parent, CometFrameBuffer overrideFrameBuffer, Framebuffer outputFrameBuffer, boolean clearDepth) {
+    public OverrideFrameBufferVertexConsumerProvider(Immediate parent, CometFrameBuffer overrideFrameBuffer, Framebuffer outputFrameBuffer, boolean clearDepth, boolean drawBack) {
         super(null, null);
         this.parent = parent;
         this.overrideFrameBuffer = overrideFrameBuffer;
         this.outputFrameBuffer = outputFrameBuffer;
         this.clearDepth = clearDepth;
+        this.drawBack = drawBack;
     }
 
     @Override
@@ -58,7 +60,8 @@ public class OverrideFrameBufferVertexConsumerProvider extends VertexConsumerPro
         if (clearDepth)
             overrideFrameBuffer.clearDepthTexture();
 
-        //Отрисовываем то, что получили, в изначальный фреймбуффер
-        overrideFrameBuffer.drawBlit(outputFrameBuffer.getColorAttachmentView());
+        //Отрисовываем то, что получили, в изначальный фреймбуффер, если это нужно
+        if (this.drawBack)
+            overrideFrameBuffer.drawBlit(outputFrameBuffer.getColorAttachmentView());
     }
 }

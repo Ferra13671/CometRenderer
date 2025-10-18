@@ -45,6 +45,7 @@ public class TestPostEffect implements Mc {
             mc.getBufferBuilders().getEntityVertexConsumers(),
             handsFrameBuffer,
             mc.getFramebuffer(),
+            true,
             true
     );
 }
