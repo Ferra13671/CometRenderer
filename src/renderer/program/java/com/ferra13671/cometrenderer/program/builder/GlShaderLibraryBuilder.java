@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalLibraryBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
+import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
 
@@ -14,7 +15,7 @@ import java.util.function.Function;
 public class GlShaderLibraryBuilder<T> {
     private String name;
     private T libraryPath;
-    private final List<GlUniformSchema> uniforms = new ArrayList<>();
+    private final List<GlUniformSchema<?>> uniforms = new ArrayList<>();
     private final Function<T, String> contentGetter;
 
     public GlShaderLibraryBuilder(Function<T, String> contentGetter, GlProgramSnippet... snippets) {
@@ -42,8 +43,8 @@ public class GlShaderLibraryBuilder<T> {
     /*
      * Добавляет униформу библиотеке
      */
-    public GlShaderLibraryBuilder<T> uniform(String name, UniformType uniformType) {
-        uniforms.add(new GlUniformSchema(name, uniformType));
+    public <S extends GlUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
+        uniforms.add(new GlUniformSchema<>(name, uniformType));
         return this;
     }
 

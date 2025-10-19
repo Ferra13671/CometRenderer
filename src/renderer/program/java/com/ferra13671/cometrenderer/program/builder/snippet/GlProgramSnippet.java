@@ -7,4 +7,4 @@ import java.util.List;
 /*
  * Сниппет — своеобразный штамп, который может быть добавлен к программе. Представляет из себя информацию, которую можно быстро добавлять к различным программам.
  */
-public record GlProgramSnippet(List<GlUniformSchema> uniforms) {}
+public record GlProgramSnippet(List<GlUniformSchema<?>> uniforms) {}

@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import org.lwjgl.opengl.GL20;
@@ -26,12 +27,12 @@ public class GlProgram {
     //Количество забинженных буфферов (Юниформ с типом BUFFER)
     private int buffersBindingsAmount = 0;
 
-    public GlProgram(String name, int id, List<GlUniformSchema> uniforms) {
+    public GlProgram(String name, int id, List<GlUniformSchema<?>> uniforms) {
         this.name = name;
         this.id = id;
 
-        for (GlUniformSchema glUniformSchema : uniforms) {
-            GlUniform uniform = glUniformSchema.uniformType().uniformCreator.apply(
+        for (GlUniformSchema<?> glUniformSchema : uniforms) {
+            GlUniform uniform = glUniformSchema.uniformType().uniformCreator().apply(
                     glUniformSchema.name(),
                     glUniformSchema.getIdFromProgram(this.id),
                     this
@@ -86,8 +87,8 @@ public class GlProgram {
     /*
      * Возвращает юниформу по её имени и типу, если юниформа не была найдена, то выдем ошибку
      */
-    public <T extends GlUniform> T getUniform(String name, Class<T> clazz) {
-        T uniform = getUniformNullable(name, clazz);
+    public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
+        T uniform = getUniformNullable(name, type);
         if (uniform == null)
             ExceptionPrinter.printAndExit(new NoSuchUniformException(name, this.name));
         return uniform;
@@ -96,7 +97,7 @@ public class GlProgram {
     /*
      * Возвращает юниформу по её имени и типу
      */
-    public <T extends GlUniform> T getUniformNullable(String name, Class<T> clazz) {
+    public <T extends GlUniform> T getUniformNullable(String name, UniformType<T> type) {
         return (T) uniformsByName.get(name);
     }
 

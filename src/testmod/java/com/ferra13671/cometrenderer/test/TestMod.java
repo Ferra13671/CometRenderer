@@ -11,7 +11,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
@@ -132,7 +132,7 @@ public class TestMod implements ModInitializer, Mc {
         CometRenderer.resetColor();
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
-        positionColorTextureProgram.getUniform("u_Texture", SamplerUniform.class).set(texture);
+        positionColorTextureProgram.getUniform("u_Texture", UniformType.SAMPLER).set(texture);
 
         CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
             buffer.vertex(400, 250, 0)

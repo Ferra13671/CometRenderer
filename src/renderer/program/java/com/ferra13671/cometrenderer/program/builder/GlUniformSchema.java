@@ -1,12 +1,13 @@
 package com.ferra13671.cometrenderer.program.builder;
 
+import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import org.lwjgl.opengl.GL20;
 
 /*
  * Схема, используемая при создании униформы программы
  */
-public record GlUniformSchema(String name, UniformType uniformType) {
+public record GlUniformSchema<T extends GlUniform>(String name, UniformType<T> uniformType) {
 
     /*
      * Возвращает айди юниформы в программе

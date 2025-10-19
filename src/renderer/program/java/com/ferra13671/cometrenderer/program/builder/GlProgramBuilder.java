@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.global.GlobalCometLoader;
 import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
+import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class GlProgramBuilder<T> {
     private String name;
     private ShaderSchema vertexShader;
     private ShaderSchema fragmentShader;
-    private final List<GlUniformSchema> uniforms = new ArrayList<>();
+    private final List<GlUniformSchema<?>> uniforms = new ArrayList<>();
     private final CometLoader<T> loader;
 
     public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
@@ -73,8 +74,8 @@ public class GlProgramBuilder<T> {
     /*
      * Добавляет униформу программе
      */
-    public GlProgramBuilder<T> uniform(String name, UniformType uniformType) {
-        uniforms.add(new GlUniformSchema(name, uniformType));
+    public <S extends GlUniform> GlProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
+        uniforms.add(new GlUniformSchema<>(name, uniformType));
         return this;
     }
 
@@ -83,7 +84,7 @@ public class GlProgramBuilder<T> {
      */
     public GlProgramBuilder<T> sampler(String name) {
         //Да, семплер это тоже униформа
-        uniforms.add(new GlUniformSchema(name, UniformType.SAMPLER));
+        uniforms.add(new GlUniformSchema<>(name, UniformType.SAMPLER));
         return this;
     }
 

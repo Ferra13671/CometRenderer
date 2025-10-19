@@ -27,7 +27,7 @@ public class GlobalCometCompiler {
     /*
      * Компилирует программу
      */
-    public static GlProgram compileProgram(String name, GlShader vertexShader, GlShader fragmentShader, List<GlUniformSchema> uniforms) {
+    public static GlProgram compileProgram(String name, GlShader vertexShader, GlShader fragmentShader, List<GlUniformSchema<?>> uniforms) {
         if (vertexShader.getShaderType() != ShaderType.Vertex)
             ExceptionPrinter.printAndExit(new IllegalShaderFormatException(vertexShader.getName(), "vertex"));
         if (fragmentShader.getShaderType() != ShaderType.Fragment)
@@ -75,7 +75,7 @@ public class GlobalCometCompiler {
     /*
      * Компилирует шейдерную библиотеку при помощи её данных
      */
-    public static <T> GlShaderLibrary compileShaderLibrary(String name, Function<T, String> contentGetter, T libraryPath, List<GlUniformSchema> uniforms) {
+    public static <T> GlShaderLibrary compileShaderLibrary(String name, Function<T, String> contentGetter, T libraryPath, List<GlUniformSchema<?>> uniforms) {
         return new GlShaderLibrary(
                 new GlslFileEntry(
                         name,

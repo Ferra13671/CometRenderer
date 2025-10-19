@@ -131,13 +131,13 @@ public class CometRenderer {
      * Устанавлиает юниформы матриц, если шейдер использовал соответствующий сниппет
      */
     public static void initMatrix() {
-        BufferUniform projectionUniform = globalProgram.getUniform("Projection", BufferUniform.class);
+        BufferUniform projectionUniform = globalProgram.getUniform("Projection", UniformType.BUFFER);
         if (projectionUniform != null) {
             GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
             projectionUniform.set(slice);
         }
 
-        Matrix4fGlUniform modelViewUniform = globalProgram.getUniform("modelViewMat", Matrix4fGlUniform.class);
+        Matrix4fGlUniform modelViewUniform = globalProgram.getUniform("modelViewMat", UniformType.MATRIX);
         if (modelViewUniform != null)
             modelViewUniform.set(RenderSystem.getModelViewMatrix());
     }
@@ -146,7 +146,7 @@ public class CometRenderer {
      * Устанавливает униформу шейдерного цвета, если шейдер использовал соответствующий сниппет
      */
     public static void initShaderColor() {
-        Vec4GlUniform colorUniform = globalProgram.getUniform("color", Vec4GlUniform.class);
+        Vec4GlUniform colorUniform = globalProgram.getUniform("color", UniformType.VEC4);
         if (colorUniform != null)
             colorUniform.set(getShaderColor());
     }

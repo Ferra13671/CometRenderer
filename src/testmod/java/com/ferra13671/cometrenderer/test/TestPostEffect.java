@@ -9,8 +9,6 @@ import com.ferra13671.cometrenderer.posteffect.ProgramPass;
 import com.ferra13671.cometrenderer.posteffect.minecraft.OverrideFrameBufferVertexConsumerProvider;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec2GlUniform;
-import net.minecraft.client.texture.GlTextureView;
 import org.joml.Vector2f;
 
 import java.awt.*;
@@ -32,10 +30,9 @@ public class TestPostEffect implements Mc {
                     ProgramPass.builder()
                             .program(postEffectProgram)
                             .output(mc.getFramebuffer())
-                            .input(0, mc.getFramebuffer())
+                            .input(0, handsFrameBuffer)
                             .preRenderAction(program -> {
-                                program.getSampler(0).set((GlTextureView) handsFrameBuffer.getColorAttachmentView());
-                                program.getUniform("texelSize", Vec2GlUniform.class).set(new Vector2f(1f / mc.getFramebuffer().textureWidth, 1f / mc.getFramebuffer().textureHeight));
+                                program.getUniform("texelSize", UniformType.VEC2).set(new Vector2f(1f / mc.getFramebuffer().textureWidth, 1f / mc.getFramebuffer().textureHeight));
                             })
                             .build()
             )

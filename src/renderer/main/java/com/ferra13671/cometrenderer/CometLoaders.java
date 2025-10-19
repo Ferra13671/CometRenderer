@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 public final class CometLoaders {
     public static final CometLoader<String> IN_JAR = new CometLoader<>() {
@@ -12,7 +13,7 @@ public final class CometLoaders {
         @OverriddenMethod
         public String getContent(String path) throws Exception {
             InputStream inputStream = CometLoaders.class.getClassLoader().getResourceAsStream(path);
-            String content = IOUtils.toString(inputStream);
+            String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             inputStream.close();
             return content;
         }
@@ -21,7 +22,7 @@ public final class CometLoaders {
         @Override
         @OverriddenMethod
         public String getContent(InputStream path) throws Exception {
-            String content = IOUtils.toString(path);
+            String content = IOUtils.toString(path, StandardCharsets.UTF_8);
             path.close();
             return content;
         }
