@@ -32,7 +32,7 @@ public class TestPostEffect implements Mc {
                             .output(mc.getFramebuffer())
                             .input(0, handsFrameBuffer)
                             .preRenderAction(program -> {
-                                program.getUniform("texelSize", UniformType.VEC2).set(new Vector2f(1f / mc.getFramebuffer().textureWidth, 1f / mc.getFramebuffer().textureHeight));
+                                program.getUniform("texelSize", UniformType.VEC2).set(new Vector2f(1f / handsFrameBuffer.textureWidth, 1f / handsFrameBuffer.textureHeight));
                             })
                             .build()
             )

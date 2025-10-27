@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.shaderlibrary;
 
 import com.ferra13671.cometrenderer.GlslFileEntry;
-import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
+import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 
 import java.util.List;
 

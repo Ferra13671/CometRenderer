@@ -4,8 +4,7 @@ import com.ferra13671.cometrenderer.blend.DstFactor;
 import com.ferra13671.cometrenderer.blend.SrcFactor;
 import com.ferra13671.cometrenderer.framebuffer.FrameBufferUtils;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
-import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippetBuilder;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
@@ -44,12 +43,12 @@ public class CometRenderer {
     //Шейдерный цвет, который биндится шейдеру, если он ему нужен
     private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
     //Сниппет для шейдеров, использующих матрицы для модификации координат вершин
-    private static final GlProgramSnippet matrixSnippet = GlProgramSnippetBuilder.builder()
+    private static final GlProgramSnippet matrixSnippet = GlProgramSnippet.builder()
             .uniform("Projection", UniformType.BUFFER)
             .uniform("modelViewMat", UniformType.MATRIX)
             .build();
     //Сниппет для шейдеров, использующих глобальный цвет шейдера
-    private static final GlProgramSnippet colorSnippet = GlProgramSnippetBuilder.builder()
+    private static final GlProgramSnippet colorSnippet = GlProgramSnippet.builder()
             .uniform("color", UniformType.VEC4)
             .build();
     //Глобальная программа рендерера, используемая при рендере

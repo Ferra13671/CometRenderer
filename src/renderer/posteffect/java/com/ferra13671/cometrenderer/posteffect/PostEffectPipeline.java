@@ -4,9 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.framebuffer.CometFrameBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.CometVertexFormats;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.SimpleFramebuffer;
 
 import java.util.HashMap;
 import java.util.List;

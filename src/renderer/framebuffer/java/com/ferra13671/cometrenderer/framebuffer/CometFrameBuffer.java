@@ -41,7 +41,7 @@ public class CometFrameBuffer extends Framebuffer {
      */
     public void clearDepthTexture() {
         if (this.depthAttachment != null)
-            RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(this.depthAttachment, 1f);
+            RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(this.depthAttachment, 0f);
     }
 
     /*

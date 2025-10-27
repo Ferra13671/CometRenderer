@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.program;
 
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
-import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
+import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;

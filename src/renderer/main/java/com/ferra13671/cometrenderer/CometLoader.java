@@ -4,9 +4,9 @@ import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadLibraryContentException;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderContentException;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
-import com.ferra13671.cometrenderer.program.builder.GlProgramBuilder;
-import com.ferra13671.cometrenderer.program.builder.GlShaderLibraryBuilder;
-import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
+import com.ferra13671.cometrenderer.builders.GlProgramBuilder;
+import com.ferra13671.cometrenderer.builders.GlShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 
 import java.util.function.Function;
 

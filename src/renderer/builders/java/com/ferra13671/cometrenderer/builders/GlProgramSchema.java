@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.program.builder;
+package com.ferra13671.cometrenderer.builders;
 
 import java.util.List;
 

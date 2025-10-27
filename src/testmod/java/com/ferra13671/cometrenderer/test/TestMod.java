@@ -41,6 +41,8 @@ public class TestMod implements ModInitializer, Mc {
     private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment3", "texture-colored.fsh");
     private static GLTexture texture;
 
+    private static int prevScale = 0;
+
     @Override
     public void onInitialize() {
         LoggerFactory.getLogger(TestMod.class).info("Test");
@@ -58,7 +60,7 @@ public class TestMod implements ModInitializer, Mc {
                         .library("test2.glsl")
                         .build()
         );
-        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>"));
+        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>").content());
         //--------------------------//
     }
 
@@ -93,12 +95,18 @@ public class TestMod implements ModInitializer, Mc {
 
         CometRenderer.bindMainFrameBuffer();
 
-        if (TestPostEffect.handsFrameBuffer.textureWidth != mc.getFramebuffer().textureWidth || TestPostEffect.handsFrameBuffer.textureHeight != mc.getFramebuffer().textureHeight) {
+        if (TestPostEffect.handsFrameBuffer.textureWidth != mc.getFramebuffer().textureWidth || TestPostEffect.handsFrameBuffer.textureHeight != mc.getFramebuffer().textureHeight || prevScale != mc.getWindow().getScaleFactor()) {
+
             TestPostEffect.handsFrameBuffer.resize(mc.getFramebuffer().textureWidth, mc.getFramebuffer().textureHeight);
             TestPostEffect.handsFrameBuffer.clearColorTexture();
+            prevScale = mc.getWindow().getScaleFactor();
         }
+        //mc.player.sendMessage(Text.literal(mc.getFramebuffer().textureWidth + " " + mc.getFramebuffer().textureHeight), false);
 
-        TestPostEffect.postEffect.execute(mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
+        TestPostEffect.postEffect.execute(mc.getWindow().getWidth(), mc.getWindow().getHeight());
+        TestPostEffect.handsFrameBuffer.clearColorTexture();
+
+        CometRenderer.bindMainFrameBuffer();
 
         //------ Rect with random color with position program ------//
         CometRenderer.setGlobalProgram(positionProgram);

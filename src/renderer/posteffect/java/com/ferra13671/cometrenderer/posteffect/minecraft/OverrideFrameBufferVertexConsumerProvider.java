@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.posteffect.minecraft;
 
 import com.ferra13671.cometrenderer.framebuffer.CometFrameBuffer;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.RenderLayer;
@@ -38,11 +39,13 @@ public class OverrideFrameBufferVertexConsumerProvider extends VertexConsumerPro
     }
 
     @Override
+    @OverriddenMethod
     public VertexConsumer getBuffer(RenderLayer renderLayer) {
         return this.parent.getBuffer(renderLayer);
     }
 
     @Override
+    @OverriddenMethod
     public void draw() {
         //Очищает текстуру цвета
         overrideFrameBuffer.clearColorTexture();

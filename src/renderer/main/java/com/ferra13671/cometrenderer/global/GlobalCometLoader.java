@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.global;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.builder.GlProgramSchema;
-import com.ferra13671.cometrenderer.program.builder.ShaderSchema;
+import com.ferra13671.cometrenderer.builders.GlProgramSchema;
+import com.ferra13671.cometrenderer.builders.ShaderSchema;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 
 /*

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.program.builder;
+package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.global.GlobalCometLoader;
-import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.program.builder;
+package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;

@@ -1,9 +1,9 @@
-package com.ferra13671.cometrenderer.program.builder;
+package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalLibraryBuilderArgumentException;
-import com.ferra13671.cometrenderer.program.builder.snippet.GlProgramSnippet;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
@@ -53,7 +53,7 @@ public class GlShaderLibraryBuilder<T> {
      */
     public GlShaderLibraryBuilder<T> sampler(String name) {
         //Да, семплер это тоже униформа
-        uniforms.add(new GlUniformSchema(name, UniformType.SAMPLER));
+        uniforms.add(new GlUniformSchema<>(name, UniformType.SAMPLER));
         return this;
     }
 

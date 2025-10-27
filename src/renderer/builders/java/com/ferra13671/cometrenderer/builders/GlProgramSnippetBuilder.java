@@ -1,6 +1,6 @@
-package com.ferra13671.cometrenderer.program.builder.snippet;
+package com.ferra13671.cometrenderer.builders;
 
-import com.ferra13671.cometrenderer.program.builder.GlUniformSchema;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
@@ -9,10 +9,6 @@ import java.util.List;
 
 public class GlProgramSnippetBuilder {
     private final List<GlUniformSchema<?>> uniforms = new ArrayList<>();
-
-    public static GlProgramSnippetBuilder builder() {
-        return new GlProgramSnippetBuilder();
-    }
 
     /*
      * Добавляет униформу элементу программы
