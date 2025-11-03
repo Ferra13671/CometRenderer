@@ -46,7 +46,7 @@ public class ProgramPass implements PostEffectPipelineAction {
         preRenderConsumer.accept(program);
 
         //Рендерим
-        CometRenderer.drawBuffer(context.buffer(), false);
+        CometRenderer.draw(context.buffer(), false);
     }
 
     /*

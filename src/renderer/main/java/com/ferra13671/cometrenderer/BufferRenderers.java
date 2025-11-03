@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.vertex.ShapeIndexBuffer;
-import com.ferra13671.cometrenderer.vertex.builder.BuiltVertexBuffer;
+import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.format.uploader.VertexFormatManager;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.opengl.GlConst;
@@ -34,17 +34,13 @@ public final class BufferRenderers {
         if (close)
             builtBuffer.close();
     };
-    public static final BiConsumer<BuiltVertexBuffer, Boolean> COMET_BUFFER = (builtBuffer, close) -> {
+    public static final BiConsumer<IMesh, Boolean> COMET_BUFFER = (builtBuffer, close) -> {
         if (builtBuffer.getIndexCount() > 0) {
 
             ShapeIndexBuffer shapeIndexBuffer = builtBuffer.getDrawMode().shapeIndexBuffer;
-            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex buffer", 40, builtBuffer.getVertexBuffer());
-            GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(builtBuffer.getIndexCount());
 
-            VertexFormatManager.applyFormatToBuffer((GlGpuBuffer) vertexBuffer, builtBuffer.getVertexFormat());
-            drawIndexed(builtBuffer.getIndexCount(), builtBuffer.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId, indexBuffer);
-
-            vertexBuffer.close();
+            VertexFormatManager.applyFormatToBuffer((GlGpuBuffer) builtBuffer.getVertexBuffer(), builtBuffer.getVertexFormat());
+            drawIndexed(builtBuffer.getIndexCount(), builtBuffer.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId, builtBuffer.getIndexBuffer());
         }
         if (close)
             builtBuffer.close();

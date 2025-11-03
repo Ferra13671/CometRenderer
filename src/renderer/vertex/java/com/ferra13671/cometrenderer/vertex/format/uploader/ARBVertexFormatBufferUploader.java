@@ -2,12 +2,12 @@ package com.ferra13671.cometrenderer.vertex.format.uploader;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
-import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import net.minecraft.client.gl.GlGpuBuffer;
 import org.lwjgl.opengl.ARBVertexAttribBinding;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
                 VertexElement vertexElement = vertexElements.get(i);
                 GL30.glEnableVertexAttribArray(i);
 
-                if (vertexElement.getType() == VertexElementType.FLOAT) {
+                if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
                     ARBVertexAttribBinding.glVertexAttribFormat(
                             i, vertexElement.getCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
                     );

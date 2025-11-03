@@ -1,13 +1,14 @@
-package com.ferra13671.cometrenderer.vertex.builder;
+package com.ferra13671.cometrenderer.vertex.mesh;
 
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalVertexBuilderStateException;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import net.minecraft.client.util.BufferAllocator;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -15,12 +16,10 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.util.stream.Collectors;
 
-import static com.mojang.blaze3d.vertex.VertexFormat.IndexType;
-
 /*
  * Билдер вершин. Используемый для построения буффера вершин для последующего рендеринга.
  */
-public class VertexBuilder {
+public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     //Максимальное количество вершин
     private static final int MAX_VERTICES = 16777215;
 
@@ -31,55 +30,61 @@ public class VertexBuilder {
     private final int vertexSize;
     private final int[] elementOffsets;
     private final int requiredMask;
+    private final boolean closeAllocatorAfterBuild;
 
     private long vertexPointer = -1L;
     private int vertexCount;
     private int currentMask;
-    private boolean building = true;
+    private boolean closed = false;
 
-    private VertexBuilder(BufferAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat) {
+    public MeshBuilder(BufferAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
         this.bufferAllocator = bufferAllocator;
         this.drawMode = drawMode;
         this.vertexFormat = vertexFormat;
         this.vertexSize = vertexFormat.getVertexSize();
         this.elementOffsets = vertexFormat.getElementOffsets();
         this.requiredMask = vertexFormat.getElementsMask() & ~1;
+        this.closeAllocatorAfterBuild = closeAllocatorAfterBuild;
     }
 
     private void ensureBuilding() {
-        if (!this.building) {
-            ExceptionPrinter.printAndExit(new IllegalVertexBuilderStateException(
-                    "Attempt to interact with VertexBuilder, which does not building.",
+        if (this.closed) {
+            ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
+                    "Attempt to interact with MeshBuilder, which does not building.",
                     new String[]{
-                            "You are trying to use VertexBuilder after it has been built."
+                            "You are trying to use MeshBuilder after it has been built."
                     },
                     new String[]{
-                            "Check your build or usage VertexBuilder method and fix it."
+                            "Check your build or usage MeshBuilder method and fix it."
                     }
             ));
         }
     }
 
-    public BuiltVertexBuffer endNullable() {
+    @Override
+    @OverriddenMethod
+    public Mesh buildNullable() {
         this.ensureBuilding();
         this.endVertex();
-        BuiltVertexBuffer builtBuffer = this.build();
+        Mesh builtBuffer = this.build();
         bufferAllocator.close();
-        this.building = false;
+        this.closed = true;
         this.vertexPointer = -1L;
         return builtBuffer;
     }
 
-    public BuiltVertexBuffer endThrowable() {
-        BuiltVertexBuffer builtBuffer = this.endNullable();
+    @Override
+    @OverriddenMethod
+    public Mesh buildOrThrow() {
+        Mesh builtBuffer = this.buildNullable();
         if (builtBuffer == null) {
-            ExceptionPrinter.printAndExit(new IllegalVertexBuilderStateException(
-                    "VertexBuilder was empty.",
+            ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
+                    "MeshBuilder was empty.",
                     new String[]{
-                            "You haven't built any vertices in VertexBuilder and called VertexBuilder build via the 'endThrowable' method, which throw an exception about the VertexBuilder being empty."
+                            "You haven't built any vertices in MeshBuilder and called MeshBuilder build via the 'buildThrowable' method, which throw an exception about the MeshBuilder being empty."
                     },
                     new String[]{
-                            "If your rendering method assumes an empty VertexBuilder, call the builder via the 'endNullable' method. If not, check your vertex builder method and fix it."
+                            "If your rendering method assumes an empty MeshBuilder, call the builder via the 'buildNullable' method. If not, check your MeshBuilder method and fix it."
                     }
             ));
             return null;
@@ -88,7 +93,7 @@ public class VertexBuilder {
         }
     }
 
-    private BuiltVertexBuffer build() {
+    private Mesh build() {
         if (this.vertexCount == 0) {
             return null;
         } else {
@@ -97,8 +102,10 @@ public class VertexBuilder {
                 return null;
             } else {
                 int i = this.drawMode.getIndexCount(this.vertexCount);
-                IndexType indexType = IndexType.smallestFor(this.vertexCount);
-                return new BuiltVertexBuffer(closeableBuffer.getBuffer(), this.vertexFormat, this.vertexCount, i, this.drawMode, indexType);
+                return new Mesh(closeableBuffer.getBuffer(), this.vertexFormat, i, this.drawMode, () -> {
+                    if (this.closeAllocatorAfterBuild)
+                        this.bufferAllocator.close();
+                });
             }
         }
     }
@@ -133,7 +140,7 @@ public class VertexBuilder {
             this.currentMask = j;
             long l = this.vertexPointer;
             if (l == -1L) {
-                ExceptionPrinter.printAndExit(new IllegalVertexBuilderStateException(
+                ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
                         "Not currently building vertex.",
                         new String[]{
                                 "You are trying to add data to vertex that has already been built."
@@ -149,7 +156,9 @@ public class VertexBuilder {
         }
     }
 
-    public VertexBuilder vertex(float x, float y, float z) {
+    @Override
+    @OverriddenMethod
+    public MeshBuilder vertex(float x, float y, float z) {
         long l = this.beginVertex() + this.elementOffsets[0];
         this.currentMask = this.requiredMask;
         MemoryUtil.memPutFloat(l, x);
@@ -158,24 +167,20 @@ public class VertexBuilder {
         return this;
     }
 
-    public VertexBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
+    @Override
+    @OverriddenMethod
+    public MeshBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
         Vector3f vec = matrix4f.transformPosition(x, y, z, new Vector3f());
         return vertex(vec.x, vec.y, vec.z);
     }
 
-    public <T> VertexBuilder element(String name, VertexElementType<T> elementType, T... values) {
+    @Override
+    @OverriddenMethod
+    public <T> MeshBuilder element(String name, VertexElementType<T> elementType, T... values) {
         long pointer = beginElement(vertexFormat.getVertexElement(name));
         if (pointer != -1L)
             elementType.uploadConsumer().accept(pointer, values);
 
         return this;
-    }
-
-    public static VertexBuilder create(DrawMode drawMode, VertexFormat vertexFormat) {
-        return create(786432, drawMode, vertexFormat);
-    }
-
-    public static VertexBuilder create(int size, DrawMode drawMode, VertexFormat vertexFormat) {
-        return new VertexBuilder(new BufferAllocator(size), drawMode, vertexFormat);
     }
 }

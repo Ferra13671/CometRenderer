@@ -11,9 +11,10 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.builder.BuiltVertexBuffer;
+import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
+import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import com.ferra13671.cometrenderer.vertex.builder.VertexBuilder;
+import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -228,41 +229,41 @@ public class CometRenderer {
      * Создаёт готовый буффер с вершинами. Перед построением буффера вызывается buildConsumer, что бы записать в билдер данные о вершинах.
      * Если в итоге в билдер ничего не было записано, то вернётся null.
      */
-    public static BuiltVertexBuffer createBuiltBuffer(DrawMode drawMode, VertexFormat vertexFormat, Consumer<VertexBuilder> buildConsumer) {
-        VertexBuilder vertexBuilder = VertexBuilder.create(drawMode, vertexFormat);
-        buildConsumer.accept(vertexBuilder);
-        return vertexBuilder.endNullable();
+    public static Mesh createBuiltBuffer(DrawMode drawMode, VertexFormat vertexFormat, Consumer<MeshBuilder> buildConsumer) {
+        MeshBuilder meshBuilder = Mesh.builder(drawMode, vertexFormat);
+        buildConsumer.accept(meshBuilder);
+        return meshBuilder.buildNullable();
     }
 
     /*
      * Рисует буффер и автоматически закрывает его
      */
-    public static void drawBuffer(BuiltBuffer builtBuffer) {
-        drawBuffer(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, true);
+    public static void draw(BuiltBuffer builtBuffer) {
+        draw(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, true);
     }
 
     /*
      * Рисует буффер и по выбору закрывает его
      */
-    public static void drawBuffer(BuiltBuffer builtBuffer, boolean close) {
-        drawBuffer(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, close);
+    public static void draw(BuiltBuffer builtBuffer, boolean close) {
+        draw(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, close);
     }
 
     /*
      * Рисует буффер и автоматически закрывает его
      */
-    public static void drawBuffer(BuiltVertexBuffer builtBuffer) {
-        drawBuffer(BufferRenderers.COMET_BUFFER, builtBuffer, true);
+    public static void draw(IMesh mesh) {
+        draw(BufferRenderers.COMET_BUFFER, mesh, true);
     }
 
     /*
      * Рисует буффер и по выбору закрывает его
      */
-    public static void drawBuffer(BuiltVertexBuffer builtBuffer, boolean close) {
-        drawBuffer(BufferRenderers.COMET_BUFFER, builtBuffer, close);
+    public static void draw(IMesh mesh, boolean close) {
+        draw(BufferRenderers.COMET_BUFFER, mesh, close);
     }
 
-    private static <T> void drawBuffer(BiConsumer<T, Boolean> renderConsumer, T builtBuffer, boolean close) {
+    private static <T> void draw(BiConsumer<T, Boolean> renderConsumer, T builtBuffer, boolean close) {
         if (scissorStack.current() != null) {
             GlStateManager._enableScissorTest();
             scissorStack.current().bind();

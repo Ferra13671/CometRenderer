@@ -115,7 +115,7 @@ public class TestMod implements ModInitializer, Mc {
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
 
-        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION, buffer -> {
+        CometRenderer.draw(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION, buffer -> {
             buffer.vertex(200, 200, 0);
             buffer.vertex(200, 400, 0);
             buffer.vertex(400, 400, 0);
@@ -128,7 +128,7 @@ public class TestMod implements ModInitializer, Mc {
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
 
-        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR, buffer -> {
+        CometRenderer.draw(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR, buffer -> {
             buffer.vertex(400, 200, 0).element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f);
             buffer.vertex(400, 250, 0).element("Color", VertexElementType.FLOAT, 1f, 0f, 0f, 1f);
             buffer.vertex(450, 250, 0).element("Color", VertexElementType.FLOAT, 0f, 1f, 0f, 1f);
@@ -142,7 +142,7 @@ public class TestMod implements ModInitializer, Mc {
         CometRenderer.initShaderColor();
         positionColorTextureProgram.getUniform("u_Texture", UniformType.SAMPLER).set(texture);
 
-        CometRenderer.drawBuffer(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
+        CometRenderer.draw(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
             buffer.vertex(400, 250, 0)
                     .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
                     .element("Texture", VertexElementType.FLOAT, 0f, 0f);
