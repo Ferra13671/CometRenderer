@@ -229,7 +229,7 @@ public class CometRenderer {
      * Создаёт готовый буффер с вершинами. Перед построением буффера вызывается buildConsumer, что бы записать в билдер данные о вершинах.
      * Если в итоге в билдер ничего не было записано, то вернётся null.
      */
-    public static Mesh createBuiltBuffer(DrawMode drawMode, VertexFormat vertexFormat, Consumer<MeshBuilder> buildConsumer) {
+    public static Mesh createMesh(DrawMode drawMode, VertexFormat vertexFormat, Consumer<MeshBuilder> buildConsumer) {
         MeshBuilder meshBuilder = Mesh.builder(drawMode, vertexFormat);
         buildConsumer.accept(meshBuilder);
         return meshBuilder.buildNullable();

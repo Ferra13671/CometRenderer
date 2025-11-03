@@ -37,7 +37,7 @@ public class PostEffectPipeline {
         }
 
         //Создаём контекст
-        PostEffectContext context = new PostEffectContext(CometRenderer.createBuiltBuffer(DrawMode.QUADS, CometVertexFormats.POSITION, builder -> {
+        PostEffectContext context = new PostEffectContext(CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION, builder -> {
             builder.vertex(0f, textureHeight, 0f);
             builder.vertex(textureWidth, textureHeight, 0f);
             builder.vertex(textureWidth, 0, 0f);
