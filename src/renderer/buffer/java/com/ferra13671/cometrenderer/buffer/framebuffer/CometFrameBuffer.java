@@ -1,5 +1,6 @@
-package com.ferra13671.cometrenderer.framebuffer;
+package com.ferra13671.cometrenderer.buffer.framebuffer;
 
+import com.ferra13671.cometrenderer.FrameBufferUtils;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;

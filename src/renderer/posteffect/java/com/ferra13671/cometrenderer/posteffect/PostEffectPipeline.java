@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.posteffect;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.framebuffer.CometFrameBuffer;
+import com.ferra13671.cometrenderer.buffer.framebuffer.CometFrameBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.CometVertexFormats;
 import net.minecraft.client.gl.Framebuffer;

@@ -1,10 +1,11 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
+import com.ferra13671.cometrenderer.buffer.BufferUsage;
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.util.BufferAllocator;
 
 import java.nio.ByteBuffer;
@@ -20,7 +21,7 @@ public class Mesh implements IMesh {
         this.indexCount = indexCount;
         this.drawMode = drawMode;
 
-        this.vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex buffer", 40, byteBuffer);
+        this.vertexBuffer = new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
 
         afterInitRunnable.run();
     }

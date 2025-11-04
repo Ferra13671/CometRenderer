@@ -32,7 +32,7 @@ public final class CometLoaders {
         @OverriddenMethod
         public String getContent(URI path) throws Exception {
             InputStream inputStream = path.toURL().openStream();
-            String content = IOUtils.toString(path);
+            String content = IOUtils.toString(path, StandardCharsets.UTF_8);
             inputStream.close();
             return content;
         }

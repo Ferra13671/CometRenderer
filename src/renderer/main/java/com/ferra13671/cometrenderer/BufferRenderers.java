@@ -27,7 +27,7 @@ public final class BufferRenderers {
             VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
             ((GlBackend) RenderSystem.getDevice()).getVertexBufferManager().setupBuffer(drawParameters.format(), (GlGpuBuffer) vertexBuffer);
-            drawIndexed(drawParameters.indexCount(), GlConst.toGl(drawParameters.mode()), GlConst.toGl(indexType), indexBuffer);
+            drawIndexed(drawParameters.indexCount(), GlConst.toGl(drawParameters.mode()), GlConst.toGl(indexType), CometRenderer.getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
 
             vertexBuffer.close();
         }
@@ -39,15 +39,15 @@ public final class BufferRenderers {
 
             ShapeIndexBuffer shapeIndexBuffer = builtBuffer.getDrawMode().shapeIndexBuffer;
 
-            VertexFormatManager.applyFormatToBuffer((GlGpuBuffer) builtBuffer.getVertexBuffer(), builtBuffer.getVertexFormat());
-            drawIndexed(builtBuffer.getIndexCount(), builtBuffer.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId, builtBuffer.getIndexBuffer());
+            VertexFormatManager.applyFormatToBuffer(builtBuffer.getVertexBuffer(), builtBuffer.getVertexFormat());
+            drawIndexed(builtBuffer.getIndexCount(), builtBuffer.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId, builtBuffer.getIndexBuffer().getId());
         }
         if (close)
             builtBuffer.close();
     };
 
-    private static void drawIndexed(int count, int drawMode, int indexType, GpuBuffer indexBuffer) {
-        GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, CometRenderer.getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
+    private static void drawIndexed(int count, int drawMode, int indexType, int indexBuffer) {
+        GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
         GlStateManager._drawElements(drawMode, count, indexType, 0);
     }

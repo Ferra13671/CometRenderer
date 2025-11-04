@@ -1,12 +1,11 @@
 package com.ferra13671.cometrenderer.vertex.format.uploader;
 
-import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import net.minecraft.client.gl.GlGpuBuffer;
 import org.lwjgl.opengl.GL30;
 
 import java.util.List;
@@ -16,21 +15,20 @@ public class DefaultVertexFormatBufferUploader extends VertexFormatBufferUploade
 
     @Override
     @OverriddenMethod
-    public void applyFormatToBuffer(GlGpuBuffer vertexBuffer, VertexFormat vertexFormat) {
-        int vertexBufferId = CometRenderer.getBufferIdGetter().apply(vertexBuffer);
+    public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
 
         VertexFormatBuffer formatBuffer = this.vertexFormatBuffers.get(vertexFormat);
         if (formatBuffer == null) {
             int i = GL30.glGenVertexArrays();
             GL30.glBindVertexArray(i);
-            GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vertexBufferId);
+            vertexBuffer.bind();
             setupBuffer(vertexFormat, true);
             VertexFormatBuffer formatBuffer2 = new VertexFormatBuffer(i, vertexFormat, new AtomicReference<>(vertexBuffer));
             this.vertexFormatBuffers.put(vertexFormat, formatBuffer2);
         } else {
             GL30.glBindVertexArray(formatBuffer.glId());
             if (formatBuffer.buffer().get() != vertexBuffer) {
-                GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vertexBufferId);
+                vertexBuffer.bind();
                 formatBuffer.buffer().set(vertexBuffer);
                 setupBuffer(vertexFormat, false);
             }

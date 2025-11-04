@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.vertex.format.uploader;
 
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import net.minecraft.client.gl.GlGpuBuffer;
 import org.lwjgl.opengl.GL;
 
 /*
@@ -19,7 +19,7 @@ public class VertexFormatManager {
     /*
      * Привязывает структуру вершин к буфферу вершин
      */
-    public static void applyFormatToBuffer(GlGpuBuffer vertexBuffer, VertexFormat vertexFormat) {
+    public static void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
         formatUploader.applyFormatToBuffer(vertexBuffer, vertexFormat);
     }
 }

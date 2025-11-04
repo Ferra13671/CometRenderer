@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.posteffect.minecraft;
 
-import com.ferra13671.cometrenderer.framebuffer.CometFrameBuffer;
+import com.ferra13671.cometrenderer.buffer.framebuffer.CometFrameBuffer;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.Framebuffer;

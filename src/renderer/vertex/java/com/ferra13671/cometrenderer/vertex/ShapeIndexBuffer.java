@@ -1,7 +1,8 @@
 package com.ferra13671.cometrenderer.vertex;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
+import com.ferra13671.cometrenderer.buffer.BufferUsage;
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import it.unimi.dsi.fastutil.ints.IntConsumer;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.system.MemoryUtil;
@@ -63,7 +64,7 @@ public final class ShapeIndexBuffer {
 				if (this.indexBuffer != null)
 					this.indexBuffer.close();
 
-				this.indexBuffer = RenderSystem.getDevice().createBuffer(() -> "Auto Storage index buffer", 64, byteBuffer);
+				this.indexBuffer = new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER);
 			} finally {
 				MemoryUtil.memFree(byteBuffer);
 			}

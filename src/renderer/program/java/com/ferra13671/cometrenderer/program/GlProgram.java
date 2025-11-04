@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.program;
 
+import com.ferra13671.cometrenderer.Bindable;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
@@ -7,6 +8,7 @@ import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class GlProgram {
+public class GlProgram implements Bindable {
     public static GlProgram ACTIVE_PROGRAM = null;
 
     private final String name;
@@ -52,6 +54,8 @@ public class GlProgram {
     /*
      * Привязывает к OpenGl программу
      */
+    @Override
+    @OverriddenMethod
     public void bind() {
         GL20.glUseProgram(getId());
 
@@ -64,7 +68,9 @@ public class GlProgram {
     /*
      * Отвязывает с OpenGl программу
      */
-    public void unBind() {
+    @Override
+    @OverriddenMethod
+    public void unbind() {
         GL20.glUseProgram(0);
 
         ACTIVE_PROGRAM = null;

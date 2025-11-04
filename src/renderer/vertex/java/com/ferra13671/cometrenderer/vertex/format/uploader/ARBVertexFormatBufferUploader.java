@@ -1,11 +1,10 @@
 package com.ferra13671.cometrenderer.vertex.format.uploader;
 
-import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import net.minecraft.client.gl.GlGpuBuffer;
 import org.lwjgl.opengl.ARBVertexAttribBinding;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -27,7 +26,7 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
 
     @Override
     @OverriddenMethod
-    public void applyFormatToBuffer(GlGpuBuffer vertexBuffer, VertexFormat vertexFormat) {
+    public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
         VertexFormatBuffer vertexFormatBuffer = vertexFormatBuffers.get(vertexFormat);
         if (vertexFormatBuffer == null) {
             int vertBuffId = GL30.glGenVertexArrays();
@@ -52,17 +51,17 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
                 ARBVertexAttribBinding.glVertexAttribBinding(i, 0);
             }
 
-            ARBVertexAttribBinding.glBindVertexBuffer(0, CometRenderer.getBufferIdGetter().apply(vertexBuffer), 0L, vertexFormat.getVertexSize());
+            ARBVertexAttribBinding.glBindVertexBuffer(0, vertexBuffer.getId(), 0L, vertexFormat.getVertexSize());
             VertexFormatBuffer vertexFormatBuffer2 = new VertexFormatBuffer(vertBuffId, vertexFormat, new AtomicReference<>(vertexBuffer));
             vertexFormatBuffers.put(vertexFormat, vertexFormatBuffer2);
         } else {
             GL30.glBindVertexArray(vertexFormatBuffer.glId());
             if (vertexFormatBuffer.buffer().get() != vertexBuffer) {
-                if (applyMesaWorkaround && vertexFormatBuffer.buffer().get() != null && CometRenderer.getBufferIdGetter().apply(vertexFormatBuffer.buffer().get()).equals(CometRenderer.getBufferIdGetter().apply(vertexBuffer))) {
+                if (applyMesaWorkaround && vertexFormatBuffer.buffer().get() != null && vertexFormatBuffer.buffer().get().getId() == vertexBuffer.getId()) {
                     ARBVertexAttribBinding.glBindVertexBuffer(0, 0, 0L, 0);
                 }
 
-                ARBVertexAttribBinding.glBindVertexBuffer(0, CometRenderer.getBufferIdGetter().apply(vertexBuffer), 0L, vertexFormat.getVertexSize());
+                ARBVertexAttribBinding.glBindVertexBuffer(0, vertexBuffer.getId(), 0L, vertexFormat.getVertexSize());
                 vertexFormatBuffer.buffer().set(vertexBuffer);
             }
         }

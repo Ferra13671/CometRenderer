@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.blend.DstFactor;
 import com.ferra13671.cometrenderer.blend.SrcFactor;
-import com.ferra13671.cometrenderer.framebuffer.FrameBufferUtils;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
@@ -274,6 +273,6 @@ public class CometRenderer {
 
         renderConsumer.accept(builtBuffer, close);
 
-        globalProgram.unBind();
+        globalProgram.unbind();
     }
 }
