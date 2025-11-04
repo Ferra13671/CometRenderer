@@ -1,6 +1,9 @@
 package com.ferra13671.cometrenderer.vertex.format.uploader;
 
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferUsageException;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import org.lwjgl.opengl.GL;
 
@@ -20,6 +23,9 @@ public class VertexFormatManager {
      * Привязывает структуру вершин к буфферу вершин
      */
     public static void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
+        if (vertexBuffer.getTarget() != BufferTarget.ARRAY_BUFFER)
+            ExceptionPrinter.printAndExit(new WrongGpuBufferUsageException(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId));
+
         formatUploader.applyFormatToBuffer(vertexBuffer, vertexFormat);
     }
 }

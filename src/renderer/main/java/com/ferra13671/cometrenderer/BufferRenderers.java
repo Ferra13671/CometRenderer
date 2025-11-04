@@ -1,16 +1,20 @@
 package com.ferra13671.cometrenderer;
 
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
+import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferUsageException;
 import com.ferra13671.cometrenderer.vertex.ShapeIndexBuffer;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.format.uploader.VertexFormatManager;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.opengl.GlConst;
-import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.gl.GlBackend;
 import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 
 import java.util.function.BiConsumer;
 
@@ -26,29 +30,40 @@ public final class BufferRenderers {
             GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawParameters.indexCount());
             VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
-            ((GlBackend) RenderSystem.getDevice()).getVertexBufferManager().setupBuffer(drawParameters.format(), (GlGpuBuffer) vertexBuffer);
-            drawIndexed(drawParameters.indexCount(), GlConst.toGl(drawParameters.mode()), GlConst.toGl(indexType), CometRenderer.getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
+            ((GlBackend) RenderSystem.getDevice()).getVertexBufferManager().setupBuffer(
+                    drawParameters.format(),
+                    (GlGpuBuffer) vertexBuffer
+            );
+            GL15.glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, CometRenderer.getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
+            drawIndexed(
+                    drawParameters.indexCount(),
+                    GlConst.toGl(drawParameters.mode()),
+                    GlConst.toGl(indexType)
+            );
 
             vertexBuffer.close();
         }
         if (close)
             builtBuffer.close();
     };
-    public static final BiConsumer<IMesh, Boolean> COMET_BUFFER = (builtBuffer, close) -> {
-        if (builtBuffer.getIndexCount() > 0) {
+    public static final BiConsumer<IMesh, Boolean> COMET_BUFFER = (mesh, close) -> {
+        if (mesh.getIndexCount() > 0) {
+            ShapeIndexBuffer shapeIndexBuffer = mesh.getDrawMode().shapeIndexBuffer;
 
-            ShapeIndexBuffer shapeIndexBuffer = builtBuffer.getDrawMode().shapeIndexBuffer;
+            VertexFormatManager.applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
-            VertexFormatManager.applyFormatToBuffer(builtBuffer.getVertexBuffer(), builtBuffer.getVertexFormat());
-            drawIndexed(builtBuffer.getIndexCount(), builtBuffer.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId, builtBuffer.getIndexBuffer().getId());
+            com.ferra13671.cometrenderer.buffer.GpuBuffer indexBuffer = mesh.getIndexBuffer();
+            if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
+                ExceptionPrinter.printAndExit(new WrongGpuBufferUsageException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
+            indexBuffer.bind();
+
+            drawIndexed(mesh.getIndexCount(), mesh.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId);
         }
         if (close)
-            builtBuffer.close();
+            mesh.close();
     };
 
-    private static void drawIndexed(int count, int drawMode, int indexType, int indexBuffer) {
-        GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-        GlStateManager._drawElements(drawMode, count, indexType, 0);
+    private static void drawIndexed(int count, int drawMode, int indexType) {
+        GL11.glDrawElements(drawMode, count, indexType, 0);
     }
 }

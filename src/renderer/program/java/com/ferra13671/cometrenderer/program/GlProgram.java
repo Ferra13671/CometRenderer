@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL20;

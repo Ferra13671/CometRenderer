@@ -5,7 +5,7 @@ import com.ferra13671.cometrenderer.blend.SrcFactor;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;

@@ -7,14 +7,12 @@ import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.texture.GlTextureView;
 
-import java.util.function.Consumer;
-
 /*
  * Униформа, хранящая в себе текстуру
  */
 public class SamplerUniform extends GlUniform {
     private final int samplerId;
-    private Consumer<SamplerUniform> applier;
+    private Runnable uploadRunnable = null;
 
     public SamplerUniform(String name, int location, GlProgram glProgram) {
         super(name, location, glProgram);
@@ -27,28 +25,28 @@ public class SamplerUniform extends GlUniform {
      * Устанавливает текстуру из GlTex
      */
     public void set(GlTex texture) {
-        this.applier = SamplerAppliers.GL_TEX.apply(texture);
+        this.uploadRunnable = () -> SamplerUniformApplier.GL_TEX.applyConsumer().accept(this, texture);
     }
 
     /*
      * Устанавливает текстуру из GlTextureView
      */
     public void set(GlTextureView textureView) {
-        this.applier = SamplerAppliers.GL_TEXTURE_VIEW.apply(textureView);
+        this.uploadRunnable = () -> SamplerUniformApplier.GL_TEXTURE_VIEW.applyConsumer().accept(this, textureView);
     }
 
     /*
      * Устанавливает текстуру при помощи её андишника в OpenGL
      */
     public void set(int textureId) {
-        this.applier = SamplerAppliers.TEXTURE_ID.apply(textureId);
+        this.uploadRunnable = () -> SamplerUniformApplier.TEXTURE_ID.applyConsumer().accept(this, textureId);
     }
 
     /*
      * Устанавливает текстуру кастомным установщиком
      */
-    public void set(Consumer<SamplerUniform> applier) {
-        this.applier = applier;
+    public <T> void set(SamplerUniformApplier<T> applier, T texture) {
+        this.uploadRunnable = () -> applier.applyConsumer().accept(this, texture);
     }
 
     public int getSamplerId() {
@@ -58,10 +56,12 @@ public class SamplerUniform extends GlUniform {
     @Override
     @OverriddenMethod
     public void upload() {
-        if (GlProgram.ACTIVE_PROGRAM == null)
-            GlStateManager._glUniform1i(this.location, getSamplerId());
+        if (this.uploadRunnable != null) {
+            if (GlProgram.ACTIVE_PROGRAM == null)
+                GlStateManager._glUniform1i(this.location, getSamplerId());
 
-        //В зависимости от установщика устанавливаем текстуру в семплер
-        this.applier.accept(this);
+            //В зависимости от установщика устанавливаем текстуру в семплер
+            this.uploadRunnable.run();
+        }
     }
 }
