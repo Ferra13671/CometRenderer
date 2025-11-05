@@ -1,6 +1,9 @@
 package com.ferra13671.cometrenderer.program.shader;
 
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL32;
+import org.lwjgl.opengl.GL40;
+import org.lwjgl.opengl.GL43;
 
 /*
  * Тип шейдера.
@@ -10,15 +13,15 @@ import org.lwjgl.opengl.GL20;
  */
 public enum ShaderType {
     Vertex(GL20.GL_VERTEX_SHADER),
-    Fragment(GL20.GL_FRAGMENT_SHADER);
+    Fragment(GL20.GL_FRAGMENT_SHADER),
+    Geometry(GL32.GL_GEOMETRY_SHADER),
+    TessellateEvaluation(GL40.GL_TESS_EVALUATION_SHADER),
+    TessellateControl(GL40.GL_TESS_CONTROL_SHADER),
+    Compute(GL43.GL_COMPUTE_SHADER);
 
-    private final int id;
+    public final int glId;
 
-    ShaderType(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
+    ShaderType(int glId) {
+        this.glId = glId;
     }
 }

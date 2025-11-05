@@ -68,7 +68,7 @@ public class GlobalCometCompiler {
         ShaderContent content = includeShaderLibraries(shaderEntry.content());
 
         //Создаём шейдер в OpenGL
-        int shaderId = GL20.glCreateShader(shaderType.getId());
+        int shaderId = GL20.glCreateShader(shaderType.glId);
         //Устанавливаем контент шейдеру
         GL20.glShaderSource(shaderId, content.content());
         //Компилируем шейдер
