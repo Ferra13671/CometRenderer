@@ -4,15 +4,19 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Objects;
 
-/*
- * Стек для областей ножниц OpenGL
+/**
+ * Стек для областей, используемых ножницами.
  */
 public class ScissorStack {
+    /** Стек. **/
     private final Deque<ScissorRect> stack = new ArrayDeque<>();
+    /** Текущая область ножниц. **/
     private ScissorRect current;
 
-    /*
-     * Увеличивает указатель стека на единицу и устанавливает новую область ножниц
+    /**
+     * Увеличивает указатель стека на единицу и устанавливает новую область ножниц.
+     *
+     * @param rect новая область ножниц.
      */
     public void push(ScissorRect rect) {
         rect = rect.fixRect();
@@ -23,15 +27,17 @@ public class ScissorStack {
         current = scissorRect;
     }
 
-    /*
-     * Возвращает текущую область ножниц
+    /**
+     * Возвращает текущую область ножниц.
+     *
+     * @return текущая область ножниц.
      */
     public ScissorRect current() {
         return current;
     }
 
-    /*
-     * Уменьшает указатель стека на единиу и удаляет последнюю область ножниц
+    /**
+     * Уменьшает указатель стека на единицу и удаляет последнюю область ножниц.
      */
     public void pop() {
         //Если стек пустой, кидаем исключение

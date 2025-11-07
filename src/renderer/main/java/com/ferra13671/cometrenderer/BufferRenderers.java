@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
-import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferUsageException;
+import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.vertex.ShapeIndexBuffer;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.format.uploader.VertexFormatManager;
@@ -18,6 +18,9 @@ import org.lwjgl.opengl.GL15;
 
 import java.util.function.BiConsumer;
 
+/**
+ * Все отрисовщики буфферов вершин, которые есть в CometRenderer.
+ */
 public final class BufferRenderers {
 
     public static final BiConsumer<BuiltBuffer, Boolean> MINECRAFT_BUFFER = (builtBuffer, close) -> {
@@ -26,7 +29,7 @@ public final class BufferRenderers {
         if (drawParameters.indexCount() > 0) {
             RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawParameters.mode());
 
-            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex buffer", 40, builtBuffer.getBuffer());
+            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex mesh", 40, builtBuffer.getBuffer());
             GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawParameters.indexCount());
             VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
@@ -50,11 +53,11 @@ public final class BufferRenderers {
         if (mesh.getIndexCount() > 0) {
             ShapeIndexBuffer shapeIndexBuffer = mesh.getDrawMode().shapeIndexBuffer;
 
-            VertexFormatManager.applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
+            VertexFormatManager.uploadFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             com.ferra13671.cometrenderer.buffer.GpuBuffer indexBuffer = mesh.getIndexBuffer();
             if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
-                ExceptionPrinter.printAndExit(new WrongGpuBufferUsageException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
+                ExceptionPrinter.printAndExit(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
             indexBuffer.bind();
 
             drawIndexed(mesh.getIndexCount(), mesh.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId);

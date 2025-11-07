@@ -1,21 +1,24 @@
 package com.ferra13671.cometrenderer.vertex.element;
 
-/*
- * Элемент вершинного формата.
- *  Используется для создания структуры вершины,
- *  которая будет сопоставляться с вершинами и их
- *  данными, поступающими через билдер.
+/**
+ * Объект, представляющий собой структурный элемент формата вершины.
+ * Совокупность нескольких таких элементов формата вершины составляют целостный формат вершины.
  */
 public class VertexElement {
-    //Айди элемента в формате
+    /** Айди элемента в формате вершины. **/
     private final int id;
-    //Количество данных в элементе
+    /** Количество данных в элементе. **/
     private final int count;
-    //Байтовый размер элемента
+    /** Размер элемента в байтах. **/
     private final int size;
-    //Тип данных элемента
+    /** Тип данных элемента. **/
     private final VertexElementType<?> type;
 
+    /**
+     * @param id айди элемента в формате вершины.
+     * @param count количество данных в элементе.
+     * @param type тип данных элемента.
+     */
     public VertexElement(int id, int count, VertexElementType<?> type) {
         this.id = id;
         this.count = count;
@@ -23,26 +26,48 @@ public class VertexElement {
         this.type = type;
     }
 
-    /*
-     * возвращает маску элемента
+    /**
+     * Возвращает маску элемента.
+     *
+     * @return маска элемента.
      */
     public int mask() {
         return 1 << this.id;
     }
 
-    public VertexElementType<?> getType() {
-        return type;
+    /**
+     * Возвращает айди элемента в формате вершины.
+     *
+     * @return айди элемента в формате вершины.
+     */
+    public int getId() {
+        return id;
     }
 
-    public int getSize() {
-        return size;
-    }
-
+    /**
+     * Возвращает количество данных в элементе.
+     *
+     * @return количество данных в элементе.
+     */
     public int getCount() {
         return count;
     }
 
-    public int getId() {
-        return id;
+    /**
+     * Возвращает размер элемента в байтах
+     *
+     * @return размер элемента в байтах.
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Возвращает тип данных элемента.
+     *
+     * @return тип данных элемента.
+     */
+    public VertexElementType<?> getType() {
+        return type;
     }
 }

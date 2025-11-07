@@ -7,6 +7,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Самые основные загрузчики glsl контента.
+ *
+ * @see CometLoader
+ */
 public final class CometLoaders {
     public static final CometLoader<String> IN_JAR = new CometLoader<>() {
         @Override

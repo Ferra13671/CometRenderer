@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.exceptions.impl.compile;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
-/*
- * Это исключение вызывается, когда произошла ошибка при компиляции шейдера (вертексного либо фрагментного)
+/**
+ * Ошибка, вызываемая в том случае, когда произошла ошибка при компиляции шейдера.
  */
 public class CompileShaderException extends CometException {
     @java.io.Serial

@@ -1,32 +1,48 @@
 package com.ferra13671.cometrenderer.scissor;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.MinecraftClient;
+import org.lwjgl.opengl.GL20;
 
-/*
- * Область ножниц, используемая в OpenGL для того, что бы задавать определенную область, за пределами которой при рендере пиксели не будут затронуты.
+/**
+ * Объект, представляющий собой область, используемая ножницами в OpenGL для установки границы, за пределами которой при отрисовке пиксели будут проигнорированы.
+ *
+ * @param x координата области по X.
+ * @param y координата области по Y.
+ * @param width длина области по X.
+ * @param height длина области по Y.
  */
 public record ScissorRect(int x, int y, int width, int height) {
 
-    /*
-     * Биндит область ножниц
+    /**
+     * Устанавливает данную область активной для ножниц.
      */
     public void bind() {
-        GlStateManager._scissorBox(x, y, width, height);
+        GL20.glScissor(this.x, this.y, this.width, this.height);
     }
 
+    /**
+     * Исправляет координаты и размеры области.
+     *
+     * @return исправлена область.
+     */
     public ScissorRect fixRect() {
         int scale = CometRenderer.getScaleGetter().get();
         int frameBufferHeight = MinecraftClient.getInstance().getWindow().getFramebufferHeight();
         return new ScissorRect(
-                x * scale,
-                frameBufferHeight - ((y + height) * scale),
-                width * scale,
-                height * scale
+                this.x * scale,
+                frameBufferHeight - ((this.y + this.height) * scale),
+                this.width * scale,
+                this.height * scale
         );
     }
 
+    /**
+     * Возвращает область, точки в которой соответствуют как данной, так и текущей области.
+     *
+     * @param other область, с которой надо найти область пересечения.
+     * @return область пересечения двух областей.
+     */
     public ScissorRect intersection(ScissorRect other) {
         int x1 = Math.max(this.x, other.x);
         int y1 = Math.max(this.y, other.y);

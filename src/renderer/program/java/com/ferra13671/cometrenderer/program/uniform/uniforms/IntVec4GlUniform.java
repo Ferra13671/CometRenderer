@@ -1,15 +1,25 @@
 package com.ferra13671.cometrenderer.program.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.joml.Vector4i;
 import org.lwjgl.opengl.GL20;
 
-/*
- * Униформа, хранящая в себе ivec4 значение
+/**
+ * Униформа, хранящая в себе параметр в виде четырёхмерного вектора с int значениями.
+ *
+ * @see GlUniform
+ * @see UniformType
  */
 public class IntVec4GlUniform extends OneTypeGlUniform<Vector4i> {
 
+    /**
+     * @param name имя униформы.
+     * @param location локация униформы в OpenGL.
+     * @param glProgram программа ({@link GlProgram}), к которой привязана униформа.
+     */
     public IntVec4GlUniform(String name, int location, GlProgram glProgram) {
         super(name, location, glProgram);
     }
@@ -17,6 +27,6 @@ public class IntVec4GlUniform extends OneTypeGlUniform<Vector4i> {
     @Override
     @OverriddenMethod
     public void upload() {
-        GL20.glUniform4i(getLocation(), value.x, value.y, value.z, value.w);
+        GL20.glUniform4i(getLocation(), this.value.x, this.value.y, this.value.z, this.value.w);
     }
 }

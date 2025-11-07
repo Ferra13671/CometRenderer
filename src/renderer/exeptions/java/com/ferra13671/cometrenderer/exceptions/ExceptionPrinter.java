@@ -2,11 +2,18 @@ package com.ferra13671.cometrenderer.exceptions;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 
+/**
+ * Класс, предназначенный для вывода информации об ошибке.
+ *
+ * @see CometException
+ */
 public class ExceptionPrinter {
     private static final String separateLine = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 
-    /*
-     * Отрисовывает в консоли информацию о исключении и закрывает процесс игры
+    /**
+     * Выводит в консоль информацию об ошибке и закрывает процесс приложения.
+     *
+     * @param exception ошибка, которую нужно вывести в консоль.
      */
     public static void printAndExit(CometException exception) {
         StringBuilder stringBuilder = new StringBuilder();

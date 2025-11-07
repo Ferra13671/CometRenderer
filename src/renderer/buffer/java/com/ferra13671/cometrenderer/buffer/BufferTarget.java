@@ -2,6 +2,11 @@ package com.ferra13671.cometrenderer.buffer;
 
 import org.lwjgl.opengl.*;
 
+/**
+ * Тип цели использования GPU буффера.
+ *
+ * @see GpuBuffer
+ */
 public enum BufferTarget {
     ARRAY_BUFFER(GL15.GL_ARRAY_BUFFER),
     ELEMENT_ARRAY_BUFFER(GL15.GL_ELEMENT_ARRAY_BUFFER),
@@ -18,8 +23,12 @@ public enum BufferTarget {
     SHADER_STORAGE_BUFFER(GL43.GL_SHADER_STORAGE_BUFFER),
     PARAMETER_BUFFER_ARB(ARBIndirectParameters.GL_PARAMETER_BUFFER_ARB);
 
+    /** Айди типа цели использования в OpenGL. **/
     public final int glId;
 
+    /**
+     * @param glId айди типа цели использования в OpenGL.
+     */
     BufferTarget(int glId) {
         this.glId = glId;
     }

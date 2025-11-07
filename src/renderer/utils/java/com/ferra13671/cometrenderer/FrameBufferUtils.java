@@ -7,10 +7,16 @@ import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.gl.GlBackend;
 import net.minecraft.client.texture.GlTexture;
 
+/**
+ * Класс с различными утилитами для фреймбуффера.
+ */
 public final class FrameBufferUtils {
 
-    /*
-     * Биндит фреймбуффер
+    /**
+     * Устанавливает активный фреймбуффер.
+     *
+     * @param id айди фреймбуффера.
+     * @param colorTexture текстуры цвета фреймбуффера.
      */
     public static void bindFrameBuffer(int id, GpuTextureView colorTexture) {
         GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, id);
@@ -18,21 +24,28 @@ public final class FrameBufferUtils {
         GlStateManager._viewport(0, 0, colorTexture.getWidth(0), colorTexture.getHeight(0));
     }
 
-    /*
-     * Возвращает айди фреймбуффера
+    /**
+     * Возвращает айди фреймбуффера.
+     *
+     * @param colorTexture текстура цвета фреймбуффера.
+     * @param depthTexture текстура глубины фреймбуффера.
+     * @return айди фреймбуффера.
      */
-    public static int getFrameBufferId(GpuTextureView gpuTextureView, GpuTextureView gpuTextureView2) {
-        validateFrameBufferTexture("Color", gpuTextureView);
+    public static int getFrameBufferId(GpuTextureView colorTexture, GpuTextureView depthTexture) {
+        validateFrameBufferTexture("Color", colorTexture);
 
-        if (gpuTextureView2 != null)
-            validateFrameBufferTexture("Depth", gpuTextureView2);
+        if (depthTexture != null)
+            validateFrameBufferTexture("Depth", depthTexture);
 
-        return ((GlTexture)gpuTextureView.texture())
-                .getOrCreateFramebuffer(((GlBackend) RenderSystem.getDevice()).getBufferManager(), gpuTextureView2 == null ? null : gpuTextureView2.texture());
+        return ((GlTexture)colorTexture.texture())
+                .getOrCreateFramebuffer(((GlBackend) RenderSystem.getDevice()).getBufferManager(), depthTexture == null ? null : depthTexture.texture());
     }
 
-    /*
-     * Проверяет GpuTextureView на валидность, если проверка не прошла то возвращается исключение
+    /**
+     * Проверяет текстуру на валидность, если проверка не прошла то возвращается исключение.
+     *
+     * @param name имя текстуры.
+     * @param gpuTextureView текстура.
      */
     public static void validateFrameBufferTexture(String name, GpuTextureView gpuTextureView) {
         if (gpuTextureView.isClosed())

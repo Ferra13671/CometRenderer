@@ -16,7 +16,7 @@ import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
-import com.ferra13671.cometrenderer.vertex.format.CometVertexFormats;
+import com.ferra13671.cometrenderer.CometVertexFormats;
 import net.fabricmc.api.ModInitializer;
 import org.joml.Vector4f;
 import org.slf4j.Logger;
@@ -40,6 +40,28 @@ public class TestMod implements ModInitializer, Mc {
     private static final GlslFileEntry positionColorTextureVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex3", "texture-colored.vsh");
     private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment3", "texture-colored.fsh");
     private static GLTexture texture;
+
+    /*
+    public static final VertexElementType<Color> COLOR = new VertexElementType<>(
+            4 * 4,
+            "Float",
+            GL11.GL_FLOAT,
+            Color.class,
+            (pointer, data) -> {
+                for (int i = 0; i < data.length; i++) {
+                    long ptr = pointer + (16L * i);
+                    MemoryUtil.memPutFloat(ptr, data[i].getRed() / 255f);
+                    MemoryUtil.memPutFloat(ptr + 4L, data[i].getGreen() / 255f);
+                    MemoryUtil.memPutFloat(ptr + 8L, data[i].getBlue() / 255f);
+                    MemoryUtil.memPutFloat(ptr + 12L, data[i].getAlpha() / 255f);
+                }
+            }
+    );
+    public static final VertexFormat CUSTOM_FORMAT = VertexFormatBuilder.builder()
+            .element("Color", COLOR, 1)
+            .build();
+
+     */
 
     private static int prevScale = 0;
 
@@ -124,7 +146,7 @@ public class TestMod implements ModInitializer, Mc {
 
         //------ multi-colored rect with position-color program ------//
         CometRenderer.setGlobalProgram(positionColorProgram);
-        CometRenderer.resetColor();
+        CometRenderer.resetShaderColor();
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
 
@@ -137,7 +159,7 @@ public class TestMod implements ModInitializer, Mc {
 
         //------ multi-colored textured rect with position-color-texture program ------//
         CometRenderer.setGlobalProgram(positionColorTextureProgram);
-        CometRenderer.resetColor();
+        CometRenderer.resetShaderColor();
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
         positionColorTextureProgram.getUniform("u_Texture", UniformType.SAMPLER).set(texture);

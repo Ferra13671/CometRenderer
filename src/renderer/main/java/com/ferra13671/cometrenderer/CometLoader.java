@@ -1,19 +1,26 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
-import com.ferra13671.cometrenderer.exceptions.impl.load.LoadLibraryContentException;
+import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderLibraryContentException;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderContentException;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.builders.GlProgramBuilder;
 import com.ferra13671.cometrenderer.builders.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
+import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
 
 import java.util.function.Function;
 
-/*
- * Лоадер шейдеров и библиотек
+/**
+ * Объект, представляющий собой загрузчик glsl контента.
+ * Загрузчик позволяет загружать glsl контент с нестандартных путей (всё зависит от реализации загрузки).
+ * Основные загрузчики есть в {@link CometLoaders}.
+ *
+ * @param <T> тип пути, при помощи которого будет возвращаться glsl контент.
  */
 public abstract class CometLoader<T> {
+    //TODO переименовать в glslContentGetter
     private final Function<T, String> shaderContentGetter = path -> {
         String content = null;
         try {
@@ -23,39 +30,65 @@ public abstract class CometLoader<T> {
         }
         return content;
     };
+    //TODO переименовать в shaderLibraryContentGetter
     private final Function<T, String> libraryContentGetter = path -> {
         String content = null;
         try {
             content = getContent(path);
         } catch (Exception e) {
-            ExceptionPrinter.printAndExit(new LoadLibraryContentException(e));
+            ExceptionPrinter.printAndExit(new LoadShaderLibraryContentException(e));
         }
         return content;
     };
 
-    /*
-     * Создает новый билдер программы, использующий данный лоадер
+    /**
+     * Создаёт новый сборщик программы, который будет использовать данный загрузчик.
+     *
+     * @param snippets фрагменты программы.
+     * @return новый сборщик программы.
+     *
+     * @see GlProgramBuilder
+     * @see GlProgram
+     * @see GlProgramSnippet
      */
     public GlProgramBuilder<T> createProgramBuilder(GlProgramSnippet... snippets) {
         return new GlProgramBuilder<>(this, snippets);
     }
 
-    /*
-     * Создает новый билдер шейдерной библиотеки, использующий данный лоадер
+    /**
+     * Создаёт новый сборщик шейдерной библиотеки, который будет использовать данный загрузчик.
+     *
+     * @param snippets фрагменты программы, которые будут добавляться в программу при добавлении библиотеки в шейдер.
+     * @return новый сборщик шейдерной библиотеки.
+     *
+     * @see GlShaderLibraryBuilder
+     * @see GlShaderLibrary
      */
+    //TODO переименовать в createShaderLibraryBuilder
     public GlShaderLibraryBuilder<T> createLibraryBuilder(GlProgramSnippet... snippets) {
         return new GlShaderLibraryBuilder<>(libraryContentGetter, snippets);
     }
 
-    /*
-     * Создаёт новые данные шейдера
+    /**
+     * Создаёт новый glsl контент.
+     *
+     * @param name имя glsl контента.
+     * @param path путь к glsl контенту.
+     * @return новые glsl данные, хранящие заготовленный контент.
+     *
+     * @see GlslFileEntry
      */
+    //TODO переименовать в createGlslEntry
     public GlslFileEntry createShaderEntry(String name, T path) {
         return GlobalCometCompiler.compileShaderEntry(name, shaderContentGetter, path);
     }
 
-    /*
-     * Возвращает контент шейдера или библиотеки при помощи его пути
+    /**
+     * Возвращает контент, загруженный при помощи данного пути.
+     *
+     * @param path путь, при помощи которого нужно получить контент.
+     * @return контент, загруженный при помощи данного пути.
+     * @throws Exception различные проблемы, которые могут произойти при загрузке.
      */
     public abstract String getContent(T path) throws Exception;
 }

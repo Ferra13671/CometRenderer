@@ -5,13 +5,22 @@ import com.ferra13671.cometrenderer.builders.GlProgramSchema;
 import com.ferra13671.cometrenderer.builders.ShaderSchema;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 
-/*
- * Загрузчик программ и шейдеров
+/**
+ * Глобальный загрузчик программ и шейдеров CometRender'а.
+ *
+ * @deprecated нужно убрать, т.к. более разумно будет использовать сразу {@link GlobalCometCompiler}
+ *
+ * @see GlobalCometCompiler
  */
+//TODO убрать
+@Deprecated(forRemoval = true)
 public class GlobalCometLoader {
 
-    /*
-     * Загружает программу при помощи её схемы
+    /**
+     * Загружает программу при помощи её схемы.
+     *
+     * @param programSchema схема программы.
+     * @return программа, загруженная по схеме
      */
     public static GlProgram loadProgram(GlProgramSchema programSchema) {
         return GlobalCometCompiler.compileProgram(
@@ -22,8 +31,11 @@ public class GlobalCometLoader {
         );
     }
 
-    /*
-     * Загружает шейдер при помощи его схемы
+    /**
+     * Загружает шейдер при помощи его схемы.
+     *
+     * @param shaderSchema схема шейдера.
+     * @return шейдер, загруженный по схеме.
      */
     private static GlShader loadShader(ShaderSchema shaderSchema) {
         return GlobalCometCompiler.compileShader(

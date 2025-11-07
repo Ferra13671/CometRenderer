@@ -33,36 +33,49 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Главный класс рендеринга.
+ * Контролирует всю работу рендера.
+ */
+//TODO bindFramebuffer(FrameBuffer framebuffer)
+//TODO переименовать bindMainFrameBuffer в bindMainFramebuffer
+//TODO переименовать bindFrameBuffer в bindFramebuffer
 public class CometRenderer {
+    /** Состояние инициализации рендера. **/
     private static boolean initialized = false;
+    /** Логгер CometRender'a, используемый для отправки ошибок. **/
     private static final Logger logger = LoggerFactory.getLogger("CometRenderer");
-    //Геттер анди буффера
+    /** Функция для получения айди GlGpuBuffer. **/
     private static Function<GlGpuBuffer, Integer> bufferIdGetter;
-    //Геттер для 2д скейла
+    /** Метод, возвращающий скейл рендеринга. **/
     private static Supplier<Integer> scaleGetter;
-    //Шейдерный цвет, который биндится шейдеру, если он ему нужен
+    /** Глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
     private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
-    //Сниппет для шейдеров, использующих матрицы для модификации координат вершин
+    /** Фрагмент программы, необходимый для вершинных шейдеров, использующих основные матрицы для модификации координат вершин. **/
     private static final GlProgramSnippet matrixSnippet = GlProgramSnippet.builder()
             .uniform("Projection", UniformType.BUFFER)
             .uniform("modelViewMat", UniformType.MATRIX)
             .build();
-    //Сниппет для шейдеров, использующих глобальный цвет шейдера
+    /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
+    //TODO переименовать название униформы в shaderColor
     private static final GlProgramSnippet colorSnippet = GlProgramSnippet.builder()
             .uniform("color", UniformType.VEC4)
             .build();
-    //Глобальная программа рендерера, используемая при рендере
+    /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
     private static GlProgram globalProgram;
-    //Стек областей ножниц
+    /** Стек для областей, используемых ножницами. **/
     private static final ScissorStack scissorStack = new ScissorStack();
 
-    /*
-     * Инициализация комет рендерера
+    /**
+     * Инициализирует CometRenderer.
+     *
+     * @param bufferIdGetter функция для получения айди GlGpuBuffer.
+     * @param scaleGetter метод, возвращающий скейл рендеринга.
      */
     public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
         //Не ну ты долбаеб если второй раз будешь инициализировать рендерер
         if (initialized)
-            throw new IllegalStateException("CometRenderer has already initialized");
+            throw new IllegalStateException("CometRenderer has already initialized.");
 
 
         //Устанавливаем геттер айди буффера
@@ -73,61 +86,84 @@ public class CometRenderer {
         initialized = true;
     }
 
+    /**
+     * Возвращает логгер CometRenderer'а.
+     *
+     * @return логгер CometRenderer'а.
+     */
     public static Logger getLogger() {
         return logger;
     }
 
-    /*
-     * Возвращает геттер айди буффера
+    /**
+     * Возвращает функцию для получения айди GlGpuBuffer.
+     *
+     * @return функция для получения айди GlGpuBuffer.
      */
     public static Function<GlGpuBuffer, Integer> getBufferIdGetter() {
         return bufferIdGetter;
     }
 
-    /*
-     * Возвращает геттер 2д скейла
+    /**
+     * Возвращает метод, возвращающий скейл рендеринга.
+     *
+     * @return метод, возвращающий скейл рендеринга.
      */
     public static Supplier<Integer> getScaleGetter() {
         return scaleGetter;
     }
 
-    /*
-     * Возвращает текущий цвет шейдера
+    /**
+     * Возвращает глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность.
+     *
+     * @return глобальный шейдерный цвет.
      */
     public static Vector4f getShaderColor() {
         return shaderColor;
     }
 
-    /*
-     * Устанавливает текущий цвет шейдера
+    /**
+     * Устанавливает текущий глобальный шейдерный цвет.
+     *
+     * @param shaderColor глобальный шейдерный цвет.
      */
     public static void setShaderColor(Vector4f shaderColor) {
         CometRenderer.shaderColor = shaderColor;
     }
 
-    /*
-     * Устанавливает цвет шейдера по умолчанию
+    /**
+     * Устанавливает глобальный шейдерный цвет по умолчанию.
      */
-    public static void resetColor() {
+    public static void resetShaderColor() {
         setShaderColor(new Vector4f(1f, 1f, 1f, 1f));
     }
 
-    /*
-     * Возвращает сниппет для матриц
+    /**
+     * Возвращает фрагмент программы, необходимый для вершинных шейдеров, использующих основные матрицы для модификации координат вершин.
+     *
+     * @return фрагмент программы, добавляющий униформы основных матриц.
+     *
+     * @see CometRenderer#matrixSnippet
      */
     public static GlProgramSnippet getMatrixSnippet() {
         return matrixSnippet;
     }
 
-    /*
-     * Возвращает сниппет для глобального цвета шейдера
+    /**
+     * Возвращает фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета.
+     *
+     * @return фрагмент программы, добавляющий униформу глобального шейдерного цвета.
+     *
+     * @see CometRenderer#colorSnippet
      */
     public static GlProgramSnippet getColorSnippet() {
         return colorSnippet;
     }
 
-    /*
-     * Устанавлиает юниформы матриц, если шейдер использовал соответствующий сниппет
+    /**
+     * Устанавливает основные матрицы в униформы, если программа использует фрагмент программы для основных матриц.
+     *
+     * @see CometRenderer#matrixSnippet
      */
     public static void initMatrix() {
         BufferUniform projectionUniform = globalProgram.getUniform("Projection", UniformType.BUFFER);
@@ -141,8 +177,10 @@ public class CometRenderer {
             modelViewUniform.set(RenderSystem.getModelViewMatrix());
     }
 
-    /*
-     * Устанавливает униформу шейдерного цвета, если шейдер использовал соответствующий сниппет
+    /**
+     * Устанавливает глобальный шейдерный цвет в униформу, если программа использует фрагмент программы для глобального шейдерного цвета.
+     *
+     * @see CometRenderer#colorSnippet
      */
     public static void initShaderColor() {
         Vec4GlUniform colorUniform = globalProgram.getUniform("color", UniformType.VEC4);
@@ -150,60 +188,87 @@ public class CometRenderer {
             colorUniform.set(getShaderColor());
     }
 
-    /*
-     * Устанавливает текущую программу
+    /**
+     * Устанавливает данную программу как активную для CometRenderer'а.
+     *
+     * @param globalProgram программа, которую нужно сделать активной.
      */
     public static void setGlobalProgram(GlProgram globalProgram) {
         CometRenderer.globalProgram = globalProgram;
     }
 
-    /*
-     * Возвращает текущую программу
+    /**
+     * Возвращает текущую активную программу для CometRenderer'а.
+     *
+     * @return текущая активная программа для CometRenderer'а.
      */
     public static GlProgram getGlobalProgram() {
         return globalProgram;
     }
 
-    /*
-     * Возвращает стек области ножниц
+    /**
+     * Возвращает стек для областей, используемых ножницами.
+     *
+     * @return стек для областей, используемых ножницами.
      */
     public static ScissorStack getScissorStack() {
         return scissorStack;
     }
 
-    /*
-     * Включает смешивание цветов, если оно не включено, и устанавливает ему основную функцию
+    /**
+     * Включает смешивание, если оно выключено, и устанавливает ему основные множители уравнения.
+     *
+     * @see <a href="https://docs.gl/gl4/glBlendFunc">OpenGL glBlendFunc wiki</a>
+     * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     public static void applyDefaultBlend() {
         GlStateManager._enableBlend();
-        GL11.glBlendFunc(SrcFactor.SRC_ALPHA.value, DstFactor.ONE_MINUS_SRC_ALPHA.value);
+        GL11.glBlendFunc(SrcFactor.SRC_ALPHA.glId, DstFactor.ONE_MINUS_SRC_ALPHA.glId);
     }
 
-    /*
-     * Включает смешивание цветов, если оно не включено, и устанавливает ему кастомную функцию
+    /**
+     * Включает смешивание, если оно выключено, и устанавливает ему данные множители уравнения.
+     *
+     * @param srcFactor множитель для нового цвета в уравнении смешивания.
+     * @param dstFactor множитель для уже имеющегося цвета в фреймбуффере в уравнении смешивания.
+     *
+     * @see <a href="https://docs.gl/gl4/glBlendFunc">OpenGL glBlendFunc wiki</a>
+     * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     public static void applyBlend(SrcFactor srcFactor, DstFactor dstFactor) {
         GlStateManager._enableBlend();
-        GL11.glBlendFunc(srcFactor.value, dstFactor.value);
+        GL11.glBlendFunc(srcFactor.glId, dstFactor.glId);
     }
 
-    /*
-     * Включает смешивание цветов, если оно не включено, и устанавливает ему кастомную функцию
+    /**
+     * Включает смешивание, если оно выключено, и устанавливаем ему данные множители уравнения.
+     *
+     * @param srcColor множитель для нового цвета в уравнении смешивания (для RGB).
+     * @param dstColor множитель для уже имеющегося цвета в фреймбуффере в уравнении смешивания (для RGB).
+     * @param srcAlpha множитель для нового цвета в уравнении смешивания (для прозрачности).
+     * @param dstAlpha множитель для уже имеющегося цвета в фреймбуффере в уравнении смешивания (для прозрачности).
+     *
+     * @see <a href="https://docs.gl/gl4/glBlendFuncSeparate">OpenGL glBlendFuncSeparate wiki</a>
+     * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     public static void applyBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
         GlStateManager._enableBlend();
-        GL14.glBlendFuncSeparate(srcColor.value, dstColor.value, srcAlpha.value, dstAlpha.value);
+        GL14.glBlendFuncSeparate(srcColor.glId, dstColor.glId, srcAlpha.glId, dstAlpha.glId);
     }
 
-    /*
-     * Отключает смешивание цветов
+    /**
+     * Отключает смешивание, если оно включено.
+     *
+     * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     public static void disableBlend() {
         GlStateManager._disableBlend();
     }
 
-    /*
-     * Биндит основной фреймбуффер майнкрафта
+    /**
+     * Устанавливает основной фреймбуффер майнкрафта как активный.
+     *
+     * @see Framebuffer
      */
     public static void bindMainFrameBuffer() {
         Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
@@ -214,8 +279,14 @@ public class CometRenderer {
         }
     }
 
-    /*
-     * Биндит фреймбуффер
+    /**
+     * Устанавливает данный фреймбуффер как активный.
+     *
+     * @param colorTexture текстура цвета фреймбуффера.
+     * @param depthTexture текстура глубины фреймбуффера.
+     *
+     * @see Framebuffer
+     * @see GpuTextureView
      */
     public static void bindFrameBuffer(GpuTextureView colorTexture, GpuTextureView depthTexture) {
         FrameBufferUtils.bindFrameBuffer(
@@ -224,9 +295,14 @@ public class CometRenderer {
         );
     }
 
-    /*
-     * Создаёт готовый буффер с вершинами. Перед построением буффера вызывается buildConsumer, что бы записать в билдер данные о вершинах.
-     * Если в итоге в билдер ничего не было записано, то вернётся null.
+    /**
+     * Создаёт готовый меш с вершинами. Перед сборкой меша вызывается данный вами метод, что бы добавить в сборщика данные о вершинах.
+     * Метод ввернет null, если в сборщике нет вершин.
+     *
+     * @param drawMode тип отрисовки вершин.
+     * @param vertexFormat формат вершины.
+     * @param buildConsumer метод для добавления в сборщика данных о вершинах.
+     * @return готовый меш либо null, если в сборщике нет вершин.
      */
     public static Mesh createMesh(DrawMode drawMode, VertexFormat vertexFormat, Consumer<MeshBuilder> buildConsumer) {
         MeshBuilder meshBuilder = Mesh.builder(drawMode, vertexFormat);
@@ -234,35 +310,60 @@ public class CometRenderer {
         return meshBuilder.buildNullable();
     }
 
-    /*
-     * Рисует буффер и автоматически закрывает его
+    /**
+     * Вызывает цикл отрисовки для реализации буффера вершин от майнкрафта и автоматически закрывает его.
+     *
+     * @param builtBuffer реализация буффера вершин от майнкрафта.
+     *
+     * @see BuiltBuffer
      */
     public static void draw(BuiltBuffer builtBuffer) {
         draw(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, true);
     }
 
-    /*
-     * Рисует буффер и по выбору закрывает его
+    /**
+     * Вызывает цикл отрисовки для реализации буффера вершин от майнкрафта и закрывает его по вашему желанию.
+     *
+     * @param builtBuffer реализация буффера вершин от майнкрафта.
+     * @param close закрывать после отрисовки буффер вершин или нет.
      */
     public static void draw(BuiltBuffer builtBuffer, boolean close) {
         draw(BufferRenderers.MINECRAFT_BUFFER, builtBuffer, close);
     }
 
-    /*
-     * Рисует буффер и автоматически закрывает его
+    /**
+     * Вызывает цикл отрисовки для меша и автоматически закрывает его.
+     *
+     * @param mesh меш.
+     *
+     * @see IMesh
      */
     public static void draw(IMesh mesh) {
         draw(BufferRenderers.COMET_BUFFER, mesh, true);
     }
 
-    /*
-     * Рисует буффер и по выбору закрывает его
+    /**
+     * Вызывает цикл отрисовки для меша и закрывает его по вашему желанию.
+     *
+     * @param mesh меш.
+     * @param close закрывать после отрисовки буффер вершин или нет.
+     *
+     * @see IMesh
      */
     public static void draw(IMesh mesh, boolean close) {
         draw(BufferRenderers.COMET_BUFFER, mesh, close);
     }
 
-    private static <T> void draw(BiConsumer<T, Boolean> renderConsumer, T builtBuffer, boolean close) {
+    /**
+     * Вызывает цикл отрисовки при помощи данного отрисовщика и буффера вершин.
+     * Так же закрывает данный буффер вершин по вашему желанию.
+     *
+     * @param renderConsumer отрисовщик буффера вершин.
+     * @param builtBuffer буффер вершин.
+     * @param close закрывать после отрисовки буффер вершин или нет.
+     * @param <T> тип буффера вершин.
+     */
+    public static <T> void draw(BiConsumer<T, Boolean> renderConsumer, T builtBuffer, boolean close) {
         if (scissorStack.current() != null) {
             GlStateManager._enableScissorTest();
             scissorStack.current().bind();

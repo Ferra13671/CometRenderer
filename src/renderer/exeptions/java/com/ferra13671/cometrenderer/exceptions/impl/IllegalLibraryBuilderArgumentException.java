@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.exceptions.impl;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
-/*
- * Это исключение вызывается, когда сборщик библиотеки имеет неверные данные
+/**
+ * Ошибка, вызываемая в том случае, когда в сборщике шейдерной библиотеки встретились неверные данные.
  */
 public class IllegalLibraryBuilderArgumentException extends CometException {
     @java.io.Serial

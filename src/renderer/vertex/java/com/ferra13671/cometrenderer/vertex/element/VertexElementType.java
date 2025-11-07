@@ -2,16 +2,25 @@ package com.ferra13671.cometrenderer.vertex.element;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 
 import java.util.function.BiConsumer;
 
-/*
- * Тип данных элемента вершины
+/**
+ * Тип данных, передаваемых элементу.
+ * Хотя OpenGL поддерживает только примитивные типы, но при помощи данного класса можно написать свои типы данных.
  *
- * byteSize — Размер типа элемента в байтах
- * typeName — Имя типа элемента
- * glId — Айди типа элемента в OpenGL
+ * @param byteSize размер типа данных в байтах.
+ * @param typeName имя типа данных.
+ * @param glId айди типа данных в OpenGL.
+ * @param clazz класс типа данных.
+ * @param uploadConsumer метод, загружающий тип данных по указанному адресу.
+ * @param <T> тип данных.
+ *
+ * @see VertexElement
+ * @see VertexFormat
  */
+//TODO Разделить byteSize на offset и byteSize (Для случаев, когда тип данных состоит из других типов данных)
 public record VertexElementType<T>(int byteSize, String typeName, int glId, Class<T> clazz, BiConsumer<Long, T[]> uploadConsumer) {
     public static final VertexElementType<Float> FLOAT = new VertexElementType<>(
             4,

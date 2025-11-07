@@ -16,27 +16,45 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.util.stream.Collectors;
 
-/*
- * Билдер вершин. Используемый для построения буффера вершин для последующего рендеринга.
+/**
+ * Основная реализация сборщика меша.
+ *
+ * @see IMeshBuilder
+ * @see Mesh
  */
 public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
-    //Максимальное количество вершин
-    private static final int MAX_VERTICES = 16777215;
+    /** Максимальное количество вершин в меше. **/
+    public static final int MAX_VERTICES = 16777215;
 
-    //Аллокатор данных для вершин
+    /** Аллокатор. **/
     private final BufferAllocator bufferAllocator;
+    /** Тип отрисовки вершин. **/
     private final DrawMode drawMode;
+    /** Формат вершин. **/
     private final VertexFormat vertexFormat;
+    /** Размер вершины. **/
     private final int vertexSize;
+    /** Массив отступов для элементов вершин. **/
     private final int[] elementOffsets;
+    /** Маска полноценной вершины. **/
     private final int requiredMask;
+    /** Закрывать аллокатор после сборки меша или нет. **/
     private final boolean closeAllocatorAfterBuild;
 
     private long vertexPointer = -1L;
+    /** Количество вершин в сборщике. **/
     private int vertexCount;
+    /** Текущая маска вершины. **/
     private int currentMask;
+    /** Закрыт сборщик меша или нет. **/
     private boolean closed = false;
 
+    /**
+     * @param bufferAllocator аллокатор.
+     * @param drawMode тип отрисовки вершин.
+     * @param vertexFormat формат вершин.
+     * @param closeAllocatorAfterBuild закрывать аллокатор после сборки меша или нет.
+     */
     public MeshBuilder(BufferAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
         this.bufferAllocator = bufferAllocator;
         this.drawMode = drawMode;
@@ -47,6 +65,10 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         this.closeAllocatorAfterBuild = closeAllocatorAfterBuild;
     }
 
+    /**
+     * Проверяет, собирается ли меш данным сборщиком или нет.
+     * Если нет, то вызывается ошибка.
+     */
     private void ensureBuilding() {
         if (this.closed) {
             ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
@@ -93,6 +115,11 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         }
     }
 
+    /**
+     * Собирает вершины и их элементы в цельный меш.
+     *
+     * @return цельный меш.
+     */
     private Mesh build() {
         if (this.vertexCount == 0) {
             return null;
@@ -110,6 +137,11 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         }
     }
 
+    /**
+     * Начинает сборку новой вершины.
+     *
+     * @return адрес новой вершины.
+     */
     private long beginVertex() {
         this.ensureBuilding();
         this.endVertex();
@@ -124,6 +156,9 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         }
     }
 
+    /**
+     * Заканчивает сборку текущей вершины.
+     */
     private void endVertex() {
         if (this.vertexCount != 0 && this.currentMask != 0) {
             String string = vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getVertexElementName).collect(Collectors.joining(", "));
@@ -131,6 +166,12 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         }
     }
 
+    /**
+     * Начинает сборку элемента вершины.
+     *
+     * @param element элемент вершины.
+     * @return адрес элемента.
+     */
     private long beginElement(VertexElement element) {
         int i = this.currentMask;
         int j = i & ~element.mask();

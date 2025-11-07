@@ -10,15 +10,21 @@ import org.lwjgl.opengl.GL12;
 
 import java.util.function.BiConsumer;
 
-public record SamplerUniformApplier<T>(BiConsumer<SamplerUniform, T> applyConsumer) {
+/**
+ * Установщик текстуры, принимающий объект текстуры и устанавливающий её в семплер.
+ *
+ * @param uploadConsumer метод установки текстуры.
+ * @param <T> текстура.
+ */
+public record SamplerUniformUploader<T>(BiConsumer<SamplerUniform, T> uploadConsumer) {
 
-    public static final SamplerUniformApplier<GlTex> GL_TEX = new SamplerUniformApplier<>(
+    public static final SamplerUniformUploader<GlTex> GL_TEX = new SamplerUniformUploader<>(
             (samplerUniform, glTex) -> {
                 GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + samplerUniform.getSamplerId());
                 GlStateManager._bindTexture(glTex.getTexId());
             }
     );
-    public static final SamplerUniformApplier<GlTextureView> GL_TEXTURE_VIEW = new SamplerUniformApplier<>(
+    public static final SamplerUniformUploader<GlTextureView> GL_TEXTURE_VIEW = new SamplerUniformUploader<>(
             (samplerUniform, textureView) -> {
                 GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + samplerUniform.getSamplerId());
                 GlTexture glTexture = textureView.texture();
@@ -36,7 +42,7 @@ public record SamplerUniformApplier<T>(BiConsumer<SamplerUniform, T> applyConsum
                 glTexture.checkDirty(o);
             }
     );
-    public static final SamplerUniformApplier<Integer> TEXTURE_ID = new SamplerUniformApplier<>(
+    public static final SamplerUniformUploader<Integer> TEXTURE_ID = new SamplerUniformUploader<>(
             (samplerUniform, id) -> {
                 GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + samplerUniform.getSamplerId());
                 GlStateManager._bindTexture(id);

@@ -3,17 +3,28 @@ package com.ferra13671.cometrenderer.program.uniform.uniforms.sampler;
 import com.ferra13671.TextureUtils.GlTex;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.texture.GlTextureView;
 
-/*
- * Униформа, хранящая в себе текстуру
+/**
+ * Униформа, хранящая в себе параметр в виде текстуры.
+ *
+ * @see GlUniform
+ * @see UniformType
  */
 public class SamplerUniform extends GlUniform {
+    /** Айди семплера. **/
     private final int samplerId;
+    /** Runnable, загружающий параметр в униформу. **/
     private Runnable uploadRunnable = null;
 
+    /**
+     * @param name имя униформы.
+     * @param location локация униформы в OpenGL.
+     * @param glProgram программа ({@link GlProgram}), к которой привязана униформа.
+     */
     public SamplerUniform(String name, int location, GlProgram glProgram) {
         super(name, location, glProgram);
 
@@ -21,34 +32,53 @@ public class SamplerUniform extends GlUniform {
         glProgram.setSamplersAmount(this.samplerId);
     }
 
-    /*
-     * Устанавливает текстуру из GlTex
+    /**
+     * Устанавливает текстуру из GlTex.
+     *
+     * @param texture GlTex.
+     *
+     * @see GlTex
      */
     public void set(GlTex texture) {
-        this.uploadRunnable = () -> SamplerUniformApplier.GL_TEX.applyConsumer().accept(this, texture);
+        this.uploadRunnable = () -> SamplerUniformUploader.GL_TEX.uploadConsumer().accept(this, texture);
     }
 
-    /*
-     * Устанавливает текстуру из GlTextureView
+    /**
+     * Устанавливает текстуру из GlTextureView.
+     *
+     * @param textureView GlTextureView.
+     *
+     * @see GlTextureView
      */
     public void set(GlTextureView textureView) {
-        this.uploadRunnable = () -> SamplerUniformApplier.GL_TEXTURE_VIEW.applyConsumer().accept(this, textureView);
+        this.uploadRunnable = () -> SamplerUniformUploader.GL_TEXTURE_VIEW.uploadConsumer().accept(this, textureView);
     }
 
-    /*
-     * Устанавливает текстуру при помощи её андишника в OpenGL
+    /**
+     * Устанавливает текстуру при помощи её айди в OpenGL.
+     *
+     * @param textureId айди текстуры в OpenGL.
      */
     public void set(int textureId) {
-        this.uploadRunnable = () -> SamplerUniformApplier.TEXTURE_ID.applyConsumer().accept(this, textureId);
+        this.uploadRunnable = () -> SamplerUniformUploader.TEXTURE_ID.uploadConsumer().accept(this, textureId);
     }
 
-    /*
-     * Устанавливает текстуру кастомным установщиком
+    /**
+     * Устанавливает текстуру при помощи пользовательского установщика и объекта.
+     *
+     * @param applier установщик текстуры.
+     * @param texture объект текстуры.
+     * @param <T> текстура.
      */
-    public <T> void set(SamplerUniformApplier<T> applier, T texture) {
-        this.uploadRunnable = () -> applier.applyConsumer().accept(this, texture);
+    public <T> void set(SamplerUniformUploader<T> applier, T texture) {
+        this.uploadRunnable = () -> applier.uploadConsumer().accept(this, texture);
     }
 
+    /**
+     * Возвращает айди семплера.
+     *
+     * @return айди семплера.
+     */
     public int getSamplerId() {
         return this.samplerId;
     }

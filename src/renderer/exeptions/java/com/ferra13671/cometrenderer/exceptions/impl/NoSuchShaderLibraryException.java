@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.exceptions.impl;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
-/*
- * Это исключение вызывается, когда в загруженных шейдерных библиотеках не была найдена нужная
+/**
+ * Ошибка, вызываемая в том случае, когда не удалось найти нужную шейдерную библиотеку в списке загруженных.
  */
 public class NoSuchShaderLibraryException extends CometException {
     @java.io.Serial

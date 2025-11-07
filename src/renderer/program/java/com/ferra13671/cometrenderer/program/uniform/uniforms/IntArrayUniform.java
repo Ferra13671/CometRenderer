@@ -2,23 +2,30 @@ package com.ferra13671.cometrenderer.program.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL20;
 
-public class IntArrayUniform extends GlUniform {
-    private int[] value;
+/**
+ * Униформа, хранящая в себе параметр в виде int массива.
+ *
+ * @see GlUniform
+ * @see UniformType
+ */
+public class IntArrayUniform extends OneTypeGlUniform<int[]> {
 
+    /**
+     * @param name имя униформы.
+     * @param location локация униформы в OpenGL.
+     * @param glProgram программа ({@link GlProgram}), к которой привязана униформа.
+     */
     public IntArrayUniform(String name, int location, GlProgram glProgram) {
         super(name, location, glProgram);
-    }
-
-    public void set(int[] value) {
-        this.value = value;
     }
 
     @Override
     @OverriddenMethod
     public void upload() {
-        GL20.glUniform1iv(getLocation(), value);
+        GL20.glUniform1iv(getLocation(), this.value);
     }
 }

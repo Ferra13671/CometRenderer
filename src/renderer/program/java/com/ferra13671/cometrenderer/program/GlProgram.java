@@ -8,6 +8,8 @@ import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
+import com.ferra13671.cometrenderer.program.shader.GlShader;
+import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL20;
 
@@ -15,20 +17,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * Объект, хранящий в себе скомпилированный набор шейдеров ({@link GlShader}), готовых к использованию для отрисовки вершин в GPU.
+ * <p>
+ * Основной набор шейдеров в программе: вершинный(Vertex) и фрагментный(Fragment).
+ * Есть также дополнительные шейдеры, которые могут входить в программу: геометрический, тесселяционные и compute.
+ * <p>
+ * Программа также может иметь в себе униформы ({@link GlUniform}), предназначенные для передачи различных параметров для настройки обработки пикселей программой.
+ *
+ * @see GlobalCometCompiler
+ */
+//TODO setUniformIfPresent
+//TODO setSamplerIfPresent
+//TODO getProgramSnippets
 public class GlProgram implements Bindable {
     public static GlProgram ACTIVE_PROGRAM = null;
 
+    /** Имя программы. **/
     private final String name;
+    /** Айди программы в OpenGL. **/
     private final int id;
+    /** Список всех униформ программы. **/
     private final List<GlUniform> uniforms = new ArrayList<>();
+    /** Карта всех униформ программы, расположенных по их именам. **/
     private final HashMap<String, GlUniform> uniformsByName = new HashMap<>();
+    /** Список всех семплеров программы. **/
     private final List<SamplerUniform> samplers = new ArrayList<>();
-    //Количество семплеров (Юниформ с типом SAMPLER)
+    /** Количество всех семплеров программы. **/
     private int samplersAmount = 0;
-    //Количество забинженных буфферов (Юниформ с типом BUFFER)
-    private int buffersBindingsAmount = 0;
+    /** Количество привязанных индексов буфферов для униформ с типом BUFFER. **/
+    private int buffersIndexAmount = 0;
 
+    /**
+     * @param name имя программы.
+     * @param id айди программы в OpenGL.
+     * @param uniforms список всех униформ программы.
+     */
     public GlProgram(String name, int id, List<GlUniformSchema<?>> uniforms) {
         this.name = name;
         this.id = id;
@@ -36,7 +60,7 @@ public class GlProgram implements Bindable {
         for (GlUniformSchema<?> glUniformSchema : uniforms) {
             GlUniform uniform = glUniformSchema.uniformType().uniformCreator().apply(
                     glUniformSchema.name(),
-                    glUniformSchema.getIdFromProgram(this.id),
+                    glUniformSchema.getLocationFromProgram(this.id),
                     this
             );
 
@@ -51,8 +75,8 @@ public class GlProgram implements Bindable {
         }
     }
 
-    /*
-     * Привязывает к OpenGl программу
+    /**
+     * Устанавливает данную программу в OpenGL как активную в данный момент.
      */
     @Override
     @OverriddenMethod
@@ -65,8 +89,8 @@ public class GlProgram implements Bindable {
         ACTIVE_PROGRAM = this;
     }
 
-    /*
-     * Отвязывает с OpenGl программу
+    /**
+     * Устанавливает активную программу в OpenGL как 0 (т.е. без активной программы)
      */
     @Override
     @OverriddenMethod
@@ -76,22 +100,35 @@ public class GlProgram implements Bindable {
         ACTIVE_PROGRAM = null;
     }
 
-    /*
-     * Возвращает имя программы
+    /**
+     * Возвращает имя программы.
+     *
+     * @return имя программы.
      */
     public String getName() {
         return name;
     }
 
-    /*
-     * Возвращает айди программы в OpenGL
+    /**
+     * Возвращает айди программы в OpenGL.
+     *
+     * @return айди программы в OpenGL.
      */
     public int getId() {
         return id;
     }
 
-    /*
-     * Возвращает юниформу по её имени и типу, если юниформа не была найдена, то выдем ошибку
+    /**
+     * Возвращает униформу программы с данным именем и типом.
+     * Если униформа с данной конфигурацией не существует в программе, то метод вызовет ошибку.
+     *
+     * @param name имя требуемой униформы.
+     * @param type тип требуемой униформы.
+     * @param <T> униформа.
+     * @return требуемая униформа.
+     *
+     * @see GlUniform
+     * @see UniformType
      */
     public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
@@ -100,16 +137,32 @@ public class GlProgram implements Bindable {
         return uniform;
     }
 
-    /*
-     * Возвращает юниформу по её имени и типу
+    /**
+     * Возвращает униформу программы с данным именем и типом.
+     * Если униформа с данной конфигурацией не существует в программе, то метод вернет null.
+     *
+     * @param name имя требуемой униформы.
+     * @param type тип требуемой униформы.
+     * @param <T> униформа.
+     * @return требуемая униформа либо null, если таковая не была найдена.
+     *
+     * @see GlUniform
+     * @see UniformType
      */
     public <T extends GlUniform> T getUniformNullable(String name, UniformType<T> type) {
         return (T) uniformsByName.get(name);
     }
 
-    /*
-     * Возвращает семплер по его айдишнику
+    /**
+     * Возвращает семплер программы с данным айди.
+     * Если семплер с данным айди не существует в программе, то метод вызовет ошибку.
+     *
+     * @param samplerId айди требуемого семплера.
+     * @return требуемый семплер.
+     *
+     * @see SamplerUniform
      */
+    //TODO getSamplerNullable
     public SamplerUniform getSampler(int samplerId) {
         SamplerUniform sampler = samplers.get(samplerId);
         if (sampler == null)
@@ -117,29 +170,45 @@ public class GlProgram implements Bindable {
         return sampler;
     }
 
-    /*
-     * Возвращает количество забинженных буфферов в программе
+    /**
+     * Возвращает количество привязанных индексов буфферов для униформ с типом BUFFER.
+     *
+     * @return количество привязанных индексов буфферов для униформ с типом BUFFER.
+     *
+     * @see BufferUniform
      */
-    public int getBuffersBindingsAmount() {
-        return buffersBindingsAmount;
+    public int getBuffersIndexAmount() {
+        return buffersIndexAmount;
     }
 
-    /*
-     * Устанавливает количество забинженных буфферов в программе
+    /**
+     * Устанавливает количество привязанных индексов буфферов для униформ с типом BUFFER.
+     *
+     * @param buffersIndexAmount количество привязанных индексов буфферов для униформ с типом BUFFER.
+     *
+     * @see BufferUniform
      */
-    public void setBuffersBindingsAmount(int buffersBindingsAmount) {
-        this.buffersBindingsAmount = buffersBindingsAmount;
+    public void setBuffersIndexAmount(int buffersIndexAmount) {
+        this.buffersIndexAmount = buffersIndexAmount;
     }
 
-    /*
-     * Возвращает количество семплеров в программе
+    /**
+     * Возвращает количество всех семплеров программы.
+     *
+     * @return количество всех семплеров программы.
+     *
+     * @see SamplerUniform
      */
     public int getSamplersAmount() {
         return samplersAmount;
     }
 
-    /*
-     * Устанавливает количество семплеров в программе
+    /**
+     * Устанавливает количество всех семплеров программы.
+     *
+     * @param samplersAmount количество всех семплеров программы.
+     *
+     * @see SamplerUniform
      */
     public void setSamplersAmount(int samplersAmount) {
         this.samplersAmount = samplersAmount;

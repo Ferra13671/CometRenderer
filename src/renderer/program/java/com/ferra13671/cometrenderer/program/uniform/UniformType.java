@@ -6,8 +6,15 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUnifor
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import org.apache.commons.lang3.function.TriFunction;
 
-/*
- * Типы юниформ, которые на данный момент поддерживаются CometRenderer
+/**
+ * Объект, представляющий собой тип униформы.
+ * Какой тип имеет униформа, такой тип данных она и будет принимать.
+ *
+ * @param clazz класс униформы.
+ * @param uniformCreator функция, создающая новую униформу из входных данных (имя, локация, программа ({@link GlProgram}))
+ * @param <T> униформа.
+ *
+ * @see GlUniform
  */
 public record UniformType<T extends GlUniform>(Class<T> clazz, TriFunction<String, Integer, GlProgram, GlUniform> uniformCreator) {
     public static final UniformType<IntUniform> INT = new UniformType<>(IntUniform.class, IntUniform::new);

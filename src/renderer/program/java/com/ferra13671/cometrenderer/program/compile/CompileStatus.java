@@ -1,22 +1,32 @@
 package com.ferra13671.cometrenderer.program.compile;
 
-/*
- * Статус компиляции чего-либо
- * SUCCESSFUL — компиляция прошла успешно
- * FAILURE — при компиляции произошла ошибка
+/**
+ * Статус компиляции чего-либо.
+ * Имеет два типа:
+ * <br><table>
+ *     <tr><td>SUCCESSFUL — компиляция прошла успешно.</td></tr>
+ *     <tr><td>FAILURE — при компиляции возникла ошибка.</td></tr>
+ * </table>
  */
 public enum CompileStatus {
     SUCCESSFUL(1),
     FAILURE(0);
 
+    /** Айди статуса компиляции. **/
     public final int id;
 
+    /**
+     * @param id айди статуса компиляции.
+     */
     CompileStatus(int id) {
         this.id = id;
     }
 
-    /*
-     * Возвращает статус по его айди
+    /**
+     * Возвращает статус компиляции по его айди.
+     *
+     * @param id айди статуса компиляции.
+     * @return статус компиляции.
      */
     public static CompileStatus fromStatusId(int id) {
         for (CompileStatus compileStatus : values())

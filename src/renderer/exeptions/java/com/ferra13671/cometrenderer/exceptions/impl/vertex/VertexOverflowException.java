@@ -1,9 +1,10 @@
 package com.ferra13671.cometrenderer.exceptions.impl.vertex;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
+import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 
-/*
- * Это исключение вызывается, когда в VertexBuilder количество вершин превысило максимальное количество (16777215)
+/**
+ * Ошибка, вызываемая в том случае, когда в сборщике меша количество вершин превысило максимальное допустимое значение.
  */
 public class VertexOverflowException extends CometException {
 
@@ -13,7 +14,7 @@ public class VertexOverflowException extends CometException {
     public VertexOverflowException() {
         super(
                 "VertexBuilder overflow.",
-                "The number of vertices in VertexBuilder exceeded the maximum value (16777215).",
+                String.format("The number of vertices in VertexBuilder exceeded the maximum value (%s).", MeshBuilder.MAX_VERTICES),
                 new String[]{
                         "You may be adding vertices in an infinite loop.",
                         "You're a monster who managed to manually exceed the maximum number of vertices."

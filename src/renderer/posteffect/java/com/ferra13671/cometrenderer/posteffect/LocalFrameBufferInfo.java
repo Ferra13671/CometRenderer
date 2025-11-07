@@ -1,8 +1,12 @@
 package com.ferra13671.cometrenderer.posteffect;
 
-/*
+/**
  * Информация о локальном фреймбуффере пост эффекта.
- * Хранит в себе айди фреймбуффера и его цвет по умолчанию.
+ *
+ * @param name имя фреймбуффера.
+ * @param clearColor цвет очистки фреймбуффера.
+ *
+ * @see PostEffectPipeline
  */
 public record LocalFrameBufferInfo(String name, int clearColor) {
 }

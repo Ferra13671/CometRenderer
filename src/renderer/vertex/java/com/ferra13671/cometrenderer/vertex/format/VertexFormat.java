@@ -3,31 +3,39 @@ package com.ferra13671.cometrenderer.vertex.format;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
+import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
-/*
- * Формат вершин, используемый для привязки к буфферу вершин и последующей передаче буффера в OpenGL для переваривания рендеринга.
- * Если програма предназначена для формата вершин, несовместимым с выбранным в билдере вершин, то последствия могут быть разными.
+/**
+ * Формат вершины, представляющий собой структуру, используемую для привязки к буфферу вершин для последующей передачи в OpenGL и обработки рендерингом.
+ * Если программа будет использоваться с буффером вершин, имеющим формат вершины, непредназначенным для данной программы, то последствия могут быть разными.
+ *
+ * @see VertexElement
  */
 public class VertexFormat {
-    //Карта элементов структуры вершин по их имени
+    /** Карта элементов формата вершины по их имени. **/
     private final HashMap<String, VertexElement> vertexMap = new HashMap<>();
-    //Карта имен элементов структуры вершин
+    /** Карта имен элементов структуры вершины. **/
     private final HashMap<VertexElement, String> namesMap = new HashMap<>();
+    /** Список элементов формата вершины. **/
     private final List<VertexElement> vertexElements;
-    //Маска формата вершины, используемая в билдере вершин для проверки построенной вершины на правильность её структуры.
+    /** Маска формата вершины, используемая в билдере меша для проверки целостности вершины при окончании её сборки. **/
     private final int elementsMask;
-    //Размер вершины в байтах.
+    /** Размер вершины в байтах. **/
     private final int vertexSize;
-    //Оффсеты элементов структуры вершин
+    /** Оффсеты элементов формата вершины. **/
     private final int[] elementOffsets;
 
+    /**
+     * @param vertexElements список элементов формата вершины.
+     * @param elementNames список имен элементов формата вершины.
+     */
     public VertexFormat(List<VertexElement> vertexElements, List<String> elementNames) {
         this.vertexElements = vertexElements;
-        elementOffsets = new int[this.vertexElements.size()];
+        this.elementOffsets = new int[this.vertexElements.size()];
         this.elementsMask = vertexElements.stream().mapToInt(VertexElement::mask).reduce(0, (a, b) -> a | b);
 
         int size = 0;
@@ -40,67 +48,107 @@ public class VertexFormat {
 
             if (i > 0) {
                 //Добавляем в массив оффсетов оффсет текущего элемента
-                elementOffsets[i] = elementOffset;
+                this.elementOffsets[i] = elementOffset;
             } else
-                elementOffsets[i] = 0;
+                this.elementOffsets[i] = 0;
 
             elementOffset += vertexElement.getSize();
 
             //Добавляем в карту элементов элемент вместе с его именем
-            vertexMap.put(elementNames.get(i), vertexElement);
-            namesMap.put(vertexElement, elementNames.get(i));
+            this.vertexMap.put(elementNames.get(i), vertexElement);
+            this.namesMap.put(vertexElement, elementNames.get(i));
         }
         //Присваиваем размеру формата полученный размер
         this.vertexSize = size;
     }
 
+    /**
+     * Возвращает маску формата вершины, используемую в билдере меша для проверки целостности вершины при окончании её сборки.
+     *
+     * @return маска вершины.
+     *
+     * @see MeshBuilder
+     */
     public int getElementsMask() {
-        return elementsMask;
+        return this.elementsMask;
     }
 
+    /**
+     * Возвращает Stream элементов вершины по остаточной маске.
+     *
+     * @param mask маска элементов вершины.
+     * @return список элементов вершин, соответствующих маске.
+     *
+     * @see VertexElement
+     */
     public Stream<VertexElement> getElementsFromMask(int mask) {
-        return vertexElements.stream().filter(element -> element != null && (mask & element.mask()) != 0);
+        return this.vertexElements.stream().filter(element -> element != null && (mask & element.mask()) != 0);
     }
 
-    /*
-     * Возвращает список элементов формата
+    /**
+     * Возвращает список элементов формата вершины.
+     *
+     * @return список элементов формата вершины.
+     *
+     * @see VertexElement
      */
     public List<VertexElement> getVertexElements() {
-        return vertexElements;
+        return this.vertexElements;
     }
 
-    /*
-     * Возвращает элемент структуры вершины по его имени
+    /**
+     * Возвращает элемент формата вершины по его имени.
+     * Если в формате вершины элемента с данным именем не существует, то вызовется ошибка.
+     *
+     * @param name имя элемента формата вершины.
+     * @return элемент формата вершины.
+     *
+     * @see VertexElement
      */
     public VertexElement getVertexElement(String name) {
-        VertexElement vertexElement = vertexMap.get(name);
+        VertexElement vertexElement = this.vertexMap.get(name);
         if (vertexElement == null)
             ExceptionPrinter.printAndExit(new NoSuchVertexElementException(name));
         return vertexElement;
     }
 
-    /*
-     * Возвращает имя элемента структуры вершины
+    /**
+     * Возвращает имя элемента формата вершины.
+     *
+     * @param vertexElement элемент формата вершины.
+     * @return имя элемента формата вершины.
+     *
+     * @see VertexElement
      */
     public String getVertexElementName(VertexElement vertexElement) {
-        return namesMap.get(vertexElement);
+        return this.namesMap.get(vertexElement);
     }
 
-    /*
-     * Возвращает размер вершины
+    /**
+     * Возвращает размер вершины в байтах.
+     *
+     * @return размер вершины в байтах.
      */
     public int getVertexSize() {
-        return vertexSize;
+        return this.vertexSize;
     }
 
+    /**
+     * Возвращает оффсеты элементов формата вершины.
+     *
+     * @return оффсеты элементов формата вершины.
+     */
     public int[] getElementOffsets() {
-        return elementOffsets;
+        return this.elementOffsets;
     }
 
-    /*
-     * Возвращает оффсет для данного элемента формата
+    /**
+     * Возвращает оффсет для данного элемента формата вершины.
+     *
+     * @param vertexElement элемент формата вершины.
+     * @return оффсет для данного элемента.
      */
     public int getElementOffset(VertexElement vertexElement) {
-        return elementOffsets[vertexElement.getId()];
+        return this.elementOffsets[vertexElement.getId()];
     }
 }

@@ -8,8 +8,8 @@ import net.minecraft.client.gl.Framebuffer;
 
 import java.awt.*;
 
-/*
- * Фреймбуффер, имеющий в себе дополнительные методы и информацию
+/**
+ * Расширения майнкрафтовского фреймбуффера, имеющий в себе дополнительные методы и информацию.
  */
 public class CometFrameBuffer extends Framebuffer {
     private static final int TRANSLUCENT = new Color(0f, 0f, 0f, 0f).hashCode();
@@ -29,32 +29,34 @@ public class CometFrameBuffer extends Framebuffer {
         this.clearColor = clearColor;
     }
 
-    /*
-     * Очищает текстуру цвета фреймбуффера
+    /**
+     * Очищает текстуру цвета фреймбуффера.
      */
     public void clearColorTexture() {
         if (this.colorAttachment != null)
             RenderSystem.getDevice().createCommandEncoder().clearColorTexture(this.colorAttachment, this.clearColor);
     }
 
-    /*
-     * Очищает текстуру грубины фреймбуффера
+    /**
+     * Очищает текстуру глубины фреймбуффера.
      */
     public void clearDepthTexture() {
         if (this.depthAttachment != null)
             RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(this.depthAttachment, 0f);
     }
 
-    /*
-     * Очищает все текстуры фреймбуффера
+    /**
+     * Очищает все текстуры фреймбуффера.
      */
     public void clearAllTextures() {
         clearColorTexture();
         clearDepthTexture();
     }
 
-    /*
-     * Биндит фреймбуффер
+    /**
+     * Устанавливает текущий фреймбуффер как активный.
+     *
+     * @param setViewport устанавливать новый Viewport или нет.
      */
     public void bind(boolean setViewport) {
         GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, FrameBufferUtils.getFrameBufferId(this.colorAttachmentView, this.depthAttachmentView));

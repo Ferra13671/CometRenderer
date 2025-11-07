@@ -5,9 +5,11 @@ import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 
 import java.util.HashMap;
 
-/*
- * Контекст пост эффекта.
- * Хранит в себе построенный буффер вершин и список всех локальных фреймбуфферов.
+/**
+ * Контекст пост эффекта, передаваемый пассам для их отрисовки.
+ *
+ * @param mesh меш для отрисовки пасса на весь фреймбуффер.
+ * @param framebuffers список локальных фреймбуфферов пост эффекта.
  */
-public record PostEffectContext(Mesh buffer, HashMap<String, CometFrameBuffer> framebuffers) {
+public record PostEffectContext(Mesh mesh, HashMap<String, CometFrameBuffer> framebuffers) {
 }

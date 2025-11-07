@@ -8,26 +8,28 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 
-/*
+/**
  * Модификация обычного VertexConsumerProvider.Immediate, необходимая для дополнительной отрисовки всего контента в другой фреймбуффер.
- * Необходимо для пост эффектных шейдеров.
+ * Необходимо для использования пост эффектов на различный майнкрафт рендер (по типу использования пост эффекта на руки или сущности).
  */
 public class OverrideFrameBufferVertexConsumerProvider extends VertexConsumerProvider.Immediate {
-    //Родительный VertexConsumerProvider.Immediate (с которого мы будем "пиздить" рендер)
+    /** Родительный VertexConsumerProvider.Immediate (с которого мы будем "пиздить" рендер). **/
     private final Immediate parent;
-    //Фреймбуффер, в который будем перенаправлять рендер
+    /** Фреймбуффер, в который будем перенаправлять рендер. **/
     private final CometFrameBuffer overrideFrameBuffer;
-    //Изначальный фреймбуффер
+    /** Изначальный фреймбуффер. **/
     private final Framebuffer outputFrameBuffer;
-    //Очищать глубину или нет
-    private final boolean clearDepth, drawBack;
+    /** Очищать глубину или нет. **/
+    private final boolean clearDepth;
+    /** Отрисовывать ли обратно в фреймбуффер то, что мы спиздили, или нет. **/
+    private final boolean drawBack;
 
-    /*
-     * parent — родительный VertexConsumerProvider.Immediate (с которого мы будем "пиздить" рендер)
-     * overrideFrameBuffer — фреймбуффер, в который будет дополнительно отрисован весь контент
-     * outputFrameBuffer — изначальный фреймбуффер
-     * clearDepth — очищать глубину фреймбуффера или нет (true для рук)
-     * drawBack — отрисовывать ли обратно в фреймбуффер то, что мы спиздили, или нет
+    /**
+     * @param parent родительный VertexConsumerProvider.Immediate (с которого мы будем перенаправлять рендер).
+     * @param overrideFrameBuffer фреймбуффер, в который будем перенаправлять рендер.
+     * @param outputFrameBuffer изначальный фреймбуффер.
+     * @param clearDepth очищать глубину или нет.
+     * @param drawBack отрисовывать ли обратно в фреймбуффер то, что мы перенаправили, или нет.
      */
     public OverrideFrameBufferVertexConsumerProvider(Immediate parent, CometFrameBuffer overrideFrameBuffer, Framebuffer outputFrameBuffer, boolean clearDepth, boolean drawBack) {
         super(null, null);

@@ -2,30 +2,42 @@ package com.ferra13671.cometrenderer.posteffect;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.CometFrameBuffer;
+import com.ferra13671.cometrenderer.builders.PostEffectPipelineBuilder;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.format.CometVertexFormats;
+import com.ferra13671.cometrenderer.CometVertexFormats;
 import net.minecraft.client.gl.Framebuffer;
 
 import java.util.HashMap;
 import java.util.List;
 
-/*
+/**
  * Пост эффект, позволяющий накладывать "эффекты" на фреймбуффер.
- * При выполнении так же может создавать свои локальные фреймбуфферы, а так же может состоять из нескольких "подэффектов".
+ * При выполнении пост эффект так же может создавать свои локальные фреймбуфферы, а так же может состоять из нескольких пассов.
+ *
+ * @see ProgramPass
+ * @see LocalFrameBufferInfo
+ * @see PostEffectPipelineBuilder
  */
 public class PostEffectPipeline {
-    //Список информации о локальных фреймбуфферах
+    /** Список информации о локальных фреймбуфферах. **/
     private final List<LocalFrameBufferInfo> localFrameBuffers;
-    //Список всех действий пост эффекта
-    private final List<PostEffectPipelineAction> actions;
+    /** Список всех пассов пост эффекта. **/
+    private final List<ProgramPass> passes;
 
-    public PostEffectPipeline(List<LocalFrameBufferInfo> localFrameBuffers, List<PostEffectPipelineAction> actions) {
+    /**
+     * @param localFrameBuffers список информации о локальных фреймбуфферах.
+     * @param passes список всех пассов пост эффекта.
+     */
+    public PostEffectPipeline(List<LocalFrameBufferInfo> localFrameBuffers, List<ProgramPass> passes) {
         this.localFrameBuffers = localFrameBuffers;
-        this.actions = actions;
+        this.passes = passes;
     }
 
-    /*
-     * Выполняет отрисовку пост эффекта
+    /**
+     * Выполняет отрисовку пост эффекта.
+     *
+     * @param textureWidth длина текстуры.
+     * @param textureHeight высота текстуры.
      */
     public void execute(int textureWidth, int textureHeight) {
         //Создаём все локальные фреймбуфферы
@@ -45,17 +57,19 @@ public class PostEffectPipeline {
         }), frameBuffers);
 
         //Выполняем все действия пост эффекта
-        for (PostEffectPipelineAction action : actions)
-            action.execute(context);
+        for (ProgramPass pass : passes)
+            pass.execute(context);
 
         //Закрываем буффер вершин и все локальные фреймбуфферы
-        context.buffer().close();
+        context.mesh().close();
         for (Framebuffer f : context.framebuffers().values())
             f.delete();
     }
 
-    /*
-     * Возвращает новый билдер пост эффекта
+    /**
+     * Возвращает новый сборщик пост эффекта.
+     *
+     * @return новый сборщик пост эффекта.
      */
     public static PostEffectPipelineBuilder builder() {
         return new PostEffectPipelineBuilder();

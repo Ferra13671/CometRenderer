@@ -1,9 +1,11 @@
-package com.ferra13671.cometrenderer.vertex.format;
+package com.ferra13671.cometrenderer;
 
+import com.ferra13671.cometrenderer.builders.VertexFormatBuilder;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 
-/*
- * Все обычные форматы вершин, которые вы можете использовать там, где не нужно использовать кастомный формат вершин
+/**
+ * Самые примитивные форматы вершин, которые можно вообще придумать.
  */
 public final class CometVertexFormats {
 

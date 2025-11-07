@@ -2,9 +2,10 @@ package com.ferra13671.cometrenderer.exceptions.impl.load;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
-/*
- * Это исключение вызывается, когда получение контента шейдера через его путь произошло с ошибкой
+/**
+ * Ошибка, вызываемая в том случае, когда при загрузке контента шейдера произошла ошибка.
  */
+//TODO переименовать в LoadGlslContentException
 public class LoadShaderContentException extends CometException {
     @java.io.Serial
     private static final long serialVersionUID = -4206273236678422364L;

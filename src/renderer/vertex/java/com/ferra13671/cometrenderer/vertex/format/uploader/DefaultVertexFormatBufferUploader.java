@@ -2,10 +2,10 @@ package com.ferra13671.cometrenderer.vertex.format.uploader;
 
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
-import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class DefaultVertexFormatBufferUploader extends VertexFormatBufferUploade
             if (vbaIsNew)
                 GL30.glEnableVertexAttribArray(j);
 
-            if (vertexElement.getType() == VertexElementType.FLOAT) {
+            if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
                 GL30.glVertexAttribPointer(
                         j, vertexElement.getCount(), vertexElement.getType().glId(), false, i, format.getElementOffset(vertexElement)
                 );

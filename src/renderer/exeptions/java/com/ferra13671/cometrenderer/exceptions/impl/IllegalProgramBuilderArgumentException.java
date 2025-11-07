@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.exceptions.impl;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
-/*
- * Это исключение вызывается, когда сборщик программы имеет неверные данные
+/**
+ * Ошибка, вызываемая в том случае, когда в сборщике программы встретились неверные данные.
  */
 public class IllegalProgramBuilderArgumentException extends CometException {
     @java.io.Serial
@@ -11,7 +11,7 @@ public class IllegalProgramBuilderArgumentException extends CometException {
 
     public IllegalProgramBuilderArgumentException(String message) {
         super(
-                "Illegal argument in program builder..",
+                "Illegal argument in program builder.",
                 message,
                 new String[]{
                         "You did not specify all the required arguments before building program builder",
