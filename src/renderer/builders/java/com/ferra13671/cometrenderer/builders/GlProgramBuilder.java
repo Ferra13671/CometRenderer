@@ -31,6 +31,8 @@ public class GlProgramBuilder<T> {
     private ShaderSchema fragmentShader;
     /** Список униформ программы. **/
     private final List<GlUniformSchema<?>> uniforms = new ArrayList<>();
+    /** Фрагменты программы, которые будут добавлены в программу. **/
+    private final GlProgramSnippet[] snippets;
     /** Загрузчик контента шейдеров. **/
     private final CometLoader<T> loader;
 
@@ -42,8 +44,9 @@ public class GlProgramBuilder<T> {
      */
     public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
         for (GlProgramSnippet snippet : snippets)
-            uniforms.addAll(snippet.uniforms());
+            this.uniforms.addAll(snippet.uniforms());
         this.loader = loader;
+        this.snippets = snippets;
     }
 
     /**
@@ -147,6 +150,7 @@ public class GlProgramBuilder<T> {
                 this.name,
                 GlobalCometCompiler.compileShader(this.vertexShader.shaderEntry(), this.vertexShader.shaderType()),
                 GlobalCometCompiler.compileShader(this.fragmentShader.shaderEntry(), this.fragmentShader.shaderType()),
+                this.snippets,
                 this.uniforms
         );
     }

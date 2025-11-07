@@ -21,6 +21,7 @@ import org.lwjgl.opengl.GL20;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -34,7 +35,6 @@ import java.util.function.Consumer;
  *
  * @see GlobalCometCompiler
  */
-//TODO getProgramSnippets
 public class GlProgram implements Bindable, Compilable, Closeable {
     public static GlProgram ACTIVE_PROGRAM = null;
 
@@ -42,6 +42,8 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     private final String name;
     /** Айди программы в OpenGL. **/
     private final int id;
+    /** Фрагменты программы, добавленные в программу. **/
+    private final HashSet<GlProgramSnippet> snippets;
     /** Карта всех униформ программы, расположенных по их именам. **/
     private final HashMap<String, GlUniform> uniformsByName = new HashMap<>();
     /** Список всех семплеров программы. **/
@@ -58,9 +60,10 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param id айди программы в OpenGL.
      * @param uniforms список всех униформ программы.
      */
-    public GlProgram(String name, int id, List<GlUniformSchema<?>> uniforms) {
+    public GlProgram(String name, int id, HashSet<GlProgramSnippet> snippets, List<GlUniformSchema<?>> uniforms) {
         this.name = name;
         this.id = id;
+        this.snippets = snippets;
 
         for (GlUniformSchema<?> glUniformSchema : uniforms) {
             GlUniform uniform = glUniformSchema.uniformType().uniformCreator().apply(
@@ -131,7 +134,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @return имя программы.
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -140,7 +143,16 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @return айди программы в OpenGL.
      */
     public int getId() {
-        return id;
+        return this.id;
+    }
+
+    /**
+     * Возвращает фрагменты программы, добавленные в программу.
+     *
+     * @return фрагменты программы, добавленные в программу.
+     */
+    public HashSet<GlProgramSnippet> getSnippets() {
+        return this.snippets;
     }
 
     /**

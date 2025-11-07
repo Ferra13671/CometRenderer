@@ -8,14 +8,13 @@ import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderExcepti
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalShaderTypeException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import org.lwjgl.opengl.GL20;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Глобальный компилятор CometRender'а, используемый для компиляции различных объектов.
@@ -102,6 +101,7 @@ public class GlobalCometCompiler {
      * @param name имя программы.
      * @param vertexShader вершинный шейдер.
      * @param fragmentShader фрагментный шейдер.
+     * @param snippets фрагменты программы, добавленные в программу.
      * @param uniforms униформы программы.
      * @return скомпилированная программа.
      *
@@ -109,7 +109,7 @@ public class GlobalCometCompiler {
      * @see GlShader
      */
     //TODO возможность добавлять все типы шейдеров в программу
-    public static GlProgram compileProgram(String name, GlShader vertexShader, GlShader fragmentShader, List<GlUniformSchema<?>> uniforms) {
+    public static GlProgram compileProgram(String name, GlShader vertexShader, GlShader fragmentShader, GlProgramSnippet[] snippets, List<GlUniformSchema<?>> uniforms) {
         //Проверяем правильность типов шейдеров
         if (vertexShader.getShaderType() != ShaderType.Vertex)
             ExceptionPrinter.printAndExit(new IllegalShaderTypeException(vertexShader.getName(), "vertex"));
@@ -130,7 +130,7 @@ public class GlobalCometCompiler {
         allUniforms.addAll(fragmentShader.getExtraUniforms());
 
         //Создаём новую программу.
-        GlProgram program = new GlProgram(name, programId, allUniforms);
+        GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(snippets)), allUniforms);
 
         //Получаем результат компиляции
         CompileResult compileResult = program.getCompileResult();
