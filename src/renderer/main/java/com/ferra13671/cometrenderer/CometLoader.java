@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderLibraryContentException;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadGlslContentException;
-import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.builders.GlProgramBuilder;
 import com.ferra13671.cometrenderer.builders.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -76,7 +75,7 @@ public abstract class CometLoader<T> {
      * @see GlslFileEntry
      */
     public GlslFileEntry createGlslFileEntry(String name, T path) {
-        return GlobalCometCompiler.compileShaderEntry(name, glslContentGetter, path);
+        return new GlslFileEntry(name, glslContentGetter.apply(path));
     }
 
     /**

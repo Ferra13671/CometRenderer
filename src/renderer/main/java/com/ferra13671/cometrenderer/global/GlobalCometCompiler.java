@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.global;
 
+import com.ferra13671.cometrenderer.Pair;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
@@ -17,7 +18,6 @@ import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Глобальный компилятор CometRender'а, используемый для компиляции различных объектов.
@@ -108,12 +108,12 @@ public class GlobalCometCompiler {
      */
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType) {
         //Внедряем в контент шейдерные библиотеки, а так же получаем все юниформы, которые они добавляют
-        ShaderContent content = includeShaderLibraries(shaderEntry.content());
+        Pair<String, List<GlUniformSchema<?>>> content = includeShaderLibraries(shaderEntry.content());
 
         //Создаём шейдер в OpenGL
         int shaderId = GL20.glCreateShader(shaderType.glId);
         //Устанавливаем контент шейдеру
-        GL20.glShaderSource(shaderId, content.content());
+        GL20.glShaderSource(shaderId, content.getLeft());
         //Компилируем шейдер
         GL20.glCompileShader(shaderId);
 
@@ -125,42 +125,7 @@ public class GlobalCometCompiler {
             ExceptionPrinter.printAndExit(new CompileShaderException(shaderEntry.name(), compileResult.message()));
 
         //Возвращаем класс программы
-        return new GlShader(shaderEntry.name(), shaderId, content.uniforms(), shaderType);
-    }
-
-    /**
-     * Компилирует контент шейдера для последующего его применения.
-     *
-     * @param name имя контента.
-     * @param contentGetter функция для получения контента из пути.
-     * @param shaderPath путь к контенту.
-     * @return контент шейдера.
-     * @param <T> тип объекта, используемого как путь к контенту шейдеров.
-     */
-    //TODO убрать т.к. хуйня.
-    public static <T> GlslFileEntry compileShaderEntry(String name, Function<T, String> contentGetter, T shaderPath) {
-        return new GlslFileEntry(name, contentGetter.apply(shaderPath));
-    }
-
-    /**
-     * Компилирует шейдерную библиотеку из данных.
-     *
-     * @param name имя шейдерной библиотеки.
-     * @param contentGetter функция для получения контента из пути.
-     * @param libraryPath путь к контенту.
-     * @param uniforms униформы шейдерной библиотеки.
-     * @return шейдерная библиотека.
-     * @param <T> тип объекта, используемого как путь к контенту шейдеров.
-     */
-    //TODO убрать
-    public static <T> GlShaderLibrary compileShaderLibrary(String name, Function<T, String> contentGetter, T libraryPath, List<GlUniformSchema<?>> uniforms) {
-        return new GlShaderLibrary(
-                new GlslFileEntry(
-                        name,
-                        contentGetter.apply(libraryPath)
-                ),
-                uniforms
-        );
+        return new GlShader(shaderEntry.name(), shaderId, content.getRight(), shaderType);
     }
 
     /**
@@ -169,7 +134,7 @@ public class GlobalCometCompiler {
      * @param content контент шейдера.
      * @return шейдерный контент с внедренными библиотеками и добавленными униформами.
      */
-    public static ShaderContent includeShaderLibraries(String content) {
+    public static Pair<String, List<GlUniformSchema<?>>> includeShaderLibraries(String content) {
         List<GlUniformSchema<?>> uniforms = new ArrayList<>();
 
         boolean writeAction = false;
@@ -208,6 +173,6 @@ public class GlobalCometCompiler {
             s.append(ch);
         }
 
-        return new ShaderContent(content, uniforms);
+        return new Pair<>(content, uniforms);
     }
 }
