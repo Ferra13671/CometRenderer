@@ -54,9 +54,8 @@ public class CometRenderer {
             .uniform("modelViewMat", UniformType.MATRIX)
             .build();
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
-    //TODO переименовать название униформы в shaderColor
     private static final GlProgramSnippet colorSnippet = GlProgramSnippet.builder()
-            .uniform("color", UniformType.VEC4)
+            .uniform("shaderColor", UniformType.VEC4)
             .build();
     /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
     private static GlProgram globalProgram;
@@ -180,7 +179,7 @@ public class CometRenderer {
      * @see CometRenderer#colorSnippet
      */
     public static void initShaderColor() {
-        Vec4GlUniform colorUniform = globalProgram.getUniform("color", UniformType.VEC4);
+        Vec4GlUniform colorUniform = globalProgram.getUniform("shaderColor", UniformType.VEC4);
         if (colorUniform != null)
             colorUniform.set(getShaderColor());
     }

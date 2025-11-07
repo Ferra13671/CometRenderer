@@ -158,8 +158,8 @@ public class TestMod implements ModInitializer, Mc {
         }));
 
         //------ multi-colored textured rect with position-color-texture program ------//
-        CometRenderer.setGlobalProgram(positionColorTextureProgram);
         CometRenderer.resetShaderColor();
+        CometRenderer.setGlobalProgram(positionColorTextureProgram);
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
         positionColorTextureProgram.getUniform("u_Texture", UniformType.SAMPLER).set(texture);
@@ -178,5 +178,6 @@ public class TestMod implements ModInitializer, Mc {
                     .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
                     .element("Texture", VertexElementType.FLOAT, 1f, 0f);
         }));
+        CometRenderer.resetShaderColor();
     }
 }
