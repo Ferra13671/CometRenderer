@@ -12,24 +12,23 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUnif
  *
  * @see <a href="https://wikis.khronos.org/opengl/Uniform_(GLSL)">OpenGL uniform wiki</a>
  */
-//TODO загрузка данных в униформу независимо от бинда программы.
 public abstract class GlUniform {
     /** Имя униформы. **/
     protected final String name;
     /** Локация униформы в OpenGL. **/
     protected final int location;
     /** Программа ({@link GlProgram}), к которой привязана униформа. **/
-    protected final GlProgram glProgram;
+    protected final GlProgram program;
 
     /**
      * @param name имя униформы.
      * @param location локация униформы в OpenGL.
-     * @param glProgram программа ({@link GlProgram}), к которой привязана униформа.
+     * @param program программа ({@link GlProgram}), к которой привязана униформа.
      */
-    public GlUniform(String name, int location, GlProgram glProgram) {
+    public GlUniform(String name, int location, GlProgram program) {
         this.name = name;
         this.location = location;
-        this.glProgram = glProgram;
+        this.program = program;
     }
 
     /**
@@ -56,8 +55,8 @@ public abstract class GlUniform {
      * @return программа, к которой привязана униформа.
      * @see GlProgram
      */
-    public GlProgram getGlProgram() {
-        return glProgram;
+    public GlProgram getProgram() {
+        return program;
     }
 
     /**

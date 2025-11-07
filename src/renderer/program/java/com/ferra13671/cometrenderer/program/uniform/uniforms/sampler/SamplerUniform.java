@@ -41,6 +41,7 @@ public class SamplerUniform extends GlUniform {
      */
     public void set(GlTex texture) {
         this.uploadRunnable = () -> SamplerUniformUploader.GL_TEX.uploadConsumer().accept(this, texture);
+        this.program.addUpdatedUniform(this);
     }
 
     /**
@@ -52,6 +53,7 @@ public class SamplerUniform extends GlUniform {
      */
     public void set(GlTextureView textureView) {
         this.uploadRunnable = () -> SamplerUniformUploader.GL_TEXTURE_VIEW.uploadConsumer().accept(this, textureView);
+        this.program.addUpdatedUniform(this);
     }
 
     /**
@@ -61,6 +63,7 @@ public class SamplerUniform extends GlUniform {
      */
     public void set(int textureId) {
         this.uploadRunnable = () -> SamplerUniformUploader.TEXTURE_ID.uploadConsumer().accept(this, textureId);
+        this.program.addUpdatedUniform(this);
     }
 
     /**
@@ -72,6 +75,7 @@ public class SamplerUniform extends GlUniform {
      */
     public <T> void set(SamplerUniformUploader<T> applier, T texture) {
         this.uploadRunnable = () -> applier.uploadConsumer().accept(this, texture);
+        this.program.addUpdatedUniform(this);
     }
 
     /**

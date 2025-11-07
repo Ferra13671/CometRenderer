@@ -60,6 +60,7 @@ public class BufferUniform extends GlUniform {
      */
     public void set(GpuBufferSlice gpuBufferSlice) {
         this.uploadRunnable = () -> BufferUniformUploader.GPU_BUFFER_SLICE.uploadConsumer().accept(this, gpuBufferSlice);
+        this.program.addUpdatedUniform(this);
     }
 
     /**
@@ -71,6 +72,7 @@ public class BufferUniform extends GlUniform {
      */
     public void set(GlGpuBuffer glGpuBuffer) {
         this.uploadRunnable = () -> BufferUniformUploader.GL_GPU_BUFFER.uploadConsumer().accept(this, glGpuBuffer);
+        this.program.addUpdatedUniform(this);
     }
 
     /**
@@ -82,6 +84,7 @@ public class BufferUniform extends GlUniform {
      */
     public void set(GpuBuffer gpuBuffer) {
         this.uploadRunnable = () -> BufferUniformUploader.GPU_BUFFER.uploadConsumer().accept(this, gpuBuffer);
+        this.program.addUpdatedUniform(this);
     }
 
     /**
@@ -93,6 +96,7 @@ public class BufferUniform extends GlUniform {
      */
     public <T> void set(BufferUniformUploader<T> uploader, T buffer) {
         this.uploadRunnable = () -> uploader.uploadConsumer().accept(this, buffer);
+        this.program.addUpdatedUniform(this);
     }
 
     @Override

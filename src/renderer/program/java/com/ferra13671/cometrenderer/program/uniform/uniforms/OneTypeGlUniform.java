@@ -32,5 +32,6 @@ public abstract class OneTypeGlUniform<T> extends GlUniform {
      */
     public void set(T value) {
         this.value = value;
+        this.program.addUpdatedUniform(this);
     }
 }

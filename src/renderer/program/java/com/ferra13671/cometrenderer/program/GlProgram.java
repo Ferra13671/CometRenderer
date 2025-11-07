@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.OneTypeGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
@@ -42,8 +43,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     private final String name;
     /** Айди программы в OpenGL. **/
     private final int id;
-    /** Список всех униформ программы. **/
-    private final List<GlUniform> uniforms = new ArrayList<>();
     /** Карта всех униформ программы, расположенных по их именам. **/
     private final HashMap<String, GlUniform> uniformsByName = new HashMap<>();
     /** Список всех семплеров программы. **/
@@ -52,6 +51,8 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     private int samplersAmount = 0;
     /** Количество привязанных индексов буфферов для униформ с типом BUFFER. **/
     private int buffersIndexAmount = 0;
+    /** Список униформ, которые были обновлены. Данный список нужен для того, что бы повторно загружать в GPU только те униформы, которые были обновлены. **/
+    private final List<GlUniform> updatedUniforms = new ArrayList<>();
 
     /**
      * @param name имя программы.
@@ -72,7 +73,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
             if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
                 ExceptionPrinter.printAndExit(new NoSuchUniformException(uniform.getName(), this.name));
 
-            this.uniforms.add(uniform);
             this.uniformsByName.put(glUniformSchema.name(), uniform);
 
             if (uniform instanceof SamplerUniform sampler)
@@ -94,7 +94,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     @OverriddenMethod
     public void close() {
         GL20.glDeleteProgram(getId());
-        this.uniforms.clear();
         this.uniformsByName.clear();
         this.samplers.clear();
     }
@@ -107,8 +106,11 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public void bind() {
         GL20.glUseProgram(getId());
 
-        for (GlUniform glUniform : uniforms)
-            glUniform.upload();
+        if (!this.updatedUniforms.isEmpty()) {
+            for (GlUniform glUniform : this.updatedUniforms)
+                glUniform.upload();
+            this.updatedUniforms.clear();
+        }
 
         ACTIVE_PROGRAM = this;
     }
@@ -140,6 +142,19 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * Добавляет в список программы униформу, которая была обновлена.
+     * Данный метод должен всегда вызываться в реализации униформы в том случае, когда данные в них были обновлены, что бы изменения были загружены на GPU.
+     *
+     * @param uniform униформа, которая была обновлена.
+     *
+     * @see GlUniform
+     * @see OneTypeGlUniform
+     */
+    public void addUpdatedUniform(GlUniform uniform) {
+        this.updatedUniforms.add(uniform);
     }
 
     /**

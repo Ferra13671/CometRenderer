@@ -35,12 +35,13 @@ public class Matrix4fGlUniform extends GlUniform {
      * @param matrix4f матрица, которая будет записан как параметр в униформу.
      */
     public void set(Matrix4f matrix4f) {
-        matrix4f.get(buffer);
+        matrix4f.get(this.buffer);
+        this.program.addUpdatedUniform(this);
     }
 
     @Override
     @OverriddenMethod
     public void upload() {
-        GL20.glUniformMatrix4fv(getLocation(), false, buffer);
+        GL20.glUniformMatrix4fv(getLocation(), false, this.buffer);
     }
 }
