@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.global;
 
 import com.ferra13671.cometrenderer.Pair;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.NoSuchShaderLibraryException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalShaderTypeException;
@@ -12,11 +13,11 @@ import com.ferra13671.cometrenderer.program.compile.CompileStatusChecker;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
-import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
 import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
 import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -50,7 +51,53 @@ public class GlobalCometCompiler {
      * Т.е. вы можете вставить в шейдер библиотеку, которая вместе с собой вставит еще одну библиотеку, и так множество раз.
      * Главное не делать зацикленные библиотеки либо библиотеки, которые внедряют сами себя, иначе вы просто заставите компилятор внедрять шейдерные библиотеки в бесконечном цикле, а это плохо.
      */
-    private static final String includeLibAction = "#include";
+    private static final String includeLibOperator = "#include";
+    /** Карта шейдерных библиотек по их именам. **/
+    private static final HashMap<String, GlShaderLibrary> libraries = new HashMap<>();
+
+    /**
+     * Регистрирует шейдерные библиотеку в компилятор CometRenderer'а.
+     *
+     * @param shaderLibraries шейдерные библиотеки, которые нужно зарегистрировать.
+     */
+    public static void registerShaderLibraries(GlShaderLibrary... shaderLibraries) {
+        for (GlShaderLibrary shaderLibrary : shaderLibraries)
+            libraries.put(shaderLibrary.libraryEntry().name(), shaderLibrary);
+    }
+
+    /**
+     * Отменяет регистрацию шейдерных библиотек в компиляторе CometRender'а.
+     *
+     * @param shaderLibraries шейдерные библиотеки, которым нужно отменить регистрацию.
+     */
+    public static void unregisterShaderLibraries(GlShaderLibrary... shaderLibraries) {
+        for (GlShaderLibrary shaderLibrary : shaderLibraries)
+            libraries.remove(shaderLibrary.libraryEntry().name());
+    }
+
+    /**
+     * Отменяет регистрацию шейдерных библиотек в компиляторе CometRender'а.
+     *
+     * @param names имена шейдерных библиотек, которым нужно отменить регистрацию.
+     */
+    public static void unregisterShaderLibraries(String... names) {
+        for (String name : names)
+            libraries.remove(name);
+    }
+
+    /**
+     * Возвращает зарегистрированную шейдерную библиотеку по её имени.
+     * Если в списке зарегистрированных шейдерных библиотек нужная не была найдена, то вызовется ошибка.
+     *
+     * @param name имя требуемой шейдерной библиотеки.
+     * @return шейдерная библиотека.
+     */
+    public static GlShaderLibrary getShaderLibrary(String name) {
+        GlShaderLibrary library = libraries.get(name);
+        if (library == null)
+            ExceptionPrinter.printAndExit(new NoSuchShaderLibraryException(name));
+        return library;
+    }
 
     /**
      * Компилирует программу из данных.
@@ -152,7 +199,7 @@ public class GlobalCometCompiler {
             }
             if (ch == '<' && writeAction) {
                 writeAction = false;
-                if (s.toString().equals(includeLibAction)) {
+                if (s.toString().equals(includeLibOperator)) {
                     writeLibName = true;
                 }
                 s = new StringBuilder();
@@ -161,11 +208,11 @@ public class GlobalCometCompiler {
             if (ch == '>' && writeLibName) {
                 writeLibName = false;
 
-                GlShaderLibrary library = GlShaderLibraries.getLibrary(s.toString());
+                GlShaderLibrary library = getShaderLibrary(s.toString());
                 uniforms.addAll(library.uniforms());
 
-                content = content.replace(includeLibAction.concat("<").concat(s.toString()).concat(">"), library.libraryEntry().content());
-                i -= "#".concat(includeLibAction).concat("<").concat(s.toString()).length();
+                content = content.replace(includeLibOperator.concat("<").concat(s.toString()).concat(">"), library.libraryEntry().content());
+                i -= "#".concat(includeLibOperator).concat("<").concat(s.toString()).length();
                 s = new StringBuilder();
                 continue;
             }

@@ -12,7 +12,6 @@ import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibraries;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -72,7 +71,7 @@ public class TestMod implements ModInitializer, Mc {
 
         //------ LIBRARY TEST ------//
         logger.info("Test library system...");
-        GlShaderLibraries.addLibraries(
+        GlobalCometCompiler.registerShaderLibraries(
                 CometLoaders.IN_JAR.createShaderLibraryBuilder()
                         .name("test")
                         .library("test.glsl")
@@ -82,7 +81,7 @@ public class TestMod implements ModInitializer, Mc {
                         .library("test2.glsl")
                         .build()
         );
-        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>").content());
+        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>").getLeft());
         //--------------------------//
     }
 
