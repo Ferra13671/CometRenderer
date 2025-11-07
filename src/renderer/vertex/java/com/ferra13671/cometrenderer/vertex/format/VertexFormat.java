@@ -1,8 +1,10 @@
 package com.ferra13671.cometrenderer.vertex.format;
 
+import com.ferra13671.cometrenderer.builders.VertexFormatBuilder;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
+import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 
 import java.util.HashMap;
@@ -166,5 +168,14 @@ public class VertexFormat {
             this.vertexFormatBuffer = bufferSupplier.get();
 
         return this.vertexFormatBuffer;
+    }
+
+    /**
+     * Возвращает новый сборщик формата вершины.
+     *
+     * @return новый сборщик формата вершины.
+     */
+    public static VertexFormatBuilder builder() {
+        return new VertexFormatBuilder().element("Position", VertexElementType.FLOAT, 3);
     }
 }

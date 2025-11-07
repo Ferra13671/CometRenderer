@@ -18,7 +18,7 @@ public final class VertexFormatBuilder {
     /** Список имен элементов вершин. **/
     private final List<String> elementNames = new ArrayList<>();
 
-    private VertexFormatBuilder() {}
+    public VertexFormatBuilder() {}
 
     /**
      * Добавляет элемент вершины в сборщика.
@@ -40,14 +40,10 @@ public final class VertexFormatBuilder {
      * Собирает элементы вершины в формат вершины.
      *
      * @return формат вершины.
+     *
+     * @see VertexFormat
      */
     public VertexFormat build() {
         return new VertexFormat(vertexElements, elementNames);
-    }
-
-    //TODO перенести в VertexFormat
-    @Deprecated(forRemoval = true)
-    public static VertexFormatBuilder builder() {
-        return new VertexFormatBuilder().element("Position", VertexElementType.FLOAT, 3);
     }
 }
