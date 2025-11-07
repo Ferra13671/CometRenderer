@@ -201,12 +201,24 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      *
      * @see SamplerUniform
      */
-    //TODO getSamplerNullable
     public SamplerUniform getSampler(int samplerId) {
-        SamplerUniform sampler = samplers.get(samplerId);
+        SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler == null)
             ExceptionPrinter.printAndExit(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
         return sampler;
+    }
+
+    /**
+     * Возвращает семплер программы с данным айди.
+     * Если семплер с данным айди не существует в программе, то метод вернет null.
+     *
+     * @param samplerId айди требуемого семплера.
+     * @return требуемый семплер либо null, если такового не было найдено.
+     *
+     * @see SamplerUniform
+     */
+    public SamplerUniform getSamplerNullable(int samplerId) {
+        return this.samplers.get(samplerId);
     }
 
     /**
