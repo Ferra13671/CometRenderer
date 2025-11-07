@@ -7,7 +7,6 @@ package com.ferra13671.cometrenderer.program.compile;
  * @param message сообщение ошибки, если компиляция произошла с ошибками.
  *
  * @see CompileStatus
- * @see CompileStatusChecker
  */
 public record CompileResult(CompileStatus status, String message) {
 
@@ -19,4 +18,6 @@ public record CompileResult(CompileStatus status, String message) {
     public boolean isFailure() {
         return status.equals(CompileStatus.FAILURE);
     }
+
+
 }

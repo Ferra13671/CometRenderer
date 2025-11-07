@@ -1,5 +1,7 @@
 package com.ferra13671.cometrenderer.program.compile;
 
+import org.lwjgl.opengl.GL11;
+
 /**
  * Статус компиляции чего-либо.
  * Имеет два типа:
@@ -9,8 +11,8 @@ package com.ferra13671.cometrenderer.program.compile;
  * </table>
  */
 public enum CompileStatus {
-    SUCCESSFUL(1),
-    FAILURE(0);
+    SUCCESSFUL(GL11.GL_TRUE),
+    FAILURE(GL11.GL_FALSE);
 
     /** Айди статуса компиляции. **/
     public final int id;

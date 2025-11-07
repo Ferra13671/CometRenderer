@@ -1,0 +1,20 @@
+package com.ferra13671.cometrenderer;
+
+import com.ferra13671.cometrenderer.program.compile.CompileResult;
+
+/**
+ * Интерфейс, реализующий возможность получить результат компиляции объекта, расширяющего данный интерфейс.
+ *
+ * @see CompileResult
+ */
+public interface Compilable {
+
+    /**
+     * Возвращает результат компиляции объекта, расширяющего данный интерфейс.
+     *
+     * @return результат компиляции объекта.
+     *
+     * @see CompileResult
+     */
+    CompileResult getCompileResult();
+}

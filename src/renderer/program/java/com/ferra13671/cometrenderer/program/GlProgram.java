@@ -1,18 +1,23 @@
 package com.ferra13671.cometrenderer.program;
 
 import com.ferra13671.cometrenderer.Bindable;
+import com.ferra13671.cometrenderer.Compilable;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
+import com.ferra13671.cometrenderer.program.compile.CompileResult;
+import com.ferra13671.cometrenderer.program.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
-import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL20;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +35,7 @@ import java.util.List;
 //TODO setUniformIfPresent
 //TODO setSamplerIfPresent
 //TODO getProgramSnippets
-public class GlProgram implements Bindable {
+public class GlProgram implements Bindable, Compilable, Closeable {
     public static GlProgram ACTIVE_PROGRAM = null;
 
     /** Имя программы. **/
@@ -73,6 +78,25 @@ public class GlProgram implements Bindable {
             if (uniform instanceof SamplerUniform sampler)
                 samplers.add(sampler);
         }
+    }
+
+    @Override
+    @OverriddenMethod
+    public CompileResult getCompileResult() {
+        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(getId(), GL20.GL_LINK_STATUS));
+        return new CompileResult(
+                status,
+                status == CompileStatus.FAILURE ? StringUtils.trim(GL20.glGetProgramInfoLog(getBuffersIndexAmount())) : ""
+        );
+    }
+
+    @Override
+    @OverriddenMethod
+    public void close() {
+        GL20.glDeleteProgram(getId());
+        this.uniforms.clear();
+        this.uniformsByName.clear();
+        this.samplers.clear();
     }
 
     /**

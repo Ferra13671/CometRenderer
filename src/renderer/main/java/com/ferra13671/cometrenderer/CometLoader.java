@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer;
 
+import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderLibraryContentException;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadGlslContentException;
@@ -7,7 +8,7 @@ import com.ferra13671.cometrenderer.builders.GlProgramBuilder;
 import com.ferra13671.cometrenderer.builders.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
+import com.ferra13671.cometrenderer.compile.GlShaderLibrary;
 
 import java.util.function.Function;
 

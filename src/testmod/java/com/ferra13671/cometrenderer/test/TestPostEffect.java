@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.test;
 
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.GlslFileEntry;
+import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.buffer.framebuffer.CometFrameBuffer;
 import com.ferra13671.cometrenderer.posteffect.PostEffectPipeline;
 import com.ferra13671.cometrenderer.posteffect.ProgramPass;

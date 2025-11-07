@@ -1,8 +1,6 @@
-package com.ferra13671.cometrenderer.shaderlibrary;
+package com.ferra13671.cometrenderer.compile;
 
-import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
-import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.CometLoader;
 
 import java.util.List;

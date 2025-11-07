@@ -2,10 +2,10 @@ package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
-import com.ferra13671.cometrenderer.GlslFileEntry;
+import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
+import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.global.GlobalCometLoader;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
@@ -20,7 +20,6 @@ import java.util.List;
  * @param <T> тип объекта, используемого как путь к контенту шейдеров.
  *
  * @see GlProgram
- * @see GlProgramSchema
  */
 //TODO возможность добавлять в программу другие шейдеры, кроме вершинного и фрагментного.
 public class GlProgramBuilder<T> {
@@ -115,7 +114,7 @@ public class GlProgramBuilder<T> {
      * @see GlUniform
      */
     public <S extends GlUniform> GlProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
-        uniforms.add(new GlUniformSchema<>(name, uniformType));
+        this.uniforms.add(new GlUniformSchema<>(name, uniformType));
         return this;
     }
 
@@ -127,7 +126,7 @@ public class GlProgramBuilder<T> {
      */
     public GlProgramBuilder<T> sampler(String name) {
         //Да, семплер это тоже униформа
-        uniforms.add(new GlUniformSchema<>(name, UniformType.SAMPLER));
+        this.uniforms.add(new GlUniformSchema<>(name, UniformType.SAMPLER));
         return this;
     }
 
@@ -137,13 +136,18 @@ public class GlProgramBuilder<T> {
      * @return программа, скомпилированная сборщиком.
      */
     public GlProgram build() {
-        if (name == null)
+        if (this.name == null)
             ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException("Missing name in program builder."));
-        if (vertexShader == null)
-            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", name)));
-        if (fragmentShader == null)
-            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", name)));
+        if (this.vertexShader == null)
+            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", this.name)));
+        if (this.fragmentShader == null)
+            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.name)));
 
-        return GlobalCometLoader.loadProgram(new GlProgramSchema(name, vertexShader, fragmentShader, uniforms));
+        return GlobalCometCompiler.compileProgram(
+                this.name,
+                GlobalCometCompiler.compileShader(this.vertexShader.shaderEntry(), this.vertexShader.shaderType()),
+                GlobalCometCompiler.compileShader(this.fragmentShader.shaderEntry(), this.fragmentShader.shaderType()),
+                this.uniforms
+        );
     }
 }

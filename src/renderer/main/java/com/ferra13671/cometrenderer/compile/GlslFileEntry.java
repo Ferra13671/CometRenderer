@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.compile;
 
 /**
  * Объект, представляющий собой контент glsl файла, используемые в различных целях.

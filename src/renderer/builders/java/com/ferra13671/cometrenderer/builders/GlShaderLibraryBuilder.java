@@ -1,12 +1,12 @@
 package com.ferra13671.cometrenderer.builders;
 
-import com.ferra13671.cometrenderer.GlslFileEntry;
+import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalLibraryBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
+import com.ferra13671.cometrenderer.compile.GlShaderLibrary;
 
 import java.util.ArrayList;
 import java.util.List;

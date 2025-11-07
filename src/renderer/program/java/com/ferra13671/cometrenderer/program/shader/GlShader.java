@@ -1,10 +1,17 @@
 package com.ferra13671.cometrenderer.program.shader;
 
+import com.ferra13671.cometrenderer.Compilable;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
-import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
+import com.ferra13671.cometrenderer.compile.GlShaderLibrary;
+import com.ferra13671.cometrenderer.program.compile.CompileResult;
+import com.ferra13671.cometrenderer.program.compile.CompileStatus;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL20;
 
+import java.io.Closeable;
 import java.util.List;
 
 /**
@@ -16,10 +23,11 @@ import java.util.List;
  * @see GlShaderLibrary
  * @see GlobalCometCompiler
  */
-//TODO возможность получить контент шейдера
-public class GlShader {
+public class GlShader implements Compilable, Closeable {
     /** Имя шейдера. **/
     private final String name;
+    /** Контент шейдера. **/
+    private final String content;
     /** Айди шейдера в OpenGL. **/
     private final int id;
     /** Униформы, добавленные шейдером при интеграции в него шейдерных библиотек. **/
@@ -37,11 +45,29 @@ public class GlShader {
      * @see ShaderType
      * @see GlShaderLibrary
      */
-    public GlShader(String name, int id, List<GlUniformSchema<?>> extraUniforms, ShaderType shaderType) {
+    public GlShader(String name, String content, int id, List<GlUniformSchema<?>> extraUniforms, ShaderType shaderType) {
         this.name = name;
+        this.content = content;
         this.id = id;
         this.extraUniforms = extraUniforms;
         this.shaderType = shaderType;
+    }
+
+    @Override
+    @OverriddenMethod
+    public void close() {
+        GL20.glDeleteShader(getId());
+        this.extraUniforms.clear();
+    }
+
+    @Override
+    @OverriddenMethod
+    public CompileResult getCompileResult() {
+        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(getId(), GL20.GL_COMPILE_STATUS));
+        return new CompileResult(
+                status,
+                status == CompileStatus.FAILURE ? StringUtils.trim(GL20.glGetShaderInfoLog(getId())) : ""
+        );
     }
 
     /**
@@ -51,6 +77,15 @@ public class GlShader {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Возвращает контент шейдера.
+     *
+     * @return контент шейдера.
+     */
+    public String getContent() {
+        return content;
     }
 
     /**

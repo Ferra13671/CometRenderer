@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.global;
+package com.ferra13671.cometrenderer.compile;
 
 import com.ferra13671.cometrenderer.Pair;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
@@ -9,11 +9,8 @@ import com.ferra13671.cometrenderer.exceptions.impl.IllegalShaderTypeException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
-import com.ferra13671.cometrenderer.program.compile.CompileStatusChecker;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
-import com.ferra13671.cometrenderer.GlslFileEntry;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
-import com.ferra13671.cometrenderer.shaderlibrary.GlShaderLibrary;
 import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
@@ -128,19 +125,21 @@ public class GlobalCometCompiler {
         //Компилируем программу
         GL20.glLinkProgram(programId);
 
+        List<GlUniformSchema<?>> allUniforms = new ArrayList<>(uniforms);
+        allUniforms.addAll(vertexShader.getExtraUniforms());
+        allUniforms.addAll(fragmentShader.getExtraUniforms());
+
+        //Создаём новую программу.
+        GlProgram program = new GlProgram(name, programId, allUniforms);
+
         //Получаем результат компиляции
-        CompileResult compileResult = CompileStatusChecker.checkProgramCompile(programId);
+        CompileResult compileResult = program.getCompileResult();
 
         //Выбрасываем ошибку, если нужно
         if (compileResult.isFailure())
             ExceptionPrinter.printAndExit(new CompileProgramException(name, compileResult.message()));
 
-        List<GlUniformSchema<?>> allUniforms = new ArrayList<>(uniforms);
-        allUniforms.addAll(vertexShader.getExtraUniforms());
-        allUniforms.addAll(fragmentShader.getExtraUniforms());
-
-        //Возвращаем класс программы
-        return new GlProgram(name, programId, allUniforms);
+        return program;
     }
 
     /**
@@ -164,15 +163,17 @@ public class GlobalCometCompiler {
         //Компилируем шейдер
         GL20.glCompileShader(shaderId);
 
+        //Создаём новый шейдер
+        GlShader shader = new GlShader(shaderEntry.name(), content.getLeft(), shaderId, content.getRight(), shaderType);
+
         //Получаем результат компиляции
-        CompileResult compileResult = CompileStatusChecker.checkShaderCompile(shaderId);
+        CompileResult compileResult = shader.getCompileResult();
 
         //Выбрасываем ошибку, если нужно
         if (compileResult.isFailure())
             ExceptionPrinter.printAndExit(new CompileShaderException(shaderEntry.name(), compileResult.message()));
 
-        //Возвращаем класс программы
-        return new GlShader(shaderEntry.name(), shaderId, content.getRight(), shaderType);
+        return shader;
     }
 
     /**

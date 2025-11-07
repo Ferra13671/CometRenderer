@@ -13,7 +13,6 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUnif
  * @see <a href="https://wikis.khronos.org/opengl/Uniform_(GLSL)">OpenGL uniform wiki</a>
  */
 //TODO загрузка данных в униформу независимо от бинда программы.
-//TODO удаление программы.
 public abstract class GlUniform {
     /** Имя униформы. **/
     protected final String name;
