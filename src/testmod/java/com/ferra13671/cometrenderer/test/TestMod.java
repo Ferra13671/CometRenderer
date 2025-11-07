@@ -73,11 +73,11 @@ public class TestMod implements ModInitializer, Mc {
         //------ LIBRARY TEST ------//
         logger.info("Test library system...");
         GlShaderLibraries.addLibraries(
-                CometLoaders.IN_JAR.createLibraryBuilder()
+                CometLoaders.IN_JAR.createShaderLibraryBuilder()
                         .name("test")
                         .library("test.glsl")
                         .build(),
-                CometLoaders.IN_JAR.createLibraryBuilder()
+                CometLoaders.IN_JAR.createShaderLibraryBuilder()
                         .name("test2")
                         .library("test2.glsl")
                         .build()

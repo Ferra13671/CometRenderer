@@ -62,8 +62,7 @@ public abstract class CometLoader<T> {
      * @see GlShaderLibraryBuilder
      * @see GlShaderLibrary
      */
-    //TODO переименовать в createShaderLibraryBuilder
-    public GlShaderLibraryBuilder<T> createLibraryBuilder(GlProgramSnippet... snippets) {
+    public GlShaderLibraryBuilder<T> createShaderLibraryBuilder(GlProgramSnippet... snippets) {
         return new GlShaderLibraryBuilder<>(shaderLibraryContentGetter, snippets);
     }
 
