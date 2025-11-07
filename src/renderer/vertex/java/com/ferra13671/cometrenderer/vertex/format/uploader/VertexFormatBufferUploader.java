@@ -10,9 +10,8 @@ import java.util.HashMap;
  * Установщик формата вершины к буфферу вершин.
  */
 public abstract class VertexFormatBufferUploader {
-    @Deprecated(forRemoval = true)
-    //TODO перенести в VertexFormat
-    protected final HashMap<VertexFormat, VertexFormatBuffer> vertexFormatBuffers = new HashMap<>();
 
     public abstract void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat);
+
+    public abstract VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat);
 }

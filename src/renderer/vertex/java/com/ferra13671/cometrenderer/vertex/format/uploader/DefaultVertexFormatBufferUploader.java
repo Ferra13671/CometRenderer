@@ -16,23 +16,23 @@ public class DefaultVertexFormatBufferUploader extends VertexFormatBufferUploade
     @Override
     @OverriddenMethod
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
+        VertexFormatBuffer vertexFormatBuffer = vertexFormat.getVertexFormatBufferOrCreate(() -> createVertexFormatBuffer(vertexFormat));
 
-        VertexFormatBuffer formatBuffer = this.vertexFormatBuffers.get(vertexFormat);
-        if (formatBuffer == null) {
-            int i = GL30.glGenVertexArrays();
-            GL30.glBindVertexArray(i);
+        GL30.glBindVertexArray(vertexFormatBuffer.glId());
+        if (vertexFormatBuffer.buffer().get() != vertexBuffer) {
             vertexBuffer.bind();
-            setupBuffer(vertexFormat, true);
-            VertexFormatBuffer formatBuffer2 = new VertexFormatBuffer(i, vertexFormat, new AtomicReference<>(vertexBuffer));
-            this.vertexFormatBuffers.put(vertexFormat, formatBuffer2);
-        } else {
-            GL30.glBindVertexArray(formatBuffer.glId());
-            if (formatBuffer.buffer().get() != vertexBuffer) {
-                vertexBuffer.bind();
-                formatBuffer.buffer().set(vertexBuffer);
-                setupBuffer(vertexFormat, false);
-            }
+            vertexFormatBuffer.buffer().set(vertexBuffer);
+            setupBuffer(vertexFormat, false);
         }
+    }
+
+    @Override
+    @OverriddenMethod
+    public VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
+        int i = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(i);
+        setupBuffer(vertexFormat, true);
+        return new VertexFormatBuffer(i, vertexFormat, new AtomicReference<>());
     }
 
     private void setupBuffer(VertexFormat format, boolean vbaIsNew) {

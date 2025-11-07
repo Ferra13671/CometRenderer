@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -28,6 +29,8 @@ public class VertexFormat {
     private final int vertexSize;
     /** Оффсеты элементов формата вершины. **/
     private final int[] elementOffsets;
+    /** Буффер формата вершины, используемый для быстрой привязки аттрибутов буфферу вершин. **/
+    private VertexFormatBuffer vertexFormatBuffer = null;
 
     /**
      * @param vertexElements список элементов формата вершины.
@@ -150,5 +153,18 @@ public class VertexFormat {
      */
     public int getElementOffset(VertexElement vertexElement) {
         return this.elementOffsets[vertexElement.getId()];
+    }
+
+    /**
+     * Создаёт новый буффер формата вершины, если он ещё не был создан, и возвращает его.
+     *
+     * @param bufferSupplier метод, создающий новый буффер формата вершины.
+     * @return буффер формата вершины.
+     */
+    public VertexFormatBuffer getVertexFormatBufferOrCreate(Supplier<VertexFormatBuffer> bufferSupplier) {
+        if (this.vertexFormatBuffer == null)
+            this.vertexFormatBuffer = bufferSupplier.get();
+
+        return this.vertexFormatBuffer;
     }
 }

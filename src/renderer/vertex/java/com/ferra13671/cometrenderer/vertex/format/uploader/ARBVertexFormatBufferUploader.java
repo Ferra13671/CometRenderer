@@ -27,43 +27,44 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
     @Override
     @OverriddenMethod
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
-        VertexFormatBuffer vertexFormatBuffer = vertexFormatBuffers.get(vertexFormat);
-        if (vertexFormatBuffer == null) {
-            int vertBuffId = GL30.glGenVertexArrays();
-            GL30.glBindVertexArray(vertBuffId);
+        VertexFormatBuffer vertexFormatBuffer = vertexFormat.getVertexFormatBufferOrCreate(() -> createVertexFormatBuffer(vertexFormat));
 
-            List<VertexElement> vertexElements = vertexFormat.getVertexElements();
-
-            for (int i = 0; i < vertexElements.size(); i++) {
-                VertexElement vertexElement = vertexElements.get(i);
-                GL30.glEnableVertexAttribArray(i);
-
-                if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
-                    ARBVertexAttribBinding.glVertexAttribFormat(
-                            i, vertexElement.getCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
-                    );
-                } else {
-                    ARBVertexAttribBinding.glVertexAttribIFormat(
-                            i, vertexElement.getCount(), vertexElement.getType().glId(), vertexFormat.getElementOffset(vertexElement)
-                    );
-                }
-
-                ARBVertexAttribBinding.glVertexAttribBinding(i, 0);
+        GL30.glBindVertexArray(vertexFormatBuffer.glId());
+        if (vertexFormatBuffer.buffer().get() != vertexBuffer) {
+            if (applyMesaWorkaround && vertexFormatBuffer.buffer().get() != null && vertexFormatBuffer.buffer().get().getId() == vertexBuffer.getId()) {
+                ARBVertexAttribBinding.glBindVertexBuffer(0, 0, 0L, 0);
             }
 
             ARBVertexAttribBinding.glBindVertexBuffer(0, vertexBuffer.getId(), 0L, vertexFormat.getVertexSize());
-            VertexFormatBuffer vertexFormatBuffer2 = new VertexFormatBuffer(vertBuffId, vertexFormat, new AtomicReference<>(vertexBuffer));
-            vertexFormatBuffers.put(vertexFormat, vertexFormatBuffer2);
-        } else {
-            GL30.glBindVertexArray(vertexFormatBuffer.glId());
-            if (vertexFormatBuffer.buffer().get() != vertexBuffer) {
-                if (applyMesaWorkaround && vertexFormatBuffer.buffer().get() != null && vertexFormatBuffer.buffer().get().getId() == vertexBuffer.getId()) {
-                    ARBVertexAttribBinding.glBindVertexBuffer(0, 0, 0L, 0);
-                }
-
-                ARBVertexAttribBinding.glBindVertexBuffer(0, vertexBuffer.getId(), 0L, vertexFormat.getVertexSize());
-                vertexFormatBuffer.buffer().set(vertexBuffer);
-            }
+            vertexFormatBuffer.buffer().set(vertexBuffer);
         }
+    }
+
+    @Override
+    @OverriddenMethod
+    public VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
+        int vertBuffId = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(vertBuffId);
+
+        List<VertexElement> vertexElements = vertexFormat.getVertexElements();
+
+        for (int i = 0; i < vertexElements.size(); i++) {
+            VertexElement vertexElement = vertexElements.get(i);
+            GL30.glEnableVertexAttribArray(i);
+
+            if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
+                ARBVertexAttribBinding.glVertexAttribFormat(
+                        i, vertexElement.getCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
+                );
+            } else {
+                ARBVertexAttribBinding.glVertexAttribIFormat(
+                        i, vertexElement.getCount(), vertexElement.getType().glId(), vertexFormat.getElementOffset(vertexElement)
+                );
+            }
+
+            ARBVertexAttribBinding.glVertexAttribBinding(i, 0);
+        }
+
+        return new VertexFormatBuffer(vertBuffId, vertexFormat, new AtomicReference<>());
     }
 }
