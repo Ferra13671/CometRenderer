@@ -11,9 +11,16 @@ import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 public interface IMesh extends AutoCloseable {
 
     /**
-     * Возвращает количество индексов для буффера вершин.
+     * Возвращает количество вершин для буффера вершин.
      *
-     * @return количество индексов для буффера вершин.
+     * @return количество вершин для буффера вершин.
+     */
+    int getVertexCount();
+
+    /**
+     * Возвращает количество индексов для буффера индексов.
+     *
+     * @return количество индексов для буффера индексов.
      */
     int getIndexCount();
 

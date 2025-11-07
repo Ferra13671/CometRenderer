@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * Тип индексов, используемых в буффере индексов.
  *
- * @see ShapeIndexBuffer
+ * @see IndexBufferGenerator
  */
 public enum IndexType {
 	SHORT(2, GL11.GL_UNSIGNED_SHORT),

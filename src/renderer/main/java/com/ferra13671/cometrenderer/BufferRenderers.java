@@ -3,7 +3,8 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
-import com.ferra13671.cometrenderer.vertex.ShapeIndexBuffer;
+import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.format.uploader.VertexFormatManager;
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -50,17 +51,25 @@ public final class BufferRenderers {
             builtBuffer.close();
     };
     public static final BiConsumer<IMesh, Boolean> COMET_BUFFER = (mesh, close) -> {
-        if (mesh.getIndexCount() > 0) {
-            ShapeIndexBuffer shapeIndexBuffer = mesh.getDrawMode().shapeIndexBuffer;
+        int indexCount = mesh.getIndexCount();
+        int vertexCount = mesh.getVertexCount();
+        DrawMode drawMode = mesh.getDrawMode();
 
+        if (vertexCount > 0) {
             VertexFormatManager.uploadFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
-            com.ferra13671.cometrenderer.buffer.GpuBuffer indexBuffer = mesh.getIndexBuffer();
-            if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
-                ExceptionPrinter.printAndExit(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
-            indexBuffer.bind();
+            if (drawMode.useIndexBuffer()) {
 
-            drawIndexed(mesh.getIndexCount(), mesh.getDrawMode().glId, shapeIndexBuffer.getIndexType().glId);
+                IndexBufferGenerator indexBufferGenerator = mesh.getDrawMode().indexBufferGenerator();
+
+                com.ferra13671.cometrenderer.buffer.GpuBuffer indexBuffer = mesh.getIndexBuffer();
+                if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
+                    ExceptionPrinter.printAndExit(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
+                indexBuffer.bind();
+
+                GL11.glDrawElements(drawMode.glId(), indexCount, indexBufferGenerator.getIndexType().glId, 0);
+            } else
+                GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
         }
         if (close)
             mesh.close();

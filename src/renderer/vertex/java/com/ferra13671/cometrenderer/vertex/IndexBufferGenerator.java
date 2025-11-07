@@ -33,16 +33,7 @@ import java.nio.ByteBuffer;
  * @see IndexType
  * @see GpuBuffer
  */
-public final class ShapeIndexBuffer {
-	public static final ShapeIndexBuffer sharedSequential = new ShapeIndexBuffer(1, 1, IntConsumer::accept);
-	public static final ShapeIndexBuffer sharedSequentialQuad = new ShapeIndexBuffer(4, 6, (indexConsumer, firstVertexIndex) -> {
-		indexConsumer.accept(firstVertexIndex);
-		indexConsumer.accept(firstVertexIndex + 1);
-		indexConsumer.accept(firstVertexIndex + 2);
-		indexConsumer.accept(firstVertexIndex + 2);
-		indexConsumer.accept(firstVertexIndex + 3);
-		indexConsumer.accept(firstVertexIndex);
-	});
+public final class IndexBufferGenerator {
 
 	/** Количество вершин до триангуляции. **/
 	private final int vertexCountInShape;
@@ -57,7 +48,7 @@ public final class ShapeIndexBuffer {
 	/** Прошлый требуемый размер. Необходимо для того, что бы если несколько раз отрисовывать одни и те же вершины, то не нужно было каждый раз создавать новый буффер индексов. **/
 	private int size;
 
-	public ShapeIndexBuffer(int vertexCountInShape, int vertexCountInTriangulated, Triangulator triangulator) {
+	public IndexBufferGenerator(int vertexCountInShape, int vertexCountInTriangulated, Triangulator triangulator) {
 		this.vertexCountInShape = vertexCountInShape;
 		this.vertexCountInTriangulated = vertexCountInTriangulated;
 		this.triangulator = triangulator;

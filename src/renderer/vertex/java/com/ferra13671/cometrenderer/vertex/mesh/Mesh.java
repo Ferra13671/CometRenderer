@@ -18,6 +18,8 @@ import java.nio.ByteBuffer;
 public class Mesh implements IMesh {
     /** Формат вершин. **/
     private final VertexFormat vertexFormat;
+    /** Количество вершин. **/
+    private final int vertexCount;
     /** Количество индексов. **/
     private final int indexCount;
     /** Тип отрисовки вершин. **/
@@ -28,18 +30,26 @@ public class Mesh implements IMesh {
     /**
      * @param byteBuffer буффер вершин, находящийся на CPU.
      * @param vertexFormat формат вершин.
+     * @param vertexCount количество вершин.
      * @param indexCount количество индексов.
      * @param drawMode тип отрисовки вершин.
      * @param afterInitRunnable действие, выполняемое после инициализации меша.
      */
-    public Mesh(ByteBuffer byteBuffer, VertexFormat vertexFormat, int indexCount, DrawMode drawMode, Runnable afterInitRunnable) {
+    public Mesh(ByteBuffer byteBuffer, VertexFormat vertexFormat, int vertexCount, int indexCount, DrawMode drawMode, Runnable afterInitRunnable) {
         this.vertexFormat = vertexFormat;
+        this.vertexCount = vertexCount;
         this.indexCount = indexCount;
         this.drawMode = drawMode;
 
         this.vertexBuffer = new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
 
         afterInitRunnable.run();
+    }
+
+    @Override
+    @OverriddenMethod
+    public int getVertexCount() {
+        return this.vertexCount;
     }
 
     @Override
@@ -57,7 +67,7 @@ public class Mesh implements IMesh {
     @Override
     @OverriddenMethod
     public GpuBuffer getIndexBuffer() {
-        return this.drawMode.shapeIndexBuffer.getIndexBuffer(this.indexCount);
+        return this.drawMode.indexBufferGenerator().getIndexBuffer(this.indexCount);
     }
 
     @Override

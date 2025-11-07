@@ -128,8 +128,8 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
             if (closeableBuffer == null) {
                 return null;
             } else {
-                int i = this.drawMode.getIndexCount(this.vertexCount);
-                return new Mesh(closeableBuffer.getBuffer(), this.vertexFormat, i, this.drawMode, () -> {
+                int i = this.drawMode.indexCountFunction().apply(this.vertexCount);
+                return new Mesh(closeableBuffer.getBuffer(), this.vertexFormat, this.vertexCount, i, this.drawMode, () -> {
                     if (this.closeAllocatorAfterBuild)
                         this.bufferAllocator.close();
                 });
