@@ -115,7 +115,7 @@ public class TestMod implements ModInitializer, Mc {
                     .wrapping(TextureWrapping.DEFAULT)
                     .build();
 
-        CometRenderer.bindMainFrameBuffer();
+        CometRenderer.bindMainFramebuffer();
 
         if (TestPostEffect.handsFrameBuffer.textureWidth != mc.getFramebuffer().textureWidth || TestPostEffect.handsFrameBuffer.textureHeight != mc.getFramebuffer().textureHeight || prevScale != mc.getWindow().getScaleFactor()) {
 
@@ -128,7 +128,7 @@ public class TestMod implements ModInitializer, Mc {
         TestPostEffect.postEffect.execute(mc.getWindow().getWidth(), mc.getWindow().getHeight());
         TestPostEffect.handsFrameBuffer.clearColorTexture();
 
-        CometRenderer.bindMainFrameBuffer();
+        CometRenderer.bindMainFramebuffer();
 
         //------ Rect with random color with position program ------//
         CometRenderer.setGlobalProgram(positionProgram);

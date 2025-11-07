@@ -38,7 +38,6 @@ import java.util.function.Supplier;
  * Контролирует всю работу рендера.
  */
 //TODO bindFramebuffer(FrameBuffer framebuffer)
-//TODO переименовать bindMainFrameBuffer в bindMainFramebuffer
 //TODO переименовать bindFrameBuffer в bindFramebuffer
 public class CometRenderer {
     /** Состояние инициализации рендера. **/
@@ -270,7 +269,7 @@ public class CometRenderer {
      *
      * @see Framebuffer
      */
-    public static void bindMainFrameBuffer() {
+    public static void bindMainFramebuffer() {
         Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
 
         if (framebuffer != null) {
