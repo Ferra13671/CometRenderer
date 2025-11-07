@@ -20,8 +20,7 @@ import java.util.function.Function;
  * @param <T> тип пути, при помощи которого будет возвращаться glsl контент.
  */
 public abstract class CometLoader<T> {
-    //TODO переименовать в glslContentGetter
-    private final Function<T, String> shaderContentGetter = path -> {
+    private final Function<T, String> glslContentGetter = path -> {
         String content = null;
         try {
             content = getContent(path);
@@ -30,8 +29,7 @@ public abstract class CometLoader<T> {
         }
         return content;
     };
-    //TODO переименовать в shaderLibraryContentGetter
-    private final Function<T, String> libraryContentGetter = path -> {
+    private final Function<T, String> shaderLibraryContentGetter = path -> {
         String content = null;
         try {
             content = getContent(path);
@@ -66,7 +64,7 @@ public abstract class CometLoader<T> {
      */
     //TODO переименовать в createShaderLibraryBuilder
     public GlShaderLibraryBuilder<T> createLibraryBuilder(GlProgramSnippet... snippets) {
-        return new GlShaderLibraryBuilder<>(libraryContentGetter, snippets);
+        return new GlShaderLibraryBuilder<>(shaderLibraryContentGetter, snippets);
     }
 
     /**
@@ -78,9 +76,8 @@ public abstract class CometLoader<T> {
      *
      * @see GlslFileEntry
      */
-    //TODO переименовать в createGlslEntry
-    public GlslFileEntry createShaderEntry(String name, T path) {
-        return GlobalCometCompiler.compileShaderEntry(name, shaderContentGetter, path);
+    public GlslFileEntry createGlslFileEntry(String name, T path) {
+        return GlobalCometCompiler.compileShaderEntry(name, glslContentGetter, path);
     }
 
     /**

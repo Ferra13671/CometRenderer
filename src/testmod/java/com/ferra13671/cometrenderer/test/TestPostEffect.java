@@ -17,7 +17,7 @@ public class TestPostEffect implements Mc {
     public static final CometFrameBuffer handsFrameBuffer = new CometFrameBuffer("Hands mesh", 1, 1, new Color(0f, 0f, 0f, 0f).hashCode(), false);
 
 
-    public static final GlslFileEntry postEffectFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("post-effect-fragment", "post-effect-test.fsh");
+    public static final GlslFileEntry postEffectFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("post-effect-fragment", "post-effect-test.fsh");
     public static GlProgram postEffectProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet())
             .name("post-effect-program")
             .vertexShader(TestMod.positionVertexEntry)

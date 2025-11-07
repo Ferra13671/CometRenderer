@@ -66,7 +66,7 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> vertexShader(String name, T shaderPath) {
-        this.vertexShader = new ShaderSchema(loader.createShaderEntry(name, shaderPath), ShaderType.Vertex);
+        this.vertexShader = new ShaderSchema(loader.createGlslFileEntry(name, shaderPath), ShaderType.Vertex);
         return this;
     }
 
@@ -89,7 +89,7 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> fragmentShader(String name, T shaderPath) {
-        this.fragmentShader = new ShaderSchema(loader.createShaderEntry(name, shaderPath), ShaderType.Fragment);
+        this.fragmentShader = new ShaderSchema(loader.createGlslFileEntry(name, shaderPath), ShaderType.Fragment);
         return this;
     }
 

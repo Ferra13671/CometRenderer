@@ -31,14 +31,14 @@ public class TestMod implements ModInitializer, Mc {
     private static final Function<String, TextureLoader> textureLoader = path -> TextureLoaders.INPUT_STREAM.apply(TestMod.class.getClassLoader().getResourceAsStream(path));
 
     private static GlProgram positionProgram;
-    public static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex", "position.vsh");
-    private static final GlslFileEntry positionFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment", "position.fsh");
+    public static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex", "position.vsh");
+    private static final GlslFileEntry positionFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment", "position.fsh");
     private static GlProgram positionColorProgram;
-    private static final GlslFileEntry positionColorVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex2", "position-colored.vsh");
-    private static final GlslFileEntry positionColorFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment2", "position-colored.fsh");
+    private static final GlslFileEntry positionColorVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex2", "position-colored.vsh");
+    private static final GlslFileEntry positionColorFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment2", "position-colored.fsh");
     private static GlProgram positionColorTextureProgram;
-    private static final GlslFileEntry positionColorTextureVertexEntry = CometLoaders.IN_JAR.createShaderEntry("test-vertex3", "texture-colored.vsh");
-    private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createShaderEntry("test-fragment3", "texture-colored.fsh");
+    private static final GlslFileEntry positionColorTextureVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex3", "texture-colored.vsh");
+    private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment3", "texture-colored.fsh");
     private static GLTexture texture;
 
     /*
