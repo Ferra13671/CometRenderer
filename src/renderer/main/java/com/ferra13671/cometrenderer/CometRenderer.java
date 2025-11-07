@@ -37,7 +37,6 @@ import java.util.function.Supplier;
  * Главный класс рендеринга.
  * Контролирует всю работу рендера.
  */
-//TODO bindFramebuffer(FrameBuffer framebuffer)
 public class CometRenderer {
     /** Состояние инициализации рендера. **/
     private static boolean initialized = false;
@@ -269,8 +268,17 @@ public class CometRenderer {
      * @see Framebuffer
      */
     public static void bindMainFramebuffer() {
-        Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
+        bindFramebuffer(MinecraftClient.getInstance().getFramebuffer());
+    }
 
+    /**
+     * Устанавливает данный фреймбуффер как активный.
+     *
+     * @param framebuffer фреймбуффер.
+     *
+     * @see Framebuffer
+     */
+    public static void bindFramebuffer(Framebuffer framebuffer) {
         if (framebuffer != null) {
             if (framebuffer.getColorAttachmentView() != null && framebuffer.getDepthAttachmentView() != null)
                 bindFramebuffer(framebuffer.getColorAttachmentView(), framebuffer.getDepthAttachmentView());
