@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderLibraryContentException;
-import com.ferra13671.cometrenderer.exceptions.impl.load.LoadShaderContentException;
+import com.ferra13671.cometrenderer.exceptions.impl.load.LoadGlslContentException;
 import com.ferra13671.cometrenderer.global.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.builders.GlProgramBuilder;
 import com.ferra13671.cometrenderer.builders.GlShaderLibraryBuilder;
@@ -25,7 +25,7 @@ public abstract class CometLoader<T> {
         try {
             content = getContent(path);
         } catch (Exception e) {
-            ExceptionPrinter.printAndExit(new LoadShaderContentException(e));
+            ExceptionPrinter.printAndExit(new LoadGlslContentException(e));
         }
         return content;
     };
