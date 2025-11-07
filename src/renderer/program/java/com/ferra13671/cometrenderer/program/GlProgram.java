@@ -22,6 +22,7 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Объект, хранящий в себе скомпилированный набор шейдеров ({@link GlShader}), готовых к использованию для отрисовки вершин в GPU.
@@ -33,8 +34,6 @@ import java.util.List;
  *
  * @see GlobalCometCompiler
  */
-//TODO setUniformIfPresent
-//TODO setSamplerIfPresent
 //TODO getProgramSnippets
 public class GlProgram implements Bindable, Compilable, Closeable {
     public static GlProgram ACTIVE_PROGRAM = null;
@@ -177,6 +176,23 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     }
 
     /**
+     * Если требуемая униформа существует в программе, то будет выполнен данный метод с ней.
+     *
+     * @param name имя требуемой униформы.
+     * @param type тип требуемой униформы.
+     * @param consumer метод, который выполнится в том случае, если требуемая униформа существует в программе.
+     * @param <T> униформа.
+     *
+     * @see GlUniform
+     * @see UniformType
+     */
+    public <T extends GlUniform> void consumeIfUniformPresent(String name, UniformType<T> type, Consumer<T> consumer) {
+        T uniform = getUniformNullable(name, type);
+        if (uniform != null)
+            consumer.accept(uniform);
+    }
+
+    /**
      * Возвращает униформу программы с данным именем и типом.
      * Если униформа с данной конфигурацией не существует в программе, то метод вернет null.
      *
@@ -206,6 +222,20 @@ public class GlProgram implements Bindable, Compilable, Closeable {
         if (sampler == null)
             ExceptionPrinter.printAndExit(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
         return sampler;
+    }
+
+    /**
+     * Если требуемый семплер существует в программе, то будет выполнен данный метод с ним.
+     *
+     * @param samplerId айди требуемого семплера.
+     * @param consumer метод, который выполнится в том случае, если требуемый семплер существует в программе.
+     *
+     * @see SamplerUniform
+     */
+    public void consumerIfSamplerPresent(int samplerId, Consumer<SamplerUniform> consumer) {
+        SamplerUniform sampler = getSamplerNullable(samplerId);
+        if (sampler != null)
+            consumer.accept(sampler);
     }
 
     /**
