@@ -38,7 +38,6 @@ import java.util.function.Supplier;
  * Контролирует всю работу рендера.
  */
 //TODO bindFramebuffer(FrameBuffer framebuffer)
-//TODO переименовать bindFrameBuffer в bindFramebuffer
 public class CometRenderer {
     /** Состояние инициализации рендера. **/
     private static boolean initialized = false;
@@ -274,7 +273,7 @@ public class CometRenderer {
 
         if (framebuffer != null) {
             if (framebuffer.getColorAttachmentView() != null && framebuffer.getDepthAttachmentView() != null)
-                bindFrameBuffer(framebuffer.getColorAttachmentView(), framebuffer.getDepthAttachmentView());
+                bindFramebuffer(framebuffer.getColorAttachmentView(), framebuffer.getDepthAttachmentView());
         }
     }
 
@@ -287,7 +286,7 @@ public class CometRenderer {
      * @see Framebuffer
      * @see GpuTextureView
      */
-    public static void bindFrameBuffer(GpuTextureView colorTexture, GpuTextureView depthTexture) {
+    public static void bindFramebuffer(GpuTextureView colorTexture, GpuTextureView depthTexture) {
         FrameBufferUtils.bindFrameBuffer(
                 FrameBufferUtils.getFrameBufferId(colorTexture, depthTexture),
                 colorTexture

@@ -50,7 +50,7 @@ public class ProgramPass {
     public void execute(PostEffectContext context) {
         //Биндим выходной фреймбуффер
         Framebuffer outputFrameBuffer = output.apply(context);
-        CometRenderer.bindFrameBuffer(outputFrameBuffer.getColorAttachmentView(), outputFrameBuffer.getDepthAttachmentView());
+        CometRenderer.bindFramebuffer(outputFrameBuffer.getColorAttachmentView(), outputFrameBuffer.getDepthAttachmentView());
 
         //Биндим программу
         CometRenderer.setGlobalProgram(program);
