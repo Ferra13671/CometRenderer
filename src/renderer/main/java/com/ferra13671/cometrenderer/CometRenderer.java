@@ -279,7 +279,7 @@ public class CometRenderer {
      */
     public static void bindFramebuffer(Framebuffer framebuffer) {
         if (framebuffer != null) {
-            if (framebuffer.getColorAttachmentView() != null && framebuffer.getDepthAttachmentView() != null)
+            if (framebuffer.getColorAttachmentView() != null)
                 bindFramebuffer(framebuffer.getColorAttachmentView(), framebuffer.getDepthAttachmentView());
         }
     }
