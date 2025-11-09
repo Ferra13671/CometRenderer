@@ -5,7 +5,6 @@ import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchShaderLibraryException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
-import com.ferra13671.cometrenderer.exceptions.impl.IllegalShaderTypeException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -99,8 +98,7 @@ public class GlobalCometCompiler {
      * Компилирует программу из данных.
      *
      * @param name имя программы.
-     * @param vertexShader вершинный шейдер.
-     * @param fragmentShader фрагментный шейдер.
+     * @param shaders список шейдеров программы.
      * @param snippets фрагменты программы, добавленные в программу.
      * @param uniforms униформы программы.
      * @return скомпилированная программа.
@@ -108,26 +106,20 @@ public class GlobalCometCompiler {
      * @see GlProgram
      * @see GlShader
      */
-    //TODO возможность добавлять все типы шейдеров в программу
-    public static GlProgram compileProgram(String name, GlShader vertexShader, GlShader fragmentShader, GlProgramSnippet[] snippets, List<GlUniformSchema<?>> uniforms) {
-        //Проверяем правильность типов шейдеров
-        if (vertexShader.getShaderType() != ShaderType.Vertex)
-            ExceptionPrinter.printAndExit(new IllegalShaderTypeException(vertexShader.getName(), "vertex"));
-        if (fragmentShader.getShaderType() != ShaderType.Fragment)
-            ExceptionPrinter.printAndExit(new IllegalShaderTypeException(fragmentShader.getName(), "fragment"));
-
+    public static GlProgram compileProgram(String name, List<GlShader> shaders, GlProgramSnippet[] snippets, List<GlUniformSchema<?>> uniforms) {
         //Создаем программу в OpenGL
         int programId = GL20.glCreateProgram();
-        //Привязывает вертексный шейдер
-        GL20.glAttachShader(programId, vertexShader.getId());
-        //Привязываем фрайментный шейдер
-        GL20.glAttachShader(programId, fragmentShader.getId());
-        //Компилируем программу
-        GL20.glLinkProgram(programId);
 
         List<GlUniformSchema<?>> allUniforms = new ArrayList<>(uniforms);
-        allUniforms.addAll(vertexShader.getExtraUniforms());
-        allUniforms.addAll(fragmentShader.getExtraUniforms());
+
+        //Добавляем в программу все шейдеры
+        for (GlShader shader : shaders) {
+            GL20.glAttachShader(programId, shader.getId());
+            allUniforms.addAll(shader.getExtraUniforms());
+        }
+
+        //Компилируем программу
+        GL20.glLinkProgram(programId);
 
         //Создаём новую программу.
         GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(snippets)), allUniforms);

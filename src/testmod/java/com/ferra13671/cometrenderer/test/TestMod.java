@@ -11,6 +11,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
@@ -109,20 +110,20 @@ public class TestMod implements ModInitializer, Mc {
         if (positionProgram == null)
             positionProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
                     .name("test1")
-                    .vertexShader(positionVertexEntry)
-                    .fragmentShader(positionFragmentEntry)
+                    .shader(positionVertexEntry, ShaderType.Vertex)
+                    .shader(positionFragmentEntry, ShaderType.Fragment)
                     .build();
         if (positionColorProgram == null)
             positionColorProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
                     .name("test2")
-                    .vertexShader(positionColorVertexEntry)
-                    .fragmentShader(positionColorFragmentEntry)
+                    .shader(positionColorVertexEntry, ShaderType.Vertex)
+                    .shader(positionColorFragmentEntry, ShaderType.Fragment)
                     .build();
         if (positionColorTextureProgram == null)
             positionColorTextureProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
                     .name("test3")
-                    .vertexShader(positionColorTextureVertexEntry)
-                    .fragmentShader(positionColorTextureFragmentEntry)
+                    .shader(positionColorTextureVertexEntry, ShaderType.Vertex)
+                    .shader(positionColorTextureFragmentEntry, ShaderType.Fragment)
                     .sampler("u_Texture")
                     .build();
         if (texture == null)

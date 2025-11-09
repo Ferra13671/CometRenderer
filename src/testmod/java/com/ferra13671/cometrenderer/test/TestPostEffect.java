@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.posteffect.PostEffectPipeline;
 import com.ferra13671.cometrenderer.posteffect.ProgramPass;
 import com.ferra13671.cometrenderer.posteffect.minecraft.OverrideFrameBufferVertexConsumerProvider;
 import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import org.joml.Vector2f;
 
@@ -20,8 +21,8 @@ public class TestPostEffect implements Mc {
     public static final GlslFileEntry postEffectFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("post-effect-fragment", "post-effect-test.fsh");
     public static GlProgram postEffectProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet())
             .name("post-effect-program")
-            .vertexShader(TestMod.positionVertexEntry)
-            .fragmentShader(postEffectFragmentEntry)
+            .shader(TestMod.positionVertexEntry, ShaderType.Vertex)
+            .shader(postEffectFragmentEntry, ShaderType.Fragment)
             .sampler("u_Texture")
             .uniform("texelSize", UniformType.VEC2)
             .build();
@@ -31,9 +32,9 @@ public class TestPostEffect implements Mc {
                             .program(postEffectProgram)
                             .output(mc.getFramebuffer())
                             .input(0, handsFrameBuffer)
-                            .preRenderAction(program -> {
-                                program.getUniform("texelSize", UniformType.VEC2).set(new Vector2f(1f / handsFrameBuffer.textureWidth, 1f / handsFrameBuffer.textureHeight));
-                            })
+                            .preRenderAction(program ->
+                                program.getUniform("texelSize", UniformType.VEC2).set(new Vector2f(1f / handsFrameBuffer.textureWidth, 1f / handsFrameBuffer.textureHeight))
+                            )
                             .build()
             )
             .build();
