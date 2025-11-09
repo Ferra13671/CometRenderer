@@ -16,11 +16,11 @@ public class DoubleShaderAdditionException extends CometException {
                 String.format("An attempt was made to add shader '%s' with type '%s', while shader '%s' with the same type had already been added.", newShader, type.name(), oldShader),
                 new String[]{
                         "Your program builder has an invalid structure.",
-                        "You have added a program fragment to the program builder that already adds a shader of the required type."
+                        "You have added a program snippet to the program builder that already adds a shader of the required type."
                 },
                 new String[]{
                         "Check that your program builder structure is correct.",
-                        "Check the program fragments you add to the program builder."
+                        "Check the program snippets you add to the program builder."
                 }
         );
     }

@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
+import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
 import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
@@ -29,8 +30,8 @@ public class GlProgramBuilder<T> {
     private String name;
     /** Карта всех добавленных шейдеров по их типу. **/
     private final HashMap<ShaderType, GlslFileEntry> shaders = new HashMap<>();
-    /** Список униформ программы. **/
-    private final List<GlUniformSchema<?>> uniforms = new ArrayList<>();
+    /** Карта униформ программы. **/
+    private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
     /** Фрагменты программы, которые будут добавлены в программу. **/
     private final GlProgramSnippet[] snippets;
     /** Загрузчик контента шейдеров. **/
@@ -86,7 +87,7 @@ public class GlProgramBuilder<T> {
      */
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
         if (this.shaders.containsKey(type))
-            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(name, type, this.shaders.get(type).name()));
+            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(shaderEntry.name(), type, this.shaders.get(type).name()));
 
         this.shaders.put(type, shaderEntry);
         return this;
@@ -103,19 +104,10 @@ public class GlProgramBuilder<T> {
      * @see GlUniform
      */
     public <S extends GlUniform> GlProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
-        this.uniforms.add(new GlUniformSchema<>(name, uniformType));
-        return this;
-    }
+        if (this.uniforms.containsKey(name))
+            ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(name));
 
-    /**
-     * Добавляет униформу программе.
-     *
-     * @param schema схема униформы.
-     * @return сборщик программы.
-     * @param <S> униформа.
-     */
-    public <S extends GlUniform> GlProgramBuilder<T> uniform(GlUniformSchema<S> schema) {
-        this.uniforms.add(schema);
+        this.uniforms.put(name, uniformType);
         return this;
     }
 
@@ -126,8 +118,7 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> sampler(String name) {
-        //Да, семплер это тоже униформа
-        this.uniforms.add(new GlUniformSchema<>(name, UniformType.SAMPLER));
+        uniform(name, UniformType.SAMPLER);
         return this;
     }
 

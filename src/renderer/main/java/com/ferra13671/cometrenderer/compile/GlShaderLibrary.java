@@ -1,9 +1,9 @@
 package com.ferra13671.cometrenderer.compile;
 
-import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Шейдерная библиотека позволяет уменьшить размер загружаемого контента множество шейдеров, использующих один и тот же код.
@@ -11,10 +11,10 @@ import java.util.List;
  * Все шейдерные библиотеки добавляются в шейдеры на этапе компиляции в компиляторе, поэтому шейдерные библиотеки нужно загружать до начала компиляции шейдеров, однако можно загружать во время загрузки glsl контента шейдера.
  *
  * @param libraryEntry glsl контент библиотеки.
- * @param uniforms список униформ, которая будет добавлять библиотека в шейдер и программу соответственно.
+ * @param uniforms карта униформ, которая будет добавлять библиотека в шейдер и программу соответственно.
  *
  * @see GlobalCometCompiler
  * @see CometLoader
  */
-public record GlShaderLibrary(GlslFileEntry libraryEntry, List<GlUniformSchema<?>> uniforms) {
+public record GlShaderLibrary(GlslFileEntry libraryEntry, HashMap<String, UniformType<?>> uniforms) {
 }

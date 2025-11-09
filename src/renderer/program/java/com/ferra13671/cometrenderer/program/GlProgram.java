@@ -4,7 +4,6 @@ import com.ferra13671.cometrenderer.Bindable;
 import com.ferra13671.cometrenderer.Compilable;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
-import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
@@ -19,10 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -60,22 +56,22 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param id айди программы в OpenGL.
      * @param uniforms список всех униформ программы.
      */
-    public GlProgram(String name, int id, HashSet<GlProgramSnippet> snippets, List<GlUniformSchema<?>> uniforms) {
+    public GlProgram(String name, int id, HashSet<GlProgramSnippet> snippets, HashMap<String, UniformType<?>> uniforms) {
         this.name = name;
         this.id = id;
         this.snippets = snippets;
 
-        for (GlUniformSchema<?> glUniformSchema : uniforms) {
-            GlUniform uniform = glUniformSchema.uniformType().uniformCreator().apply(
-                    glUniformSchema.name(),
-                    glUniformSchema.getLocationFromProgram(this.id),
+        for (Map.Entry<String, UniformType<?>> uniformEntry : uniforms.entrySet()) {
+            GlUniform uniform = uniformEntry.getValue().uniformCreator().apply(
+                    uniformEntry.getKey(),
+                    GL20.glGetUniformLocation(this.id, uniformEntry.getKey()),
                     this
             );
 
             if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
                 ExceptionPrinter.printAndExit(new NoSuchUniformException(uniform.getName(), this.name));
 
-            this.uniformsByName.put(glUniformSchema.name(), uniform);
+            this.uniformsByName.put(uniformEntry.getKey(), uniform);
 
             if (uniform instanceof SamplerUniform sampler)
                 samplers.add(sampler);

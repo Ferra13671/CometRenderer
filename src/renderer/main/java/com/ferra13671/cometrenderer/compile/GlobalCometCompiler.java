@@ -2,15 +2,16 @@ package com.ferra13671.cometrenderer.compile;
 
 import com.ferra13671.cometrenderer.Pair;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchShaderLibraryException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.builders.GlUniformSchema;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import org.lwjgl.opengl.GL20;
 
 import java.util.*;
@@ -106,16 +107,22 @@ public class GlobalCometCompiler {
      * @see GlProgram
      * @see GlShader
      */
-    public static GlProgram compileProgram(String name, List<GlShader> shaders, GlProgramSnippet[] snippets, List<GlUniformSchema<?>> uniforms) {
+    public static GlProgram compileProgram(String name, List<GlShader> shaders, GlProgramSnippet[] snippets, HashMap<String, UniformType<?>> uniforms) {
         //Создаем программу в OpenGL
         int programId = GL20.glCreateProgram();
 
-        List<GlUniformSchema<?>> allUniforms = new ArrayList<>(uniforms);
+        HashMap<String, UniformType<?>> allUniforms = new HashMap<>(uniforms);
 
         //Добавляем в программу все шейдеры
         for (GlShader shader : shaders) {
             GL20.glAttachShader(programId, shader.getId());
-            allUniforms.addAll(shader.getExtraUniforms());
+
+            shader.getExtraUniforms().forEach((s, uniformType) -> {
+                if (allUniforms.containsKey(s))
+                    ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(s));
+
+                allUniforms.put(s, uniformType);
+            });
         }
 
         //Компилируем программу
@@ -146,7 +153,7 @@ public class GlobalCometCompiler {
      */
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType) {
         //Внедряем в контент шейдерные библиотеки, а так же получаем все юниформы, которые они добавляют
-        Pair<String, List<GlUniformSchema<?>>> content = includeShaderLibraries(shaderEntry.content());
+        Pair<String, HashMap<String, UniformType<?>>> content = includeShaderLibraries(shaderEntry.content());
 
         //Создаём шейдер в OpenGL
         int shaderId = GL20.glCreateShader(shaderType.glId);
@@ -174,8 +181,8 @@ public class GlobalCometCompiler {
      * @param content контент шейдера.
      * @return шейдерный контент с внедренными библиотеками и добавленными униформами.
      */
-    public static Pair<String, List<GlUniformSchema<?>>> includeShaderLibraries(String content) {
-        List<GlUniformSchema<?>> uniforms = new ArrayList<>();
+    public static Pair<String, HashMap<String, UniformType<?>>> includeShaderLibraries(String content) {
+        HashMap<String, UniformType<?>> uniforms = new HashMap<>();
 
         boolean writeAction = false;
         boolean writeLibName = false;
@@ -202,7 +209,13 @@ public class GlobalCometCompiler {
                 writeLibName = false;
 
                 GlShaderLibrary library = getShaderLibrary(s.toString());
-                uniforms.addAll(library.uniforms());
+
+                library.uniforms().forEach((s1, uniformType) -> {
+                    if (uniforms.containsKey(s1))
+                        ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(s1));
+
+                    uniforms.put(s1, uniformType);
+                });
 
                 content = content.replace(includeLibOperator.concat("<").concat(s.toString()).concat(">"), library.libraryEntry().content());
                 i -= "#".concat(includeLibOperator).concat("<").concat(s.toString()).length();

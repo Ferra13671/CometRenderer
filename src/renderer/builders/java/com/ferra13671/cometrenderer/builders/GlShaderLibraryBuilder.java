@@ -2,14 +2,14 @@ package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.compile.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
+import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalLibraryBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.compile.GlShaderLibrary;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.function.Function;
 
 /**
@@ -24,18 +24,21 @@ public class GlShaderLibraryBuilder<T> {
     private String name;
     /** Путь к шейдерной библиотеке. **/
     private T libraryPath;
-    /** Список униформ шейдерной библиотеки. **/
-    private final List<GlUniformSchema<?>> uniforms = new ArrayList<>();
+    /** Карта униформ шейдерной библиотеки. **/
+    private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
     /** Загрузчик контента шейдерной библиотеки. **/
     private final Function<T, String> contentGetter;
 
     /**
      * @param contentGetter загрузчик контента шейдерной библиотеки.
      * @param snippets фрагменты программы.
+     *
+     * @implNote с фрагментов программы будут взяты только униформы.
      */
     public GlShaderLibraryBuilder(Function<T, String> contentGetter, GlProgramSnippet... snippets) {
         for (GlProgramSnippet snippet : snippets)
-            uniforms.addAll(snippet.uniforms());
+            snippet.uniforms().forEach(this::uniform);
+
         this.contentGetter = contentGetter;
     }
 
@@ -72,7 +75,10 @@ public class GlShaderLibraryBuilder<T> {
      * @see GlUniform
      */
     public <S extends GlUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
-        uniforms.add(new GlUniformSchema<>(name, uniformType));
+        if (this.uniforms.containsKey(name))
+            ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(name));
+
+        this.uniforms.put(name, uniformType);
         return this;
     }
 
@@ -83,8 +89,7 @@ public class GlShaderLibraryBuilder<T> {
      * @return сборщик шейдерной библиотеки.
      */
     public GlShaderLibraryBuilder<T> sampler(String name) {
-        //Да, семплер это тоже униформа
-        uniforms.add(new GlUniformSchema<>(name, UniformType.SAMPLER));
+        uniform(name, UniformType.SAMPLER);
         return this;
     }
 
