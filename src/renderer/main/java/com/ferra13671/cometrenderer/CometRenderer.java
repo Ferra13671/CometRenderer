@@ -49,14 +49,14 @@ public class CometRenderer {
     /** Глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
     private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
     /** Фрагмент программы, необходимый для вершинных шейдеров, использующих основные матрицы для модификации координат вершин. **/
-    private static final GlProgramSnippet matrixSnippet = GlProgramSnippet.builder()
+    private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("Projection", UniformType.BUFFER)
             .uniform("modelViewMat", UniformType.MATRIX)
-            .build();
+            .buildSnippet();
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
-    private static final GlProgramSnippet colorSnippet = GlProgramSnippet.builder()
+    private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("shaderColor", UniformType.VEC4)
-            .build();
+            .buildSnippet();
     /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
     private static GlProgram globalProgram;
     /** Стек для областей, используемых ножницами. **/

@@ -44,7 +44,8 @@ public class GlProgramBuilder<T> {
      */
     public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
         for (GlProgramSnippet snippet : snippets)
-            this.uniforms.addAll(snippet.uniforms());
+            snippet.applyTo(this);
+
         this.loader = loader;
         this.snippets = snippets;
     }
@@ -107,6 +108,18 @@ public class GlProgramBuilder<T> {
     }
 
     /**
+     * Добавляет униформу программе.
+     *
+     * @param schema схема униформы.
+     * @return сборщик программы.
+     * @param <S> униформа.
+     */
+    public <S extends GlUniform> GlProgramBuilder<T> uniform(GlUniformSchema<S> schema) {
+        this.uniforms.add(schema);
+        return this;
+    }
+
+    /**
      * Добавляет семплер программе.
      *
      * @param name имя семплера.
@@ -145,5 +158,16 @@ public class GlProgramBuilder<T> {
                 this.snippets,
                 this.uniforms
         );
+    }
+
+    /**
+     * Собирает все данные в сборщике в новый фрагмент программы.
+     *
+     * @implNote Имя, которое вы задали в сборщике, не будет сохранено.
+     *
+     * @return новый фрагмент программы.
+     */
+    public GlProgramSnippet buildSnippet() {
+        return new GlProgramSnippet(this.shaders, this.uniforms);
     }
 }
