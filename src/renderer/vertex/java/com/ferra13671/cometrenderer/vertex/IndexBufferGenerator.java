@@ -68,41 +68,46 @@ public final class IndexBufferGenerator {
 	 * Возвращает буффер вершин с требуемым количеством индексов.
 	 *
 	 * @param requiredSize требуемый размер.
+	 * @param standalone должен ли быть буффер вершин автономным или нет. Если буффер индексов будет являться автономным, то он будет храниться в памяти до того времени, пока вы сами его не удалите.
 	 * @return буффер вершин с требуемым количеством индексов.
 	 */
-	public GpuBuffer getIndexBuffer(int requiredSize) {
-		this.grow(requiredSize);
-		return this.indexBuffer;
-	}
-
-	private void grow(int requiredSize) {
-		if (!this.isLargeEnough(requiredSize)) {
-			requiredSize = MathHelper.roundUpToMultiple(requiredSize * 2, this.vertexCountInTriangulated);
-			int i = requiredSize / this.vertexCountInTriangulated;
-			IndexType indexType = IndexType.smallestFor(
-					i * this.vertexCountInShape
-			);
-			ByteBuffer byteBuffer = MemoryUtil.memAlloc(
-					MathHelper.roundUpToMultiple(requiredSize * indexType.bytes, 4)
-			);
-
-			try {
-				this.indexType = indexType;
-				IntConsumer intConsumer = this.getIndexConsumer(byteBuffer);
-
-				for (int l = 0; l < requiredSize; l += this.vertexCountInTriangulated)
-					this.triangulator.accept(intConsumer, l * this.vertexCountInShape / this.vertexCountInTriangulated);
-
-				byteBuffer.flip();
+	public GpuBuffer getIndexBuffer(int requiredSize, boolean standalone) {
+		if (standalone)
+			return generateIndexBuffer(requiredSize);
+		else {
+			if (!this.isLargeEnough(requiredSize)) {
 				if (this.indexBuffer != null)
 					this.indexBuffer.close();
 
-				this.indexBuffer = new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER);
-			} finally {
-				MemoryUtil.memFree(byteBuffer);
+				this.indexBuffer = generateIndexBuffer(requiredSize);
+				this.size = requiredSize;
 			}
+			return this.indexBuffer;
+		}
+	}
 
-			this.size = requiredSize;
+	private GpuBuffer generateIndexBuffer(int requiredSize) {
+		requiredSize = MathHelper.roundUpToMultiple(requiredSize * 2, this.vertexCountInTriangulated);
+		int i = requiredSize / this.vertexCountInTriangulated;
+		IndexType indexType = IndexType.smallestFor(
+				i * this.vertexCountInShape
+		);
+		ByteBuffer byteBuffer = MemoryUtil.memAlloc(
+				MathHelper.roundUpToMultiple(requiredSize * indexType.bytes, 4)
+		);
+
+		try {
+			this.indexType = indexType;
+			IntConsumer intConsumer = this.getIndexConsumer(byteBuffer);
+
+			for (int l = 0; l < requiredSize; l += this.vertexCountInTriangulated)
+				this.triangulator.accept(intConsumer, l * this.vertexCountInShape / this.vertexCountInTriangulated);
+
+			byteBuffer.flip();
+
+			return new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER);
+		} finally {
+			MemoryUtil.memFree(byteBuffer);
 		}
 	}
 

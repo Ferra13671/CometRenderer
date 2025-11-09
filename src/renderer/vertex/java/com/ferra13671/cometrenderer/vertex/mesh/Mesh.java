@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import net.minecraft.client.util.BufferAllocator;
@@ -14,6 +15,7 @@ import java.nio.ByteBuffer;
  * Основная реализация меша.
  *
  * @see IMesh
+ * @see MeshBuilder
  */
 public class Mesh implements IMesh {
     /** Формат вершин. **/
@@ -26,6 +28,13 @@ public class Mesh implements IMesh {
     private DrawMode drawMode;
     /** Буффер вершин, находящийся на GPU. **/
     private final GpuBuffer vertexBuffer;
+    /**
+     *  Автономный буффер вершин, созданный для данного меша.
+     *  Данный буффер вершин будет создан только в том случае, когда сам меш становится автономным.
+     */
+    private GpuBuffer indexBuffer;
+    /** Состояние автономности меша. **/
+    private boolean standalone = false;
 
     /**
      * @param byteBuffer буффер вершин, находящийся на CPU.
@@ -47,6 +56,28 @@ public class Mesh implements IMesh {
     }
 
     /**
+     * Делает меш автономным, создавая для него собственный буффер индексов.
+     * Хотя обычные меши тоже могут использоваться как автономные, но автономная версия меша будет более оптимизированной в долгосрочной перспективе, чем обычная.
+     */
+    public Mesh makeStandalone() {
+        if (!this.standalone) {
+            this.standalone = true;
+            recreateIndexBuffer();
+        }
+
+        return this;
+    }
+
+    private void recreateIndexBuffer() {
+        if (this.indexBuffer != null)
+            this.indexBuffer.close();
+
+        IndexBufferGenerator indexBufferGenerator = this.drawMode.indexBufferGenerator();
+        if (indexBufferGenerator != null)
+            this.indexBuffer = indexBufferGenerator.getIndexBuffer(this.indexCount, true);
+    }
+
+    /**
      * Меняет тип отрисовки вершин меша на новый.
      * Используйте этот метод только в том случае, если знаете, что делаете.
      *
@@ -54,6 +85,8 @@ public class Mesh implements IMesh {
      */
     public void changeDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
+        if (this.standalone)
+            recreateIndexBuffer();
     }
 
     @Override
@@ -77,7 +110,7 @@ public class Mesh implements IMesh {
     @Override
     @OverriddenMethod
     public GpuBuffer getIndexBuffer() {
-        return this.drawMode.indexBufferGenerator().getIndexBuffer(this.indexCount);
+        return this.standalone ? this.indexBuffer : this.drawMode.indexBufferGenerator().getIndexBuffer(this.indexCount, false);
     }
 
     @Override
@@ -96,6 +129,8 @@ public class Mesh implements IMesh {
     @OverriddenMethod
     public void close() {
         this.vertexBuffer.close();
+        if (this.indexBuffer != null)
+            this.indexBuffer.close();
     }
 
     /**

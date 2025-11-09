@@ -16,6 +16,7 @@ import com.ferra13671.cometrenderer.test.mixins.IGlGpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.CometVertexFormats;
+import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import net.fabricmc.api.ModInitializer;
 import org.joml.Vector4f;
 import org.slf4j.Logger;
@@ -62,6 +63,9 @@ public class TestMod implements ModInitializer, Mc {
 
      */
 
+
+    public static Mesh standaloneMesh;
+
     private static int prevScale = 0;
 
     @Override
@@ -86,6 +90,22 @@ public class TestMod implements ModInitializer, Mc {
     }
 
     public static void render() {
+        if (standaloneMesh == null)
+            standaloneMesh = CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
+                buffer.vertex(400, 250, 0)
+                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                        .element("Texture", VertexElementType.FLOAT, 0f, 0f);
+                buffer.vertex(400, 300, 0)
+                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                        .element("Texture", VertexElementType.FLOAT, 0f, 1f);
+                buffer.vertex(450, 300, 0)
+                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                        .element("Texture", VertexElementType.FLOAT, 1f, 1f);
+                buffer.vertex(450, 250, 0)
+                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                        .element("Texture", VertexElementType.FLOAT, 1f, 0f);
+            }).makeStandalone();
+
         if (positionProgram == null)
             positionProgram = CometLoaders.IN_JAR.createProgramBuilder(CometRenderer.getMatrixSnippet(), CometRenderer.getColorSnippet())
                     .name("test1")
@@ -156,27 +176,14 @@ public class TestMod implements ModInitializer, Mc {
             buffer.vertex(450, 200, 0).element("Color", VertexElementType.FLOAT, 0f, 0f, 1f, 1f);
         }));
 
-        //------ multi-colored textured rect with position-color-texture program ------//
+        //------ multi-colored textured rect with standalone mesh ------//
         CometRenderer.resetShaderColor();
         CometRenderer.setGlobalProgram(positionColorTextureProgram);
         CometRenderer.initMatrix();
         CometRenderer.initShaderColor();
         positionColorTextureProgram.getUniform("u_Texture", UniformType.SAMPLER).set(texture);
 
-        CometRenderer.draw(CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
-            buffer.vertex(400, 250, 0)
-                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                    .element("Texture", VertexElementType.FLOAT, 0f, 0f);
-            buffer.vertex(400, 300, 0)
-                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                    .element("Texture", VertexElementType.FLOAT, 0f, 1f);
-            buffer.vertex(450, 300, 0)
-                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                    .element("Texture", VertexElementType.FLOAT, 1f, 1f);
-            buffer.vertex(450, 250, 0)
-                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                    .element("Texture", VertexElementType.FLOAT, 1f, 0f);
-        }));
+        CometRenderer.draw(standaloneMesh, false);
         CometRenderer.resetShaderColor();
     }
 }
