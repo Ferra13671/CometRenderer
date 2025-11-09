@@ -23,7 +23,7 @@ public class Mesh implements IMesh {
     /** Количество индексов. **/
     private final int indexCount;
     /** Тип отрисовки вершин. **/
-    private final DrawMode drawMode;
+    private DrawMode drawMode;
     /** Буффер вершин, находящийся на GPU. **/
     private final GpuBuffer vertexBuffer;
 
@@ -44,6 +44,16 @@ public class Mesh implements IMesh {
         this.vertexBuffer = new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
 
         afterInitRunnable.run();
+    }
+
+    /**
+     * Меняет тип отрисовки вершин меша на новый.
+     * Используйте этот метод только в том случае, если знаете, что делаете.
+     *
+     * @param drawMode новый тип отрисовки вершин, который будет присвоен мешу.
+     */
+    public void changeDrawMode(DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 
     @Override
