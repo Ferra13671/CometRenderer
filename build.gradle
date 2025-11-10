@@ -4,49 +4,42 @@ plugins {
     id 'maven-publish'
 }
 
-version = "1.8.4"
+version = "1.8.4-public"
 group = "com.ferra13671"
 
-base {
-    archivesName = "CometRenderer"
+java {
+    withSourcesJar()
 }
 
-void registerSourceSet(String name) {
-    sourceSets.renderer.java.srcDirs += "src/renderer/" + name + "/java"
+base {
+    archivesName = "comet-renderer"
+}
 
-    jar {
-        from('src/renderer/' + name + '/java') {
-            include '**/*.java'
-        }
-    }
+void subSourceSet(String name) {
+    sourceSets.main.java.srcDirs += "src/renderer/" + name + "/java"
+    sourceSets.main.resources.srcDirs += "src/renderer/" + name + "/resources"
 }
 
 sourceSets {
-    //SourceSets, хранящий в себе непосредственно сам рендерер
-    renderer {
-        java.srcDirs = ["src/renderer/main/java"]
-        resources.srcDirs = ["src/renderer/main/resources"]
-        compileClasspath += main.compileClasspath
+    main {
+        java.srcDirs = ["src/main/main/java"]
+        resources.srcDirs = ["src/main/main/resources"]
     }
-    //SourceSets, хранящий в себе программу для тестирования рендерера
     testmod {
-        compileClasspath += renderer.compileClasspath
-        runtimeClasspath += renderer.runtimeClasspath
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
 
-    registerSourceSet("main")
-    registerSourceSet("buffer")
-    registerSourceSet("exeptions")
-    registerSourceSet("posteffect")
-    registerSourceSet("program")
-    registerSourceSet("vertex")
-    registerSourceSet("builders")
-    registerSourceSet("utils")
+    subSourceSet("main")
+    subSourceSet("buffer")
+    subSourceSet("exeptions")
+    subSourceSet("posteffect")
+    subSourceSet("program")
+    subSourceSet("vertex")
+    subSourceSet("builders")
+    subSourceSet("utils")
 }
 
-//Добавляем в gradle проект задачу для запуска майнкрафта с программой для тестирования рендерера
 loom {
     runs {
         testmodClient {
@@ -72,17 +65,22 @@ dependencies {
 
     implementation "com.ferra13671:gl-texture-utils:1.6.1"
 
-    //Добавляем зависимости для плагина
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-
     compileOnly files("libs/FerraGuard-Annotations-2.0.jar")
 
-    //Добавляем в зависимости для программы для тестирования рендерера
-    testmodImplementation sourceSets.renderer.output
     testmodImplementation sourceSets.main.output
 }
 
-test {
-    useJUnitPlatform()
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.ferra13671'
+            artifactId = 'comet-renderer'
+            artifact source: jar, classifier: null
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
 }
