@@ -42,29 +42,6 @@ public class TestMod implements ModInitializer, Mc {
     private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment3", "texture-colored.fsh");
     private static GLTexture texture;
 
-    /*
-    public static final VertexElementType<Color> COLOR = new VertexElementType<>(
-            4 * 4,
-            "Float",
-            GL11.GL_FLOAT,
-            Color.class,
-            (pointer, data) -> {
-                for (int i = 0; i < data.length; i++) {
-                    long ptr = pointer + (16L * i);
-                    MemoryUtil.memPutFloat(ptr, data[i].getRed() / 255f);
-                    MemoryUtil.memPutFloat(ptr + 4L, data[i].getGreen() / 255f);
-                    MemoryUtil.memPutFloat(ptr + 8L, data[i].getBlue() / 255f);
-                    MemoryUtil.memPutFloat(ptr + 12L, data[i].getAlpha() / 255f);
-                }
-            }
-    );
-    public static final VertexFormat CUSTOM_FORMAT = VertexFormatBuilder.builder()
-            .element("Color", COLOR, 1)
-            .build();
-
-     */
-
-
     public static Mesh standaloneMesh;
 
     private static int prevScale = 0;
