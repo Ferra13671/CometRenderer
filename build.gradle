@@ -32,7 +32,7 @@ sourceSets {
 
     subSourceSet("main")
     subSourceSet("buffer")
-    subSourceSet("exeptions")
+    subSourceSet("exceptions")
     subSourceSet("posteffect")
     subSourceSet("program")
     subSourceSet("vertex")

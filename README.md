@@ -1,4 +1,6 @@
-# CometRenderer
+<p align="left">
+    <img src="https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/logo.png" style="width: 50%" alt="logo">
+</p>
 
 Premium custom renderer for minecraft >=1.21.8.
 CometRenderer has a well-optimized rendering system, extensive customization, and a fairly user-friendly API.
