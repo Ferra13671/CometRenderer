@@ -27,7 +27,7 @@ public record UniformType<T extends GlUniform>(Class<T> clazz, TriFunction<Strin
     public static final UniformType<IntVec2GlUniform> IVEC2 = new UniformType<>(IntVec2GlUniform.class, IntVec2GlUniform::new);
     public static final UniformType<IntVec3GlUniform> IVEC3 = new UniformType<>(IntVec3GlUniform.class, IntVec3GlUniform::new);
     public static final UniformType<IntVec4GlUniform> IVEC4 = new UniformType<>(IntVec4GlUniform.class, IntVec4GlUniform::new);
-    public static final UniformType<Matrix4fGlUniform> MATRIX = new UniformType<>(Matrix4fGlUniform.class, Matrix4fGlUniform::new);
+    public static final UniformType<Matrix4fGlUniform> MATRIX4 = new UniformType<>(Matrix4fGlUniform.class, Matrix4fGlUniform::new);
     public static final UniformType<BufferUniform> BUFFER = new UniformType<>(BufferUniform.class, BufferUniform::new);
     public static final UniformType<SamplerUniform> SAMPLER = new UniformType<>(SamplerUniform.class, SamplerUniform::new);
 }

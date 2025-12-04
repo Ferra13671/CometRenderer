@@ -51,7 +51,7 @@ public class CometRenderer {
     /** Фрагмент программы, необходимый для вершинных шейдеров, использующих основные матрицы для модификации координат вершин. **/
     private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("Projection", UniformType.BUFFER)
-            .uniform("modelViewMat", UniformType.MATRIX)
+            .uniform("modelViewMat", UniformType.MATRIX4)
             .buildSnippet();
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
@@ -168,7 +168,7 @@ public class CometRenderer {
             projectionUniform.set(slice);
         }
 
-        Matrix4fGlUniform modelViewUniform = globalProgram.getUniform("modelViewMat", UniformType.MATRIX);
+        Matrix4fGlUniform modelViewUniform = globalProgram.getUniform("modelViewMat", UniformType.MATRIX4);
         if (modelViewUniform != null)
             modelViewUniform.set(RenderSystem.getModelViewMatrix());
     }
