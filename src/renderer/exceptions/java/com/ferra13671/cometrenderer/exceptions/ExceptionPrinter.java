@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
  *
  * @see CometException
  */
+//TODO remove
 public class ExceptionPrinter {
     private static final String separateLine = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 

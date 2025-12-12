@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = "1.8.4-public"
+version = "1.9"
 group = "com.ferra13671"
 
 java {

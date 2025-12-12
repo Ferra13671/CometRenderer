@@ -12,7 +12,7 @@ import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
-import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL20;

@@ -1,12 +1,15 @@
 package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.compiler.tag.Registry;
+import com.ferra13671.cometrenderer.compiler.tag.Tag;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
-import com.ferra13671.cometrenderer.compile.GlslFileEntry;
+import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
-import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
@@ -17,6 +20,7 @@ import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Сборщик программы.
@@ -26,14 +30,7 @@ import java.util.List;
  * @see GlProgram
  */
 public class GlProgramBuilder<T> {
-    /** Имя программы. **/
-    private String name;
-    /** Карта всех добавленных шейдеров по их типу. **/
-    private final HashMap<ShaderType, GlslFileEntry> shaders = new HashMap<>();
-    /** Карта униформ программы. **/
-    private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
-    /** Фрагменты программы, которые будут добавлены в программу. **/
-    private final GlProgramSnippet[] snippets;
+    private final Registry registry = new Registry();
     /** Загрузчик контента шейдеров. **/
     private final CometLoader<T> loader;
 
@@ -44,11 +41,15 @@ public class GlProgramBuilder<T> {
      * @see GlProgramSnippet
      */
     public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
+        this.registry.addImmutable(CometTags.SHADERS, new HashMap<>());
+        this.registry.addImmutable(CometTags.UNIFORMS, new HashMap<>());
+
         for (GlProgramSnippet snippet : snippets)
             snippet.applyTo(this);
 
         this.loader = loader;
-        this.snippets = snippets;
+
+        this.registry.addImmutable(CometTags.SNIPPETS, snippets);
     }
 
     /**
@@ -58,7 +59,9 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> name(String name) {
-        this.name = name;
+        if (name != null)
+            this.registry.add(CometTags.NAME, name);
+
         return this;
     }
 
@@ -71,10 +74,12 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> shader(String name, T shaderPath, ShaderType type) {
-        if (this.shaders.containsKey(type))
-            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(name, type, this.shaders.get(type).name()));
+        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
-        this.shaders.put(type, loader.createGlslFileEntry(name, shaderPath));
+        if (shaders.containsKey(type))
+            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(name, type, shaders.get(type).getName()));
+
+        shaders.put(type, loader.createGlslFileEntry(name, shaderPath));
         return this;
     }
 
@@ -86,10 +91,18 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
-        if (this.shaders.containsKey(type))
-            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(shaderEntry.name(), type, this.shaders.get(type).name()));
+        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
-        this.shaders.put(type, shaderEntry);
+        if (shaders.containsKey(type))
+            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(shaderEntry.getName(), type, shaders.get(type).getName()));
+
+        shaders.put(type, shaderEntry);
+        return this;
+    }
+
+    public <S> GlProgramBuilder<T> tag(Tag<S> tag, S value) {
+        this.registry.add(tag, value);
+
         return this;
     }
 
@@ -104,10 +117,12 @@ public class GlProgramBuilder<T> {
      * @see GlUniform
      */
     public <S extends GlUniform> GlProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
-        if (this.uniforms.containsKey(name))
+        Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow().getValue();
+
+        if (uniforms.containsKey(name))
             ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(name));
 
-        this.uniforms.put(name, uniformType);
+        uniforms.put(name, uniformType);
         return this;
     }
 
@@ -128,26 +143,26 @@ public class GlProgramBuilder<T> {
      * @return программа, скомпилированная сборщиком.
      */
     public GlProgram build() {
-        if (this.name == null)
+        if (!this.registry.contains(CometTags.NAME))
             ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException("Missing name in program builder."));
 
-        if (!this.shaders.containsKey(ShaderType.Compute)) {
-            if (!this.shaders.containsKey(ShaderType.Vertex))
-                ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", this.name)));
-            if (!this.shaders.containsKey(ShaderType.Fragment))
-                ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.name)));
+        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
+
+        if (!shaders.containsKey(ShaderType.Compute)) {
+            if (!shaders.containsKey(ShaderType.Vertex))
+                ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
+            if (!shaders.containsKey(ShaderType.Fragment))
+                ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
         }
 
         List<GlShader> shaderList = new ArrayList<>();
-        this.shaders.forEach((type, glslFileEntry) ->
+        shaders.forEach((type, glslFileEntry) ->
             shaderList.add(GlobalCometCompiler.compileShader(glslFileEntry, type))
         );
 
         return GlobalCometCompiler.compileProgram(
-                this.name,
-                shaderList,
-                this.snippets,
-                this.uniforms
+                this.registry,
+                shaderList
         );
     }
 
@@ -159,6 +174,6 @@ public class GlProgramBuilder<T> {
      * @return новый фрагмент программы.
      */
     public GlProgramSnippet buildSnippet() {
-        return new GlProgramSnippet(this.shaders, this.uniforms);
+        return new GlProgramSnippet(this.registry);
     }
 }

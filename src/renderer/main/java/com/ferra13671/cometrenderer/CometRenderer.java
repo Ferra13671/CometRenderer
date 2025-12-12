@@ -37,6 +37,13 @@ import java.util.function.Supplier;
  * Главный класс рендеринга.
  * Контролирует всю работу рендера.
  */
+/*
+    TODO:
+         Config
+         Ability to choose whether to throw an exception on error or simply send the error to the console
+         Make optional functionality as plugins
+         Make CometRenderer completely independent of Minecraft
+ */
 public class CometRenderer {
     /** Состояние инициализации рендера. **/
     private static boolean initialized = false;

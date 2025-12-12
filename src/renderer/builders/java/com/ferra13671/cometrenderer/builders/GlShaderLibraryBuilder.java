@@ -1,14 +1,17 @@
 package com.ferra13671.cometrenderer.builders;
 
-import com.ferra13671.cometrenderer.compile.GlslFileEntry;
+import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.compiler.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalLibraryBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.compile.GlShaderLibrary;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -17,7 +20,6 @@ import java.util.function.Function;
  *
  * @param <T> тип объекта, используемого как путь к контенту шейдеров.
  *
- * @see GlShaderLibrary
  */
 public class GlShaderLibraryBuilder<T> {
     /** Имя шейдерной библиотеки. **/
@@ -37,7 +39,7 @@ public class GlShaderLibraryBuilder<T> {
      */
     public GlShaderLibraryBuilder(Function<T, String> contentGetter, GlProgramSnippet... snippets) {
         for (GlProgramSnippet snippet : snippets)
-            snippet.uniforms().forEach(this::uniform);
+            snippet.applyTo(this);
 
         this.contentGetter = contentGetter;
     }
@@ -97,21 +99,21 @@ public class GlShaderLibraryBuilder<T> {
      * Собирает все данные в новую шейдерную библиотеку.
      *
      * @return новая шейдерная библиотека.
-     *
-     * @see GlShaderLibrary
      */
-    public GlShaderLibrary build() {
-        if (name == null)
+    public GlslFileEntry build() {
+        if (this.name == null)
             ExceptionPrinter.printAndExit(new IllegalLibraryBuilderArgumentException("Missing name in shader library builder."));
-        if (libraryPath == null)
+        if (this.libraryPath == null)
             ExceptionPrinter.printAndExit(new IllegalLibraryBuilderArgumentException(String.format("Missing libraryPath in library '%s'.", name)));
 
-        return new GlShaderLibrary(
-                new GlslFileEntry(
-                        name,
-                        contentGetter.apply(libraryPath)
-                ),
-                uniforms
+        Registry registry = new Registry();
+        registry.addImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));
+
+        return new GlslFileEntry(
+                this.name,
+                this.contentGetter.apply(libraryPath),
+                GlobalCometCompiler.SHADER_LIBRARY_FILE,
+                registry
         );
     }
 }

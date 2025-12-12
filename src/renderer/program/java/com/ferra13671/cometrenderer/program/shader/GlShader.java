@@ -1,9 +1,8 @@
 package com.ferra13671.cometrenderer.program.shader;
 
 import com.ferra13671.cometrenderer.Compilable;
-import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.compile.GlShaderLibrary;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
@@ -12,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Часть программы, исполняемая на GPU, которая отвечает за часть графической обработки программой: обработка вершин, растеризация, вычисление цвета пикселя и другие этапы рендеринга.
@@ -20,7 +19,6 @@ import java.util.HashMap;
  * @see <a href="https://wikis.khronos.org/opengl/Shader">OpenGL shader wiki</a>
  * @see GlProgram
  * @see ShaderType
- * @see GlShaderLibrary
  * @see GlobalCometCompiler
  */
 public class GlShader implements Compilable, Closeable {
@@ -31,7 +29,7 @@ public class GlShader implements Compilable, Closeable {
     /** Айди шейдера в OpenGL. **/
     private final int id;
     /** Униформы, добавленные шейдером при интеграции в него шейдерных библиотек. **/
-    private final HashMap<String, UniformType<?>> extraUniforms;
+    private final Map<String, UniformType<?>> extraUniforms;
     /** Тип шейдера. **/
     private final ShaderType shaderType;
 
@@ -43,9 +41,8 @@ public class GlShader implements Compilable, Closeable {
      *
      * @see GlProgram
      * @see ShaderType
-     * @see GlShaderLibrary
      */
-    public GlShader(String name, String content, int id, HashMap<String, UniformType<?>> extraUniforms, ShaderType shaderType) {
+    public GlShader(String name, String content, int id, Map<String, UniformType<?>> extraUniforms, ShaderType shaderType) {
         this.name = name;
         this.content = content;
         this.id = id;
@@ -101,9 +98,8 @@ public class GlShader implements Compilable, Closeable {
      * Возвращает униформы, добавленные шейдером при интеграции в него шейдерных библиотек.
      *
      * @return униформы, добавленные шейдером при интеграции в него шейдерных библиотек.
-     * @see GlShaderLibrary
      */
-    public HashMap<String, UniformType<?>> getExtraUniforms() {
+    public Map<String, UniformType<?>> getExtraUniforms() {
         return extraUniforms;
     }
 

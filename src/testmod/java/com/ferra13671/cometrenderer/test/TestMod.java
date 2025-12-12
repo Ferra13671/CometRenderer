@@ -8,8 +8,9 @@ import com.ferra13671.TextureUtils.texture.TextureFiltering;
 import com.ferra13671.TextureUtils.texture.TextureWrapping;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.compile.GlslFileEntry;
-import com.ferra13671.cometrenderer.compile.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
@@ -63,7 +64,7 @@ public class TestMod implements ModInitializer, Mc {
                         .library("test2.glsl")
                         .build()
         );
-        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>").getLeft());
+        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>").get(CometTags.CONTENT).orElseThrow().getValue());
         //--------------------------//
     }
 
