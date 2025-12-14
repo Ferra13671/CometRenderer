@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex.format;
 
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.builders.VertexFormatBuilder;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
@@ -7,6 +8,7 @@ import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 
+import java.io.Closeable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
@@ -18,7 +20,7 @@ import java.util.stream.Stream;
  *
  * @see VertexElement
  */
-public class VertexFormat {
+public class VertexFormat implements Closeable {
     /** Карта элементов формата вершины по их имени. **/
     private final HashMap<String, VertexElement> vertexMap = new HashMap<>();
     /** Карта имен элементов структуры вершины. **/
@@ -65,6 +67,13 @@ public class VertexFormat {
         }
         //Присваиваем размеру формата полученный размер
         this.vertexSize = size;
+    }
+
+    @Override
+    public void close() {
+        GpuBuffer buffer = this.vertexFormatBuffer.buffer().get();
+        if (buffer != null)
+            buffer.close();
     }
 
     /**

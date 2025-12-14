@@ -9,6 +9,7 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUnifor
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
+import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -23,8 +24,7 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +44,8 @@ import java.util.function.Supplier;
          Make CometRenderer completely independent of Minecraft
  */
 public class CometRenderer {
-    /** Состояние инициализации рендера. **/
-    private static boolean initialized = false;
+    /** Реестр различных данных. **/
+    private static final Registry registry = new Registry();
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     private static final Logger logger = LoggerFactory.getLogger("CometRenderer");
     /** Функция для получения айди GlGpuBuffer. **/
@@ -75,17 +75,33 @@ public class CometRenderer {
      * @param scaleGetter метод, возвращающий скейл рендеринга.
      */
     public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
-        //Не ну ты долбаеб если второй раз будешь инициализировать рендерер
-        if (initialized)
+        if (registry.contains(CometTags.INITIALIZED))
             throw new IllegalStateException("CometRenderer has already initialized.");
 
 
-        //Устанавливаем геттер айди буффера
         CometRenderer.bufferIdGetter = bufferIdGetter;
-        //Устанавлиаем геттер 2д скейла
         CometRenderer.scaleGetter = scaleGetter;
 
-        initialized = true;
+        initRegistry();
+
+        GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
+        if (glVersion.id < GLVersion.GL32.id)
+            //TODO UnsupportedOpenGLVersion
+            throw new IllegalStateException(String.format("OpenGL version (%s) does not match the minimum version (%s).", glVersion.glVersion, GLVersion.GL32.glVersion));
+
+        registry.setImmutable(CometTags.INITIALIZED, true);
+    }
+
+    private static void initRegistry() {
+        registry.setImmutable(CometTags.VENDOR, GL11.glGetString(GL11.GL_VENDOR));
+        registry.setImmutable(CometTags.GPU, GL11.glGetString(GL11.GL_RENDERER));
+        GLVersion glVersion = GLVersion.fromString(GL11.glGetString(GL11.GL_VERSION));
+        registry.setImmutable(CometTags.GL_VERSION, glVersion);
+        registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
+    }
+
+    public static Registry getRegistry() {
+        return registry;
     }
 
     /**

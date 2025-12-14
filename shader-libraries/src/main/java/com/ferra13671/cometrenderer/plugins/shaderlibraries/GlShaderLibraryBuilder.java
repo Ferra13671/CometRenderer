@@ -56,7 +56,7 @@ public class GlShaderLibraryBuilder<T> {
             throw new IllegalArgumentException(String.format("Missing libraryPath in library '%s'.", name));
 
         Registry registry = new Registry();
-        registry.addImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));
+        registry.setImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));
 
         return new GlslFileEntry(
                 this.name,

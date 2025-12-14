@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.compiler;
 
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.tag.DefaultTagEntry;
 import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
@@ -71,7 +72,13 @@ public class GlobalCometCompiler {
         GL20.glShaderSource(shaderId, content);
         GL20.glCompileShader(shaderId);
 
-        GlShader shader = new GlShader(shaderEntry.getName(), content, shaderId, shaderEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue(), shaderType);
+        GlShader shader = new GlShader(
+                shaderEntry.getName(),
+                content,
+                shaderId,
+                shaderEntry.getRegistry().get(CometTags.UNIFORMS).orElse(new DefaultTagEntry<>(CometTags.UNIFORMS, new HashMap<>())).getValue(),
+                shaderType
+        );
 
         CompileResult compileResult = shader.getCompileResult();
 

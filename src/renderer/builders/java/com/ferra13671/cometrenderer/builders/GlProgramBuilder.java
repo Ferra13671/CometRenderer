@@ -1,7 +1,9 @@
 package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.GLVersion;
 import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.tag.Tag;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
@@ -38,15 +40,15 @@ public class GlProgramBuilder<T> {
      * @see GlProgramSnippet
      */
     public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
-        this.registry.addImmutable(CometTags.SHADERS, new HashMap<>());
-        this.registry.addImmutable(CometTags.UNIFORMS, new HashMap<>());
+        this.registry.setImmutable(CometTags.SHADERS, new HashMap<>());
+        this.registry.setImmutable(CometTags.UNIFORMS, new HashMap<>());
 
         for (GlProgramSnippet snippet : snippets)
             snippet.applyTo(this);
 
         this.loader = loader;
 
-        this.registry.addImmutable(CometTags.SNIPPETS, snippets);
+        this.registry.setImmutable(CometTags.SNIPPETS, snippets);
     }
 
     /**
@@ -57,7 +59,7 @@ public class GlProgramBuilder<T> {
      */
     public GlProgramBuilder<T> name(String name) {
         if (name != null)
-            this.registry.add(CometTags.NAME, name);
+            this.registry.set(CometTags.NAME, name);
 
         return this;
     }
@@ -71,13 +73,7 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> shader(String name, T shaderPath, ShaderType type) {
-        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
-
-        if (shaders.containsKey(type))
-            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(name, type, shaders.get(type).getName()));
-
-        shaders.put(type, loader.createGlslFileEntry(name, shaderPath));
-        return this;
+        return shader(loader.createGlslFileEntry(name, shaderPath), type);
     }
 
     /**
@@ -88,6 +84,15 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
+        GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
+        if (glVersion.id < type.glVersion.id)
+            /*
+            TODO
+                 UnsupportedShaderException
+                 Ability to choose whether to throw an exception on error or simply send the error to the console
+             */
+            throw new IllegalStateException(String.format("Current OpenGL version ('%s') does not match the minimum OpenGL version for the shader ('%s').", glVersion.glVersion, type.glVersion.glVersion));
+
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
         if (shaders.containsKey(type))
@@ -98,7 +103,7 @@ public class GlProgramBuilder<T> {
     }
 
     public <S> GlProgramBuilder<T> tag(Tag<S> tag, S value) {
-        this.registry.add(tag, value);
+        this.registry.set(tag, value);
 
         return this;
     }

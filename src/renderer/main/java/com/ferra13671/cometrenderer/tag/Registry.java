@@ -8,16 +8,16 @@ import java.util.function.Consumer;
 public class Registry {
     private final HashMap<Tag<?>, TagEntry<?>> tagMap = new HashMap<>();
 
-    public <T> void add(Tag<T> tag, T value) {
-        addInternal(new DefaultTag<>(tag, value));
+    public <T> void set(Tag<T> tag, T value) {
+        setInternal(new DefaultTagEntry<>(tag, value));
     }
 
-    public <T> void addImmutable(Tag<T> tag, T value) {
-        addInternal(new ImmutableTag<>(tag, value));
+    public <T> void setImmutable(Tag<T> tag, T value) {
+        setInternal(new ImmutableTagEntry<>(tag, value));
     }
 
-    private <T> void addInternal(TagEntry<T> entry) {
-        if (contains(entry.getTag()) && get(entry.getTag()).orElseThrow() instanceof ImmutableTag<?>)
+    private <T> void setInternal(TagEntry<T> entry) {
+        if (contains(entry.getTag()) && get(entry.getTag()).orElseThrow() instanceof ImmutableTagEntry<?>)
             throw new UnsupportedOperationException("Unable to change value for ImmutableTagEntry");
 
         this.tagMap.put(entry.getTag(), entry);
@@ -34,8 +34,8 @@ public class Registry {
     public <T> TagEntry<T> computeIfAbsent(Tag<T> tag, T value, boolean immutable) {
         TagEntry<T> tagEntry = (TagEntry<T>) this.tagMap.get(tag);
         if (tagEntry == null) {
-            tagEntry = immutable ? new ImmutableTag<>(tag, value) : new DefaultTag<>(tag, value);
-            addInternal(tagEntry);
+            tagEntry = immutable ? new ImmutableTagEntry<>(tag, value) : new DefaultTagEntry<>(tag, value);
+            setInternal(tagEntry);
         }
 
         return tagEntry;

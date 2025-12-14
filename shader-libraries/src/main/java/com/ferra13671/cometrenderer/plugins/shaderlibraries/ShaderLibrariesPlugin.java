@@ -97,6 +97,6 @@ public class ShaderLibrariesPlugin {
             s.append(ch);
         }
 
-        registry.add(CometTags.CONTENT, content);
+        registry.set(CometTags.CONTENT, content);
     }
 }

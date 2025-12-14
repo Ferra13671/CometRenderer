@@ -40,12 +40,17 @@ public class TestMod implements ModInitializer, Mc {
 
     public static Mesh standaloneMesh;
 
+    private static boolean initialized = false;
+
     @Override
-    public void onInitialize() {
-        CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId(), () -> mc.getWindow().getScaleFactor());
-    }
+    public void onInitialize() {}
 
     public static void render() {
+        if (!initialized) {
+            CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId(), () -> mc.getWindow().getScaleFactor());
+            initialized = true;
+        }
+
         if (standaloneMesh == null)
             standaloneMesh = CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
                 buffer.vertex(400, 250, 0)

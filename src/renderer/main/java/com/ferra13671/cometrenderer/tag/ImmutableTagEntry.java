@@ -2,9 +2,9 @@ package com.ferra13671.cometrenderer.tag;
 
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 
-public class ImmutableTag<T> extends DefaultTag<T> {
+public class ImmutableTagEntry<T> extends DefaultTagEntry<T> {
 
-    public ImmutableTag(Tag<T> tag, T value) {
+    public ImmutableTagEntry(Tag<T> tag, T value) {
         super(tag, value);
     }
 

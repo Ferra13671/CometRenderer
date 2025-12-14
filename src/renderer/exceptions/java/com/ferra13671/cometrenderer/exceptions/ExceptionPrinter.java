@@ -7,7 +7,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
  *
  * @see CometException
  */
-//TODO remove
+//TODO make it like a plugin?
 public class ExceptionPrinter {
     private static final String separateLine = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 

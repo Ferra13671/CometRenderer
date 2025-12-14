@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer.tag;
 
-public class DefaultTag<T> implements TagEntry<T> {
+public class DefaultTagEntry<T> implements TagEntry<T> {
     private final Tag<T> tag;
     private T value;
 
-    public DefaultTag(Tag<T> tag, T value) {
+    public DefaultTagEntry(Tag<T> tag, T value) {
         this.tag = tag;
         this.value = value;
     }
