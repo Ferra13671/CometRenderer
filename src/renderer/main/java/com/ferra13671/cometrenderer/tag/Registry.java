@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.compiler.tag;
+package com.ferra13671.cometrenderer.tag;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -29,6 +29,16 @@ public class Registry {
 
     public <T> Optional<TagEntry<T>> get(Tag<T> tag) {
         return Optional.ofNullable((TagEntry<T>) this.tagMap.get(tag));
+    }
+
+    public <T> TagEntry<T> computeIfAbsent(Tag<T> tag, T value, boolean immutable) {
+        TagEntry<T> tagEntry = (TagEntry<T>) this.tagMap.get(tag);
+        if (tagEntry == null) {
+            tagEntry = immutable ? new ImmutableTag<>(tag, value) : new DefaultTag<>(tag, value);
+            addInternal(tagEntry);
+        }
+
+        return tagEntry;
     }
 
     public void forEach(BiConsumer<Tag<?>, TagEntry<?>> consumer) {

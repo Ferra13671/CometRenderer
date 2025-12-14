@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.builders;
 
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.compiler.tag.Registry;
-import com.ferra13671.cometrenderer.compiler.tag.Tag;
+import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.tag.Tag;
 import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
@@ -12,14 +12,11 @@ import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumen
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
-import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -154,16 +151,7 @@ public class GlProgramBuilder<T> {
             if (!shaders.containsKey(ShaderType.Fragment))
                 ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
         }
-
-        List<GlShader> shaderList = new ArrayList<>();
-        shaders.forEach((type, glslFileEntry) ->
-            shaderList.add(GlobalCometCompiler.compileShader(glslFileEntry, type))
-        );
-
-        return GlobalCometCompiler.compileProgram(
-                this.registry,
-                shaderList
-        );
+        return GlobalCometCompiler.compileProgram(this.registry);
     }
 
     /**

@@ -56,7 +56,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param id айди программы в OpenGL.
      * @param uniforms список всех униформ программы.
      */
-    public GlProgram(String name, int id, HashSet<GlProgramSnippet> snippets, HashMap<String, UniformType<?>> uniforms) {
+    public GlProgram(String name, int id, HashSet<GlProgramSnippet> snippets, Map<String, UniformType<?>> uniforms) {
         this.name = name;
         this.id = id;
         this.snippets = snippets;

@@ -15,6 +15,13 @@ base {
     archivesName = "comet-renderer-shader-libraries"
 }
 
+sourceSets {
+    example {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
 repositories {
     maven {
         name = 'ferra13671-maven'
@@ -29,4 +36,20 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     implementation rootProject
+    exampleImplementation sourceSets.main.output
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.ferra13671'
+            artifactId = 'comet-renderer-shader-libraries'
+            artifact source: jar, classifier: null
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
 }

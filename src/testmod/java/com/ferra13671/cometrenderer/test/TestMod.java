@@ -8,9 +8,7 @@ import com.ferra13671.TextureUtils.texture.TextureFiltering;
 import com.ferra13671.TextureUtils.texture.TextureWrapping;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
@@ -21,14 +19,11 @@ import com.ferra13671.cometrenderer.CometVertexFormats;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import net.fabricmc.api.ModInitializer;
 import org.joml.Vector4f;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 import java.util.function.Function;
 
 public class TestMod implements ModInitializer, Mc {
-    private final Logger logger = LoggerFactory.getLogger(TestMod.class);
 
     private static final Function<String, TextureLoader> textureLoader = path -> TextureLoaders.INPUT_STREAM.apply(TestMod.class.getClassLoader().getResourceAsStream(path));
 
@@ -49,23 +44,7 @@ public class TestMod implements ModInitializer, Mc {
 
     @Override
     public void onInitialize() {
-        LoggerFactory.getLogger(TestMod.class).info("Test");
         CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId(), () -> mc.getWindow().getScaleFactor());
-
-        //------ LIBRARY TEST ------//
-        logger.info("Test library system...");
-        GlobalCometCompiler.registerShaderLibraries(
-                CometLoaders.IN_JAR.createShaderLibraryBuilder()
-                        .name("test")
-                        .library("test.glsl")
-                        .build(),
-                CometLoaders.IN_JAR.createShaderLibraryBuilder()
-                        .name("test2")
-                        .library("test2.glsl")
-                        .build()
-        );
-        logger.info(GlobalCometCompiler.includeShaderLibraries("#include<test>").get(CometTags.CONTENT).orElseThrow().getValue());
-        //--------------------------//
     }
 
     public static void render() {

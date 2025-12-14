@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.compiler.tag;
+package com.ferra13671.cometrenderer.tag;
 
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 

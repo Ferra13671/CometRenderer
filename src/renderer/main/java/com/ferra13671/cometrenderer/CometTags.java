@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.compiler.tag.Tag;
+import com.ferra13671.cometrenderer.tag.Tag;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.compiler.tag;
+package com.ferra13671.cometrenderer.tag;
 
 public interface TagEntry<T> {
 

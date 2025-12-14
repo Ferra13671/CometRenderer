@@ -2,10 +2,9 @@ package com.ferra13671.cometrenderer.program;
 
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.builders.GlProgramBuilder;
-import com.ferra13671.cometrenderer.builders.GlShaderLibraryBuilder;
-import com.ferra13671.cometrenderer.compiler.tag.Registry;
-import com.ferra13671.cometrenderer.compiler.tag.Tag;
-import com.ferra13671.cometrenderer.compiler.tag.TagEntry;
+import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.tag.Tag;
+import com.ferra13671.cometrenderer.tag.TagEntry;
 
 /**
  * Фрагмент программы, который может быть добавлен любой программе.
@@ -28,10 +27,6 @@ public record GlProgramSnippet(Registry registry) {
         this.registry.forEachTags(tag ->
             processTag(tag, builder)
         );
-    }
-
-    public <T> void applyTo(GlShaderLibraryBuilder<T> builder) {
-        this.registry.get(CometTags.UNIFORMS).orElseThrow().getValue().forEach(builder::uniform);
     }
 
     private <S, T> void processTag(Tag<T> tag, GlProgramBuilder<S> builder) {
