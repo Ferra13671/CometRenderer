@@ -40,8 +40,6 @@ public class TestMod implements ModInitializer, Mc {
 
     public static Mesh standaloneMesh;
 
-    private static int prevScale = 0;
-
     @Override
     public void onInitialize() {
         CometRenderer.init(glGpuBuffer -> ((IGlGpuBuffer) glGpuBuffer)._getId(), () -> mc.getWindow().getScaleFactor());
@@ -91,19 +89,6 @@ public class TestMod implements ModInitializer, Mc {
                     .filtering(TextureFiltering.SMOOTH)
                     .wrapping(TextureWrapping.DEFAULT)
                     .build();
-
-        CometRenderer.bindMainFramebuffer();
-
-        if (TestPostEffect.handsFrameBuffer.textureWidth != mc.getFramebuffer().textureWidth || TestPostEffect.handsFrameBuffer.textureHeight != mc.getFramebuffer().textureHeight || prevScale != mc.getWindow().getScaleFactor()) {
-
-            TestPostEffect.handsFrameBuffer.resize(mc.getFramebuffer().textureWidth, mc.getFramebuffer().textureHeight);
-            TestPostEffect.handsFrameBuffer.clearColorTexture();
-            prevScale = mc.getWindow().getScaleFactor();
-        }
-        //mc.player.sendMessage(Text.literal(mc.getFramebuffer().textureWidth + " " + mc.getFramebuffer().textureHeight), false);
-
-        TestPostEffect.postEffect.execute(mc.getWindow().getWidth(), mc.getWindow().getHeight());
-        TestPostEffect.handsFrameBuffer.clearColorTexture();
 
         CometRenderer.bindMainFramebuffer();
 

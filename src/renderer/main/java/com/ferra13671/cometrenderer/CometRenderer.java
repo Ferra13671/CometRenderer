@@ -41,7 +41,6 @@ import java.util.function.Supplier;
     TODO:
          Config
          Ability to choose whether to throw an exception on error or simply send the error to the console
-         Make optional functionality as plugins
          Make CometRenderer completely independent of Minecraft
  */
 public class CometRenderer {

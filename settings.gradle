@@ -9,3 +9,4 @@ pluginManagement {
 }
 
 include "shader-libraries"
+include "post-effects"
