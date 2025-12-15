@@ -10,3 +10,4 @@ pluginManagement {
 
 include "shader-libraries"
 include "post-effects"
+include "better-exceptions"

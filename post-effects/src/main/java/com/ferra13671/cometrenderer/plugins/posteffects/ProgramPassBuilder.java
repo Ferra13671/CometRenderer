@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
-import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramPassBuilderArgumentException;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.util.Pair;
@@ -50,9 +49,9 @@ public class ProgramPassBuilder {
 
     public ProgramPass build() {
         if (output == null)
-            ExceptionPrinter.printAndExit(new IllegalProgramPassBuilderArgumentException("Missing output in program pipeline."));
+            CometRenderer.manageException(new IllegalProgramPassBuilderArgumentException("Missing output in program pipeline."));
         if (program == null)
-            ExceptionPrinter.printAndExit(new IllegalProgramPassBuilderArgumentException("Missing program in program pipeline."));
+            CometRenderer.manageException(new IllegalProgramPassBuilderArgumentException("Missing program in program pipeline."));
 
         return new ProgramPass(program, inputs, output, preRenderConsumer);
     }

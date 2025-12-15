@@ -1,9 +1,9 @@
 package com.ferra13671.cometrenderer.compiler;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.tag.DefaultTagEntry;
 import com.ferra13671.cometrenderer.tag.Registry;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
@@ -45,7 +45,7 @@ public class GlobalCometCompiler {
 
             shader.getExtraUniforms().forEach((s, uniformType) -> {
                 if (uniforms.containsKey(s))
-                    ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(s));
+                    CometRenderer.manageException(new DoubleUniformAdditionException(s));
 
                 uniforms.put(s, uniformType);
             });
@@ -58,7 +58,7 @@ public class GlobalCometCompiler {
         CompileResult compileResult = program.getCompileResult();
 
         if (compileResult.isFailure())
-            ExceptionPrinter.printAndExit(new CompileProgramException(name, compileResult.message()));
+            CometRenderer.manageException(new CompileProgramException(name, compileResult.message()));
 
         return program;
     }
@@ -83,7 +83,7 @@ public class GlobalCometCompiler {
         CompileResult compileResult = shader.getCompileResult();
 
         if (compileResult.isFailure())
-            ExceptionPrinter.printAndExit(new CompileShaderException(shaderEntry.getName(), compileResult.message()));
+            CometRenderer.manageException(new CompileShaderException(shaderEntry.getName(), compileResult.message()));
 
         return shader;
     }

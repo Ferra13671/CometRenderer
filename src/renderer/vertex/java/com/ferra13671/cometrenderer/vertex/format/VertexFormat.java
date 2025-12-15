@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.vertex.format;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.builders.VertexFormatBuilder;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -122,7 +122,7 @@ public class VertexFormat implements Closeable {
     public VertexElement getVertexElement(String name) {
         VertexElement vertexElement = this.vertexMap.get(name);
         if (vertexElement == null)
-            ExceptionPrinter.printAndExit(new NoSuchVertexElementException(name));
+            CometRenderer.manageException(new NoSuchVertexElementException(name));
         return vertexElement;
     }
 

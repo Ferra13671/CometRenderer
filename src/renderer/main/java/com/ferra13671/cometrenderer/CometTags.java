@@ -22,4 +22,6 @@ public final class CometTags {
     public static final Tag<String> GPU = new Tag<>("gpu");
     public static final Tag<GLVersion> GL_VERSION = new Tag<>("gl-version");
     public static final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
+
+    public static final Tag<ExceptionProvider> EXCEPTION_PROVIDER = new Tag<>("exception-provider");
 }

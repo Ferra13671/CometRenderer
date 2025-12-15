@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.program;
 
 import com.ferra13671.cometrenderer.Bindable;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.Compilable;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
@@ -69,7 +69,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
             );
 
             if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
-                ExceptionPrinter.printAndExit(new NoSuchUniformException(uniform.getName(), this.name));
+                CometRenderer.manageException(new NoSuchUniformException(uniform.getName(), this.name));
 
             this.uniformsByName.put(uniformEntry.getKey(), uniform);
 
@@ -179,7 +179,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
         if (uniform == null)
-            ExceptionPrinter.printAndExit(new NoSuchUniformException(name, this.name));
+            CometRenderer.manageException(new NoSuchUniformException(name, this.name));
         return uniform;
     }
 
@@ -228,7 +228,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public SamplerUniform getSampler(int samplerId) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler == null)
-            ExceptionPrinter.printAndExit(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
+            CometRenderer.manageException(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
         return sampler;
     }
 

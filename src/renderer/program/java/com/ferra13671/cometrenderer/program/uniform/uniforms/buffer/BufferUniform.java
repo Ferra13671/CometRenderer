@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.program.uniform.uniforms.buffer;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
@@ -33,7 +33,7 @@ public class BufferUniform extends GlUniform {
 
         int index = GL31.glGetUniformBlockIndex(glProgram.getId(), name);
         if (index == -1) {
-            ExceptionPrinter.printAndExit(new NoSuchUniformException(name, glProgram.getName()));
+            CometRenderer.manageException(new NoSuchUniformException(name, glProgram.getName()));
             bufferIndex = -1;
         } else {
             bufferIndex = glProgram.getBuffersIndexAmount() + 1;

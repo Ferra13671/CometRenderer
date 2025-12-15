@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
@@ -64,7 +63,7 @@ public final class BufferRenderers {
 
                 com.ferra13671.cometrenderer.buffer.GpuBuffer indexBuffer = mesh.getIndexBuffer();
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
-                    ExceptionPrinter.printAndExit(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
+                    CometRenderer.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
                 indexBuffer.bind();
 
                 GL11.glDrawElements(drawMode.glId(), indexCount, indexBufferGenerator.getIndexType().glId, 0);

@@ -1,9 +1,9 @@
 package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.tag.Registry;
@@ -83,7 +83,7 @@ public class ShaderLibrariesPlugin {
 
                 library.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
                     if (uniforms.containsKey(s1))
-                        ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(s1));
+                        CometRenderer.manageException(new DoubleUniformAdditionException(s1));
 
                     uniforms.put(s1, uniformType);
                 });

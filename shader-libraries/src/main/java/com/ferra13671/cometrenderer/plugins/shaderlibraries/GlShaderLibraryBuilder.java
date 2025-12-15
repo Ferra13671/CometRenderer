@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 
 import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.tag.Registry;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
@@ -38,7 +38,7 @@ public class GlShaderLibraryBuilder<T> {
 
     public <S extends GlUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
         if (this.uniforms.containsKey(name))
-            ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(name));
+            CometRenderer.manageException(new DoubleUniformAdditionException(name));
 
         this.uniforms.put(name, uniformType);
         return this;

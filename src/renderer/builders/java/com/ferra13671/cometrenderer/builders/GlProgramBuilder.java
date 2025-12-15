@@ -6,7 +6,6 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.GLVersion;
 import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.tag.Tag;
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
@@ -96,7 +95,7 @@ public class GlProgramBuilder<T> {
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
         if (shaders.containsKey(type))
-            ExceptionPrinter.printAndExit(new DoubleShaderAdditionException(shaderEntry.getName(), type, shaders.get(type).getName()));
+            CometRenderer.manageException(new DoubleShaderAdditionException(shaderEntry.getName(), type, shaders.get(type).getName()));
 
         shaders.put(type, shaderEntry);
         return this;
@@ -122,7 +121,7 @@ public class GlProgramBuilder<T> {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow().getValue();
 
         if (uniforms.containsKey(name))
-            ExceptionPrinter.printAndExit(new DoubleUniformAdditionException(name));
+            CometRenderer.manageException(new DoubleUniformAdditionException(name));
 
         uniforms.put(name, uniformType);
         return this;
@@ -146,15 +145,15 @@ public class GlProgramBuilder<T> {
      */
     public GlProgram build() {
         if (!this.registry.contains(CometTags.NAME))
-            ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException("Missing name in program builder."));
+            CometRenderer.manageException(new IllegalProgramBuilderArgumentException("Missing name in program builder."));
 
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
         if (!shaders.containsKey(ShaderType.Compute)) {
             if (!shaders.containsKey(ShaderType.Vertex))
-                ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
+                CometRenderer.manageException(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
             if (!shaders.containsKey(ShaderType.Fragment))
-                ExceptionPrinter.printAndExit(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
+                CometRenderer.manageException(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
         }
         return GlobalCometCompiler.compileProgram(this.registry);
     }

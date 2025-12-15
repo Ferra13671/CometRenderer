@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
-import com.ferra13671.cometrenderer.exceptions.ExceptionPrinter;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
@@ -71,7 +71,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
      */
     private void ensureBuilding() {
         if (this.closed) {
-            ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
+            CometRenderer.manageException(new IllegalMeshBuilderStateException(
                     "Attempt to interact with MeshBuilder, which does not building.",
                     new String[]{
                             "You are trying to use MeshBuilder after it has been built."
@@ -100,7 +100,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     public Mesh buildOrThrow() {
         Mesh builtBuffer = this.buildNullable();
         if (builtBuffer == null) {
-            ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
+            CometRenderer.manageException(new IllegalMeshBuilderStateException(
                     "MeshBuilder was empty.",
                     new String[]{
                             "You haven't built any vertices in MeshBuilder and called MeshBuilder build via the 'buildThrowable' method, which throw an exception about the MeshBuilder being empty."
@@ -146,7 +146,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         this.ensureBuilding();
         this.endVertex();
         if (this.vertexCount >= MAX_VERTICES) {
-            ExceptionPrinter.printAndExit(new VertexOverflowException());
+            CometRenderer.manageException(new VertexOverflowException());
             return -1L;
         } else {
             this.vertexCount++;
@@ -162,7 +162,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     private void endVertex() {
         if (this.vertexCount != 0 && this.currentMask != 0) {
             String string = vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getVertexElementName).collect(Collectors.joining(", "));
-            ExceptionPrinter.printAndExit(new BadVertexStructureException(string));
+            CometRenderer.manageException(new BadVertexStructureException(string));
         }
     }
 
@@ -181,7 +181,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
             this.currentMask = j;
             long l = this.vertexPointer;
             if (l == -1L) {
-                ExceptionPrinter.printAndExit(new IllegalMeshBuilderStateException(
+                CometRenderer.manageException(new IllegalMeshBuilderStateException(
                         "Not currently building vertex.",
                         new String[]{
                                 "You are trying to add data to vertex that has already been built."
