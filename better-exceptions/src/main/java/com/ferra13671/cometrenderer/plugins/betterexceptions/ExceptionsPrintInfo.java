@@ -155,6 +155,18 @@ public class ExceptionsPrintInfo {
                         "Recheck the method call that caused the error and fix the buffer issue"
                 }
         ));
+        add(UnsupportedShaderException.class, exception -> makeRegistry(
+                "Unsupported shader error.",
+                exception.getMessage(),
+                new String[]{
+                        "You are trying to add a shader to program that has a type that is not supported by the current version of OpenGL"
+                },
+                new String[]{
+                        "Stop adding shader of this type to the program",
+                        "If the project is designed for newer versions of OpenGL, then you can ignore this error",
+                        "Disable version checking via the 'COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS' tag."
+                }
+        ));
     }
 
     private static <T extends CometException> void add(Class<T> clazz, PrintInfoCreator<T> printInfoCreator) {

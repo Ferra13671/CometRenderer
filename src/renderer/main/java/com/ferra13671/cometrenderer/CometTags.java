@@ -24,4 +24,6 @@ public final class CometTags {
     public static final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
 
     public static final Tag<ExceptionProvider> EXCEPTION_PROVIDER = new Tag<>("exception-provider");
+
+    public static final Tag<Boolean> COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS = new Tag<>("compare-current-and-shader-OpenGL-versions");
 }

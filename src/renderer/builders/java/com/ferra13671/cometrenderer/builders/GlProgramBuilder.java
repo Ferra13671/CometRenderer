@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.GLVersion;
+import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedShaderException;
 import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.tag.Tag;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
@@ -83,14 +84,11 @@ public class GlProgramBuilder<T> {
      * @return сборщик программы.
      */
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
-        GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
-        if (glVersion.id < type.glVersion.id)
-            /*
-            TODO
-                 UnsupportedShaderException
-                 Ability to choose whether to throw an exception on error or simply send the error to the console
-             */
-            throw new IllegalStateException(String.format("Current OpenGL version ('%s') does not match the minimum OpenGL version for the shader ('%s').", glVersion.glVersion, type.glVersion.glVersion));
+        if (CometRenderer.getRegistry().get(CometTags.COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS).orElseThrow().getValue()) {
+            GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
+            if (glVersion.id < type.glVersion.id)
+                CometRenderer.manageException(new UnsupportedShaderException(glVersion, type.glVersion));
+        }
 
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 

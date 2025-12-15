@@ -101,6 +101,8 @@ public class CometRenderer {
         registry.set(CometTags.EXCEPTION_PROVIDER, exception -> {
             throw exception;
         });
+
+        registry.set(CometTags.COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS, true);
     }
 
     public static void manageException(CometException exception) {
