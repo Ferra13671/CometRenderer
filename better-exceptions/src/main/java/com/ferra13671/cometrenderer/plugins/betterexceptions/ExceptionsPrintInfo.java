@@ -4,10 +4,7 @@ import com.ferra13671.cometrenderer.exceptions.CometException;
 import com.ferra13671.cometrenderer.exceptions.impl.*;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.*;
 import com.ferra13671.cometrenderer.tag.Registry;
 
 import java.util.HashMap;
@@ -164,7 +161,17 @@ public class ExceptionsPrintInfo {
                 new String[]{
                         "Stop adding shader of this type to the program",
                         "If the project is designed for newer versions of OpenGL, then you can ignore this error",
-                        "Disable version checking via the 'COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS' tag."
+                        "Disable version checking via the 'COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS' tag"
+                }
+        ));
+        add(VertexFormatOverflowException.class, exception -> makeRegistry(
+                "VertexFormat overflow.",
+                exception.getMessage(),
+                new String[]{
+                        "You are adding more elements to VertexFormat than the maximum number"
+                },
+                new String[]{
+                        "Create a VertexFormat that uses fewer elements"
                 }
         ));
     }
