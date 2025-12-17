@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL;
 public class VertexFormatManager {
     /** Установщик формата ввершины к буфферу вершин. В зависимости от функций поддерживаемого OpenGL будет выбран 1 из 2 типов привязывателя. **/
     private static final VertexFormatBufferUploader formatUploader =
-            GL.getCapabilities().GL_ARB_vertex_attrib_binding ?
+            GL.getCapabilities().GL_ARB_vertex_attrib_binding && CometRenderer.getConfig().USE_ARB_ATTRIB_BINDING_IF_SUPPORT.getValue() ?
                     new ARBVertexFormatBufferUploader()
                     :
                     new DefaultVertexFormatBufferUploader();
