@@ -104,13 +104,18 @@ public class CometRenderer {
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
 
 
-        registry.set(CometTags.EXCEPTION_PROVIDER, exception -> {
-            throw exception;
-        });
+        registry.set(CometTags.EXCEPTION_PROVIDER, CometRenderer::throwOrLogException);
     }
 
     public static void manageException(CometException exception) {
         registry.get(CometTags.EXCEPTION_PROVIDER).orElseThrow().getValue().manageException(exception);
+    }
+
+    public static void throwOrLogException(CometException exception) {
+        if (config.DONT_THROW_EXCEPTIONS.getValue())
+            logger.error(exception.getClass().getName().concat(exception.getMessage()));
+        else
+            throw exception;
     }
 
     public static Registry getRegistry() {

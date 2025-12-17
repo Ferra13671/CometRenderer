@@ -48,7 +48,7 @@ public class BetterExceptionsPlugin {
             else
                 CometRenderer.getLogger().error(String.format("Unable to find information about exception '%s'.", exception.getClass()));
 
-            throw exception;
+            CometRenderer.throwOrLogException(exception);
         });
     }
 
