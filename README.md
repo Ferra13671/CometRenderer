@@ -17,8 +17,13 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ferra13671:comet-renderer:1.8.4-public"
+    implementation "com.ferra13671:comet-renderer:1.9"
     implementation "com.ferra13671:gl-texture-utils:1.6.1"
+    
+    //Plugins (optional)
+    implementation "com.ferra13671:comet-renderer-better-exceptions:1.9"
+    implementation "com.ferra13671:comet-renderer-post-effects:1.9"
+    implementation "com.ferra13671:comet-renderer-shader-libraries:1.9"
 }
 ```
 
