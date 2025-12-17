@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.blend.DstFactor;
 import com.ferra13671.cometrenderer.blend.SrcFactor;
+import com.ferra13671.cometrenderer.config.Config;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -45,6 +46,8 @@ import java.util.function.Supplier;
 public class CometRenderer {
     /** Реестр различных данных. **/
     private static final Registry registry = new Registry();
+    /** Конфиг с различными настройками. **/
+    private static final Config config = new Config();
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     private static final Logger logger = LoggerFactory.getLogger("CometRenderer");
     /** Функция для получения айди GlGpuBuffer. **/
@@ -83,10 +86,12 @@ public class CometRenderer {
 
         initRegistry();
 
-        GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
-        if (glVersion.id < GLVersion.GL32.id)
-            //TODO UnsupportedOpenGLVersion
-            throw new IllegalStateException(String.format("OpenGL version (%s) does not match the minimum version (%s).", glVersion.glVersion, GLVersion.GL32.glVersion));
+        if (config.CHECK_OPENGL_VERSION.getValue()) {
+            GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
+            if (glVersion.id < GLVersion.GL32.id)
+                //TODO UnsupportedOpenGLVersion
+                throw new IllegalStateException(String.format("OpenGL version (%s) does not match the minimum version (%s).", glVersion.glVersion, GLVersion.GL32.glVersion));
+        }
 
         registry.setImmutable(CometTags.INITIALIZED, true);
     }
@@ -101,8 +106,6 @@ public class CometRenderer {
         registry.set(CometTags.EXCEPTION_PROVIDER, exception -> {
             throw exception;
         });
-
-        registry.set(CometTags.COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS, true);
     }
 
     public static void manageException(CometException exception) {
@@ -111,6 +114,10 @@ public class CometRenderer {
 
     public static Registry getRegistry() {
         return registry;
+    }
+
+    public static Config getConfig() {
+        return config;
     }
 
     /**
