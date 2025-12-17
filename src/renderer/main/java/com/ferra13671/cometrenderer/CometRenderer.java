@@ -94,6 +94,8 @@ public class CometRenderer {
     }
 
     private static void initRegistry() {
+        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "1.9");
+
         String vendor = GL11.glGetString(GL11.GL_VENDOR);
         String version = GL11.glGetString(GL11.GL_VERSION);
 
@@ -103,6 +105,11 @@ public class CometRenderer {
         registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
 
+        int numExtensions = GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS);
+        String[] extensions = new String[numExtensions];
+        for (int i = 0; i < numExtensions; i++)
+            extensions[i] = GL30.glGetStringi(GL11.GL_EXTENSIONS, i);
+        registry.setImmutable(CometTags.GL_EXTENSIONS, extensions);
 
         registry.set(CometTags.EXCEPTION_PROVIDER, CometRenderer::throwOrLogException);
     }
@@ -113,7 +120,7 @@ public class CometRenderer {
 
     public static void throwOrLogException(CometException exception) {
         if (config.DONT_THROW_EXCEPTIONS.getValue())
-            logger.error(exception.getClass().getName().concat(exception.getMessage()));
+            logger.error(exception.getClass().getName().concat(": ".concat(exception.getMessage())));
         else
             throw exception;
     }
