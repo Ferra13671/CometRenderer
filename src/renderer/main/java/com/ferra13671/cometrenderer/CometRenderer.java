@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.blend.DstFactor;
 import com.ferra13671.cometrenderer.blend.SrcFactor;
 import com.ferra13671.cometrenderer.config.Config;
 import com.ferra13671.cometrenderer.exceptions.CometException;
+import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
@@ -89,8 +90,7 @@ public class CometRenderer {
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
             if (glVersion.id < GLVersion.GL32.id)
-                //TODO UnsupportedOpenGLVersion
-                throw new IllegalStateException(String.format("OpenGL version (%s) does not match the minimum version (%s).", glVersion.glVersion, GLVersion.GL32.glVersion));
+                manageException(new UnsupportedOpenGLVersionException(glVersion, GLVersion.GL32));
         }
 
         registry.setImmutable(CometTags.INITIALIZED, true);

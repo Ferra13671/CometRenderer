@@ -174,6 +174,16 @@ public class ExceptionsPrintInfo {
                         "Create a VertexFormat that uses fewer elements"
                 }
         ));
+        add(UnsupportedOpenGLVersionException.class, exception -> makeRegistry(
+                "Unsupported OpenGL version.",
+                exception.getMessage(),
+                new String[]{
+                        "Your GPU is too old and does not support the minimum OpenGL version required by CometRenderer"
+                },
+                new String[]{
+                        "Just buy a new GPU"
+                }
+        ));
     }
 
     private static <T extends CometException> void add(Class<T> clazz, PrintInfoCreator<T> printInfoCreator) {
