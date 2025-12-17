@@ -8,9 +8,6 @@ import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionExce
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.Matrix4fGlUniform;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.Vec4GlUniform;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
 import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
@@ -200,15 +197,21 @@ public class CometRenderer {
      * @see CometRenderer#matrixSnippet
      */
     public static void initMatrix() {
-        BufferUniform projectionUniform = globalProgram.getUniform("Projection", UniformType.BUFFER);
-        if (projectionUniform != null) {
-            GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
-            projectionUniform.set(slice);
-        }
+        globalProgram.consumeIfUniformPresent(
+                "Projection",
+                UniformType.BUFFER,
+                projectionUniform -> {
+                    GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
+                    projectionUniform.set(slice);
+                }
+        );
 
-        Matrix4fGlUniform modelViewUniform = globalProgram.getUniform("modelViewMat", UniformType.MATRIX4);
-        if (modelViewUniform != null)
-            modelViewUniform.set(RenderSystem.getModelViewMatrix());
+        globalProgram.consumeIfUniformPresent(
+                "modelViewMat",
+                UniformType.MATRIX4,
+                modelViewUniform ->
+                        modelViewUniform.set(RenderSystem.getModelViewMatrix())
+        );
     }
 
     /**
@@ -217,9 +220,12 @@ public class CometRenderer {
      * @see CometRenderer#colorSnippet
      */
     public static void initShaderColor() {
-        Vec4GlUniform colorUniform = globalProgram.getUniform("shaderColor", UniformType.VEC4);
-        if (colorUniform != null)
-            colorUniform.set(getShaderColor());
+        globalProgram.consumeIfUniformPresent(
+                "shaderColor",
+                UniformType.VEC4,
+                colorUniform ->
+                        colorUniform.set(getShaderColor())
+        );
     }
 
     /**
