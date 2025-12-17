@@ -1,5 +1,8 @@
 package com.ferra13671.cometrenderer.vertex.format.uploader;
 
+import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.Mesa3DVersion;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
@@ -16,12 +19,12 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
     private final boolean applyMesaWorkaround;
 
     protected ARBVertexFormatBufferUploader() {
-        if ("Mesa".equals(GL30.glGetString(GL30.GL_VENDOR))) {
-            String string = GL30.glGetString(GL30.GL_VERSION);
-            applyMesaWorkaround = string.contains("25.0.0") || string.contains("25.0.1") || string.contains("25.0.2");
-        } else {
-            applyMesaWorkaround = false;
-        }
+        Mesa3DVersion mesaVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow().getValue();
+
+        if (mesaVersion != Mesa3DVersion.NONE)
+            this.applyMesaWorkaround = mesaVersion.version().contains("25.0.0") || mesaVersion.version().contains("25.0.1") || mesaVersion.version().contains("25.0.2");
+        else
+            this.applyMesaWorkaround = false;
     }
 
     @Override

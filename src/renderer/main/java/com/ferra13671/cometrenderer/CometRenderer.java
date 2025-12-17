@@ -94,11 +94,15 @@ public class CometRenderer {
     }
 
     private static void initRegistry() {
-        registry.setImmutable(CometTags.VENDOR, GL11.glGetString(GL11.GL_VENDOR));
+        String vendor = GL11.glGetString(GL11.GL_VENDOR);
+        String version = GL11.glGetString(GL11.GL_VERSION);
+
+        registry.setImmutable(CometTags.VENDOR, vendor);
         registry.setImmutable(CometTags.GPU, GL11.glGetString(GL11.GL_RENDERER));
-        GLVersion glVersion = GLVersion.fromString(GL11.glGetString(GL11.GL_VERSION));
-        registry.setImmutable(CometTags.GL_VERSION, glVersion);
+        registry.setImmutable(CometTags.GL_VERSION, GLVersion.fromString(version));
+        registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
+
 
         registry.set(CometTags.EXCEPTION_PROVIDER, exception -> {
             throw exception;
