@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.utils;
 
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;

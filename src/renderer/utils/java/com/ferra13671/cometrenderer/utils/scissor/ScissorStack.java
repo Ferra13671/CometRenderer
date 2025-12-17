@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.scissor;
+package com.ferra13671.cometrenderer.utils.scissor;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

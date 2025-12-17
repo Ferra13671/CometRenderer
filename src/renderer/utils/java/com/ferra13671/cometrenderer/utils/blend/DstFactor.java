@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.blend;
+package com.ferra13671.cometrenderer.utils.blend;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;

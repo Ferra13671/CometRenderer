@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.scissor;
+package com.ferra13671.cometrenderer.utils.scissor;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import net.minecraft.client.MinecraftClient;

@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.buffer;
 
-import com.ferra13671.cometrenderer.Bindable;
+import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL15;
 

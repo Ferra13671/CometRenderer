@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.utils;
 
 public interface Bindable {
 

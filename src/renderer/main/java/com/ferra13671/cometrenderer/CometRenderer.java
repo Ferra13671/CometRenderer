@@ -1,15 +1,16 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.blend.DstFactor;
-import com.ferra13671.cometrenderer.blend.SrcFactor;
+import com.ferra13671.cometrenderer.utils.blend.DstFactor;
+import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.config.Config;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.scissor.ScissorStack;
+import com.ferra13671.cometrenderer.utils.scissor.ScissorStack;
 import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.utils.FrameBufferUtils;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -429,9 +430,9 @@ public class CometRenderer {
      * @param <T> тип буффера вершин.
      */
     public static <T> void draw(BiConsumer<T, Boolean> renderConsumer, T builtBuffer, boolean close) {
-        if (scissorStack.current() != null) {
+        if (!scissorStack.isEmpty()) {
             GlStateManager._enableScissorTest();
-            scissorStack.current().bind();
+            scissorStack.peek().bind();
         } else
             GlStateManager._disableScissorTest();
 

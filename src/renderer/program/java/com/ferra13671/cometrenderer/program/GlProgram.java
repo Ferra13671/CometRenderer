@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.program;
 
-import com.ferra13671.cometrenderer.Bindable;
+import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.Compilable;
+import com.ferra13671.cometrenderer.utils.Compilable;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
