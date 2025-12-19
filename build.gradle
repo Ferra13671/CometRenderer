@@ -62,7 +62,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    implementation "com.ferra13671:gl-texture-utils:1.6.1"
+    implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
 
     compileOnly files("libs/FerraGuard-Annotations-2.0.jar")
 

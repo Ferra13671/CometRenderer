@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.program.uniform.uniforms.sampler;
 
-import com.ferra13671.TextureUtils.GlTex;
+import com.ferra13671.gltextureutils.GlTex;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.texture.GlTexture;

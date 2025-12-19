@@ -1,11 +1,5 @@
 package com.ferra13671.cometrenderer.test;
 
-import com.ferra13671.TextureUtils.builder.GLTextureBuilder;
-import com.ferra13671.TextureUtils.loader.TextureLoader;
-import com.ferra13671.TextureUtils.loader.TextureLoaders;
-import com.ferra13671.TextureUtils.texture.GLTexture;
-import com.ferra13671.TextureUtils.texture.TextureFiltering;
-import com.ferra13671.TextureUtils.texture.TextureWrapping;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
@@ -17,15 +11,28 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.CometVertexFormats;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import com.ferra13671.gltextureutils.ColorMode;
+import com.ferra13671.gltextureutils.GLTexture;
+import com.ferra13671.gltextureutils.TextureFiltering;
+import com.ferra13671.gltextureutils.TextureWrapping;
+import com.ferra13671.gltextureutils.builder.GLTextureInfo;
+import com.ferra13671.gltextureutils.loader.TextureLoader;
+import com.ferra13671.gltextureutils.loader.TextureLoaders;
 import net.fabricmc.api.ModInitializer;
 import org.joml.Vector4f;
 
 import java.util.Random;
-import java.util.function.Function;
 
 public class TestMod implements ModInitializer, Mc {
 
-    private static final Function<String, TextureLoader> textureLoader = path -> TextureLoaders.INPUT_STREAM.apply(TestMod.class.getClassLoader().getResourceAsStream(path));
+    private static final TextureLoader<String> textureLoader = new TextureLoader<>() {
+        @Override
+        @OverriddenMethod
+        public GLTextureInfo load(String s, ColorMode colorMode) throws Exception {
+            return TextureLoaders.INPUT_STREAM.load(TestMod.class.getClassLoader().getResourceAsStream(s), colorMode);
+        }
+    };
 
     private static GlProgram positionProgram;
     public static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex", "position.vsh");
@@ -88,9 +95,9 @@ public class TestMod implements ModInitializer, Mc {
                     .build();
         if (texture == null)
             texture =
-                    GLTextureBuilder.builder()
+                    textureLoader.createTextureBuilder()
                     .name("Test-texture")
-                    .loader(textureLoader.apply("texture.jpg"))
+                    .info("texture.jpg")
                     .filtering(TextureFiltering.SMOOTH)
                     .wrapping(TextureWrapping.DEFAULT)
                     .build();

@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer.program.uniform.uniforms.sampler;
 
-import com.ferra13671.TextureUtils.GlTex;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import com.ferra13671.gltextureutils.GlTex;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.texture.GlTextureView;
 
