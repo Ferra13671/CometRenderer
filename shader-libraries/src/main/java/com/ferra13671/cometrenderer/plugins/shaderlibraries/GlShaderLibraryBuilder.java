@@ -50,6 +50,7 @@ public class GlShaderLibraryBuilder<T> {
     }
 
     public GlslFileEntry build() {
+        //TODO IllegalShaderBuilderArgumentException
         if (this.name == null)
             throw new IllegalArgumentException("Missing name in shader library builder.");
         if (this.libraryPath == null)

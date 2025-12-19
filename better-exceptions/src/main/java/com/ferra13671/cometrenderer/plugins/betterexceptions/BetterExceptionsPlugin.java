@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class BetterExceptionsPlugin {
     private static final String exceptionText = """
+    
     ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
             CometRenderer error occurred!
     ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
