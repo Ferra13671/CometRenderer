@@ -21,7 +21,7 @@ dependencies {
     implementation "com.ferra13671:gl-texture-utils:1.7.1"
     
     //Plugins (optional)
-    implementation "com.ferra13671:comet-renderer-minecraft:1.21.8-1.21.11-fabric-yarn-2.0"
+    implementation "com.ferra13671:comet-renderer-minecraft:version"//check need version in https://github.com/Ferra13671/maven/tree/main/com/ferra13671/comet-renderer-minecraft
     implementation "com.ferra13671:comet-renderer-better-exceptions:2.0"
     implementation "com.ferra13671:comet-renderer-post-effects:2.0"
     implementation "com.ferra13671:comet-renderer-shader-libraries:2.0"
