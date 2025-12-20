@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ferra13671:comet-renderer:2.0"
+    implementation "com.ferra13671:comet-renderer:2.0-HOTFIX-1"
     implementation "com.ferra13671:gl-texture-utils:1.7.1"
     
     //Plugins (optional)
