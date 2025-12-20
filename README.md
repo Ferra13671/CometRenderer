@@ -17,13 +17,14 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ferra13671:comet-renderer:1.9"
-    implementation "com.ferra13671:gl-texture-utils:1.6.1"
+    implementation "com.ferra13671:comet-renderer:2.0"
+    implementation "com.ferra13671:gl-texture-utils:1.7.1"
     
     //Plugins (optional)
-    implementation "com.ferra13671:comet-renderer-better-exceptions:1.9"
-    implementation "com.ferra13671:comet-renderer-post-effects:1.9"
-    implementation "com.ferra13671:comet-renderer-shader-libraries:1.9"
+    implementation "com.ferra13671:comet-renderer-minecraft:1.21.8-1.21.11-fabric-yarn-2.0"
+    implementation "com.ferra13671:comet-renderer-better-exceptions:2.0"
+    implementation "com.ferra13671:comet-renderer-post-effects:2.0"
+    implementation "com.ferra13671:comet-renderer-shader-libraries:2.0"
 }
 ```
 
