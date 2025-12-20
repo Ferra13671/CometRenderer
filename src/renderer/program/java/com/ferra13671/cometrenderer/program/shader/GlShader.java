@@ -7,7 +7,6 @@ import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
@@ -63,7 +62,7 @@ public class GlShader implements Compilable, Closeable {
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(getId(), GL20.GL_COMPILE_STATUS));
         return new CompileResult(
                 status,
-                status == CompileStatus.FAILURE ? StringUtils.trim(GL20.glGetShaderInfoLog(getId())) : ""
+                status == CompileStatus.FAILURE ? GL20.glGetShaderInfoLog(getId()).trim() : ""
         );
     }
 

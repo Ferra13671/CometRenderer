@@ -1,11 +1,11 @@
 package com.ferra13671.cometrenderer.vertex;
 
-import it.unimi.dsi.fastutil.ints.IntConsumer;
+import java.util.function.Consumer;
 
 /**
  * Объект, обрабатывающий и разбивающий вершины на множество индексов.
  */
 public interface Triangulator {
 
-	void accept(IntConsumer indexConsumer, int firstVertexIndex);
+	void accept(Consumer<Integer> indexConsumer, int firstVertexIndex);
 }

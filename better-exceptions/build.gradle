@@ -1,10 +1,10 @@
 plugins {
     id 'java-library'
-    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = "1.9"
+project.ext.projectName = "comet-renderer-better-exceptions"
+version = "2.0"
 group = "com.ferra13671"
 
 java {
@@ -12,7 +12,7 @@ java {
 }
 
 base {
-    archivesName = "comet-renderer-better-exceptions"
+    archivesName = projectName
 }
 
 repositories {
@@ -24,9 +24,6 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     implementation rootProject
 }
@@ -35,7 +32,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'com.ferra13671'
-            artifactId = 'comet-renderer-better-exceptions'
+            artifactId = project.ext.projectName
             artifact source: jar, classifier: null
             artifact sourcesJar
         }

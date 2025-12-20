@@ -1,10 +1,11 @@
 plugins {
     id 'java-library'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
-project.ext.projectName = "comet-renderer-shader-libraries"
-version = "2.0"
+project.ext.projectName = "comet-renderer-minecraft"
+version = "1.21.8-1.21.11-fabric-yarn-2.0"
 group = "com.ferra13671"
 
 java {
@@ -12,13 +13,23 @@ java {
 }
 
 base {
-    archivesName = project.ext.projectName
+    archivesName = projectName
 }
 
 sourceSets {
     example {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    runs {
+        testmodClient {
+            client()
+            name = "Testmod Client"
+            source sourceSets.example
+        }
     }
 }
 
@@ -31,6 +42,11 @@ repositories {
 }
 
 dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
 
     implementation rootProject
     exampleImplementation sourceSets.main.output

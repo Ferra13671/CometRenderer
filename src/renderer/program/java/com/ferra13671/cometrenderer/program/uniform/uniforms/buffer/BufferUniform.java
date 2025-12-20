@@ -7,8 +7,6 @@ import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import net.minecraft.client.gl.GlGpuBuffer;
 import org.lwjgl.opengl.GL31;
 
 /**
@@ -49,30 +47,6 @@ public class BufferUniform extends GlUniform {
      */
     public int getBufferIndex() {
         return bufferIndex;
-    }
-
-    /**
-     * Устанавливает буффер из GpuBufferSlice.
-     *
-     * @param gpuBufferSlice GpuBufferSlice.
-     *
-     * @see GpuBufferSlice
-     */
-    public void set(GpuBufferSlice gpuBufferSlice) {
-        this.uploadRunnable = () -> BufferUniformUploader.GPU_BUFFER_SLICE.uploadConsumer().accept(this, gpuBufferSlice);
-        this.program.addUpdatedUniform(this);
-    }
-
-    /**
-     * Устанавливает буффер из GlGpuBuffer.
-     *
-     * @param glGpuBuffer GlGpuBuffer.
-     *
-     * @see GlGpuBuffer
-     */
-    public void set(GlGpuBuffer glGpuBuffer) {
-        this.uploadRunnable = () -> BufferUniformUploader.GL_GPU_BUFFER.uploadConsumer().accept(this, glGpuBuffer);
-        this.program.addUpdatedUniform(this);
     }
 
     /**

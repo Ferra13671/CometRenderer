@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.Allocator;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
@@ -9,7 +10,6 @@ import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import net.minecraft.client.util.BufferAllocator;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
@@ -27,7 +27,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     public static final int MAX_VERTICES = 16777215;
 
     /** Аллокатор. **/
-    private final BufferAllocator bufferAllocator;
+    private final Allocator allocator;
     /** Тип отрисовки вершин. **/
     private final DrawMode drawMode;
     /** Формат вершин. **/
@@ -55,8 +55,8 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
      * @param vertexFormat формат вершин.
      * @param closeAllocatorAfterBuild закрывать аллокатор после сборки меша или нет.
      */
-    public MeshBuilder(BufferAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
-        this.bufferAllocator = bufferAllocator;
+    public MeshBuilder(Allocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
+        this.allocator = bufferAllocator;
         this.drawMode = drawMode;
         this.vertexFormat = vertexFormat;
         this.vertexSize = vertexFormat.getVertexSize();
@@ -89,7 +89,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         this.ensureBuilding();
         this.endVertex();
         Mesh builtBuffer = this.build();
-        bufferAllocator.close();
+        this.allocator.close();
         this.closed = true;
         this.vertexPointer = -1L;
         return builtBuffer;
@@ -124,15 +124,11 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         if (this.vertexCount == 0) {
             return null;
         } else {
-            BufferAllocator.CloseableBuffer closeableBuffer = this.bufferAllocator.getAllocated();
-            if (closeableBuffer == null) {
+            if (this.allocator.isEmpty()) {
                 return null;
             } else {
                 int i = this.drawMode.indexCountFunction().apply(this.vertexCount);
-                return new Mesh(closeableBuffer.getBuffer(), this.vertexFormat, this.vertexCount, i, this.drawMode, () -> {
-                    if (this.closeAllocatorAfterBuild)
-                        this.bufferAllocator.close();
-                });
+                return new Mesh(this.allocator, this.vertexFormat, this.vertexCount, i, this.drawMode, this.closeAllocatorAfterBuild);
             }
         }
     }
@@ -150,7 +146,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
             return -1L;
         } else {
             this.vertexCount++;
-            long l = this.bufferAllocator.allocate(this.vertexSize);
+            long l = this.allocator.allocate(this.vertexSize);
             this.vertexPointer = l;
             return l;
         }

@@ -1,11 +1,13 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import org.apache.commons.io.IOUtils;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 /**
  * Самые основные загрузчики glsl контента.
@@ -18,7 +20,7 @@ public final class CometLoaders {
         @OverriddenMethod
         public String load(String path) throws Exception {
             InputStream inputStream = CometLoaders.class.getClassLoader().getResourceAsStream(path);
-            String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            String content = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
             inputStream.close();
             return content;
         }
@@ -27,7 +29,7 @@ public final class CometLoaders {
         @Override
         @OverriddenMethod
         public String load(InputStream path) throws Exception {
-            String content = IOUtils.toString(path, StandardCharsets.UTF_8);
+            String content = new BufferedReader(new InputStreamReader(path, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
             path.close();
             return content;
         }
@@ -37,7 +39,7 @@ public final class CometLoaders {
         @OverriddenMethod
         public String load(URI path) throws Exception {
             InputStream inputStream = path.toURL().openStream();
-            String content = IOUtils.toString(path, StandardCharsets.UTF_8);
+            String content = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
             inputStream.close();
             return content;
         }

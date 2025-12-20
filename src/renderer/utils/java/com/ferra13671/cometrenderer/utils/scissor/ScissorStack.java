@@ -10,7 +10,6 @@ public class ScissorStack extends Stack<ScissorRect> {
     @Override
     @OverriddenMethod
     public ScissorRect push(ScissorRect rect) {
-        rect = rect.fixRect();
         ScissorRect scissorRect = rect;
         if (!isEmpty())
             scissorRect = Objects.requireNonNullElse(rect.intersection(peek()), new ScissorRect(0, 0, 0, 0));

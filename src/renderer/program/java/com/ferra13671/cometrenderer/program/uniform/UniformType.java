@@ -4,7 +4,7 @@ import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.*;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
-import org.apache.commons.lang3.function.TriFunction;
+import com.ferra13671.cometrenderer.utils.TriFunction;
 
 /**
  * Объект, представляющий собой тип униформы.

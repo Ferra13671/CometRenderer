@@ -1,10 +1,34 @@
 plugins {
     id 'java-library'
-    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = "1.9"
+import org.gradle.internal.os.OperatingSystem
+
+project.ext.lwjglVersion = "3.3.3"
+project.ext.jomlVersion = "1.10.5"
+
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        def osArch = System.getProperty("os.arch")
+        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+            project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
+        } else if  (osArch.startsWith("ppc")) {
+            project.ext.lwjglNatives += "-ppc64le"
+        } else if  (osArch.startsWith("riscv")) {
+            project.ext.lwjglNatives += "-riscv64"
+        }
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+}
+
+version = "2.0"
 group = "com.ferra13671"
 
 java {
@@ -25,10 +49,6 @@ sourceSets {
         java.srcDirs = ["src/main/main/java"]
         resources.srcDirs = ["src/main/main/resources"]
     }
-    testmod {
-        compileClasspath += main.compileClasspath
-        runtimeClasspath += main.runtimeClasspath
-    }
 
     subSourceSet("main")
     subSourceSet("buffer")
@@ -37,16 +57,6 @@ sourceSets {
     subSourceSet("vertex")
     subSourceSet("builders")
     subSourceSet("utils")
-}
-
-loom {
-    runs {
-        testmodClient {
-            client()
-            name = "Testmod Client"
-            source sourceSets.testmod
-        }
-    }
 }
 
 repositories {
@@ -58,15 +68,23 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
     implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
 
     compileOnly files("libs/FerraGuard-Annotations-2.0.jar")
 
-    testmodImplementation sourceSets.main.output
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+
+
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-jawt"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-stb"
+    implementation "org.joml:joml:${jomlVersion}"
+
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 }
 
 publishing {

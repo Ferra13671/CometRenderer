@@ -14,7 +14,6 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUnif
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
@@ -32,8 +31,6 @@ import java.util.function.Consumer;
  * @see GlobalCometCompiler
  */
 public class GlProgram implements Bindable, Compilable, Closeable {
-    public static GlProgram ACTIVE_PROGRAM = null;
-
     /** Имя программы. **/
     private final String name;
     /** Айди программы в OpenGL. **/
@@ -84,7 +81,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(getId(), GL20.GL_LINK_STATUS));
         return new CompileResult(
                 status,
-                status == CompileStatus.FAILURE ? StringUtils.trim(GL20.glGetProgramInfoLog(getBuffersIndexAmount())) : ""
+                status == CompileStatus.FAILURE ? GL20.glGetProgramInfoLog(getBuffersIndexAmount()).trim() : ""
         );
     }
 
@@ -109,8 +106,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
                 glUniform.upload();
             this.updatedUniforms.clear();
         }
-
-        ACTIVE_PROGRAM = this;
     }
 
     /**
@@ -120,8 +115,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     @OverriddenMethod
     public void unbind() {
         GL20.glUseProgram(0);
-
-        ACTIVE_PROGRAM = null;
     }
 
     /**

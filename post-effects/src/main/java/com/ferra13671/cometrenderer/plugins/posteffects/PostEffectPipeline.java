@@ -2,10 +2,11 @@ package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometVertexFormats;
-import com.ferra13671.cometrenderer.buffer.framebuffer.CometFrameBuffer;
+import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import net.minecraft.client.gl.Framebuffer;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,10 +20,10 @@ public class PostEffectPipeline {
     }
 
     public void execute(int textureWidth, int textureHeight) {
-        HashMap<String, CometFrameBuffer> frameBuffers = new HashMap<>();
+        HashMap<String, Framebuffer> frameBuffers = new HashMap<>();
         for (LocalFrameBufferInfo info : localFrameBuffers) {
-            CometFrameBuffer f = new CometFrameBuffer(info.name(), textureWidth, textureHeight, info.clearColor(), false);
-            f.clearColorTexture();
+            FramebufferImpl f = new FramebufferImpl(info.name(), false, textureWidth, textureHeight, new Color(info.clearColor()), 0);
+            f.clearColor();
             frameBuffers.put(info.name(), f);
         }
 

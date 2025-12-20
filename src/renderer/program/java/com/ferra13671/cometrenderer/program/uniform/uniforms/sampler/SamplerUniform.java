@@ -5,8 +5,7 @@ import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.ferra13671.gltextureutils.GlTex;
-import com.mojang.blaze3d.opengl.GlStateManager;
-import net.minecraft.client.texture.GlTextureView;
+import org.lwjgl.opengl.GL20;
 
 /**
  * Униформа, хранящая в себе параметр в виде текстуры.
@@ -45,18 +44,6 @@ public class SamplerUniform extends GlUniform {
     }
 
     /**
-     * Устанавливает текстуру из GlTextureView.
-     *
-     * @param textureView GlTextureView.
-     *
-     * @see GlTextureView
-     */
-    public void set(GlTextureView textureView) {
-        this.uploadRunnable = () -> SamplerUniformUploader.GL_TEXTURE_VIEW.uploadConsumer().accept(this, textureView);
-        this.program.addUpdatedUniform(this);
-    }
-
-    /**
      * Устанавливает текстуру при помощи её айди в OpenGL.
      *
      * @param textureId айди текстуры в OpenGL.
@@ -91,10 +78,8 @@ public class SamplerUniform extends GlUniform {
     @OverriddenMethod
     public void upload() {
         if (this.uploadRunnable != null) {
-            if (GlProgram.ACTIVE_PROGRAM == null)
-                GlStateManager._glUniform1i(this.location, getSamplerId());
+            GL20.glUniform1i(this.location, getSamplerId());
 
-            //В зависимости от установщика устанавливаем текстуру в семплер
             this.uploadRunnable.run();
         }
     }

@@ -3,11 +3,10 @@ package com.ferra13671.cometrenderer.vertex;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import it.unimi.dsi.fastutil.ints.IntConsumer;
-import net.minecraft.util.math.MathHelper;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.function.Consumer;
 
 /**
  * Объект, представляющий собой сборщик буффера индексов для определенного буффера вершин.
@@ -87,18 +86,18 @@ public final class IndexBufferGenerator {
 	}
 
 	private GpuBuffer generateIndexBuffer(int requiredSize) {
-		requiredSize = MathHelper.roundUpToMultiple(requiredSize * 2, this.vertexCountInTriangulated);
+		requiredSize = roundUpToMultiple(requiredSize * 2, this.vertexCountInTriangulated);
 		int i = requiredSize / this.vertexCountInTriangulated;
 		IndexType indexType = IndexType.smallestFor(
 				i * this.vertexCountInShape
 		);
 		ByteBuffer byteBuffer = MemoryUtil.memAlloc(
-				MathHelper.roundUpToMultiple(requiredSize * indexType.bytes, 4)
+				roundUpToMultiple(requiredSize * indexType.bytes, 4)
 		);
 
 		try {
 			this.indexType = indexType;
-			IntConsumer intConsumer = this.getIndexConsumer(byteBuffer);
+			Consumer<Integer> intConsumer = this.getIndexConsumer(byteBuffer);
 
 			for (int l = 0; l < requiredSize; l += this.vertexCountInTriangulated)
 				this.triangulator.accept(intConsumer, l * this.vertexCountInShape / this.vertexCountInTriangulated);
@@ -111,9 +110,9 @@ public final class IndexBufferGenerator {
 		}
 	}
 
-	private IntConsumer getIndexConsumer(ByteBuffer indexBuffer) {
+	private Consumer<Integer> getIndexConsumer(ByteBuffer indexBuffer) {
 		if (this.indexType == IndexType.SHORT)
-			return index -> indexBuffer.putShort((short) index);
+			return index -> indexBuffer.putShort(index.shortValue());
 		else
 			return indexBuffer::putInt;
 	}
@@ -127,5 +126,13 @@ public final class IndexBufferGenerator {
 	 */
 	public IndexType getIndexType() {
 		return this.indexType;
+	}
+
+	private int roundUpToMultiple(int value, int divisor) {
+		return ceilDiv(value, divisor) * divisor;
+	}
+
+	private int ceilDiv(int a, int b) {
+		return -Math.floorDiv(-a, b);
 	}
 }

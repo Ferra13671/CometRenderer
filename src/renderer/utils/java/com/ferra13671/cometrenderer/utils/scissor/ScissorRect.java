@@ -1,7 +1,5 @@
 package com.ferra13671.cometrenderer.utils.scissor;
 
-import com.ferra13671.cometrenderer.CometRenderer;
-import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL20;
 
 /**
@@ -19,22 +17,6 @@ public record ScissorRect(int x, int y, int width, int height) {
      */
     public void bind() {
         GL20.glScissor(this.x, this.y, this.width, this.height);
-    }
-
-    /**
-     * Исправляет координаты и размеры области.
-     *
-     * @return исправлена область.
-     */
-    public ScissorRect fixRect() {
-        int scale = CometRenderer.getScaleGetter().get();
-        int frameBufferHeight = MinecraftClient.getInstance().getWindow().getFramebufferHeight();
-        return new ScissorRect(
-                this.x * scale,
-                frameBufferHeight - ((this.y + this.height) * scale),
-                this.width * scale,
-                this.height * scale
-        );
     }
 
     /**

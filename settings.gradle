@@ -11,3 +11,4 @@ pluginManagement {
 include "shader-libraries"
 include "post-effects"
 include "better-exceptions"
+include "minecraft-1_21_8-1_21_11-fabric-yarn"

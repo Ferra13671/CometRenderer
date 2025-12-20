@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
+import com.ferra13671.cometrenderer.buffer.Allocator;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
@@ -7,9 +8,6 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-import net.minecraft.client.util.BufferAllocator;
-
-import java.nio.ByteBuffer;
 
 /**
  * Основная реализация меша.
@@ -37,22 +35,23 @@ public class Mesh implements IMesh {
     private boolean standalone = false;
 
     /**
-     * @param byteBuffer буффер вершин, находящийся на CPU.
+     * @param allocator аллокатор, в котором хранится буффер вершин, находящийся на CPU.
      * @param vertexFormat формат вершин.
      * @param vertexCount количество вершин.
      * @param indexCount количество индексов.
      * @param drawMode тип отрисовки вершин.
-     * @param afterInitRunnable действие, выполняемое после инициализации меша.
+     * @param closeAllocator нужно ли закрыть аллокатор после создания буффера вершин.
      */
-    public Mesh(ByteBuffer byteBuffer, VertexFormat vertexFormat, int vertexCount, int indexCount, DrawMode drawMode, Runnable afterInitRunnable) {
+    public Mesh(Allocator allocator, VertexFormat vertexFormat, int vertexCount, int indexCount, DrawMode drawMode, boolean closeAllocator) {
         this.vertexFormat = vertexFormat;
         this.vertexCount = vertexCount;
         this.indexCount = indexCount;
         this.drawMode = drawMode;
 
-        this.vertexBuffer = new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
+        this.vertexBuffer = new GpuBuffer(allocator.getBuffer(), BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
 
-        afterInitRunnable.run();
+       if (closeAllocator)
+           allocator.close();
     }
 
     /**
@@ -157,13 +156,13 @@ public class Mesh implements IMesh {
      * @see MeshBuilder
      */
     public static MeshBuilder builder(int size, DrawMode drawMode, VertexFormat vertexFormat) {
-        return builder(new BufferAllocator(size), drawMode, vertexFormat, true);
+        return builder(new Allocator(size), drawMode, vertexFormat, true);
     }
 
     /**
      * Создаёт новый сборщик меша с данным аллокатором.
      *
-     * @param bufferAllocator аллокатор.
+     * @param allocator аллокатор.
      * @param drawMode тип отрисовки вершин.
      * @param vertexFormat формат вершин.
      * @param closeAllocatorAfterBuild закрывать аллокатор после сборки меша или нет.
@@ -171,7 +170,7 @@ public class Mesh implements IMesh {
      *
      * @see MeshBuilder
      */
-    public static MeshBuilder builder(BufferAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
-        return new MeshBuilder(bufferAllocator, drawMode, vertexFormat, closeAllocatorAfterBuild);
+    public static MeshBuilder builder(Allocator allocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
+        return new MeshBuilder(allocator, drawMode, vertexFormat, closeAllocatorAfterBuild);
     }
 }

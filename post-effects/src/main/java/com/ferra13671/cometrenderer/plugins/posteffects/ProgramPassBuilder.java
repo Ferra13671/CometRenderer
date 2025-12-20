@@ -1,9 +1,9 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.util.Pair;
+import com.ferra13671.gltextureutils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
