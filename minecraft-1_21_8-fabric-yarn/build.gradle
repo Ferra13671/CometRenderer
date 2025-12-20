@@ -5,7 +5,7 @@ plugins {
 }
 
 project.ext.projectName = "comet-renderer-minecraft"
-version = "1.21.8-1.21.11-fabric-yarn-2.0"
+version = "1.21.8-fabric-yarn-2.0"
 group = "com.ferra13671"
 
 java {
