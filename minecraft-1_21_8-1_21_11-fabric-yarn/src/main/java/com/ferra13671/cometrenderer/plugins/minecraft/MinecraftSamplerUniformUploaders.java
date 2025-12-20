@@ -29,4 +29,15 @@ public class MinecraftSamplerUniformUploaders {
                 GlStateManager._texParameter(o, GL12.GL_TEXTURE_MAX_LEVEL, textureView.baseMipLevel() + textureView.mipLevels() - 1);
             }
     );
+    public static final SamplerUniformUploader<GlTexture> GL_TEXTURE = new SamplerUniformUploader<>(
+            (samplerUniform, glTexture) -> {
+                State.TEXTURE.activeTexture(GL13.GL_TEXTURE0 + samplerUniform.getSamplerId());
+                int o;
+                if ((glTexture.usage() & 16) != 0) {
+                    o = 34067;
+                    GL11.glBindTexture(o, glTexture.getGlId());
+                } else
+                    State.TEXTURE.bindTexture(glTexture.getGlId());
+            }
+    );
 }
