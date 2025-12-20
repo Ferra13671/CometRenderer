@@ -9,12 +9,12 @@ import org.lwjgl.opengl.GL30;
 
 import java.awt.*;
 
-public class MinecraftFrameBuffer implements Framebuffer {
+public class MinecraftFramebuffer implements Framebuffer {
     private final net.minecraft.client.gl.Framebuffer framebuffer;
     private final Color clearColor;
     private final double clearDepth;
 
-    public MinecraftFrameBuffer(net.minecraft.client.gl.Framebuffer framebuffer, Color clearColor, double clearDepth) {
+    public MinecraftFramebuffer(net.minecraft.client.gl.Framebuffer framebuffer, Color clearColor, double clearDepth) {
         this.framebuffer = framebuffer;
         this.clearColor = clearColor;
         this.clearDepth = clearDepth;

@@ -147,7 +147,7 @@ public class MinecraftPlugin {
     public static void bindMainFramebuffer(boolean setViewport) {
         if (mainFrameBuffer == null) {
             if (MinecraftClient.getInstance().getFramebuffer() != null)
-                mainFrameBuffer = new MinecraftFrameBuffer(MinecraftClient.getInstance().getFramebuffer(), new Color(0, 0, 0, 0), 0);
+                mainFrameBuffer = new MinecraftFramebuffer(MinecraftClient.getInstance().getFramebuffer(), new Color(0, 0, 0, 0), 0);
         } else
             mainFrameBuffer.bind(setViewport);
     }
