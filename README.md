@@ -29,7 +29,7 @@ dependencies {
 ```
 
 ## Example
-For example check out `src/testmod/java/com/ferra13671/cometrenderer/test/TestMod.java`.  
+For example check out `minecraft-1_21_8-1_21_11-fabric-yarn/src/example/com/ferra13671/cometrenderer/test/TestMod.java`.  
 
 ## JavaDoc
 JavaDoc is written entirely in Russian, but I may rewrite it into English in the future.
