@@ -28,7 +28,7 @@ switch (OperatingSystem.current()) {
         break
 }
 
-version = "2.0"
+version = "2.0-HOTFIX-1"
 group = "com.ferra13671"
 
 java {

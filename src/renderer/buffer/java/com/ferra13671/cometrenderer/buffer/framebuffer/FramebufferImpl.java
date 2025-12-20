@@ -112,7 +112,7 @@ public class FramebufferImpl implements Framebuffer {
     public void clearColor() {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);
-        GL11.glClear(GL11.GL_COLOR);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
@@ -120,7 +120,7 @@ public class FramebufferImpl implements Framebuffer {
     public void clearDepth() {
         bind(false);
         GL11.glClearDepth(this.clearDepth);
-        GL11.glClearDepth(GL11.GL_DEPTH);
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
@@ -129,7 +129,7 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);
         GL11.glClearDepth(this.clearDepth);
-        GL11.glClear(GL11.GL_COLOR | GL11.GL_DEPTH);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
