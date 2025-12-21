@@ -1,9 +1,10 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
-import com.ferra13671.cometrenderer.buffer.Allocator;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.buffer.allocator.Allocator;
+import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
@@ -40,18 +41,14 @@ public class Mesh implements IMesh {
      * @param vertexCount количество вершин.
      * @param indexCount количество индексов.
      * @param drawMode тип отрисовки вершин.
-     * @param closeAllocator нужно ли закрыть аллокатор после создания буффера вершин.
      */
-    public Mesh(Allocator allocator, VertexFormat vertexFormat, int vertexCount, int indexCount, DrawMode drawMode, boolean closeAllocator) {
+    public Mesh(IAllocator allocator, VertexFormat vertexFormat, int vertexCount, int indexCount, DrawMode drawMode) {
         this.vertexFormat = vertexFormat;
         this.vertexCount = vertexCount;
         this.indexCount = indexCount;
         this.drawMode = drawMode;
 
         this.vertexBuffer = new GpuBuffer(allocator.getBuffer(), BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
-
-       if (closeAllocator)
-           allocator.close();
     }
 
     /**
@@ -170,7 +167,7 @@ public class Mesh implements IMesh {
      *
      * @see MeshBuilder
      */
-    public static MeshBuilder builder(Allocator allocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
+    public static MeshBuilder builder(IAllocator allocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
         return new MeshBuilder(allocator, drawMode, vertexFormat, closeAllocatorAfterBuild);
     }
 }

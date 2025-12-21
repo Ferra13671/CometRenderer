@@ -1,17 +1,17 @@
-package com.ferra13671.cometrenderer.buffer;
+package com.ferra13671.cometrenderer.buffer.allocator;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.exceptions.impl.AllocatorOverflowException;
+import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
-public class Allocator {
+public class Allocator implements IAllocator {
     private static final MemoryUtil.MemoryAllocator ALLOCATOR = MemoryUtil.getAllocator(false);
-    private int size;
-    private int offset;
     private long pointer;
-    private boolean closed = false;
+    private long offset;
+    private final int size;
 
     public Allocator(int size) {
         this.pointer = ALLOCATOR.malloc(size);
@@ -27,26 +27,22 @@ public class Allocator {
         return Math.addExact(this.pointer, address);
     }
 
+    @Override
+    @OverriddenMethod
     public boolean isEmpty() {
-        return this.pointer == 0;
+        return this.offset == 0L;
     }
 
-    public void clear() {
-        this.offset = 0;
-    }
-
+    @Override
+    @OverriddenMethod
     public ByteBuffer getBuffer() {
-        return MemoryUtil.memByteBuffer(this.pointer, this.size);
+        return MemoryUtil.memByteBuffer(this.pointer, (int) this.offset);
     }
 
-    public boolean isClosed() {
-        return closed;
-    }
-
+    @Override
+    @OverriddenMethod
     public void close() {
         ALLOCATOR.free(this.pointer);
-        this.pointer = 0;
-        this.size = 0;
-        this.closed = true;
+        this.pointer = 0L;
     }
 }

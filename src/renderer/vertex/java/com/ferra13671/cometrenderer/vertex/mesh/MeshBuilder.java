@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.buffer.Allocator;
+import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
@@ -27,7 +27,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     public static final int MAX_VERTICES = 16777215;
 
     /** Аллокатор. **/
-    private final Allocator allocator;
+    private final IAllocator allocator;
     /** Тип отрисовки вершин. **/
     private final DrawMode drawMode;
     /** Формат вершин. **/
@@ -55,7 +55,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
      * @param vertexFormat формат вершин.
      * @param closeAllocatorAfterBuild закрывать аллокатор после сборки меша или нет.
      */
-    public MeshBuilder(Allocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
+    public MeshBuilder(IAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
         this.allocator = bufferAllocator;
         this.drawMode = drawMode;
         this.vertexFormat = vertexFormat;
@@ -89,7 +89,8 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
         this.ensureBuilding();
         this.endVertex();
         Mesh builtBuffer = this.build();
-        this.allocator.close();
+        if (this.closeAllocatorAfterBuild)
+            this.allocator.close();
         this.closed = true;
         this.vertexPointer = -1L;
         return builtBuffer;
@@ -128,7 +129,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
                 return null;
             } else {
                 int i = this.drawMode.indexCountFunction().apply(this.vertexCount);
-                return new Mesh(this.allocator, this.vertexFormat, this.vertexCount, i, this.drawMode, this.closeAllocatorAfterBuild);
+                return new Mesh(this.allocator, this.vertexFormat, this.vertexCount, i, this.drawMode);
             }
         }
     }
