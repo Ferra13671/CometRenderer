@@ -7,6 +7,8 @@ CometRenderer has a well-optimized rendering system, extensive customization, an
 <p>
 At the moment, the library depends on Minecraft, albeit only slightly. Despite this, in the future the library may become completely independent, thus it could be used as a renderer for, for example, your game.
 
+Documentation: <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation">click</a>
+
 ## Gradle
 ```groovy
 repositories {
