@@ -1,0 +1,68 @@
+plugins {
+    id 'java-library'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'maven-publish'
+}
+
+project.ext.projectName = "comet-renderer-minecraft"
+version = "1.21.8-fabric-mojang-2.0"
+group = "com.ferra13671"
+
+java {
+    withSourcesJar()
+}
+
+base {
+    archivesName = projectName
+}
+
+sourceSets {
+    example {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    runs {
+        testmodClient {
+            client()
+            name = "Testmod Client"
+            source sourceSets.example
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'ferra13671-maven'
+        url = 'https://ferra13671.github.io/maven/'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
+
+    implementation rootProject
+    exampleImplementation sourceSets.main.output
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.ferra13671'
+            artifactId = project.ext.projectName
+            artifact source: jar, classifier: null
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
