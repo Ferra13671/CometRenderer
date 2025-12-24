@@ -1,0 +1,38 @@
+project.group = "com.ferra13671"
+
+base {
+    archivesName = project.ext.projectName
+}
+
+repositories {
+    maven {
+        name = 'ferra13671-maven'
+        url = 'https://ferra13671.github.io/maven/'
+    }
+    mavenCentral()
+}
+
+java {
+    withSourcesJar()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.ext.minecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${project.ext.loaderVersion}"
+    modImplementation "net.fabricmc:fabric-loader:${project.ext.loaderVersion}"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.ferra13671'
+            artifactId = project.ext.projectName
+            artifact source: jar, classifier: null
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}

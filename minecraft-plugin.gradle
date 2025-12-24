@@ -1,0 +1,23 @@
+sourceSets {
+    example {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    runs {
+        testmodClient {
+            client()
+            name = "Testmod Client"
+            source sourceSets.example
+        }
+    }
+}
+
+dependencies {
+    implementation "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
+
+    implementation rootProject
+    exampleImplementation sourceSets.main.output
+}
