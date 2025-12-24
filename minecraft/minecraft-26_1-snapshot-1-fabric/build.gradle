@@ -10,5 +10,5 @@ project.ext.loaderVersion = project.loader_version
 version = "26.1-snapshot-1-fabric-2.0"
 
 apply from: rootProject.file("utils.gradle")
-apply from: rootProject.file("minecraft-plugin.gradle")
-apply from: rootProject.file("new-fabric-loader.gradle")
+apply from: rootProject.file("minecraft/minecraft-plugin.gradle")
+apply from: rootProject.file("minecraft/new-fabric-loader.gradle")

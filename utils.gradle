@@ -16,10 +16,6 @@ java {
     withSourcesJar()
 }
 
-dependencies {
-    minecraft "com.mojang:minecraft:${project.ext.minecraftVersion}"
-}
-
 publishing {
     publications {
         maven(MavenPublication) {

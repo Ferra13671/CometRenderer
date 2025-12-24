@@ -16,6 +16,8 @@ loom {
 }
 
 dependencies {
+    minecraft "com.mojang:minecraft:${project.ext.minecraftVersion}"
+
     implementation "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
 
     implementation rootProject
