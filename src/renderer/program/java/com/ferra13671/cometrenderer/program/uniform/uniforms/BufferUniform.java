@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import lombok.Getter;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GL32;
 
@@ -21,6 +22,7 @@ import java.util.function.BiConsumer;
  */
 public class BufferUniform extends GlUniform {
     /** Индекс буффера униформы. **/
+    @Getter
     private final int bufferIndex;
     /** Runnable, загружающий параметр в униформу. **/
     private Runnable uploadRunnable = null;
@@ -42,15 +44,6 @@ public class BufferUniform extends GlUniform {
             glProgram.setBuffersIndexAmount(bufferIndex);
             GL31.glUniformBlockBinding(glProgram.getId(), index, bufferIndex);
         }
-    }
-
-    /**
-     * Возвращает индекс буффера униформы.
-     *
-     * @return индекс буффера униформы.
-     */
-    public int getBufferIndex() {
-        return bufferIndex;
     }
 
     /**

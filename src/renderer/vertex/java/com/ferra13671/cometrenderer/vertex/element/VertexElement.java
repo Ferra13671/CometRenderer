@@ -1,9 +1,12 @@
 package com.ferra13671.cometrenderer.vertex.element;
 
+import lombok.Getter;
+
 /**
  * Объект, представляющий собой структурный элемент формата вершины.
  * Совокупность нескольких таких элементов формата вершины составляют целостный формат вершины.
  */
+@Getter
 public class VertexElement {
     /** Айди элемента в формате вершины. **/
     private final int id;
@@ -33,41 +36,5 @@ public class VertexElement {
      */
     public int mask() {
         return 1 << this.id;
-    }
-
-    /**
-     * Возвращает айди элемента в формате вершины.
-     *
-     * @return айди элемента в формате вершины.
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Возвращает количество данных в элементе.
-     *
-     * @return количество данных в элементе.
-     */
-    public int getCount() {
-        return count;
-    }
-
-    /**
-     * Возвращает размер элемента в байтах
-     *
-     * @return размер элемента в байтах.
-     */
-    public int getSize() {
-        return size;
-    }
-
-    /**
-     * Возвращает тип данных элемента.
-     *
-     * @return тип данных элемента.
-     */
-    public VertexElementType<?> getType() {
-        return type;
     }
 }

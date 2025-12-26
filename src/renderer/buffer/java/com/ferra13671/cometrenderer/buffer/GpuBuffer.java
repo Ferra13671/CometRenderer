@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.buffer;
 
 import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import lombok.Getter;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
@@ -11,10 +12,13 @@ import java.nio.ByteBuffer;
  */
 public class GpuBuffer implements Bindable, AutoCloseable {
     /** Айди буффера в OpenGL. **/
+    @Getter
     private final int id;
     /** Тип использования буффера. **/
+    @Getter
     private final BufferUsage usage;
     /** Тип цели использования буффера. **/
+    @Getter
     private final BufferTarget target;
     /** Закрыт буффер или нет. **/
     private boolean closed = false;
@@ -31,33 +35,6 @@ public class GpuBuffer implements Bindable, AutoCloseable {
         bind();
         GL15.glBufferData(target.glId, data, usage.glId);
         GL15.glBindBuffer(target.glId, 0);
-    }
-
-    /**
-     * Возвращает айди буффера в OpenGL.
-     *
-     * @return айди буффера в OpenGL.
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Возвращает тип использования буффера.
-     *
-     * @return тип использования буффера.
-     */
-    public BufferUsage getUsage() {
-        return usage;
-    }
-
-    /**
-     * Возвращает тип цели использования буффера.
-     *
-     * @return тип цели использования буффера.
-     */
-    public BufferTarget getTarget() {
-        return target;
     }
 
     @Override

@@ -41,9 +41,9 @@ public class GlobalCometCompiler {
         for (Map.Entry<ShaderType, GlslFileEntry> shaderEntry : shaders.entrySet()) {
             GlShader shader = compileShader(shaderEntry.getValue(), shaderEntry.getKey(), registry);
 
-            GL20.glAttachShader(programId, shader.getId());
+            GL20.glAttachShader(programId, shader.id());
 
-            shader.getExtraUniforms().forEach((s, uniformType) -> {
+            shader.extraUniforms().forEach((s, uniformType) -> {
                 if (uniforms.containsKey(s))
                     CometRenderer.manageException(new DoubleUniformAdditionException(s));
 

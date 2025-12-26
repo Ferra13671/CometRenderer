@@ -15,100 +15,32 @@ import java.util.Map;
 /**
  * Часть программы, исполняемая на GPU, которая отвечает за часть графической обработки программой: обработка вершин, растеризация, вычисление цвета пикселя и другие этапы рендеринга.
  *
+ * @param name Имя шейдера.
+ * @param content Контент шейдера.
+ * @param id Айди шейдера в OpenGL.
+ * @param extraUniforms Униформы, добавленные шейдером при интеграции в него шейдерных библиотек.
+ * @param shaderType Тип шейдера.
  * @see <a href="https://wikis.khronos.org/opengl/Shader">OpenGL shader wiki</a>
  * @see GlProgram
  * @see ShaderType
  * @see GlobalCometCompiler
  */
-public class GlShader implements Compilable, Closeable {
-    /** Имя шейдера. **/
-    private final String name;
-    /** Контент шейдера. **/
-    private final String content;
-    /** Айди шейдера в OpenGL. **/
-    private final int id;
-    /** Униформы, добавленные шейдером при интеграции в него шейдерных библиотек. **/
-    private final Map<String, UniformType<?>> extraUniforms;
-    /** Тип шейдера. **/
-    private final ShaderType shaderType;
-
-    /**
-     * @param name имя шейдера.
-     * @param id айди шейдера в OpenGL.
-     * @param extraUniforms униформы, добавленные шейдером при интеграции в него шейдерных библиотек.
-     * @param shaderType тип шейдера.
-     *
-     * @see GlProgram
-     * @see ShaderType
-     */
-    public GlShader(String name, String content, int id, Map<String, UniformType<?>> extraUniforms, ShaderType shaderType) {
-        this.name = name;
-        this.content = content;
-        this.id = id;
-        this.extraUniforms = extraUniforms;
-        this.shaderType = shaderType;
-    }
+public record GlShader(String name, String content, int id, Map<String, UniformType<?>> extraUniforms, ShaderType shaderType) implements Compilable, Closeable {
 
     @Override
     @OverriddenMethod
     public void close() {
-        GL20.glDeleteShader(getId());
+        GL20.glDeleteShader(id());
         this.extraUniforms.clear();
     }
 
     @Override
     @OverriddenMethod
     public CompileResult getCompileResult() {
-        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(getId(), GL20.GL_COMPILE_STATUS));
+        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(id(), GL20.GL_COMPILE_STATUS));
         return new CompileResult(
                 status,
-                status == CompileStatus.FAILURE ? GL20.glGetShaderInfoLog(getId()).trim() : ""
+                status == CompileStatus.FAILURE ? GL20.glGetShaderInfoLog(id()).trim() : ""
         );
-    }
-
-    /**
-     * Возвращает имя шейдера.
-     *
-     * @return имя шейдера.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Возвращает контент шейдера.
-     *
-     * @return контент шейдера.
-     */
-    public String getContent() {
-        return content;
-    }
-
-    /**
-     * Возвращает айди шейдера в OpenGL.
-     *
-     * @return айди шейдера в OpenGL.
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Возвращает униформы, добавленные шейдером при интеграции в него шейдерных библиотек.
-     *
-     * @return униформы, добавленные шейдером при интеграции в него шейдерных библиотек.
-     */
-    public Map<String, UniformType<?>> getExtraUniforms() {
-        return extraUniforms;
-    }
-
-    /**
-     * Возвращает тип шейдера.
-     *
-     * @return тип шейдера.
-     * @see ShaderType
-     */
-    public ShaderType getShaderType() {
-        return shaderType;
     }
 }

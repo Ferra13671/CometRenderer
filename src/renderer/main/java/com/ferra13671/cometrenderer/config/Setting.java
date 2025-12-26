@@ -1,24 +1,16 @@
 package com.ferra13671.cometrenderer.config;
 
-public class Setting<T> {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+public class Setting<T> {
+    @Setter
     private T value;
     private final T defaultValue;
 
     public Setting(T value) {
         this.defaultValue = this.value = value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public T getDefaultValue() {
-        return defaultValue;
     }
 
     public void toDefault() {

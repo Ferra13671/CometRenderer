@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.vertex;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -43,6 +44,7 @@ public final class IndexBufferGenerator {
 	/** Буффер индексов. **/
 	private GpuBuffer indexBuffer;
 	/** Тип индексов. **/
+	@Getter
 	private IndexType indexType = IndexType.SHORT;
 	/** Прошлый требуемый размер. Необходимо для того, что бы если несколько раз отрисовывать одни и те же вершины, то не нужно было каждый раз создавать новый буффер индексов. **/
 	private int size;
@@ -115,17 +117,6 @@ public final class IndexBufferGenerator {
 			return index -> indexBuffer.putShort(index.shortValue());
 		else
 			return indexBuffer::putInt;
-	}
-
-	/**
-	 * Возвращает текущий тип индексов в буффере.
-	 *
-	 * @return текущий тип индексов в буффере.
-	 *
-	 * @see IndexType
-	 */
-	public IndexType getIndexType() {
-		return this.indexType;
 	}
 
 	private int roundUpToMultiple(int value, int divisor) {

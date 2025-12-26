@@ -15,6 +15,7 @@ import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlBackend;
 import net.minecraft.client.gl.GlGpuBuffer;
@@ -28,9 +29,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MinecraftPlugin {
+    @Getter
     private static Function<GlGpuBuffer, Integer> bufferIdGetter;
     private static Supplier<Integer> scaleGetter;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
+    @Getter
     private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("Projection", UniformType.BUFFER)
             .uniform("modelViewMat", UniformType.MATRIX4)
@@ -116,14 +119,6 @@ public class MinecraftPlugin {
                 GlStateManager._bindTexture(texture);
             }
         };
-    }
-
-    public static Function<GlGpuBuffer, Integer> getBufferIdGetter() {
-        return bufferIdGetter;
-    }
-
-    public static GlProgramSnippet getMatrixSnippet() {
-        return matrixSnippet;
     }
 
     public static void initMatrix() {

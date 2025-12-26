@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.program.uniform;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
+import lombok.Getter;
 
 /**
  * Объект, представляющий собой параметр программы ({@link GlProgram}), предназначенный для передачи различных параметров для настройки обработки пикселей программой.
@@ -12,6 +13,7 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
  *
  * @see <a href="https://wikis.khronos.org/opengl/Uniform_(GLSL)">OpenGL uniform wiki</a>
  */
+@Getter
 public abstract class GlUniform {
     /** Имя униформы. **/
     protected final String name;
@@ -29,34 +31,6 @@ public abstract class GlUniform {
         this.name = name;
         this.location = location;
         this.program = program;
-    }
-
-    /**
-     * Возвращает имя униформы.
-     *
-     * @return имя униформы.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Возвращает локацию униформы в OpenGL.
-     *
-     * @return локация униформы в OpenGL.
-     */
-    public int getLocation() {
-        return location;
-    }
-
-    /**
-     * Возвращает программу, к которой привязана униформа.
-     *
-     * @return программа, к которой привязана униформа.
-     * @see GlProgram
-     */
-    public GlProgram getProgram() {
-        return program;
     }
 
     /**

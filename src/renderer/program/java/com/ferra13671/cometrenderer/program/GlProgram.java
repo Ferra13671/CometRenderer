@@ -14,6 +14,8 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
+import lombok.Getter;
+import lombok.Setter;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
@@ -32,18 +34,25 @@ import java.util.function.Consumer;
  */
 public class GlProgram implements Bindable, Compilable, Closeable {
     /** Имя программы. **/
+    @Getter
     private final String name;
     /** Айди программы в OpenGL. **/
+    @Getter
     private final int id;
     /** Фрагменты программы, добавленные в программу. **/
+    @Getter
     private final HashSet<GlProgramSnippet> snippets;
     /** Карта всех униформ программы, расположенных по их именам. **/
     private final HashMap<String, GlUniform> uniformsByName = new HashMap<>();
     /** Список всех семплеров программы. **/
     private final List<SamplerUniform> samplers = new ArrayList<>();
     /** Количество всех семплеров программы. **/
+    @Getter
+    @Setter
     private int samplersAmount = 0;
     /** Количество привязанных индексов буфферов для униформ с типом BUFFER. **/
+    @Getter
+    @Setter
     private int buffersIndexAmount = 0;
     /** Список униформ, которые были обновлены. Данный список нужен для того, что бы повторно загружать в GPU только те униформы, которые были обновлены. **/
     private final List<GlUniform> updatedUniforms = new ArrayList<>();
@@ -115,33 +124,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     @OverriddenMethod
     public void unbind() {
         GL20.glUseProgram(0);
-    }
-
-    /**
-     * Возвращает имя программы.
-     *
-     * @return имя программы.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Возвращает айди программы в OpenGL.
-     *
-     * @return айди программы в OpenGL.
-     */
-    public int getId() {
-        return this.id;
-    }
-
-    /**
-     * Возвращает фрагменты программы, добавленные в программу.
-     *
-     * @return фрагменты программы, добавленные в программу.
-     */
-    public HashSet<GlProgramSnippet> getSnippets() {
-        return this.snippets;
     }
 
     /**
@@ -250,49 +232,5 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      */
     public SamplerUniform getSamplerNullable(int samplerId) {
         return this.samplers.get(samplerId);
-    }
-
-    /**
-     * Возвращает количество привязанных индексов буфферов для униформ с типом BUFFER.
-     *
-     * @return количество привязанных индексов буфферов для униформ с типом BUFFER.
-     *
-     * @see BufferUniform
-     */
-    public int getBuffersIndexAmount() {
-        return buffersIndexAmount;
-    }
-
-    /**
-     * Устанавливает количество привязанных индексов буфферов для униформ с типом BUFFER.
-     *
-     * @param buffersIndexAmount количество привязанных индексов буфферов для униформ с типом BUFFER.
-     *
-     * @see BufferUniform
-     */
-    public void setBuffersIndexAmount(int buffersIndexAmount) {
-        this.buffersIndexAmount = buffersIndexAmount;
-    }
-
-    /**
-     * Возвращает количество всех семплеров программы.
-     *
-     * @return количество всех семплеров программы.
-     *
-     * @see SamplerUniform
-     */
-    public int getSamplersAmount() {
-        return samplersAmount;
-    }
-
-    /**
-     * Устанавливает количество всех семплеров программы.
-     *
-     * @param samplersAmount количество всех семплеров программы.
-     *
-     * @see SamplerUniform
-     */
-    public void setSamplersAmount(int samplersAmount) {
-        this.samplersAmount = samplersAmount;
     }
 }

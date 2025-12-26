@@ -11,25 +11,25 @@ import java.util.Map;
 public class BetterExceptionsPlugin {
     private static final String exceptionText = """
     
-    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+    ----------------------------------------------
             CometRenderer error occurred!
-    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+    ----------------------------------------------
                       Whats wrong?
     
     %s
-    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+    ----------------------------------------------
                        Details:
     
     %s
-    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+    ----------------------------------------------
                   Possible reasons:
     
     %s
-    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+    ----------------------------------------------
                  Possible solutions:
     
     %s
-    ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+    ----------------------------------------------
     """;
     public static final Tag<Map<Class<? extends CometException>, PrintInfoCreator<?>>> EXCEPTIONS_PRINT_INFO = new Tag<>("exceptions-print-info");
     public static final Tag<String> DESCRIPTION = new Tag<>("description");

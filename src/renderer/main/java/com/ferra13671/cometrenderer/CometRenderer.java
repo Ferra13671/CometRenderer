@@ -22,6 +22,8 @@ import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.*;
 
@@ -33,21 +35,32 @@ import java.util.function.Consumer;
  */
 public class CometRenderer {
     /** Реестр различных данных. **/
+    @Getter
     private static final Registry registry = new Registry();
     /** Конфиг с различными настройками. **/
+    @Getter
     private static final Config config = new Config();
     /** Глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
+    @Getter
+    @Setter
     private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
+    @Getter
     private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
     /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
+    @Getter
+    @Setter
     private static GlProgram globalProgram;
     /** Стек для областей, используемых ножницами. **/
+    @Getter
     private static final ScissorStack scissorStack = new ScissorStack();
+    @Getter
     private static ISamplerManger samplerManager;
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
+    @Getter
+    @Setter
     private static Logger logger = new Logger() {
         @Override
         public void log(String message) {
@@ -145,61 +158,11 @@ public class CometRenderer {
             throw exception;
     }
 
-    public static Registry getRegistry() {
-        return registry;
-    }
-
-    public static Config getConfig() {
-        return config;
-    }
-
-    /**
-     * Возвращает логгер CometRenderer'а.
-     *
-     * @return логгер CometRenderer'а.
-     */
-    public static Logger getLogger() {
-        return logger;
-    }
-
-    public static void setLogger(Logger logger) {
-        CometRenderer.logger = logger;
-    }
-
-    /**
-     * Возвращает глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность.
-     *
-     * @return глобальный шейдерный цвет.
-     */
-    public static Vector4f getShaderColor() {
-        return shaderColor;
-    }
-
-    /**
-     * Устанавливает текущий глобальный шейдерный цвет.
-     *
-     * @param shaderColor глобальный шейдерный цвет.
-     */
-    public static void setShaderColor(Vector4f shaderColor) {
-        CometRenderer.shaderColor = shaderColor;
-    }
-
     /**
      * Устанавливает глобальный шейдерный цвет по умолчанию.
      */
     public static void resetShaderColor() {
         setShaderColor(new Vector4f(1f, 1f, 1f, 1f));
-    }
-
-    /**
-     * Возвращает фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета.
-     *
-     * @return фрагмент программы, добавляющий униформу глобального шейдерного цвета.
-     *
-     * @see CometRenderer#colorSnippet
-     */
-    public static GlProgramSnippet getColorSnippet() {
-        return colorSnippet;
     }
 
     /**
@@ -214,37 +177,6 @@ public class CometRenderer {
                 colorUniform ->
                         colorUniform.set(getShaderColor())
         );
-    }
-
-    /**
-     * Устанавливает данную программу как активную для CometRenderer'а.
-     *
-     * @param globalProgram программа, которую нужно сделать активной.
-     */
-    public static void setGlobalProgram(GlProgram globalProgram) {
-        CometRenderer.globalProgram = globalProgram;
-    }
-
-    /**
-     * Возвращает текущую активную программу для CometRenderer'а.
-     *
-     * @return текущая активная программа для CometRenderer'а.
-     */
-    public static GlProgram getGlobalProgram() {
-        return globalProgram;
-    }
-
-    /**
-     * Возвращает стек для областей, используемых ножницами.
-     *
-     * @return стек для областей, используемых ножницами.
-     */
-    public static ScissorStack getScissorStack() {
-        return scissorStack;
-    }
-
-    public static ISamplerManger getSamplerManager() {
-        return samplerManager;
     }
 
     /**

@@ -19,5 +19,4 @@ public record CompileResult(CompileStatus status, String message) {
         return status.equals(CompileStatus.FAILURE);
     }
 
-
 }

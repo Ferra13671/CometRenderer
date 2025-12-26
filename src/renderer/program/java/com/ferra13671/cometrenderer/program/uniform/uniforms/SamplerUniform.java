@@ -6,6 +6,7 @@ import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.ferra13671.gltextureutils.GlTex;
+import lombok.Getter;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -20,6 +21,7 @@ import java.util.function.BiConsumer;
  */
 public class SamplerUniform extends GlUniform {
     /** Айди семплера. **/
+    @Getter
     private final int samplerId;
     /** Runnable, загружающий параметр в униформу. **/
     private Runnable uploadRunnable = null;
@@ -74,15 +76,6 @@ public class SamplerUniform extends GlUniform {
     public <T> void set(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
         this.uploadRunnable = () -> uploadConsumer.accept(this, texture);
         this.program.addUpdatedUniform(this);
-    }
-
-    /**
-     * Возвращает айди семплера.
-     *
-     * @return айди семплера.
-     */
-    public int getSamplerId() {
-        return this.samplerId;
     }
 
     @Override

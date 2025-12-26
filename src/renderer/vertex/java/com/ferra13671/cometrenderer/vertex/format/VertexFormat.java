@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.builders.VertexFormatBuilder;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
-import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
+import lombok.Getter;
 
 import java.io.Closeable;
 import java.util.HashMap;
@@ -26,12 +26,16 @@ public class VertexFormat implements Closeable {
     /** Карта имен элементов структуры вершины. **/
     private final HashMap<VertexElement, String> namesMap = new HashMap<>();
     /** Список элементов формата вершины. **/
+    @Getter
     private final List<VertexElement> vertexElements;
     /** Маска формата вершины, используемая в билдере меша для проверки целостности вершины при окончании её сборки. **/
+    @Getter
     private final int elementsMask;
     /** Размер вершины в байтах. **/
+    @Getter
     private final int vertexSize;
     /** Оффсеты элементов формата вершины. **/
+    @Getter
     private final int[] elementOffsets;
     /** Буффер формата вершины, используемый для быстрой привязки аттрибутов буфферу вершин. **/
     private VertexFormatBuffer vertexFormatBuffer = null;
@@ -77,17 +81,6 @@ public class VertexFormat implements Closeable {
     }
 
     /**
-     * Возвращает маску формата вершины, используемую в билдере меша для проверки целостности вершины при окончании её сборки.
-     *
-     * @return маска вершины.
-     *
-     * @see MeshBuilder
-     */
-    public int getElementsMask() {
-        return this.elementsMask;
-    }
-
-    /**
      * Возвращает Stream элементов вершины по остаточной маске.
      *
      * @param mask маска элементов вершины.
@@ -97,17 +90,6 @@ public class VertexFormat implements Closeable {
      */
     public Stream<VertexElement> getElementsFromMask(int mask) {
         return this.vertexElements.stream().filter(element -> element != null && (mask & element.mask()) != 0);
-    }
-
-    /**
-     * Возвращает список элементов формата вершины.
-     *
-     * @return список элементов формата вершины.
-     *
-     * @see VertexElement
-     */
-    public List<VertexElement> getVertexElements() {
-        return this.vertexElements;
     }
 
     /**
@@ -136,24 +118,6 @@ public class VertexFormat implements Closeable {
      */
     public String getVertexElementName(VertexElement vertexElement) {
         return this.namesMap.get(vertexElement);
-    }
-
-    /**
-     * Возвращает размер вершины в байтах.
-     *
-     * @return размер вершины в байтах.
-     */
-    public int getVertexSize() {
-        return this.vertexSize;
-    }
-
-    /**
-     * Возвращает оффсеты элементов формата вершины.
-     *
-     * @return оффсеты элементов формата вершины.
-     */
-    public int[] getElementOffsets() {
-        return this.elementOffsets;
     }
 
     /**

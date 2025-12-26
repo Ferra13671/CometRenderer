@@ -20,7 +20,7 @@ public class ShaderLibrariesPlugin {
 
     static {
         GlobalCometCompiler.addExtensions(
-                (shaderRegistry, programRegistry) -> includeShaderLibraries(shaderRegistry)
+                (shaderRegistry, _) -> includeShaderLibraries(shaderRegistry)
         );
     }
 

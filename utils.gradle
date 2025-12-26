@@ -17,6 +17,11 @@ java {
     withSourcesJar()
 }
 
+dependencies {
+    compileOnly("org.projectlombok:lombok:${project.lombok_version}")
+    annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
