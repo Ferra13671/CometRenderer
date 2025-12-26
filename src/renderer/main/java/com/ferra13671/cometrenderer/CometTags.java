@@ -25,6 +25,7 @@ public final class CometTags {
     public static final Tag<Mesa3DVersion> MESA_VERSION = new Tag<>("mesa-version");
     public static final Tag<String[]> GL_EXTENSIONS = new Tag<>("gl-extensions");
     public static final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
+    public static final Tag<Boolean> SAMPLER_OBJECT_SUPPORT = new Tag<>("sampler-object-support");
 
     public static final Tag<ExceptionProvider> EXCEPTION_PROVIDER = new Tag<>("exception-provider");
 }

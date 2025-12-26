@@ -28,7 +28,7 @@ switch (OperatingSystem.current()) {
         break
 }
 
-version = "2.0.1"
+version = "2.1"
 group = "com.ferra13671"
 
 java {
@@ -55,6 +55,7 @@ sourceSets {
     subSourceSet("exceptions")
     subSourceSet("program")
     subSourceSet("vertex")
+    subSourceSet("sampler")
     subSourceSet("builders")
     subSourceSet("utils")
 }

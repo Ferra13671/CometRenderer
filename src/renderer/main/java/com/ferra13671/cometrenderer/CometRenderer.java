@@ -2,6 +2,9 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
+import com.ferra13671.cometrenderer.sampler.ISamplerManger;
+import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
+import com.ferra13671.cometrenderer.sampler.impl.SamplerManagerImpl;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.config.Config;
@@ -33,6 +36,17 @@ public class CometRenderer {
     private static final Registry registry = new Registry();
     /** Конфиг с различными настройками. **/
     private static final Config config = new Config();
+    /** Глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
+    private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
+    /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
+    private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
+            .uniform("shaderColor", UniformType.VEC4)
+            .buildSnippet();
+    /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
+    private static GlProgram globalProgram;
+    /** Стек для областей, используемых ножницами. **/
+    private static final ScissorStack scissorStack = new ScissorStack();
+    private static ISamplerManger samplerManager;
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     private static Logger logger = new Logger() {
         @Override
@@ -74,16 +88,6 @@ public class CometRenderer {
         if (close)
             mesh.close();
     };
-    /** Глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
-    private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
-    /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
-    private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
-            .uniform("shaderColor", UniformType.VEC4)
-            .buildSnippet();
-    /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
-    private static GlProgram globalProgram;
-    /** Стек для областей, используемых ножницами. **/
-    private static final ScissorStack scissorStack = new ScissorStack();
 
     /**
      * Инициализирует CometRenderer.
@@ -100,6 +104,11 @@ public class CometRenderer {
                 manageException(new UnsupportedOpenGLVersionException(glVersion, GLVersion.GL32));
         }
 
+        samplerManager = registry.get(CometTags.SAMPLER_OBJECT_SUPPORT).orElseThrow().getValue() ?
+                new SamplerManagerImpl()
+                :
+                new EmptySamplerManager();
+
         registry.setImmutable(CometTags.INITIALIZED, true);
     }
 
@@ -114,6 +123,7 @@ public class CometRenderer {
         registry.setImmutable(CometTags.GL_VERSION, GLVersion.fromString(version));
         registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
+        registry.setImmutable(CometTags.SAMPLER_OBJECT_SUPPORT, registry.get(CometTags.GL_VERSION).orElseThrow().getValue().id >= GLVersion.GL33.id);
 
         int numExtensions = GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS);
         String[] extensions = new String[numExtensions];
@@ -231,6 +241,10 @@ public class CometRenderer {
      */
     public static ScissorStack getScissorStack() {
         return scissorStack;
+    }
+
+    public static ISamplerManger getSamplerManager() {
+        return samplerManager;
     }
 
     /**
