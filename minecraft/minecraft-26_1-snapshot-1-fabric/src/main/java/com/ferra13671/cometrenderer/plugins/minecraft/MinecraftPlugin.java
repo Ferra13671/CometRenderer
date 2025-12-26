@@ -21,6 +21,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL33;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
@@ -142,6 +143,11 @@ public class MinecraftPlugin {
                 modelViewUniform ->
                         modelViewUniform.set(RenderSystem.getModelViewMatrix())
         );
+    }
+
+    public static void unbindMinecraftSamplers() {
+        for (int i = 0; i < 12; i++)
+            GL33.glBindSampler(i, 0);
     }
 
     public static void bindMainFramebuffer(boolean setViewport) {

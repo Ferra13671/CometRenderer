@@ -4,7 +4,7 @@ plugins {
 }
 
 project.ext.projectName = "comet-renderer-shader-libraries"
-version = "2.0"
+version = project.main_version
 group = "com.ferra13671"
 
 java {

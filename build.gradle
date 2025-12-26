@@ -28,16 +28,10 @@ switch (OperatingSystem.current()) {
         break
 }
 
-version = "2.1"
-group = "com.ferra13671"
+project.ext.projectName = "comet-renderer"
+version = project.main_version
 
-java {
-    withSourcesJar()
-}
-
-base {
-    archivesName = "comet-renderer"
-}
+apply from: file("utils.gradle")
 
 void subSourceSet(String name) {
     sourceSets.main.java.srcDirs += "src/renderer/" + name + "/java"
@@ -60,14 +54,6 @@ sourceSets {
     subSourceSet("utils")
 }
 
-repositories {
-    maven {
-        name = 'ferra13671-maven'
-        url = 'https://ferra13671.github.io/maven/'
-    }
-    mavenCentral()
-}
-
 dependencies {
     implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
 
@@ -86,19 +72,4 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.ferra13671'
-            artifactId = 'comet-renderer'
-            artifact source: jar, classifier: null
-            artifact sourcesJar
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
 }

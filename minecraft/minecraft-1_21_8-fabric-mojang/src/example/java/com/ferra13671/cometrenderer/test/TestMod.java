@@ -19,12 +19,11 @@ import com.ferra13671.gltextureutils.TextureWrapping;
 import com.ferra13671.gltextureutils.builder.GLTextureInfo;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
 import com.ferra13671.gltextureutils.loader.TextureLoaders;
-import net.fabricmc.api.ModInitializer;
 import org.joml.Vector4f;
 
 import java.util.Random;
 
-public class TestMod implements ModInitializer, Mc {
+public class TestMod implements Mc {
 
     private static final TextureLoader<String> textureLoader = new TextureLoader<>() {
         @Override
@@ -46,64 +45,56 @@ public class TestMod implements ModInitializer, Mc {
 
     public static Mesh standaloneMesh;
 
-    private static boolean initialized = false;
+    public static void initRender() {
+        CometRenderer.init();
+        MinecraftPlugin.init(glGpuBuffer -> ((IGlBuffer) glGpuBuffer)._getHandle(), () -> mc.getWindow().getGuiScale());
 
-    @Override
-    public void onInitialize() {}
+        standaloneMesh = CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
+            buffer.vertex(400, 250, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 0f, 0f);
+            buffer.vertex(400, 300, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 0f, 1f);
+            buffer.vertex(450, 300, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 1f, 1f);
+            buffer.vertex(450, 250, 0)
+                    .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                    .element("Texture", VertexElementType.FLOAT, 1f, 0f);
+        }).makeStandalone();
+
+        positionProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
+                .name("test1")
+                .shader(positionVertexEntry, ShaderType.Vertex)
+                .shader(positionFragmentEntry, ShaderType.Fragment)
+                .build();
+
+        positionColorProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
+                .name("test2")
+                .shader(positionColorVertexEntry, ShaderType.Vertex)
+                .shader(positionColorFragmentEntry, ShaderType.Fragment)
+                .build();
+
+        positionColorTextureProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
+                .name("test3")
+                .shader(positionColorTextureVertexEntry, ShaderType.Vertex)
+                .shader(positionColorTextureFragmentEntry, ShaderType.Fragment)
+                .sampler("u_Texture")
+                .build();
+
+        texture =
+                textureLoader.createTextureBuilder()
+                        .name("Test-texture")
+                        .info("texture.jpg")
+                        .filtering(TextureFiltering.SMOOTH)
+                        .wrapping(TextureWrapping.DEFAULT)
+                        .build();
+    }
 
     public static void render() {
-        if (!initialized) {
-            CometRenderer.init();
-            MinecraftPlugin.init(glGpuBuffer -> ((IGlBuffer) glGpuBuffer)._getHandle(), () -> mc.getWindow().getGuiScale());
-            initialized = true;
-        }
-
         if (mc.player == null)
             return;
-
-        if (standaloneMesh == null)
-            standaloneMesh = CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
-                buffer.vertex(400, 250, 0)
-                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                        .element("Texture", VertexElementType.FLOAT, 0f, 0f);
-                buffer.vertex(400, 300, 0)
-                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                        .element("Texture", VertexElementType.FLOAT, 0f, 1f);
-                buffer.vertex(450, 300, 0)
-                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                        .element("Texture", VertexElementType.FLOAT, 1f, 1f);
-                buffer.vertex(450, 250, 0)
-                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                        .element("Texture", VertexElementType.FLOAT, 1f, 0f);
-            }).makeStandalone();
-
-        if (positionProgram == null)
-            positionProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                    .name("test1")
-                    .shader(positionVertexEntry, ShaderType.Vertex)
-                    .shader(positionFragmentEntry, ShaderType.Fragment)
-                    .build();
-        if (positionColorProgram == null)
-            positionColorProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                    .name("test2")
-                    .shader(positionColorVertexEntry, ShaderType.Vertex)
-                    .shader(positionColorFragmentEntry, ShaderType.Fragment)
-                    .build();
-        if (positionColorTextureProgram == null)
-            positionColorTextureProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                    .name("test3")
-                    .shader(positionColorTextureVertexEntry, ShaderType.Vertex)
-                    .shader(positionColorTextureFragmentEntry, ShaderType.Fragment)
-                    .sampler("u_Texture")
-                    .build();
-        if (texture == null)
-            texture =
-                    textureLoader.createTextureBuilder()
-                    .name("Test-texture")
-                    .info("texture.jpg")
-                    .filtering(TextureFiltering.SMOOTH)
-                    .wrapping(TextureWrapping.DEFAULT)
-                    .build();
 
         MinecraftPlugin.bindMainFramebuffer(true);
 

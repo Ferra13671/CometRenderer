@@ -7,8 +7,9 @@
   ],
   "client": [
     "GameRendererMixin",
+    "ICachedOrthoProjectionMatrixBuffer",
     "IGlBuffer",
-    "ICachedOrthoProjectionMatrixBuffer"
+    "RenderSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

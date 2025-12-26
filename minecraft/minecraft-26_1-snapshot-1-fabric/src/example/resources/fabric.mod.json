@@ -12,9 +12,6 @@
   "icon": "",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.ferra13671.cometrenderer.test.TestMod"
-    ]
   },
   "mixins": [
     "comet-renderer-test.mixins.json"

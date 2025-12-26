@@ -4,7 +4,7 @@ plugins {
 }
 
 project.ext.projectName = "comet-renderer-better-exceptions"
-version = "2.0"
+version = project.main_version
 group = "com.ferra13671"
 
 java {
