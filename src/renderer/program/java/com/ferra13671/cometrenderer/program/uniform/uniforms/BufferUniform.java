@@ -1,6 +1,7 @@
-package com.ferra13671.cometrenderer.program.uniform.uniforms.buffer;
+package com.ferra13671.cometrenderer.program.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.GlProgram;
@@ -8,6 +9,9 @@ import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.GL32;
+
+import java.util.function.BiConsumer;
 
 /**
  * Униформа, хранящая в себе параметр в виде буффера, который может быть разложен в программе на несколько данных.
@@ -57,19 +61,23 @@ public class BufferUniform extends GlUniform {
      * @see GpuBuffer
      */
     public void set(GpuBuffer gpuBuffer) {
-        this.uploadRunnable = () -> BufferUniformUploader.GPU_BUFFER.uploadConsumer().accept(this, gpuBuffer);
+        this.uploadRunnable = () -> GL32.glBindBufferBase(
+                BufferTarget.UNIFORM_BUFFER.glId,
+                this.bufferIndex,
+                gpuBuffer.getId()
+        );
         this.program.addUpdatedUniform(this);
     }
 
     /**
      * Устанавливает буффер при помощи пользовательского установщика.
      *
-     * @param uploader установщик буффера.
+     * @param uploadConsumer установщик буффера.
      * @param buffer объект буффера.
      * @param <T> буффер.
      */
-    public <T> void set(BufferUniformUploader<T> uploader, T buffer) {
-        this.uploadRunnable = () -> uploader.uploadConsumer().accept(this, buffer);
+    public <T> void set(BiConsumer<BufferUniform, T> uploadConsumer, T buffer) {
+        this.uploadRunnable = () -> uploadConsumer.accept(this, buffer);
         this.program.addUpdatedUniform(this);
     }
 

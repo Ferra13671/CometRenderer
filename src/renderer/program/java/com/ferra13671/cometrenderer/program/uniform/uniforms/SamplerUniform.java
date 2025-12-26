@@ -1,11 +1,16 @@
-package com.ferra13671.cometrenderer.program.uniform.uniforms.sampler;
+package com.ferra13671.cometrenderer.program.uniform.uniforms;
 
+import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.ferra13671.gltextureutils.GlTex;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+
+import java.util.function.BiConsumer;
 
 /**
  * Униформа, хранящая в себе параметр в виде текстуры.
@@ -39,7 +44,10 @@ public class SamplerUniform extends GlUniform {
      * @see GlTex
      */
     public void set(GlTex texture) {
-        this.uploadRunnable = () -> SamplerUniformUploader.GL_TEX.uploadConsumer().accept(this, texture);
+        this.uploadRunnable = () -> {
+            State.TEXTURE.activeTexture(GL13.GL_TEXTURE0 + this.samplerId);
+            State.TEXTURE.bindTexture(texture.getTexId());
+        };
         this.program.addUpdatedUniform(this);
     }
 
@@ -49,19 +57,22 @@ public class SamplerUniform extends GlUniform {
      * @param textureId айди текстуры в OpenGL.
      */
     public void set(int textureId) {
-        this.uploadRunnable = () -> SamplerUniformUploader.TEXTURE_ID.uploadConsumer().accept(this, textureId);
+        this.uploadRunnable = () -> {
+            State.TEXTURE.activeTexture(GL30.GL_TEXTURE0 + this.samplerId);
+            State.TEXTURE.bindTexture(textureId);
+        };
         this.program.addUpdatedUniform(this);
     }
 
     /**
      * Устанавливает текстуру при помощи пользовательского установщика и объекта.
      *
-     * @param applier установщик текстуры.
+     * @param uploadConsumer установщик текстуры.
      * @param texture объект текстуры.
      * @param <T> текстура.
      */
-    public <T> void set(SamplerUniformUploader<T> applier, T texture) {
-        this.uploadRunnable = () -> applier.uploadConsumer().accept(this, texture);
+    public <T> void set(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
+        this.uploadRunnable = () -> uploadConsumer.accept(this, texture);
         this.program.addUpdatedUniform(this);
     }
 

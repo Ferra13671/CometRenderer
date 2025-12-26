@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.program.uniform;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.sampler.SamplerUniform;
+import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
 
 /**
  * Объект, представляющий собой параметр программы ({@link GlProgram}), предназначенный для передачи различных параметров для настройки обработки пикселей программой.
