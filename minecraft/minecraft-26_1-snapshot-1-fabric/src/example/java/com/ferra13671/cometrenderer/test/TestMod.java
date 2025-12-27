@@ -21,6 +21,7 @@ import com.ferra13671.gltextureutils.loader.TextureLoader;
 import com.ferra13671.gltextureutils.loader.TextureLoaders;
 import org.joml.Vector4f;
 
+import java.awt.*;
 import java.util.Random;
 
 public class TestMod implements Mc {

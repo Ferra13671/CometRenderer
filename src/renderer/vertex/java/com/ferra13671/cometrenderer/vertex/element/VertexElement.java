@@ -23,8 +23,10 @@ public class VertexElement {
      * @param type тип данных элемента.
      */
     public VertexElement(int id, int count, VertexElementType<?> type) {
+        type.verify();
+
         this.id = id;
-        this.count = count;
+        this.count = count * (type.byteSize() / type.offset());
         this.size = this.count * type.byteSize();
         this.type = type;
     }

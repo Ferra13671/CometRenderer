@@ -1,10 +1,12 @@
 package com.ferra13671.cometrenderer.exceptions.impl.vertex;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
+import lombok.Getter;
 
 /**
  * Ошибка, вызываемая в том случае, когда сборщик меша имеет неверное состояние.
  */
+@Getter
 public class IllegalMeshBuilderStateException extends CometException {
     private final String details;
     private final String[] reasons;
@@ -16,17 +18,5 @@ public class IllegalMeshBuilderStateException extends CometException {
         this.details = details;
         this.reasons = reasons;
         this.solutions = solutions;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public String[] getReasons() {
-        return reasons;
-    }
-
-    public String[] getSolutions() {
-        return solutions;
     }
 }
