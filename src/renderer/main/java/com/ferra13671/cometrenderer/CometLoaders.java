@@ -44,4 +44,10 @@ public final class CometLoaders {
             return content;
         }
     };
+    public static final CometLoader<String> STRING = new CometLoader<>() {
+        @Override
+        public String load(String path) {
+            return path;
+        }
+    };
 }
