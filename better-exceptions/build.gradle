@@ -7,38 +7,9 @@ project.ext.projectName = "comet-renderer-better-exceptions"
 version = project.main_version
 group = "com.ferra13671"
 
-java {
-    withSourcesJar()
-}
-
-base {
-    archivesName = projectName
-}
-
-repositories {
-    maven {
-        name = 'ferra13671-maven'
-        url = 'https://ferra13671.github.io/maven/'
-    }
-    mavenCentral()
-}
+apply from: rootProject.file("utils.gradle")
 
 dependencies {
 
     implementation rootProject
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.ferra13671'
-            artifactId = project.ext.projectName
-            artifact source: jar, classifier: null
-            artifact sourcesJar
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
 }

@@ -7,13 +7,7 @@ project.ext.projectName = "comet-renderer-shader-libraries"
 version = project.main_version
 group = "com.ferra13671"
 
-java {
-    withSourcesJar()
-}
-
-base {
-    archivesName = project.ext.projectName
-}
+apply from: rootProject.file("utils.gradle")
 
 sourceSets {
     example {
@@ -22,31 +16,7 @@ sourceSets {
     }
 }
 
-repositories {
-    maven {
-        name = 'ferra13671-maven'
-        url = 'https://ferra13671.github.io/maven/'
-    }
-    mavenCentral()
-}
-
 dependencies {
-
     implementation rootProject
     exampleImplementation sourceSets.main.output
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.ferra13671'
-            artifactId = project.ext.projectName
-            artifact source: jar, classifier: null
-            artifact sourcesJar
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
 }
