@@ -60,7 +60,7 @@ public class FramebufferImpl implements Framebuffer {
     public void setColorTexture(GLTexture colorTexture) {
         this.colorTexture = colorTexture;
         bind(false);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture.getTexId(), 0);
+        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture != null ? colorTexture.getTexId() : 0, 0);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
@@ -68,7 +68,7 @@ public class FramebufferImpl implements Framebuffer {
         if (isUseDepth()) {
             this.depthTexture = depthTexture;
             bind(false);
-            GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture.getTexId(), 0);
+            GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture != null ? depthTexture.getTexId() : 0, 0);
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         }
     }
