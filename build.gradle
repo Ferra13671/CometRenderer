@@ -3,34 +3,10 @@ plugins {
     id 'maven-publish'
 }
 
-import org.gradle.internal.os.OperatingSystem
-
-project.ext.lwjglVersion = "3.3.3"
-project.ext.jomlVersion = "1.10.5"
-
-switch (OperatingSystem.current()) {
-    case OperatingSystem.LINUX:
-        project.ext.lwjglNatives = "natives-linux"
-        def osArch = System.getProperty("os.arch")
-        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
-            project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
-        } else if  (osArch.startsWith("ppc")) {
-            project.ext.lwjglNatives += "-ppc64le"
-        } else if  (osArch.startsWith("riscv")) {
-            project.ext.lwjglNatives += "-riscv64"
-        }
-        break
-    case OperatingSystem.MAC_OS:
-        project.ext.lwjglNatives = "natives-macos"
-        break
-    case OperatingSystem.WINDOWS:
-        project.ext.lwjglNatives = "natives-windows"
-        break
-}
-
 project.ext.projectName = "comet-renderer"
 version = project.main_version
 
+apply from: file("opengl.gradle")
 apply from: file("utils.gradle")
 
 void subSourceSet(String name) {
@@ -58,18 +34,4 @@ dependencies {
     implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
 
     compileOnly files("libs/FerraGuard-Annotations-2.0.jar")
-
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
-
-
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-jawt"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-stb"
-    implementation "org.joml:joml:${jomlVersion}"
-
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 }
