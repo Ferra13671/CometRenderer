@@ -10,6 +10,7 @@ import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.utils.scissor.ScissorRect;
+import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlBuffer;
@@ -21,6 +22,7 @@ import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.slf4j.LoggerFactory;
@@ -67,6 +69,7 @@ public class MinecraftPlugin {
             builtBuffer.close();
     };
     private static Framebuffer mainFrameBuffer;
+    private static CachedOrthoProjectionMatrixBuffer uiMatrix;
     @Getter
     private static DefaultPrograms programs;
 
@@ -123,7 +126,20 @@ public class MinecraftPlugin {
             }
         };
 
+        uiMatrix = new CachedOrthoProjectionMatrixBuffer("ui-matrix", -1000, 1000, true);
         programs = new DefaultPrograms();
+    }
+
+    public static void setupUIProjection() {
+        float scale = scaleGetter.get();
+
+        RenderSystem.setProjectionMatrix(
+                uiMatrix.getBuffer(
+                        Minecraft.getInstance().getWindow().getWidth() / scale,
+                        Minecraft.getInstance().getWindow().getHeight() / scale
+                ),
+                ProjectionType.ORTHOGRAPHIC
+        );
     }
 
     public static void initMatrix() {

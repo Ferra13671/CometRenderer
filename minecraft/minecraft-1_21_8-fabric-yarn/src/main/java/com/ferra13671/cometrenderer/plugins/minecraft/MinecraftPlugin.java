@@ -14,6 +14,7 @@ import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlBackend;
 import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
+import net.minecraft.client.render.ProjectionMatrix2;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.slf4j.LoggerFactory;
@@ -67,6 +69,7 @@ public class MinecraftPlugin {
             builtBuffer.close();
     };
     private static Framebuffer mainFrameBuffer;
+    private static ProjectionMatrix2 uiMatrix;
     @Getter
     private static DefaultPrograms programs;
 
@@ -123,7 +126,20 @@ public class MinecraftPlugin {
             }
         };
 
+        uiMatrix = new ProjectionMatrix2("ui-matrix", -1000, 1000, true);
         programs = new DefaultPrograms();
+    }
+
+    public static void setupUIProjection() {
+        float scale = scaleGetter.get();
+
+        RenderSystem.setProjectionMatrix(
+                uiMatrix.set(
+                        MinecraftClient.getInstance().getWindow().getWidth() / scale,
+                        MinecraftClient.getInstance().getWindow().getHeight() / scale
+                ),
+                ProjectionType.ORTHOGRAPHIC
+        );
     }
 
     public static void initMatrix() {

@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.test.mixins;
 
-import com.ferra13671.cometrenderer.test.RenderUtils;
+import com.ferra13671.cometrenderer.plugins.minecraft.MinecraftPlugin;
 import com.ferra13671.cometrenderer.test.TestMod;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.render.GameRenderer;
@@ -15,12 +15,10 @@ public class GameRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/render/state/GuiRenderState;clear()V", shift = At.Shift.AFTER))
     public void modifyRenderBeforeGui(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci) {
-        RenderUtils.unscaledProjection();
+        MinecraftPlugin.setupUIProjection();
 
         GlStateManager._disableDepthTest();
 
         TestMod.render();
-
-        RenderUtils.scaledProjection();
     }
 }

@@ -7,7 +7,6 @@
   ],
   "client": [
     "GameRendererMixin",
-    "ICachedOrthoProjectionMatrixBuffer",
     "IGlBuffer",
     "RenderSystemMixin"
   ],
