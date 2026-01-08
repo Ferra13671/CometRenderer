@@ -2,12 +2,19 @@
     <img src="https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/logo.png" style="width: 50%" alt="logo">
 </p>
 
-Premium custom renderer for minecraft >=1.21.8.
-CometRenderer has a well-optimized rendering system, extensive customization, and a fairly user-friendly API.
+CometRenderer is an optimized, customized, easy-to-use, and full independent rendering system for OpenGL.
+This rendering system provides a wide range of tools that can be used to easily render your projects.
 <p>
-At the moment, the library depends on Minecraft, albeit only slightly. Despite this, in the future the library may become completely independent, thus it could be used as a renderer for, for example, your game.
 
-Documentation: <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation">click</a>
+## Official CometRenderer plugins
+Several official plugins were also created for the project, expanding the functionality of the rendering system:
+* better-exceptions
+* post-effects
+* shader-libraries
+* minecraft
+
+## Documentation
+CometRenderer has its own documentation, which you can read on the <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation">website</a>.
 
 ## Gradle
 ```groovy
@@ -30,8 +37,8 @@ dependencies {
 }
 ```
 
-## Example
-For example check out `minecraft-1_21_8-1_21_11-fabric-yarn/src/example/com/ferra13671/cometrenderer/test/TestMod.java`.  
+## Minecraft example
+For example to use in minecraft check out `minecraft/{plugin-version}/src/example/com/ferra13671/cometrenderer/test/TestMod.java`.  
 
 ## JavaDoc
 JavaDoc is written entirely in Russian, but I may rewrite it into English in the future.
