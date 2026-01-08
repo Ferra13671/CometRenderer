@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.Logger;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.State;
@@ -66,6 +67,8 @@ public class MinecraftPlugin {
             builtBuffer.close();
     };
     private static Framebuffer mainFrameBuffer;
+    @Getter
+    private static DefaultPrograms programs;
 
     public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
         MinecraftPlugin.bufferIdGetter = bufferIdGetter;
@@ -119,6 +122,8 @@ public class MinecraftPlugin {
                 GlStateManager._bindTexture(texture);
             }
         };
+
+        programs = new DefaultPrograms();
     }
 
     public static void initMatrix() {

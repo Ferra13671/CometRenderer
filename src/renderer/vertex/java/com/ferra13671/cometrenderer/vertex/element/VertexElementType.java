@@ -108,7 +108,19 @@ public record VertexElementType<T>(int byteSize, int offset, String typeName, in
                 || this.offset <= 0
                 || (this.byteSize % this.offset != 0)
                         || (this.offset > this.byteSize)
-        )
-            CometRenderer.manageException(new IllegalVertexElementStructureException(this));
+        ) {
+            String reason = "";
+
+            if (this.byteSize <= 0)
+                reason = String.format("byteSize(%s) must be > 0", this.byteSize);
+            else if (this.offset <= 0)
+                reason = String.format("offset(%s) must be > 0", this.offset);
+            else if (this.byteSize % this.offset != 0)
+                reason = String.format("byteSize(%s) must be a multiple of offset(%s)", this.byteSize, this.offset);
+            else if (this.offset > this.byteSize)
+                reason = String.format("offset(%s) must be <= byteSize(%s)", this.offset, this.byteSize);
+
+            CometRenderer.manageException(new IllegalVertexElementStructureException(this, reason));
+        }
     }
 }

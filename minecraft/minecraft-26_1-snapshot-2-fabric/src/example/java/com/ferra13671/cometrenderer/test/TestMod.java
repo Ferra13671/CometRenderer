@@ -1,11 +1,7 @@
 package com.ferra13671.cometrenderer.test;
 
-import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.minecraft.MinecraftPlugin;
-import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.test.mixins.IGlBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
@@ -32,16 +28,6 @@ public class TestMod implements Mc {
             return TextureLoaders.INPUT_STREAM.load(TestMod.class.getClassLoader().getResourceAsStream(s), colorMode);
         }
     };
-
-    private static GlProgram positionProgram;
-    public static final GlslFileEntry positionVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex", "position.vsh");
-    private static final GlslFileEntry positionFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment", "position.fsh");
-    private static GlProgram positionColorProgram;
-    private static final GlslFileEntry positionColorVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex2", "position-colored.vsh");
-    private static final GlslFileEntry positionColorFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment2", "position-colored.fsh");
-    private static GlProgram positionColorTextureProgram;
-    private static final GlslFileEntry positionColorTextureVertexEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-vertex3", "texture-colored.vsh");
-    private static final GlslFileEntry positionColorTextureFragmentEntry = CometLoaders.IN_JAR.createGlslFileEntry("test-fragment3", "texture-colored.fsh");
     private static GLTexture texture;
 
     public static Mesh standaloneMesh;
@@ -50,7 +36,7 @@ public class TestMod implements Mc {
         CometRenderer.init();
         MinecraftPlugin.init(glGpuBuffer -> ((IGlBuffer) glGpuBuffer)._getHandle(), () -> mc.getWindow().getGuiScale());
 
-        standaloneMesh = CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_COLOR_TEXTURE, buffer -> {
+        standaloneMesh = CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE_COLOR, buffer -> {
             buffer.vertex(400, 250, 0)
                     .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
                     .element("Texture", VertexElementType.FLOAT, 0f, 0f);
@@ -64,25 +50,6 @@ public class TestMod implements Mc {
                     .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
                     .element("Texture", VertexElementType.FLOAT, 1f, 0f);
         }).makeStandalone();
-
-        positionProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                .name("test1")
-                .shader(positionVertexEntry, ShaderType.Vertex)
-                .shader(positionFragmentEntry, ShaderType.Fragment)
-                .build();
-
-        positionColorProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                .name("test2")
-                .shader(positionColorVertexEntry, ShaderType.Vertex)
-                .shader(positionColorFragmentEntry, ShaderType.Fragment)
-                .build();
-
-        positionColorTextureProgram = CometLoaders.IN_JAR.createProgramBuilder(MinecraftPlugin.getMatrixSnippet(), CometRenderer.getColorSnippet())
-                .name("test3")
-                .shader(positionColorTextureVertexEntry, ShaderType.Vertex)
-                .shader(positionColorTextureFragmentEntry, ShaderType.Fragment)
-                .sampler("u_Texture")
-                .build();
 
         texture =
                 textureLoader.createTextureBuilder()
@@ -107,7 +74,7 @@ public class TestMod implements Mc {
     }
 
     private static void drawRandomColorRect() {
-        CometRenderer.setGlobalProgram(positionProgram);
+        CometRenderer.setGlobalProgram(MinecraftPlugin.getPrograms().POSITION);
         Random random = new Random();
         CometRenderer.setShaderColor(new Vector4f(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1f));
         MinecraftPlugin.initMatrix();
@@ -122,7 +89,7 @@ public class TestMod implements Mc {
     }
 
     private static void drawMultiColorRect() {
-        CometRenderer.setGlobalProgram(positionColorProgram);
+        CometRenderer.setGlobalProgram(MinecraftPlugin.getPrograms().POSITION_COLOR);
         CometRenderer.resetShaderColor();
         MinecraftPlugin.initMatrix();
         CometRenderer.initShaderColor();
@@ -137,10 +104,10 @@ public class TestMod implements Mc {
 
     private static void drawTextureRect() {
         CometRenderer.resetShaderColor();
-        CometRenderer.setGlobalProgram(positionColorTextureProgram);
+        CometRenderer.setGlobalProgram(MinecraftPlugin.getPrograms().POSITION_TEXTURE_COLOR);
         MinecraftPlugin.initMatrix();
         CometRenderer.initShaderColor();
-        positionColorTextureProgram.getUniform("u_Texture", UniformType.SAMPLER).set(texture);
+        CometRenderer.getGlobalProgram().getUniform("u_Texture", UniformType.SAMPLER).set(texture);
 
         CometRenderer.draw(standaloneMesh, false);
         CometRenderer.resetShaderColor();
