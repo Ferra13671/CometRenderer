@@ -1,8 +1,9 @@
 package com.ferra13671.cometrenderer.compiler;
 
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
+import lombok.NonNull;
 
 /**
  * Объект, представляющий собой контент glsl файла, используемые в различных целях.
@@ -14,7 +15,7 @@ public class GlslFileEntry {
     @Getter
     private final Registry registry;
 
-    public GlslFileEntry(String name, String content, String type, Registry registry) {
+    public GlslFileEntry(@NonNull String name, String content, @NonNull String type, @NonNull Registry registry) {
         this.registry = registry;
 
         registry.computeIfAbsent(CometTags.NAME, name, true);

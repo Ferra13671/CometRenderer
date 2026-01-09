@@ -1,5 +1,8 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.utils;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum GLVersion {
     GL10("1.0", null, 0),
     GL11("1.1", null, 1),
@@ -24,12 +27,6 @@ public enum GLVersion {
     public final String glVersion;
     public final String glslVersion;
     public final int id;
-
-    GLVersion(String glVersion, String glslVersion, int id) {
-        this.glVersion = glVersion;
-        this.glslVersion = glslVersion;
-        this.id = id;
-    }
 
     public static GLVersion fromString(String version) {
         for (GLVersion value : values())

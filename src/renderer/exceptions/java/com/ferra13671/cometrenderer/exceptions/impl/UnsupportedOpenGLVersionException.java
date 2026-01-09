@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.exceptions.impl;
 
-import com.ferra13671.cometrenderer.GLVersion;
+import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
 public class UnsupportedOpenGLVersionException extends CometException {

@@ -15,6 +15,7 @@ import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.lwjgl.opengl.GL20;
 
@@ -62,7 +63,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param id айди программы в OpenGL.
      * @param uniforms список всех униформ программы.
      */
-    public GlProgram(String name, int id, HashSet<GlProgramSnippet> snippets, Map<String, UniformType<?>> uniforms) {
+    public GlProgram(@NonNull String name, int id, @NonNull HashSet<GlProgramSnippet> snippets, @NonNull Map<String, UniformType<?>> uniforms) {
         this.name = name;
         this.id = id;
         this.snippets = snippets;

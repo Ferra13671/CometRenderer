@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.utils;
 
 public record Mesa3DVersion(String version) {
     public static final Mesa3DVersion NONE = new Mesa3DVersion("-1");

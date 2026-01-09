@@ -1,22 +1,21 @@
-package com.ferra13671.cometrenderer.builders;
+package com.ferra13671.cometrenderer.program;
 
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.GLVersion;
+import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedShaderException;
-import com.ferra13671.cometrenderer.tag.Registry;
-import com.ferra13671.cometrenderer.tag.Tag;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Tag;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
-import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import lombok.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,6 +71,7 @@ public class GlProgramBuilder<T> {
      * @param type тип шейдера.
      * @return сборщик программы.
      */
+    @NonNull
     public GlProgramBuilder<T> shader(String name, T shaderPath, ShaderType type) {
         return shader(loader.createGlslFileEntry(name, shaderPath), type);
     }
@@ -83,6 +83,7 @@ public class GlProgramBuilder<T> {
      * @param type тип шейдера.
      * @return сборщик программы.
      */
+    @NonNull
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
@@ -99,7 +100,7 @@ public class GlProgramBuilder<T> {
         return this;
     }
 
-    public <S> GlProgramBuilder<T> tag(Tag<S> tag, S value) {
+    public <S> GlProgramBuilder<T> tag(@NonNull Tag<S> tag, S value) {
         this.registry.set(tag, value);
 
         return this;
@@ -115,6 +116,7 @@ public class GlProgramBuilder<T> {
      *
      * @see GlUniform
      */
+    @NonNull
     public <S extends GlUniform> GlProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow().getValue();
 
@@ -131,6 +133,7 @@ public class GlProgramBuilder<T> {
      * @param name имя семплера.
      * @return сборщик программы.
      */
+    @NonNull
     public GlProgramBuilder<T> sampler(String name) {
         uniform(name, UniformType.SAMPLER);
         return this;

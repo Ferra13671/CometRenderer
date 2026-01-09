@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.program.shader;
 
-import com.ferra13671.cometrenderer.GLVersion;
+import com.ferra13671.cometrenderer.utils.GLVersion;
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
@@ -21,6 +22,7 @@ import org.lwjgl.opengl.GL43;
  * @see <a href="https://wikis.khronos.org/opengl/Shader">OpenGL shader wiki</a>
  * @see GlShader
  */
+@AllArgsConstructor
 public enum ShaderType {
     Vertex(GL20.GL_VERTEX_SHADER, GLVersion.GL20),
     Fragment(GL20.GL_FRAGMENT_SHADER, GLVersion.GL20),
@@ -32,12 +34,4 @@ public enum ShaderType {
     /** Айди типа шейдера в OpenGL. **/
     public final int glId;
     public final GLVersion glVersion;
-
-    /**
-     * @param glId айди типа шейдера в OpenGL.
-     */
-    ShaderType(int glId, GLVersion glVersion) {
-        this.glId = glId;
-        this.glVersion = glVersion;
-    }
 }

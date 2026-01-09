@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils.scissor;
+package com.ferra13671.cometrenderer.scissor;
 
 import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 

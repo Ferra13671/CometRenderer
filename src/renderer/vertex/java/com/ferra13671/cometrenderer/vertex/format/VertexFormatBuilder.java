@@ -1,11 +1,10 @@
-package com.ferra13671.cometrenderer.builders;
+package com.ferra13671.cometrenderer.vertex.format;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexFormatOverflowException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
-import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 
 import java.util.ArrayList;
 import java.util.List;

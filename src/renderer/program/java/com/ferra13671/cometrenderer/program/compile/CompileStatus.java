@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.program.compile;
 
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -10,19 +11,13 @@ import org.lwjgl.opengl.GL11;
  *     <tr><td>FAILURE — при компиляции возникла ошибка.</td></tr>
  * </table>
  */
+@AllArgsConstructor
 public enum CompileStatus {
     SUCCESSFUL(GL11.GL_TRUE),
     FAILURE(GL11.GL_FALSE);
 
     /** Айди статуса компиляции. **/
     public final int id;
-
-    /**
-     * @param id айди статуса компиляции.
-     */
-    CompileStatus(int id) {
-        this.id = id;
-    }
 
     /**
      * Возвращает статус компиляции по его айди.

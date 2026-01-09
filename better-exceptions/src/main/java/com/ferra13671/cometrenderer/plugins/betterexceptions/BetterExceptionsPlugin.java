@@ -3,8 +3,8 @@ package com.ferra13671.cometrenderer.plugins.betterexceptions;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.CometException;
-import com.ferra13671.cometrenderer.tag.Registry;
-import com.ferra13671.cometrenderer.tag.Tag;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Tag;
 
 import java.util.Map;
 

@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.vertex.format;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import com.ferra13671.cometrenderer.builders.VertexFormatBuilder;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;

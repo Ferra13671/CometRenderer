@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.utils.blend;
 
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -8,6 +9,7 @@ import org.lwjgl.opengl.GL14;
  *
  * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
  */
+@AllArgsConstructor
 public enum DstFactor {
     CONSTANT_ALPHA(GL14.GL_CONSTANT_ALPHA),
     CONSTANT_COLOR(GL14.GL_CONSTANT_COLOR),
@@ -26,11 +28,4 @@ public enum DstFactor {
 
     /** Айди множителя смешивания. **/
     public final int glId;
-
-    /**
-     * @param glId айди множителя смешивания.
-     */
-    DstFactor(int glId) {
-        this.glId = glId;
-    }
 }

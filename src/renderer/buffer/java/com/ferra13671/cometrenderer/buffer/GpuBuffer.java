@@ -29,12 +29,30 @@ public class GpuBuffer implements Bindable, AutoCloseable {
      * @param target тип цели использования буффера.
      */
     public GpuBuffer(ByteBuffer data, BufferUsage usage, BufferTarget target) {
+        this(usage, target);
+
+        bind();
+        GL15.glBufferData(target.glId, data, usage.glId);
+        unbind();
+    }
+
+    /**
+     * @param capacity размер буффера.
+     * @param usage тип использования буффера.
+     * @param target тип цели использования буффера.
+     */
+    public GpuBuffer(int capacity, BufferUsage usage, BufferTarget target) {
+        this(usage, target);
+
+        bind();
+        GL15.glBufferData(target.glId, capacity, usage.glId);
+        unbind();
+    }
+
+    private GpuBuffer(BufferUsage usage, BufferTarget target) {
         this.id = GL15.glGenBuffers();
         this.usage = usage;
         this.target = target;
-        bind();
-        GL15.glBufferData(target.glId, data, usage.glId);
-        GL15.glBindBuffer(target.glId, 0);
     }
 
     @Override

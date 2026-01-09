@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.compiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.tag.DefaultTagEntry;
-import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.DefaultTagEntry;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
@@ -12,6 +12,7 @@ import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import lombok.NonNull;
 import org.lwjgl.opengl.GL20;
 
 import java.util.*;
@@ -25,11 +26,11 @@ public class GlobalCometCompiler {
 
     public static final String DEFAULT_FILE = "DEFAULT";
 
-
-    public static void addExtensions(CompilerExtension... extensions) {
+    public static void addExtensions(@NonNull CompilerExtension... extensions) {
         GlobalCometCompiler.extensions.addAll(List.of(extensions));
     }
 
+    @NonNull
     public static GlProgram compileProgram(Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow().getValue();
 
@@ -63,6 +64,7 @@ public class GlobalCometCompiler {
         return program;
     }
 
+    @NonNull
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
         for (CompilerExtension extension : extensions)
             extension.modify(shaderEntry.getRegistry(), programRegistry);

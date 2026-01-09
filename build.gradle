@@ -26,7 +26,6 @@ sourceSets {
     subSourceSet("program")
     subSourceSet("vertex")
     subSourceSet("sampler")
-    subSourceSet("builders")
     subSourceSet("utils")
 }
 

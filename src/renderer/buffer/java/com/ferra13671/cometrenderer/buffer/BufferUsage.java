@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.buffer;
 
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL15;
 
 /**
@@ -7,6 +8,7 @@ import org.lwjgl.opengl.GL15;
  *
  * @see GpuBuffer
  */
+@AllArgsConstructor
 public enum BufferUsage {
     STREAM_DRAW(GL15.GL_STREAM_DRAW),
     STATIC_DRAW(GL15.GL_STATIC_DRAW),
@@ -20,11 +22,4 @@ public enum BufferUsage {
 
     /** Айди типа использования в OpenGL. **/
     public final int glId;
-
-    /**
-     * @param glId айди типа использования в OpenGL.
-     */
-    BufferUsage(int glId) {
-        this.glId = glId;
-    }
 }

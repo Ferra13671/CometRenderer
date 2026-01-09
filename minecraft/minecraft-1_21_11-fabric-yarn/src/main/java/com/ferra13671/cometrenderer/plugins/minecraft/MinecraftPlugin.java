@@ -1,15 +1,15 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
-import com.ferra13671.cometrenderer.BufferRenderer;
+import com.ferra13671.cometrenderer.utils.BufferRenderer;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.Logger;
+import com.ferra13671.cometrenderer.utils.Logger;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.utils.scissor.ScissorRect;
+import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;

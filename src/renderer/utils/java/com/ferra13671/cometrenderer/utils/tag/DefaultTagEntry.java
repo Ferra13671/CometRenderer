@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.tag;
+package com.ferra13671.cometrenderer.utils.tag;
 
 public class DefaultTagEntry<T> implements TagEntry<T> {
     private final Tag<T> tag;

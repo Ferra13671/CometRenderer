@@ -5,11 +5,12 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
-import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import lombok.NonNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,11 +33,13 @@ public class GlShaderLibraryBuilder<T> {
         return this;
     }
 
+    @NonNull
     public GlShaderLibraryBuilder<T> library(T libraryPath) {
         this.libraryPath = libraryPath;
         return this;
     }
 
+    @NonNull
     public <S extends GlUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
         if (this.uniforms.containsKey(name))
             CometRenderer.manageException(new DoubleUniformAdditionException(name));
@@ -45,6 +48,7 @@ public class GlShaderLibraryBuilder<T> {
         return this;
     }
 
+    @NonNull
     public GlShaderLibraryBuilder<T> sampler(String name) {
         uniform(name, UniformType.SAMPLER);
         return this;

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.tag;
+package com.ferra13671.cometrenderer.utils.tag;
 
 import java.util.HashMap;
 import java.util.Optional;

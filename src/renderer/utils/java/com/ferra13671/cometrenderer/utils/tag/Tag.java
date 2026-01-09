@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.tag;
+package com.ferra13671.cometrenderer.utils.tag;
 
 public record Tag<T>(String id) {
 

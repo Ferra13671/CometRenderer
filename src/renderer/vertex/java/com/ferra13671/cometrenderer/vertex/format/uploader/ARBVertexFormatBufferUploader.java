@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.vertex.format.uploader;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.Mesa3DVersion;
+import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;

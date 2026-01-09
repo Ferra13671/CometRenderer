@@ -6,6 +6,7 @@ import com.ferra13671.gltextureutils.TextureFiltering;
 import com.ferra13671.gltextureutils.TextureWrapping;
 import com.ferra13671.gltextureutils.loader.TextureLoaders;
 import lombok.Getter;
+import lombok.NonNull;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -23,7 +24,7 @@ public class FramebufferImpl implements Framebuffer {
     @Getter
     protected GLTexture depthTexture;
 
-    public FramebufferImpl(String name, boolean useDepth, int width, int height, Color clearColor, double clearDepth) {
+    public FramebufferImpl(@NonNull String name, boolean useDepth, int width, int height, @NonNull Color clearColor, double clearDepth) {
         this.name = name;
         this.useDepth = useDepth;
         this.id = GL30.glGenFramebuffers();

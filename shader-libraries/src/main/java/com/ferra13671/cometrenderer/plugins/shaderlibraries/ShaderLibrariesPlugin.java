@@ -6,52 +6,56 @@ import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Tag;
+import lombok.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class ShaderLibrariesPlugin {
-    private static final HashMap<String, GlslFileEntry> libraries = new HashMap<>();
+    private static final Tag<HashMap<String, GlslFileEntry>> LIBRARIES_TAG = new Tag<>("shader-libraries");
     private static final String includeLibDirective = "#include";
 
     public static final String SHADER_LIBRARY_FILE = "SHADER_LIB";
 
     static {
+        CometRenderer.getRegistry().setImmutable(LIBRARIES_TAG, new HashMap<>());
         GlobalCometCompiler.addExtensions(
-                (shaderRegistry, _) -> includeShaderLibraries(shaderRegistry)
+                (shaderRegistry, registry) -> includeShaderLibraries(shaderRegistry)
         );
     }
 
-    public static void registerShaderLibraries(GlslFileEntry... fileEntries) {
+    public static void registerShaderLibraries(@NonNull GlslFileEntry... fileEntries) {
         for (GlslFileEntry fileEntry : fileEntries) {
             if (!fileEntry.getType().equals(SHADER_LIBRARY_FILE))
                 throw new IllegalStateException(String.format("Encountered a GlslFileEntry of type '%s' when '%s' was expected.", fileEntry.getType(), SHADER_LIBRARY_FILE));
 
-            libraries.put(fileEntry.getName(), fileEntry);
+            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().put(fileEntry.getName(), fileEntry);
         }
     }
 
-    public static void unregisterShaderLibraries(GlslFileEntry... fileEntries) {
+    public static void unregisterShaderLibraries(@NonNull GlslFileEntry... fileEntries) {
         for (GlslFileEntry fileEntry : fileEntries) {
             if (!fileEntry.getType().equals(SHADER_LIBRARY_FILE))
                 throw new IllegalStateException(String.format("Encountered a GlslFileEntry of type '%s' when '%s' was expected.", fileEntry.getType(), SHADER_LIBRARY_FILE));
 
-            libraries.remove(fileEntry.getName());
+            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().remove(fileEntry.getName());
         }
     }
 
-    public static void unregisterShaderLibraries(String... names) {
+    public static void unregisterShaderLibraries(@NonNull String... names) {
         for (String name : names)
-            libraries.remove(name);
+            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().remove(name);
     }
 
+    @NonNull
     public static Optional<GlslFileEntry> getShaderLibrary(String name) {
-        return Optional.ofNullable(libraries.get(name));
+        return Optional.ofNullable(CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().get(name));
     }
 
-    public static void includeShaderLibraries(Registry registry) {
+    public static void includeShaderLibraries(@NonNull Registry registry) {
         Map<String, UniformType<?>> uniforms = registry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
         String content = registry.get(CometTags.CONTENT).orElseThrow().getValue();
 

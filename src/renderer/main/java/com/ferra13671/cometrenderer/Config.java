@@ -1,4 +1,6 @@
-package com.ferra13671.cometrenderer.config;
+package com.ferra13671.cometrenderer;
+
+import com.ferra13671.cometrenderer.utils.Setting;
 
 public class Config {
 

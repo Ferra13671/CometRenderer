@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.buffer;
 
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.*;
 
 /**
@@ -7,6 +8,7 @@ import org.lwjgl.opengl.*;
  *
  * @see GpuBuffer
  */
+@AllArgsConstructor
 public enum BufferTarget {
     ARRAY_BUFFER(GL15.GL_ARRAY_BUFFER),
     ELEMENT_ARRAY_BUFFER(GL15.GL_ELEMENT_ARRAY_BUFFER),
@@ -25,11 +27,4 @@ public enum BufferTarget {
 
     /** Айди типа цели использования в OpenGL. **/
     public final int glId;
-
-    /**
-     * @param glId айди типа цели использования в OpenGL.
-     */
-    BufferTarget(int glId) {
-        this.glId = glId;
-    }
 }

@@ -5,16 +5,19 @@ import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetExceptio
 import com.ferra13671.cometrenderer.sampler.ISamplerManger;
 import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
 import com.ferra13671.cometrenderer.sampler.impl.SamplerManagerImpl;
+import com.ferra13671.cometrenderer.utils.BufferRenderer;
+import com.ferra13671.cometrenderer.utils.GLVersion;
+import com.ferra13671.cometrenderer.utils.Logger;
+import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
-import com.ferra13671.cometrenderer.config.Config;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.utils.scissor.ScissorStack;
-import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.scissor.ScissorStack;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.uploader.VertexFormatManager;
@@ -78,7 +81,6 @@ public class CometRenderer {
         }
     };
     private static final BufferRenderer<IMesh> COMET_BUFFER_RENDERER = (mesh, close) -> {
-        int indexCount = mesh.getIndexCount();
         int vertexCount = mesh.getVertexCount();
         DrawMode drawMode = mesh.getDrawMode();
 
@@ -94,7 +96,7 @@ public class CometRenderer {
                     CometRenderer.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
                 indexBuffer.bind();
 
-                GL11.glDrawElements(drawMode.glId(), indexCount, indexBufferGenerator.getIndexType().glId, 0);
+                GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), indexBufferGenerator.getIndexType().glId, 0);
             } else
                 GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
         }

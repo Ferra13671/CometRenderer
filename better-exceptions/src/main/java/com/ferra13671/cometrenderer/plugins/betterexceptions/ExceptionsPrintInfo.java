@@ -5,7 +5,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.*;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.*;
-import com.ferra13671.cometrenderer.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 
 import java.util.HashMap;
 import java.util.Map;

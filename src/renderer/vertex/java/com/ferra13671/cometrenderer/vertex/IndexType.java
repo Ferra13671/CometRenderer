@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex;
 
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -7,6 +8,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @see IndexBufferGenerator
  */
+@AllArgsConstructor
 public enum IndexType {
 	SHORT(2, GL11.GL_UNSIGNED_SHORT),
 	INT(4, GL11.GL_UNSIGNED_INT);
@@ -15,15 +17,6 @@ public enum IndexType {
 	public final int bytes;
 	/** Айди типа индексов в OpenGL. **/
 	public final int glId;
-
-	/**
-	 * @param bytes размер типа индесов в байтах.
-	 * @param glId айди типа индексов в OpenGL.
-	 */
-	IndexType(int bytes, int glId) {
-		this.bytes = bytes;
-		this.glId = glId;
-	}
 
 	/**
 	 * Возвращает лучший по размерам тип индексов для числа.
