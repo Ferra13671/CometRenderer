@@ -14,7 +14,7 @@ public class ProgramPassBuilder {
     private final List<Pair<Integer, Function<PostEffectContext, Framebuffer>>> inputs = new ArrayList<>();
     private Function<PostEffectContext, Framebuffer> output;
     private GlProgram program;
-    private Consumer<GlProgram> preRenderConsumer = _ -> {};
+    private Consumer<GlProgram> preRenderConsumer = p -> {};
 
     public ProgramPassBuilder input(int samplerId, String frameBufferName) {
         this.inputs.add(new Pair<>(samplerId, context -> context.framebuffers().get(frameBufferName)));
@@ -22,7 +22,7 @@ public class ProgramPassBuilder {
     }
 
     public ProgramPassBuilder input(int samplerId, Framebuffer framebuffer) {
-        this.inputs.add(new Pair<>(samplerId, _ -> framebuffer));
+        this.inputs.add(new Pair<>(samplerId, p -> framebuffer));
         return this;
     }
 
@@ -32,7 +32,7 @@ public class ProgramPassBuilder {
     }
 
     public ProgramPassBuilder output(Framebuffer framebuffer) {
-        this.output = _ -> framebuffer;
+        this.output = p -> framebuffer;
         return this;
     }
 

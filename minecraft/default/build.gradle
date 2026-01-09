@@ -6,7 +6,9 @@ project.ext.projectName = "comet-renderer-minecraft-default"
 version = project.main_version
 
 apply from: rootProject.file("utils.gradle")
+apply from: rootProject.file("opengl.gradle")
 
 dependencies {
     compileOnly rootProject
+    compileOnly "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
 }

@@ -32,18 +32,3 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${project.lombok_version}")
     annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
 }
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.ferra13671'
-            artifactId = project.ext.projectName
-            artifact source: jar, classifier: null
-            artifact sourcesJar
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
-}

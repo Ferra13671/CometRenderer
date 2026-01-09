@@ -8,6 +8,7 @@ version = project.main_version
 group = "com.ferra13671"
 
 apply from: rootProject.file("utils.gradle")
+apply from: rootProject.file("publishing.gradle")
 
 sourceSets {
     example {

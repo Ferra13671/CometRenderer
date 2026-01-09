@@ -35,8 +35,28 @@ dependencies {
 
 shadowJar {
     configurations = [project.configurations.shadow]
+
+    //Тупое дерьмо
+    exclude "org/lwjgl/**"
+    exclude "org/joml/**"
+    exclude "META-INF/**"
 }
 
 jar {
     dependsOn shadowJar
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.ferra13671'
+            artifactId = project.ext.projectName
+            artifact source: shadowJar, classifier: null
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
 }
