@@ -14,10 +14,7 @@ public class DefaultShaderEntries {
             
             in vec4 position;
             
-            layout(std140) uniform Projection {
-                mat4 projMat;
-            };
-            uniform mat4 modelViewMat;
+            #include<matrices>
             
             void main() {
                 gl_Position = projMat * modelViewMat * position;
@@ -31,7 +28,7 @@ public class DefaultShaderEntries {
             
             precision lowp float;
             
-            uniform vec4 shaderColor;
+            #include<shaderColor>
             
             out vec4 fragColor;
             
@@ -48,10 +45,7 @@ public class DefaultShaderEntries {
             in vec4 pos;
             in vec4 color;
             
-            layout(std140) uniform Projection {
-                mat4 projMat;
-            };
-            uniform mat4 modelViewMat;
+            #include<matrices>
             
             out vec4 vertexColor;
             
@@ -71,7 +65,7 @@ public class DefaultShaderEntries {
             
             in vec4 vertexColor;
             
-            uniform vec4 shaderColor;
+            #include<shaderColor>
             
             out vec4 fragColor;
             
@@ -88,10 +82,7 @@ public class DefaultShaderEntries {
             in vec4 position;
             in vec2 UV;
             
-            layout(std140) uniform Projection {
-                mat4 projMat;
-            };
-            uniform mat4 modelViewMat;
+            #include<matrices>
             
             out vec2 texPos;
             
@@ -111,7 +102,7 @@ public class DefaultShaderEntries {
             
             in vec2 texPos;
             
-            uniform vec4 shaderColor;
+            #include<shaderColor>
             uniform sampler2D u_Texture;
             
             out vec4 fragColor;
@@ -130,10 +121,7 @@ public class DefaultShaderEntries {
             in vec2 UV;
             in vec4 color;
             
-            layout(std140) uniform Projection {
-                mat4 projMat;
-            };
-            uniform mat4 modelViewMat;
+            #include<matrices>
             
             out vec2 texPos;
             out vec4 vertexColor;
@@ -154,8 +142,8 @@ public class DefaultShaderEntries {
             in vec2 texPos;
             in vec4 vertexColor;
             
+            #include<shaderColor>
             uniform sampler2D u_Texture;
-            uniform vec4 shaderColor;
             
             out vec4 fragColor;
             

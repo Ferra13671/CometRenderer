@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.plugins.minecraft;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
+import com.ferra13671.cometrenderer.plugins.shaderlibraries.ShaderLibrariesPlugin;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.scissor.ScissorRect;
@@ -13,13 +14,13 @@ import java.util.function.Supplier;
 
 public abstract class AbstractMinecraftPlugin {
     @Getter
-    @Setter
-    private static AbstractMinecraftPlugin instance;
-    @Getter
-    private final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
+    private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("Projection", UniformType.BUFFER)
             .uniform("modelViewMat", UniformType.MATRIX4)
             .buildSnippet();
+    @Getter
+    @Setter
+    private static AbstractMinecraftPlugin instance;
     protected final Supplier<Integer> scaleGetter;
     @Getter
     private final DefaultPrograms programs;
@@ -27,6 +28,8 @@ public abstract class AbstractMinecraftPlugin {
 
     public AbstractMinecraftPlugin(Supplier<Integer> scaleGetter) {
         setInstance(this);
+
+        initShaderLibraries();
 
         this.scaleGetter = scaleGetter;
         this.programs = new DefaultPrograms();
@@ -46,6 +49,14 @@ public abstract class AbstractMinecraftPlugin {
                 frameBufferHeight - ((scissorRect.y() + scissorRect.height()) * scale),
                 scissorRect.width() * scale,
                 scissorRect.height() * scale
+        );
+    }
+
+    private void initShaderLibraries() {
+        ShaderLibrariesPlugin.registerShaderLibraries(
+                DefaultShaderLibraries.MATRICES,
+                DefaultShaderLibraries.SHADER_COLOR,
+                DefaultShaderLibraries.ROUNDED
         );
     }
 }
