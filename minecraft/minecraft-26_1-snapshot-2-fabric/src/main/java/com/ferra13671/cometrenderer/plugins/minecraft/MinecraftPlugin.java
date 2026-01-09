@@ -1,15 +1,10 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
-import com.ferra13671.cometrenderer.utils.BufferRenderer;
-import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.utils.Logger;
-import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
-import com.ferra13671.cometrenderer.program.GlProgramSnippet;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.scissor.ScissorRect;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import com.ferra13671.cometrenderer.utils.BufferRenderer;
+import com.ferra13671.cometrenderer.utils.Logger;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -25,24 +20,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL33;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class MinecraftPlugin {
+public class MinecraftPlugin extends AbstractMinecraftPlugin {
     @Getter
-    private static Function<GlBuffer, Integer> bufferIdGetter;
-    private static Supplier<Integer> scaleGetter;
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
+    private static MinecraftPlugin instance;
     @Getter
-    private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
-            .uniform("Projection", UniformType.BUFFER)
-            .uniform("modelViewMat", UniformType.MATRIX4)
-            .buildSnippet();
-    public static final BufferRenderer<MeshData> MINECRAFT_BUFFER = (builtBuffer, close) -> {
+    private final Function<GlBuffer, Integer> bufferIdGetter;
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
+    public final BufferRenderer<MeshData> MINECRAFT_BUFFER = (builtBuffer, close) -> {
         MeshData.DrawState drawState = builtBuffer.drawState();
 
         if (drawState.indexCount() > 0) {
@@ -69,14 +59,12 @@ public class MinecraftPlugin {
         if (close)
             builtBuffer.close();
     };
-    private static Framebuffer mainFrameBuffer;
-    private static CachedOrthoProjectionMatrixBuffer uiMatrix;
-    @Getter
-    private static DefaultPrograms programs;
+    private final CachedOrthoProjectionMatrixBuffer uiMatrix;
 
-    public static void init(Function<GlBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
-        MinecraftPlugin.bufferIdGetter = bufferIdGetter;
-        MinecraftPlugin.scaleGetter = scaleGetter;
+    private MinecraftPlugin(Function<GlBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+        super(scaleGetter);
+
+        this.bufferIdGetter = bufferIdGetter;
         CometRenderer.setLogger(new Logger() {
             @Override
             public void log(String message) {
@@ -127,11 +115,18 @@ public class MinecraftPlugin {
             }
         };
 
-        uiMatrix = new CachedOrthoProjectionMatrixBuffer("ui-matrix", -1000, 1000, true);
-        programs = new DefaultPrograms();
+        this.uiMatrix = new CachedOrthoProjectionMatrixBuffer("ui-matrix", -1000, 1000, true);
     }
 
-    public static void setupUIProjection() {
+    public static void init(Function<GlBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+        if (instance != null)
+            throw new IllegalStateException("Minecraft plugin already initialized");
+
+        instance = new MinecraftPlugin(bufferIdGetter, scaleGetter);
+    }
+
+    @Override
+    public void setupUIProjection() {
         float scale = scaleGetter.get();
 
         RenderSystem.setProjectionMatrix(
@@ -143,7 +138,8 @@ public class MinecraftPlugin {
         );
     }
 
-    public static void initMatrix() {
+    @Override
+    public void initMatrix() {
         CometRenderer.getGlobalProgram().consumeIfUniformPresent(
                 "Projection",
                 UniformType.BUFFER,
@@ -161,12 +157,8 @@ public class MinecraftPlugin {
         );
     }
 
-    public static void unbindMinecraftSamplers() {
-        for (int i = 0; i < 12; i++)
-            GL33.glBindSampler(i, 0);
-    }
-
-    public static void bindMainFramebuffer(boolean setViewport) {
+    @Override
+    public void bindMainFramebuffer(boolean setViewport) {
         if (mainFrameBuffer == null) {
             if (Minecraft.getInstance().getMainRenderTarget() != null)
                 mainFrameBuffer = new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0);
@@ -174,22 +166,11 @@ public class MinecraftPlugin {
             mainFrameBuffer.bind(setViewport);
     }
 
-    public static ScissorRect fixScissorRect(ScissorRect scissorRect) {
-        int scale = scaleGetter.get();
-        int frameBufferHeight = Minecraft.getInstance().getWindow().getHeight();
-        return new ScissorRect(
-                scissorRect.x() * scale,
-                frameBufferHeight - ((scissorRect.y() + scissorRect.height()) * scale),
-                scissorRect.width() * scale,
-                scissorRect.height() * scale
-        );
-    }
-
-    public static void draw(MeshData builtBuffer) {
+    public void draw(MeshData builtBuffer) {
         draw(builtBuffer, true);
     }
 
-    public static void draw(MeshData builtBuffer, boolean close) {
+    public void draw(MeshData builtBuffer, boolean close) {
         CometRenderer.draw(MINECRAFT_BUFFER, builtBuffer, close);
     }
 }

@@ -1,15 +1,10 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
-import com.ferra13671.cometrenderer.utils.BufferRenderer;
-import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.utils.Logger;
-import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
-import com.ferra13671.cometrenderer.program.GlProgramSnippet;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.scissor.ScissorRect;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import com.ferra13671.cometrenderer.utils.BufferRenderer;
+import com.ferra13671.cometrenderer.utils.Logger;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlConst;
@@ -31,34 +26,30 @@ import java.awt.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class MinecraftPlugin {
+public class MinecraftPlugin extends AbstractMinecraftPlugin {
     @Getter
-    private static Function<GlGpuBuffer, Integer> bufferIdGetter;
-    private static Supplier<Integer> scaleGetter;
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
+    private static MinecraftPlugin instance;
     @Getter
-    private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
-            .uniform("Projection", UniformType.BUFFER)
-            .uniform("modelViewMat", UniformType.MATRIX4)
-            .buildSnippet();
-    public static final BufferRenderer<BuiltBuffer> MINECRAFT_BUFFER = (builtBuffer, close) -> {
-        BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
+    private final Function<GlGpuBuffer, Integer> bufferIdGetter;
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
+    public final BufferRenderer<BuiltBuffer> MINECRAFT_BUFFER = (builtBuffer, close) -> {
+        BuiltBuffer.DrawParameters drawState = builtBuffer.getDrawParameters();
 
-        if (drawParameters.indexCount() > 0) {
-            RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawParameters.mode());
+        if (drawState.indexCount() > 0) {
+            RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawState.mode());
 
             GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex mesh", 40, builtBuffer.getBuffer());
-            GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawParameters.indexCount());
+            GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawState.indexCount());
             VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
             ((GlBackend) RenderSystem.getDevice()).getVertexBufferManager().setupBuffer(
-                    drawParameters.format(),
+                    drawState.format(),
                     (GlGpuBuffer) vertexBuffer
             );
             GL15.glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
             GL11.glDrawElements(
-                    GlConst.toGl(drawParameters.mode()),
-                    drawParameters.indexCount(),
+                    GlConst.toGl(drawState.mode()),
+                    drawState.indexCount(),
                     GlConst.toGl(indexType),
                     0
             );
@@ -68,14 +59,12 @@ public class MinecraftPlugin {
         if (close)
             builtBuffer.close();
     };
-    private static Framebuffer mainFrameBuffer;
-    private static ProjectionMatrix2 uiMatrix;
-    @Getter
-    private static DefaultPrograms programs;
+    private final ProjectionMatrix2 uiMatrix;
 
-    public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
-        MinecraftPlugin.bufferIdGetter = bufferIdGetter;
-        MinecraftPlugin.scaleGetter = scaleGetter;
+    private MinecraftPlugin(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+        super(scaleGetter);
+
+        this.bufferIdGetter = bufferIdGetter;
         CometRenderer.setLogger(new Logger() {
             @Override
             public void log(String message) {
@@ -126,11 +115,18 @@ public class MinecraftPlugin {
             }
         };
 
-        uiMatrix = new ProjectionMatrix2("ui-matrix", -1000, 1000, true);
-        programs = new DefaultPrograms();
+        this.uiMatrix = new ProjectionMatrix2("ui-matrix", -1000, 1000, true);
     }
 
-    public static void setupUIProjection() {
+    public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+        if (instance != null)
+            throw new IllegalStateException("Minecraft plugin already initialized");
+
+        instance = new MinecraftPlugin(bufferIdGetter, scaleGetter);
+    }
+
+    @Override
+    public void setupUIProjection() {
         float scale = scaleGetter.get();
 
         RenderSystem.setProjectionMatrix(
@@ -142,7 +138,8 @@ public class MinecraftPlugin {
         );
     }
 
-    public static void initMatrix() {
+    @Override
+    public void initMatrix() {
         CometRenderer.getGlobalProgram().consumeIfUniformPresent(
                 "Projection",
                 UniformType.BUFFER,
@@ -160,7 +157,8 @@ public class MinecraftPlugin {
         );
     }
 
-    public static void bindMainFramebuffer(boolean setViewport) {
+    @Override
+    public void bindMainFramebuffer(boolean setViewport) {
         if (mainFrameBuffer == null) {
             if (MinecraftClient.getInstance().getFramebuffer() != null)
                 mainFrameBuffer = new MinecraftFramebuffer(MinecraftClient.getInstance().getFramebuffer(), new Color(0, 0, 0, 0), 0);
@@ -168,22 +166,11 @@ public class MinecraftPlugin {
             mainFrameBuffer.bind(setViewport);
     }
 
-    public static ScissorRect fixScissorRect(ScissorRect scissorRect) {
-        int scale = scaleGetter.get();
-        int frameBufferHeight = MinecraftClient.getInstance().getWindow().getFramebufferHeight();
-        return new ScissorRect(
-                scissorRect.x() * scale,
-                frameBufferHeight - ((scissorRect.y() + scissorRect.height()) * scale),
-                scissorRect.width() * scale,
-                scissorRect.height() * scale
-        );
-    }
-
-    public static void draw(BuiltBuffer builtBuffer) {
+    public void draw(BuiltBuffer builtBuffer) {
         draw(builtBuffer, true);
     }
 
-    public static void draw(BuiltBuffer builtBuffer, boolean close) {
+    public void draw(BuiltBuffer builtBuffer, boolean close) {
         CometRenderer.draw(MINECRAFT_BUFFER, builtBuffer, close);
     }
 }

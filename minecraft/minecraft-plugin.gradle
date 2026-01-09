@@ -15,11 +15,28 @@ loom {
     }
 }
 
+configurations {
+    modImplementation.extendsFrom(modInclude)
+    include.extendsFrom(modInclude)
+
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.ext.minecraftVersion}"
 
     implementation "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
 
+    library rootProject.project("minecraft:default")
     implementation rootProject
     exampleImplementation sourceSets.main.output
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
+
+jar {
+    dependsOn shadowJar
 }

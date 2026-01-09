@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'
+}
+
+project.ext.projectName = "comet-renderer-minecraft-default"
+version = project.main_version
+
+apply from: rootProject.file("utils.gradle")
+
+dependencies {
+    compileOnly rootProject
+}

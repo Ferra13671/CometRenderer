@@ -14,7 +14,7 @@ public class MinecraftBufferUniformUploaders {
             GL32.glBindBufferRange(
                     BufferTarget.UNIFORM_BUFFER.glId,
                     bufferUniform.getBufferIndex(),
-                    MinecraftPlugin.getBufferIdGetter().apply((GlBuffer) gpuBufferSlice.buffer()),
+                    MinecraftPlugin.getInstance().getBufferIdGetter().apply((GlBuffer) gpuBufferSlice.buffer()),
                     gpuBufferSlice.offset(),
                     gpuBufferSlice.length()
             );
@@ -22,6 +22,6 @@ public class MinecraftBufferUniformUploaders {
             GL32.glBindBufferBase(
                     BufferTarget.UNIFORM_BUFFER.glId,
                     bufferUniform.getBufferIndex(),
-                    MinecraftPlugin.getBufferIdGetter().apply(glGpuBuffer)
+                    MinecraftPlugin.getInstance().getBufferIdGetter().apply(glGpuBuffer)
             );
 }
