@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
 import com.ferra13671.cometrenderer.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -50,11 +51,10 @@ public class GlShaderLibraryBuilder<T> {
     }
 
     public GlslFileEntry build() {
-        //TODO IllegalShaderBuilderArgumentException
         if (this.name == null)
-            throw new IllegalArgumentException("Missing name in shader library builder.");
+            CometRenderer.manageException(new IllegalBuilderArgumentException("shader library", "Missing name in shader library builder."));
         if (this.libraryPath == null)
-            throw new IllegalArgumentException(String.format("Missing libraryPath in library '%s'.", name));
+            CometRenderer.manageException(new IllegalBuilderArgumentException("shader library", String.format("Missing libraryPath in library '%s'.", this.name)));
 
         Registry registry = new Registry();
         registry.setImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));

@@ -10,7 +10,7 @@ import com.ferra13671.cometrenderer.tag.Tag;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
-import com.ferra13671.cometrenderer.exceptions.impl.IllegalProgramBuilderArgumentException;
+import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -143,15 +143,15 @@ public class GlProgramBuilder<T> {
      */
     public GlProgram build() {
         if (!this.registry.contains(CometTags.NAME))
-            CometRenderer.manageException(new IllegalProgramBuilderArgumentException("Missing name in program builder."));
+            CometRenderer.manageException(new IllegalBuilderArgumentException("program", "Missing name in program builder."));
 
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
         if (!shaders.containsKey(ShaderType.Compute)) {
             if (!shaders.containsKey(ShaderType.Vertex))
-                CometRenderer.manageException(new IllegalProgramBuilderArgumentException(String.format("Missing vertex shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
+                CometRenderer.manageException(new IllegalBuilderArgumentException("program", String.format("Missing vertex shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
             if (!shaders.containsKey(ShaderType.Fragment))
-                CometRenderer.manageException(new IllegalProgramBuilderArgumentException(String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
+                CometRenderer.manageException(new IllegalBuilderArgumentException("program", String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
         }
         return GlobalCometCompiler.compileProgram(this.registry);
     }

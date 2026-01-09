@@ -119,16 +119,16 @@ public class ExceptionsPrintInfo {
                         "Check which shader libraries are being included into shaders and fix problem with uniforms."
                 }
         ));
-        add(IllegalProgramBuilderArgumentException.class, exception -> makeRegistry(
-                "Illegal argument in program builder.",
+        add(IllegalBuilderArgumentException.class, exception -> makeRegistry(
+                String.format("Illegal argument in %s builder.", exception.getBuilder()),
                 exception.getMessage(),
                 new String[]{
-                        "You did not specify all the required arguments before building program builder",
-                        "The argument you specified in program builder is null"
+                        String.format("You did not specify all the required arguments before building %s builder", exception.getBuilder()),
+                        String.format("The argument you specified in %s builder is null", exception.getBuilder())
                 },
                 new String[]{
-                        "Check if you are specifying all arguments when building library builder.",
-                        "Check if you are not passing any arguments that are null."
+                        String.format("Check if you are specifying all arguments when building %s builder.", exception.getBuilder()),
+                        "Check if you are not passing non-null arguments that are null."
                 }
         ));
         add(LoadGlslContentException.class, exception -> makeRegistry(
