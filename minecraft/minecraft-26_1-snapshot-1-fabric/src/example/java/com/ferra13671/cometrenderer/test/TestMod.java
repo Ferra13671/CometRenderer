@@ -5,10 +5,7 @@ import com.ferra13671.cometrenderer.plugins.minecraft.MinecraftPlugin;
 import com.ferra13671.cometrenderer.plugins.minecraft.RectColors;
 import com.ferra13671.cometrenderer.plugins.minecraft.RenderColor;
 import com.ferra13671.cometrenderer.plugins.minecraft.drawer.IDrawer;
-import com.ferra13671.cometrenderer.plugins.minecraft.drawer.impl.BasicRectDrawer;
-import com.ferra13671.cometrenderer.plugins.minecraft.drawer.impl.BasicTextureDrawer;
-import com.ferra13671.cometrenderer.plugins.minecraft.drawer.impl.ColoredRectDrawer;
-import com.ferra13671.cometrenderer.plugins.minecraft.drawer.impl.RoundedRectDrawer;
+import com.ferra13671.cometrenderer.plugins.minecraft.drawer.impl.*;
 import com.ferra13671.cometrenderer.test.mixins.IGlBuffer;
 import com.ferra13671.gltextureutils.ColorMode;
 import com.ferra13671.gltextureutils.GLTexture;
@@ -18,10 +15,8 @@ import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.builder.GLTextureInfo;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
 import com.ferra13671.gltextureutils.loader.TextureLoaders;
-import org.joml.Vector4f;
 
 import java.awt.*;
-import java.util.Random;
 
 public class TestMod implements Mc {
 
@@ -49,7 +44,7 @@ public class TestMod implements Mc {
 
         standaloneDrawer = new BasicTextureDrawer()
                 .setTexture(texture)
-                .rectSized(800, 500, 100, 100, new TextureBorder(0, 0, 1, 1))
+                .rectSized(1200, 400, 100, 100, new TextureBorder(0, 0, 1, 1))
                 .build()
                 .makeStandalone();
     }
@@ -60,19 +55,18 @@ public class TestMod implements Mc {
 
         MinecraftPlugin.getInstance().bindMainFramebuffer(true);
 
-        drawRandomColorRect();
+        drawOneColorRect();
 
         drawMultiColorRect();
 
-        drawTextureRect();
+        drawTextures();
 
         drawRoundedRects();
     }
 
-    private static void drawRandomColorRect() {
-        Random random = new Random();
-        new BasicRectDrawer(() -> CometRenderer.setShaderColor(new Vector4f(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1f)))
-                .rectSized(400, 400, 400, 400)
+    private static void drawOneColorRect() {
+        new BasicRectDrawer(() -> CometRenderer.setShaderColor(RenderColor.of(Color.RED).toVector4f()))
+                .rectSized(800, 400, 100, 100)
                 .build()
                 .tryDraw()
                 .close();
@@ -80,7 +74,7 @@ public class TestMod implements Mc {
 
     private static void drawMultiColorRect() {
         new ColoredRectDrawer()
-                .rectSized(800, 400, 100, 100, new RectColors(
+                .rectSized(800, 510, 100, 100, new RectColors(
                         RenderColor.of(1f, 1f, 1f, 1f),
                         RenderColor.of(1f, 0f, 0f, 1f),
                         RenderColor.of(0f, 1f, 0f, 1f),
@@ -91,8 +85,15 @@ public class TestMod implements Mc {
                 .close();
     }
 
-    private static void drawTextureRect() {
+    private static void drawTextures() {
         standaloneDrawer.tryDraw();
+
+        new RoundedTextureDrawer()
+                .setTexture(texture)
+                .rectSized(1200, 510, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
+                .build()
+                .tryDraw()
+                .close();
     }
 
     private static void drawRoundedRects() {

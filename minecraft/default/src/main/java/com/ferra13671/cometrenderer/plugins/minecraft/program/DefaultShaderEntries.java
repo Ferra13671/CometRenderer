@@ -208,4 +208,67 @@ public class DefaultShaderEntries {
             }
             """
     );
+    public final GlslFileEntry ROUNDED_TEXTURE_VERTEX = CometLoaders.STRING.createGlslFileEntry(
+            "shader.rounded-texture.vertex",
+            """
+            #version 330 core
+            
+            in vec4 pos;
+            in vec2 UV;
+            in vec4 color;
+            in vec2 _rectPosition;
+            in vec2 _halfSize;
+            in float _radius;
+            
+            #include<matrices>
+            
+            out vec2 texPos;
+            out vec4 vertexColor;
+            out vec2 rectPosition;
+            out vec2 halfSize;
+            out float radius;
+            
+            void main() {
+                gl_Position = projMat * modelViewMat * pos;
+                texPos = UV;
+                vertexColor = color;
+                rectPosition = _rectPosition;
+                halfSize = _halfSize;
+                radius = _radius;
+            }
+            """
+    );
+    public final GlslFileEntry ROUNDED_TEXTURE_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
+            "shader.rounded-texture.fragment",
+            """
+            #version 330 core
+            
+            precision lowp float;
+            
+            in vec2 texPos;
+            in vec4 vertexColor;
+            in vec2 rectPosition;
+            in vec2 halfSize;
+            in float radius;
+            
+            #include<rounded>
+            #include<shaderColor>
+            uniform sampler2D u_Texture;
+            uniform float height;
+            
+            out vec4 fragColor;
+            
+            const float edgeSoftness  = 2.;
+            
+            void main() {
+                vec2 _position = vec2(rectPosition.x, height - rectPosition.y);
+            
+                float distance = roundedBoxSDF(gl_FragCoord.xy - _position, halfSize, radius);
+            
+                vec4 col = vertexColor * texture(u_Texture, texPos);
+            
+                fragColor = vec4(col.rgb, (1. - smoothstep(0., edgeSoftness, distance)) * col.a) * shaderColor;
+            }
+            """
+    );
 }

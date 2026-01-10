@@ -38,4 +38,12 @@ public class DefaultPrograms {
             .shader(DefaultShaderEntries.ROUNDED_RECT_FRAGMENT, ShaderType.Fragment)
             .uniform("height", UniformType.FLOAT)
             .build();
+
+    public final GlProgram ROUNDED_TEXTURE = CometLoaders.STRING.createProgramBuilder()
+            .name("rounded-texture")
+            .shader(DefaultShaderEntries.ROUNDED_TEXTURE_VERTEX, ShaderType.Vertex)
+            .shader(DefaultShaderEntries.ROUNDED_TEXTURE_FRAGMENT, ShaderType.Fragment)
+            .sampler("u_Texture")
+            .uniform("height", UniformType.FLOAT)
+            .build();
 }
