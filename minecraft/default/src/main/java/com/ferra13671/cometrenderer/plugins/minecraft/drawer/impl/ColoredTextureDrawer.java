@@ -10,6 +10,7 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
+import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 import com.ferra13671.gltextureutils.GlTex;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import org.joml.Matrix4f;
@@ -25,32 +26,32 @@ public class ColoredTextureDrawer extends AbstractDrawer {
     }
 
     public ColoredTextureDrawer() {
-        super(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE_COLOR, Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
+        super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
     }
 
     public ColoredTextureDrawer setTexture(int textureId) {
-        SamplerUniform uniform = this.program.getSampler(0);
+        SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);
 
         return this;
     }
 
     public ColoredTextureDrawer setTexture(GlTex texture) {
-        SamplerUniform uniform = this.program.getSampler(0);
+        SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(texture);
 
         return this;
     }
 
     public <T> ColoredTextureDrawer setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
-        SamplerUniform uniform = this.program.getSampler(0);
+        SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(uploadConsumer, texture);
 
         return this;
     }
 
     public ColoredTextureDrawer rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder) {
-        return rectPositioned(x, y, x + width, y + height, rectColors, textureBorder);
+        return rectPositioned(x, y, x + width, y + height, rectColors, textureBorder, null);
     }
 
     public ColoredTextureDrawer rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
@@ -58,41 +59,36 @@ public class ColoredTextureDrawer extends AbstractDrawer {
     }
 
     public ColoredTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder) {
-        this.meshBuilder.vertex(x1, y1, 0)
+        return rectPositioned(x1, y1, x2, y2, rectColors, textureBorder, null);
+    }
+
+    public ColoredTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
+        vertex(x1, y1, matrix4f)
                 .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y1Color());
-        this.meshBuilder.vertex(x1, y2, 0)
+        vertex(x1, y2, matrix4f)
                 .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV2())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y2Color());
-        this.meshBuilder.vertex(x2, y2, 0)
+        vertex(x2, y2, matrix4f)
                 .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV2())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y2Color());
-        this.meshBuilder.vertex(x2, y1, 0)
+        vertex(x2, y1, matrix4f)
                 .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y1Color());
 
         return this;
     }
 
-    public ColoredTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
-        this.meshBuilder.vertex(matrix4f, x1, y1, 0)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV1())
-                .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y1Color());
-        this.meshBuilder.vertex(matrix4f, x1, y2, 0)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV2())
-                .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y2Color());
-        this.meshBuilder.vertex(matrix4f, x2, y2, 0)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV2())
-                .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y2Color());
-        this.meshBuilder.vertex(matrix4f, x2, y1, 0)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV1())
-                .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y1Color());
-
-        return this;
+    private MeshBuilder vertex(float x, float y, Matrix4f matrix4f) {
+        if (matrix4f != null)
+            return this.meshBuilder.vertex(matrix4f, x, y, 0);
+        else return this.meshBuilder.vertex(x, y, 0);
     }
 
     @Override
     protected void draw() {
+        CometRenderer.setGlobalProgram(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE_COLOR);
+
         CometRenderer.initShaderColor();
         AbstractMinecraftPlugin.getInstance().initMatrix();
 

@@ -23,25 +23,25 @@ public class BasicTextureDrawer extends AbstractDrawer {
     }
 
     public BasicTextureDrawer() {
-        super(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE, Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE));
+        super(Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE));
     }
 
     public BasicTextureDrawer setTexture(int textureId) {
-        SamplerUniform uniform = this.program.getSampler(0);
+        SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);
 
         return this;
     }
 
     public BasicTextureDrawer setTexture(GlTex texture) {
-        SamplerUniform uniform = this.program.getSampler(0);
+        SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(texture);
 
         return this;
     }
 
     public <T> BasicTextureDrawer setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
-        SamplerUniform uniform = this.program.getSampler(0);
+        SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(uploadConsumer, texture);
 
         return this;
@@ -75,6 +75,8 @@ public class BasicTextureDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
+        CometRenderer.setGlobalProgram(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE);
+
         CometRenderer.initShaderColor();
         AbstractMinecraftPlugin.getInstance().initMatrix();
 

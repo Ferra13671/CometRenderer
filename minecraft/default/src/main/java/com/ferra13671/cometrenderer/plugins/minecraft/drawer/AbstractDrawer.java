@@ -1,19 +1,16 @@
 package com.ferra13671.cometrenderer.plugins.minecraft.drawer;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 
 public abstract class AbstractDrawer implements IDrawer {
     protected Runnable preDrawRunnable = () -> {};
-    protected final GlProgram program;
     protected final MeshBuilder meshBuilder;
     protected Mesh mesh;
     protected boolean built = false;
 
-    public AbstractDrawer(GlProgram program, MeshBuilder meshBuilder) {
-        this.program = program;
+    public AbstractDrawer(MeshBuilder meshBuilder) {
         this.meshBuilder = meshBuilder;
     }
 
@@ -22,7 +19,6 @@ public abstract class AbstractDrawer implements IDrawer {
         if (this.mesh != null) {
             this.preDrawRunnable.run();
 
-            CometRenderer.setGlobalProgram(this.program);
             draw();
 
             CometRenderer.resetShaderColor();

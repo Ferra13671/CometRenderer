@@ -152,4 +152,60 @@ public class DefaultShaderEntries {
             }
             """
     );
+    public final GlslFileEntry ROUNDED_RECT_VERTEX = CometLoaders.STRING.createGlslFileEntry(
+            "shader.rounded-rect.vertex",
+            """
+            #version 330 core
+            
+            in vec4 pos;
+            in vec4 color;
+            in vec2 _rectPosition;
+            in vec2 _halfSize;
+            in float _radius;
+            
+            #include<matrices>
+            
+            out vec4 vertexColor;
+            out vec2 rectPosition;
+            out vec2 halfSize;
+            out float radius;
+            
+            void main() {
+                gl_Position = projMat * modelViewMat * pos;
+                vertexColor = color;
+                rectPosition = _rectPosition;
+                halfSize = _halfSize;
+                radius = _radius;
+            }
+            """
+    );
+    public final GlslFileEntry ROUNDED_RECT_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
+            "shader.rounded-rect.fragment",
+            """
+            #version 330 core
+            
+            precision lowp float;
+            
+            in vec4 vertexColor;
+            in vec2 rectPosition;
+            in vec2 halfSize;
+            in float radius;
+            
+            #include<rounded>
+            #include<shaderColor>
+            uniform float height;
+            
+            out vec4 fragColor;
+            
+            const float edgeSoftness  = 2.;
+            
+            void main() {
+                vec2 _position = vec2(rectPosition.x, height - rectPosition.y);
+            
+                float distance = roundedBoxSDF(gl_FragCoord.xy - _position, halfSize, radius);
+            
+                fragColor = vec4(vertexColor.rgb, (1. - smoothstep(0., edgeSoftness, distance)) * vertexColor.a) * shaderColor;
+            }
+            """
+    );
 }

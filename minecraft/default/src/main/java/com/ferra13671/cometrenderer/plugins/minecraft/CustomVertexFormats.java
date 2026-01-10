@@ -15,4 +15,11 @@ public class CustomVertexFormats {
             .element("Texture", VertexElementType.FLOAT, 2)
             .element("Color", CustomVertexElementTypes.RENDER_COLOR, 1)
             .build();
+
+    public VertexFormat ROUNDED_RECT = VertexFormat.builder()
+            .element("Color", CustomVertexElementTypes.RENDER_COLOR, 1)
+            .element("Rect Position", VertexElementType.FLOAT, 2)
+            .element("Half Size", VertexElementType.FLOAT, 2)
+            .element("Radius", VertexElementType.FLOAT, 1)
+            .build();
 }

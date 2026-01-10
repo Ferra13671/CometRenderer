@@ -16,7 +16,7 @@ public class BasicRectDrawer extends AbstractDrawer {
     }
 
     public BasicRectDrawer() {
-        super(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION, Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION));
+        super(Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION));
     }
 
     public BasicRectDrawer rectSized(float x, float y, float width, float height) {
@@ -47,6 +47,8 @@ public class BasicRectDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
+        CometRenderer.setGlobalProgram(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION);
+
         CometRenderer.initShaderColor();
         AbstractMinecraftPlugin.getInstance().initMatrix();
 

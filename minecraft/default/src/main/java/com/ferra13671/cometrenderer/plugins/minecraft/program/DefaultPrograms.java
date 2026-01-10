@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.plugins.minecraft.program;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
+import com.ferra13671.cometrenderer.program.uniform.UniformType;
 
 public class DefaultPrograms {
     public final GlProgram POSITION = CometLoaders.STRING.createProgramBuilder()
@@ -29,5 +30,12 @@ public class DefaultPrograms {
             .shader(DefaultShaderEntries.POSITION_TEXTURE_COLOR_VERTEX, ShaderType.Vertex)
             .shader(DefaultShaderEntries.POSITION_TEXTURE_COLOR_FRAGMENT, ShaderType.Fragment)
             .sampler("u_Texture")
+            .build();
+
+    public final GlProgram ROUNDED_RECT = CometLoaders.STRING.createProgramBuilder()
+            .name("rounded-rect")
+            .shader(DefaultShaderEntries.ROUNDED_RECT_VERTEX, ShaderType.Vertex)
+            .shader(DefaultShaderEntries.ROUNDED_RECT_FRAGMENT, ShaderType.Fragment)
+            .uniform("height", UniformType.FLOAT)
             .build();
 }

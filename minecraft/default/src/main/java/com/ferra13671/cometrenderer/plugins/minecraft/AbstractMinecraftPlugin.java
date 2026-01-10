@@ -24,6 +24,7 @@ public abstract class AbstractMinecraftPlugin {
     protected final Supplier<Integer> scaleGetter;
     @Getter
     private final DefaultPrograms programs;
+    @Getter
     protected Framebuffer mainFrameBuffer;
 
     public AbstractMinecraftPlugin(Supplier<Integer> scaleGetter) {

@@ -18,7 +18,7 @@ public class ColoredRectDrawer extends AbstractDrawer {
     }
 
     public ColoredRectDrawer() {
-        super(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_COLOR, Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_COLOR));
+        super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_COLOR));
     }
 
     public ColoredRectDrawer rectSized(float x, float y, float width, float height, RectColors rectColors) {
@@ -49,6 +49,8 @@ public class ColoredRectDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
+        CometRenderer.setGlobalProgram(AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_COLOR);
+
         CometRenderer.initShaderColor();
         AbstractMinecraftPlugin.getInstance().initMatrix();
 
