@@ -26,8 +26,8 @@ public class VertexElement {
         type.verify();
 
         this.id = id;
-        this.count = count * (type.byteSize() / type.offset());
-        this.size = this.count * type.byteSize();
+        this.count = count * (type.elementSize() / type.offset());
+        this.size = this.count * type.elementSize();
         this.type = type;
     }
 
