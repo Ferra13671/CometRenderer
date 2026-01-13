@@ -23,10 +23,6 @@ import java.util.stream.Collectors;
  * @see Mesh
  */
 public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuilder, Mesh> {
-    /** Максимальное количество вершин в меше. **/
-    //TODO Config.MAX_MESH_VERTEX_COUNT
-    public static final int MAX_VERTICES = 16777215;
-
     /** Аллокатор. **/
     private final IAllocator allocator;
     /** Тип отрисовки вершин. **/
@@ -142,7 +138,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
     private long beginVertex() {
         this.assertNotBuilt();
         this.endVertex();
-        if (this.vertexCount >= MAX_VERTICES) {
+        if (this.vertexCount >= CometRenderer.getConfig().MAX_MESH_VERTEX_COUNT.getValue()) {
             CometRenderer.manageException(new VertexOverflowException());
             return -1L;
         } else {
