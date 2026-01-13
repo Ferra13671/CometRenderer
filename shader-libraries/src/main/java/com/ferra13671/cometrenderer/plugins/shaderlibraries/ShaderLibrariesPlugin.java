@@ -4,19 +4,15 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.NonNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ShaderLibrariesPlugin {
-    private static final Tag<HashMap<String, GlslFileEntry>> LIBRARIES_TAG = new Tag<>("shader-libraries");
-    private static final String includeLibDirective = "#include";
+    public static final Tag<HashMap<String, GlslFileEntry>> LIBRARIES_TAG = new Tag<>("shader-libraries");
+    public static final String includeLibDirective = "#include";
 
     public static final String SHADER_LIBRARY_FILE = "SHADER_LIB";
 
@@ -56,51 +52,63 @@ public class ShaderLibrariesPlugin {
     }
 
     public static void includeShaderLibraries(@NonNull Registry registry) {
-        Map<String, UniformType<?>> uniforms = registry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
+        List<ShaderDirective> directives = getShaderDirectives(registry);
+        for (int i = 0; i < directives.size(); i++) {
+            ShaderDirective directive = directives.get(i);
+
+            directive.includeLibs(registry);
+
+            int s = directive.getIncludeLibsSize();
+            for (ShaderDirective d : directives) {
+                d.setDirectiveIndex(d.getDirectiveIndex() + s - directive.getDirectiveSize());
+            }
+        }
+    }
+
+    private static List<ShaderDirective> getShaderDirectives(Registry registry) {
+        List<ShaderDirective> directives = new ArrayList<>();
         String content = registry.get(CometTags.CONTENT).orElseThrow().getValue();
 
         boolean writeAction = false;
-        boolean writeLibName = false;
+        boolean writeLibNames = false;
         StringBuilder s = new StringBuilder();
+        int startIndex = 0;
         int i = 0;
-        while (i < content.length()){
+        while (i < content.length()) {
             char ch = content.charAt(i);
             i++;
 
             if (ch == '#') {
                 s = new StringBuilder("#");
                 writeAction = true;
+                startIndex = i - 1;
                 continue;
             }
             if (ch == '<' && writeAction) {
                 writeAction = false;
                 if (s.toString().equals(includeLibDirective)) {
-                    writeLibName = true;
+                    writeLibNames = true;
                 }
                 s = new StringBuilder();
                 continue;
             }
-            if (ch == '>' && writeLibName) {
-                writeLibName = false;
+            if (ch == '>' && writeLibNames) {
+                writeLibNames = false;
 
-                GlslFileEntry library = getShaderLibrary(s.toString()).orElseThrow();
+                String libs = s.toString().replace(" ", "");
 
-                library.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
-                    if (uniforms.containsKey(s1))
-                        CometRenderer.manageException(new DoubleUniformAdditionException(s1));
+                directives.add(new ShaderDirective(
+                        libs.split(","),
+                        startIndex,
+                        i - startIndex
+                ));
 
-                    uniforms.put(s1, uniformType);
-                });
-
-                content = content.replace(includeLibDirective.concat("<").concat(s.toString()).concat(">"), library.getContent());
-                i -= "#".concat(includeLibDirective).concat("<").concat(s.toString()).length();
                 s = new StringBuilder();
-                continue;
             }
 
             s.append(ch);
         }
 
-        registry.set(CometTags.CONTENT, content);
+        return directives;
     }
 }

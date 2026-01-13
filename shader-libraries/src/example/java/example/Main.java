@@ -9,14 +9,22 @@ import com.ferra13671.cometrenderer.program.uniform.UniformType;
 public class Main {
 
     public static void main(String[] args) {
-        GlslFileEntry shaderLib = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
-                .name("exampleLib")
-                .library("exampleLibrary.glsl")
-                .uniform("Projection", UniformType.BUFFER)
-                .uniform("modelViewMat", UniformType.MATRIX4)
-                .build();
         ShaderLibrariesPlugin.registerShaderLibraries(
-                shaderLib
+                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                        .name("exampleLib1")
+                        .library("exampleLibrary1.glsl")
+                        .uniform("shaderColor", UniformType.VEC4)
+                        .build(),
+                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                        .name("exampleLib2")
+                        .library("exampleLibrary2.glsl")
+                        .uniform("Projection", UniformType.BUFFER)
+                        .uniform("modelViewMat", UniformType.MATRIX4)
+                        .build(),
+                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                        .name("exampleLib3")
+                        .library("exampleLibrary3.glsl")
+                        .build()
         );
 
         GlslFileEntry shaderEntry = CometLoaders.IN_JAR.createGlslFileEntry("exampleShader", "exampleShader.vsh");
