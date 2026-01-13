@@ -24,16 +24,6 @@ public interface IMeshBuilder<T, G extends IMesh> {
     G buildNullable();
 
     /**
-     * Собирает все добавленные вершины в цельный меш.
-     * Если не удалось собрать меш, то вызовется ошибка.
-     *
-     * @return готовый меш.
-     *
-     * @see IMesh
-     */
-    G buildOrThrow();
-
-    /**
      * Создаёт новую вершину в сборщике меша.
      *
      * @param x координата вершины по X.

@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.vertex.format;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexFormatOverflowException;
+import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 
@@ -14,13 +15,15 @@ import java.util.List;
  *
  * @see VertexFormat
  */
-public final class VertexFormatBuilder {
+public final class VertexFormatBuilder extends Builder<VertexFormat> {
     /** Список элементов вершин. **/
     private final List<VertexElement> vertexElements = new ArrayList<>();
     /** Список имен элементов вершин. **/
     private final List<String> elementNames = new ArrayList<>();
 
-    public VertexFormatBuilder() {}
+    public VertexFormatBuilder() {
+        super("vertex format");
+    }
 
     /**
      * Добавляет элемент вершины в сборщика.
@@ -42,14 +45,8 @@ public final class VertexFormatBuilder {
         return this;
     }
 
-    /**
-     * Собирает элементы вершины в формат вершины.
-     *
-     * @return формат вершины.
-     *
-     * @see VertexFormat
-     */
+    @Override
     public VertexFormat build() {
-        return new VertexFormat(vertexElements, elementNames);
+        return new VertexFormat(this.vertexElements, this.elementNames);
     }
 }

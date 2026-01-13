@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.program;
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedShaderException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -27,7 +28,7 @@ import java.util.Map;
  *
  * @see GlProgram
  */
-public class GlProgramBuilder<T> {
+public class GlProgramBuilder<T> extends Builder<GlProgram> {
     private final Registry registry = new Registry();
     /** Загрузчик контента шейдеров. **/
     private final CometLoader<T> loader;
@@ -39,6 +40,8 @@ public class GlProgramBuilder<T> {
      * @see GlProgramSnippet
      */
     public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
+        super("program");
+
         this.registry.setImmutable(CometTags.SHADERS, new HashMap<>());
         this.registry.setImmutable(CometTags.UNIFORMS, new HashMap<>());
 
@@ -73,7 +76,7 @@ public class GlProgramBuilder<T> {
      */
     @NonNull
     public GlProgramBuilder<T> shader(String name, T shaderPath, ShaderType type) {
-        return shader(loader.createGlslFileEntry(name, shaderPath), type);
+        return shader(this.loader.createGlslFileEntry(name, shaderPath), type);
     }
 
     /**
@@ -85,6 +88,7 @@ public class GlProgramBuilder<T> {
      */
     @NonNull
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
+        //TODO move to method in ShaderType
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
             if (glVersion.id < type.glVersion.id)
@@ -144,12 +148,13 @@ public class GlProgramBuilder<T> {
      *
      * @return программа, скомпилированная сборщиком.
      */
+    @Override
     public GlProgram build() {
-        if (!this.registry.contains(CometTags.NAME))
-            CometRenderer.manageException(new IllegalBuilderArgumentException("program", "Missing name in program builder."));
+        assertNotNull(this.registry, CometTags.NAME);
 
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();
 
+        //TODO Move from builder?
         if (!shaders.containsKey(ShaderType.Compute)) {
             if (!shaders.containsKey(ShaderType.Vertex))
                 CometRenderer.manageException(new IllegalBuilderArgumentException("program", String.format("Missing vertex shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));

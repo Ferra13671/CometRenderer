@@ -23,6 +23,9 @@ import java.util.function.BiConsumer;
  * @see VertexElement
  * @see VertexFormat
  */
+//TODO
+// VertexElementTypeBuilder
+// MoreTypes
 public record VertexElementType<T>(int byteSize, int offset, String typeName, int glId, Class<T> clazz, BiConsumer<Long, T[]> uploadConsumer) {
     public static final VertexElementType<Float> FLOAT = new VertexElementType<>(
             4,

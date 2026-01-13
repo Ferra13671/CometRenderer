@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
+import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -21,8 +22,9 @@ import java.util.stream.Collectors;
  * @see IMeshBuilder
  * @see Mesh
  */
-public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
+public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuilder, Mesh> {
     /** Максимальное количество вершин в меше. **/
+    //TODO Config.MAX_MESH_VERTEX_COUNT
     public static final int MAX_VERTICES = 16777215;
 
     /** Аллокатор. **/
@@ -46,6 +48,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     /** Текущая маска вершины. **/
     private int currentMask;
     /** Закрыт сборщик меша или нет. **/
+    //TODO Rename to 'built'
     private boolean closed = false;
 
     /**
@@ -55,6 +58,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
      * @param closeAllocatorAfterBuild закрывать аллокатор после сборки меша или нет.
      */
     public MeshBuilder(IAllocator bufferAllocator, DrawMode drawMode, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
+        super("mesh");
         this.allocator = bufferAllocator;
         this.drawMode = drawMode;
         this.vertexFormat = vertexFormat;
@@ -68,6 +72,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
      * Проверяет, собирается ли меш данным сборщиком или нет.
      * Если нет, то вызывается ошибка.
      */
+    //TODO rename to assertNotBuilt
     private void ensureBuilding() {
         if (this.closed) {
             CometRenderer.manageException(new IllegalMeshBuilderStateException(
@@ -86,7 +91,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     public Mesh buildNullable() {
         this.ensureBuilding();
         this.endVertex();
-        Mesh builtBuffer = this.build();
+        Mesh builtBuffer = this.buildInternal();
         if (this.closeAllocatorAfterBuild)
             this.allocator.close();
         this.closed = true;
@@ -95,7 +100,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     }
 
     @Override
-    public Mesh buildOrThrow() {
+    public Mesh build() {
         Mesh builtBuffer = this.buildNullable();
         if (builtBuffer == null) {
             CometRenderer.manageException(new IllegalMeshBuilderStateException(
@@ -118,7 +123,7 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
      *
      * @return цельный меш.
      */
-    private Mesh build() {
+    private Mesh buildInternal() {
         if (this.vertexCount == 0) {
             return null;
         } else {

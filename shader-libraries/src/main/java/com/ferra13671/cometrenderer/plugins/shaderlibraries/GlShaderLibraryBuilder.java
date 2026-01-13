@@ -4,7 +4,7 @@ import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
+import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -15,13 +15,15 @@ import lombok.NonNull;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class GlShaderLibraryBuilder<T> {
+public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     private String name;
     private T libraryPath;
     private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
     private final CometLoader<T> loader;
 
     public GlShaderLibraryBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
+        super("shader library");
+
         for (GlProgramSnippet snippet : snippets)
             snippet.registry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach(this::uniform);
 
@@ -54,11 +56,10 @@ public class GlShaderLibraryBuilder<T> {
         return this;
     }
 
+    @Override
     public GlslFileEntry build() {
-        if (this.name == null)
-            CometRenderer.manageException(new IllegalBuilderArgumentException("shader library", "Missing name in shader library builder."));
-        if (this.libraryPath == null)
-            CometRenderer.manageException(new IllegalBuilderArgumentException("shader library", String.format("Missing libraryPath in library '%s'.", this.name)));
+        assertNotNull(this.name, "name");
+        assertNotNull(this.libraryPath, "library path");
 
         Registry registry = new Registry();
         registry.setImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));

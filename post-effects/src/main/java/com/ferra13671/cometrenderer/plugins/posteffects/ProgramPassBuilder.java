@@ -1,9 +1,8 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
-import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.gltextureutils.Pair;
 
 import java.util.ArrayList;
@@ -11,11 +10,15 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ProgramPassBuilder {
+public class ProgramPassBuilder extends Builder<ProgramPass> {
     private final List<Pair<Integer, Function<PostEffectContext, Framebuffer>>> inputs = new ArrayList<>();
     private Function<PostEffectContext, Framebuffer> output;
     private GlProgram program;
     private Consumer<GlProgram> preRenderConsumer = p -> {};
+
+    private ProgramPassBuilder() {
+        super("program pass");
+    }
 
     public ProgramPassBuilder input(int samplerId, String frameBufferName) {
         this.inputs.add(new Pair<>(samplerId, context -> context.framebuffers().get(frameBufferName)));
@@ -48,12 +51,11 @@ public class ProgramPassBuilder {
         return this;
     }
 
+    @Override
     public ProgramPass build() {
-        if (output == null)
-            CometRenderer.manageException(new IllegalBuilderArgumentException("program pipeline", "Missing output in program pipeline builder."));
-        if (program == null)
-            CometRenderer.manageException(new IllegalBuilderArgumentException("program pipeline", "Missing program in program pipeline builder."));
+        assertNotNull(this.output, "output");
+        assertNotNull(this.program, "program");
 
-        return new ProgramPass(program, inputs, output, preRenderConsumer);
+        return new ProgramPass(this.program, this.inputs, this.output, this.preRenderConsumer);
     }
 }
