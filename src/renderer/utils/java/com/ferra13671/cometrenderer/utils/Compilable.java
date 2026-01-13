@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.utils;
 
-import com.ferra13671.cometrenderer.program.compile.CompileResult;
+import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 
 /**
  * Интерфейс, реализующий возможность получить результат компиляции объекта, расширяющего данный интерфейс.

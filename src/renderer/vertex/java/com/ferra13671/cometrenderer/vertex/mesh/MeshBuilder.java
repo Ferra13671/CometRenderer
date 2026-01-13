@@ -85,18 +85,18 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
     public Mesh buildNullable() {
         this.assertNotBuilt();
         this.endVertex();
-        Mesh builtBuffer = this.buildInternal();
+        Mesh mesh = this.buildInternal();
         if (this.closeAllocatorAfterBuild)
             this.allocator.close();
         this.built = true;
         this.vertexPointer = -1L;
-        return builtBuffer;
+        return mesh;
     }
 
     @Override
     public Mesh build() {
-        Mesh builtBuffer = this.buildNullable();
-        if (builtBuffer == null) {
+        Mesh mesh = this.buildNullable();
+        if (mesh == null) {
             CometRenderer.manageException(new IllegalMeshBuilderStateException(
                     "MeshBuilder was empty.",
                     new String[]{
@@ -108,7 +108,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
             ));
             return null;
         } else {
-            return builtBuffer;
+            return mesh;
         }
     }
 
@@ -208,7 +208,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
 
     @Override
     public <T> MeshBuilder element(String name, VertexElementType<T> elementType, T... values) {
-        long pointer = beginElement(vertexFormat.getVertexElement(name));
+        long pointer = beginElement(this.vertexFormat.getVertexElement(name));
         if (pointer != -1L)
             elementType.uploadConsumer().accept(pointer, values);
 

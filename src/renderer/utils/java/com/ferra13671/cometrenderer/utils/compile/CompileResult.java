@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.program.compile;
+package com.ferra13671.cometrenderer.utils.compile;
 
 /**
  * Объект, представляющий себя как результат компиляции чего-либо.

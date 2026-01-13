@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.program.uniform;
 
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -15,24 +16,16 @@ import lombok.NonNull;
  * @see <a href="https://wikis.khronos.org/opengl/Uniform_(GLSL)">OpenGL uniform wiki</a>
  */
 @Getter
+@AllArgsConstructor
 public abstract class GlUniform {
     /** Имя униформы. **/
+    @NonNull
     protected final String name;
     /** Локация униформы в OpenGL. **/
     protected final int location;
     /** Программа ({@link GlProgram}), к которой привязана униформа. **/
+    @NonNull
     protected final GlProgram program;
-
-    /**
-     * @param name имя униформы.
-     * @param location локация униформы в OpenGL.
-     * @param program программа ({@link GlProgram}), к которой привязана униформа.
-     */
-    public GlUniform(@NonNull String name, int location, @NonNull GlProgram program) {
-        this.name = name;
-        this.location = location;
-        this.program = program;
-    }
 
     /**
      * Загружает данные в униформу.

@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.program.compile;
+package com.ferra13671.cometrenderer.utils.compile;
 
 import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;

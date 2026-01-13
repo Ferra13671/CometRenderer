@@ -3,8 +3,8 @@ package com.ferra13671.cometrenderer.program.shader;
 import com.ferra13671.cometrenderer.utils.Compilable;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.compile.CompileResult;
-import com.ferra13671.cometrenderer.program.compile.CompileStatus;
+import com.ferra13671.cometrenderer.utils.compile.CompileResult;
+import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import org.lwjgl.opengl.GL20;
 
