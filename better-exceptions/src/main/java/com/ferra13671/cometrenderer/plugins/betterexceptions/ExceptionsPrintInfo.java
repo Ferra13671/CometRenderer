@@ -59,14 +59,14 @@ public class ExceptionsPrintInfo {
                 "Illegal VertexElementType structure.",
                 exception.getMessage(),
                 new String[]{
-                        "The elementSize and offset set in the problematic VertexElementType do not match some conditions."
+                        "The size and offset set in the problematic VertexElementType do not match some conditions."
                 },
                 new String[]{
                         """
-                        Check elementSize and offset in the problematic VertexElementType and fix them.
+                        Check size and offset in the problematic VertexElementType and fix them.
                         Conditions:
-                            elementSize and offset must be > 0.
-                            elementSize must be >= offset and also be a multiple of it.
+                            size and offset must be > 0.
+                            size must be >= offset and also be a multiple of it.
                         """
                 }
         ));

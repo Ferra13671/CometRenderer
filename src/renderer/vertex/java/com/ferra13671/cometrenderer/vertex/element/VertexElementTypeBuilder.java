@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 
 public class VertexElementTypeBuilder<T> extends Builder<VertexElementType<T>>  {
     private String name;
-    private Integer elementSize;
+    private Integer size;
     private Integer offset;
     private Integer glId;
     private Class<T> clazz;
@@ -22,8 +22,8 @@ public class VertexElementTypeBuilder<T> extends Builder<VertexElementType<T>>  
         return this;
     }
 
-    public VertexElementTypeBuilder<T> elementSize(Integer elementSize) {
-        this.elementSize = elementSize;
+    public VertexElementTypeBuilder<T> size(Integer size) {
+        this.size = size;
 
         return this;
     }
@@ -56,17 +56,17 @@ public class VertexElementTypeBuilder<T> extends Builder<VertexElementType<T>>  
     public VertexElementType<T> build() {
         assertNotNull(this.name, "name");
         if (this.offset == null)
-            this.offset = this.elementSize;
-        if (this.elementSize == null)
-            this.elementSize = this.offset;
-        assertNotNull(this.elementSize, "element size");
+            this.offset = this.size;
+        if (this.size == null)
+            this.size = this.offset;
+        assertNotNull(this.size, "size");
         assertNotNull(this.glId, "glId");
         assertNotNull(this.clazz, "type class");
         assertNotNull(this.uploadConsumer, "upload consumer");
 
         return new VertexElementType<>(
                 this.name,
-                this.elementSize,
+                this.size,
                 this.offset,
                 this.glId,
                 this.clazz,
