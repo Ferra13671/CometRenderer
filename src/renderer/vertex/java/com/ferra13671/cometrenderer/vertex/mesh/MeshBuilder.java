@@ -48,8 +48,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
     /** Текущая маска вершины. **/
     private int currentMask;
     /** Закрыт сборщик меша или нет. **/
-    //TODO Rename to 'built'
-    private boolean closed = false;
+    private boolean built = false;
 
     /**
      * @param bufferAllocator аллокатор.
@@ -72,11 +71,10 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
      * Проверяет, собирается ли меш данным сборщиком или нет.
      * Если нет, то вызывается ошибка.
      */
-    //TODO rename to assertNotBuilt
-    private void ensureBuilding() {
-        if (this.closed) {
+    private void assertNotBuilt() {
+        if (this.built) {
             CometRenderer.manageException(new IllegalMeshBuilderStateException(
-                    "Attempt to interact with MeshBuilder, which does not building.",
+                    "MeshBuilder has been already built.",
                     new String[]{
                             "You are trying to use MeshBuilder after it has been built."
                     },
@@ -89,12 +87,12 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
 
     @Override
     public Mesh buildNullable() {
-        this.ensureBuilding();
+        this.assertNotBuilt();
         this.endVertex();
         Mesh builtBuffer = this.buildInternal();
         if (this.closeAllocatorAfterBuild)
             this.allocator.close();
-        this.closed = true;
+        this.built = true;
         this.vertexPointer = -1L;
         return builtBuffer;
     }
@@ -142,7 +140,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
      * @return адрес новой вершины.
      */
     private long beginVertex() {
-        this.ensureBuilding();
+        this.assertNotBuilt();
         this.endVertex();
         if (this.vertexCount >= MAX_VERTICES) {
             CometRenderer.manageException(new VertexOverflowException());

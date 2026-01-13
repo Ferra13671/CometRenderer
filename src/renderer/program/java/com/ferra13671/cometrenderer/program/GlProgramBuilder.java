@@ -88,10 +88,9 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      */
     @NonNull
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
-        //TODO move to method in ShaderType
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
-            if (glVersion.id < type.glVersion.id)
+            if (!type.isSupportedOn(glVersion))
                 CometRenderer.manageException(new UnsupportedShaderException(glVersion, type.glVersion));
         }
 
