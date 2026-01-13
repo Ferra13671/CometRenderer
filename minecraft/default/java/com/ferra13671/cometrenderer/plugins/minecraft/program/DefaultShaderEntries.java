@@ -191,8 +191,7 @@ public class DefaultShaderEntries {
             in vec2 halfSize;
             in float radius;
             
-            #include<rounded>
-            #include<shaderColor>
+            #include<rounded, shaderColor>
             uniform float height;
             
             out vec4 fragColor;
@@ -251,8 +250,7 @@ public class DefaultShaderEntries {
             in vec2 halfSize;
             in float radius;
             
-            #include<rounded>
-            #include<shaderColor>
+            #include<rounded, shaderColor>
             uniform sampler2D u_Texture;
             uniform float height;
             
