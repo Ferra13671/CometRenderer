@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer.vertex.mesh;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 
 /**
  * Объект, хранящий в себе буффер вершин и различную информацию для него.
@@ -56,6 +55,5 @@ public interface IMesh extends AutoCloseable {
      * Закрывает меш.
      */
     @Override
-    @OverriddenMethod
     void close();
 }

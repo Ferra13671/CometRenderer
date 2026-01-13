@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.buffer.allocator;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.exceptions.impl.AllocatorOverflowException;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -28,19 +27,16 @@ public class Allocator implements IAllocator {
     }
 
     @Override
-    @OverriddenMethod
     public boolean isEmpty() {
         return this.offset == 0L;
     }
 
     @Override
-    @OverriddenMethod
     public ByteBuffer getBuffer() {
         return MemoryUtil.memByteBuffer(this.pointer, (int) this.offset);
     }
 
     @Override
-    @OverriddenMethod
     public void close() {
         ALLOCATOR.free(this.pointer);
         this.pointer = 0L;

@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer.program.uniform.uniforms;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL20;
 
 /**
@@ -24,7 +23,6 @@ public class IntUniform extends OneTypeGlUniform<Integer> {
     }
 
     @Override
-    @OverriddenMethod
     public void upload() {
         GL20.glUniform1i(getLocation(), this.value);
     }

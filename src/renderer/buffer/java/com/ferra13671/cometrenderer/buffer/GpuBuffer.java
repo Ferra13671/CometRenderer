@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.buffer;
 
 import com.ferra13671.cometrenderer.utils.Bindable;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import lombok.Getter;
 import org.lwjgl.opengl.GL15;
 
@@ -56,19 +55,16 @@ public class GpuBuffer implements Bindable, AutoCloseable {
     }
 
     @Override
-    @OverriddenMethod
     public void bind() {
         GL15.glBindBuffer(this.target.glId, this.id);
     }
 
     @Override
-    @OverriddenMethod
     public void unbind() {
         GL15.glBindBuffer(this.target.glId, 0);
     }
 
     @Override
-    @OverriddenMethod
     public void close() {
         if (!this.closed)
             GL15.glDeleteBuffers(this.id);

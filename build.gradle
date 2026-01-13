@@ -32,6 +32,4 @@ sourceSets {
 
 dependencies {
     implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
-
-    compileOnly files("libs/FerraGuard-Annotations-2.0.jar")
 }

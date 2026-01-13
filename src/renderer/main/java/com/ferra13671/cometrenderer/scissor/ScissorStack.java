@@ -1,14 +1,11 @@
 package com.ferra13671.cometrenderer.scissor;
 
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
-
 import java.util.Objects;
 import java.util.Stack;
 
 public class ScissorStack extends Stack<ScissorRect> {
 
     @Override
-    @OverriddenMethod
     public ScissorRect push(ScissorRect rect) {
         ScissorRect scissorRect = rect;
         if (!isEmpty())

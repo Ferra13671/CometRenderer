@@ -8,7 +8,6 @@ import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 
 /**
  * Основная реализация меша.
@@ -86,43 +85,36 @@ public class Mesh implements IMesh {
     }
 
     @Override
-    @OverriddenMethod
     public int getVertexCount() {
         return this.vertexCount;
     }
 
     @Override
-    @OverriddenMethod
     public int getIndexCount() {
         return this.indexCount;
     }
 
     @Override
-    @OverriddenMethod
     public GpuBuffer getVertexBuffer() {
         return this.vertexBuffer;
     }
 
     @Override
-    @OverriddenMethod
     public GpuBuffer getIndexBuffer() {
         return this.standalone ? this.indexBuffer : this.drawMode.indexBufferGenerator().getIndexBuffer(this.indexCount, false);
     }
 
     @Override
-    @OverriddenMethod
     public DrawMode getDrawMode() {
         return this.drawMode;
     }
 
     @Override
-    @OverriddenMethod
     public VertexFormat getVertexFormat() {
         return this.vertexFormat;
     }
 
     @Override
-    @OverriddenMethod
     public void close() {
         this.vertexBuffer.close();
         if (this.indexBuffer != null)

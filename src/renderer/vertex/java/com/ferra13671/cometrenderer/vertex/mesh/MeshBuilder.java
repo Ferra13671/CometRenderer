@@ -9,7 +9,6 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
@@ -84,7 +83,6 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     }
 
     @Override
-    @OverriddenMethod
     public Mesh buildNullable() {
         this.ensureBuilding();
         this.endVertex();
@@ -97,7 +95,6 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     }
 
     @Override
-    @OverriddenMethod
     public Mesh buildOrThrow() {
         Mesh builtBuffer = this.buildNullable();
         if (builtBuffer == null) {
@@ -195,7 +192,6 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     }
 
     @Override
-    @OverriddenMethod
     public MeshBuilder vertex(float x, float y, float z) {
         long l = this.beginVertex() + this.elementOffsets[0];
         this.currentMask = this.requiredMask;
@@ -206,14 +202,12 @@ public class MeshBuilder implements IMeshBuilder<MeshBuilder, Mesh> {
     }
 
     @Override
-    @OverriddenMethod
     public MeshBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
         Vector3f vec = matrix4f.transformPosition(x, y, z, new Vector3f());
         return vertex(vec.x, vec.y, vec.z);
     }
 
     @Override
-    @OverriddenMethod
     public <T> MeshBuilder element(String name, VertexElementType<T> elementType, T... values) {
         long pointer = beginElement(vertexFormat.getVertexElement(name));
         if (pointer != -1L)

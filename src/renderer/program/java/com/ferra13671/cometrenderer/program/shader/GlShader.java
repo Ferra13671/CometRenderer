@@ -6,7 +6,6 @@ import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.compile.CompileResult;
 import com.ferra13671.cometrenderer.program.compile.CompileStatus;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
@@ -28,14 +27,12 @@ import java.util.Map;
 public record GlShader(String name, String content, int id, Map<String, UniformType<?>> extraUniforms, ShaderType shaderType) implements Compilable, Closeable {
 
     @Override
-    @OverriddenMethod
     public void close() {
         GL20.glDeleteShader(id());
         this.extraUniforms.clear();
     }
 
     @Override
-    @OverriddenMethod
     public CompileResult getCompileResult() {
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(id(), GL20.GL_COMPILE_STATUS));
         return new CompileResult(

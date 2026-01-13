@@ -7,7 +7,6 @@ import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import lombok.Getter;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GL32;
@@ -75,7 +74,6 @@ public class BufferUniform extends GlUniform {
     }
 
     @Override
-    @OverriddenMethod
     public void upload() {
         if (this.uploadRunnable != null)
             this.uploadRunnable.run();

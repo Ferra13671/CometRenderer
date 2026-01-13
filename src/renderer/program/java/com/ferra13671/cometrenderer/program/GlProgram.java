@@ -13,7 +13,6 @@ import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
 import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -86,7 +85,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     }
 
     @Override
-    @OverriddenMethod
     public CompileResult getCompileResult() {
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(getId(), GL20.GL_LINK_STATUS));
         return new CompileResult(
@@ -96,7 +94,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     }
 
     @Override
-    @OverriddenMethod
     public void close() {
         GL20.glDeleteProgram(getId());
         this.uniformsByName.clear();
@@ -107,7 +104,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * Устанавливает данную программу в OpenGL как активную в данный момент.
      */
     @Override
-    @OverriddenMethod
     public void bind() {
         GL20.glUseProgram(getId());
 
@@ -122,7 +118,6 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * Устанавливает активную программу в OpenGL как 0 (т.е. без активной программы)
      */
     @Override
-    @OverriddenMethod
     public void unbind() {
         GL20.glUseProgram(0);
     }

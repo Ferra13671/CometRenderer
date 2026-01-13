@@ -4,7 +4,6 @@ import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.uniform.GlUniform;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import com.ferra13671.gltextureutils.GlTex;
 import lombok.Getter;
 import org.lwjgl.opengl.GL13;
@@ -79,7 +78,6 @@ public class SamplerUniform extends GlUniform {
     }
 
     @Override
-    @OverriddenMethod
     public void upload() {
         if (this.uploadRunnable != null) {
             GL20.glUniform1i(this.location, getSamplerId());

@@ -7,7 +7,6 @@ import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
-import com.ferra13671.ferraguard.annotations.OverriddenMethod;
 import org.lwjgl.opengl.ARBVertexAttribBinding;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -28,7 +27,6 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
     }
 
     @Override
-    @OverriddenMethod
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
         VertexFormatBuffer vertexFormatBuffer = vertexFormat.getVertexFormatBufferOrCreate(() -> createVertexFormatBuffer(vertexFormat));
 
@@ -44,7 +42,6 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
     }
 
     @Override
-    @OverriddenMethod
     public VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
         int vertBuffId = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vertBuffId);
