@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
@@ -131,7 +132,7 @@ public class Mesh implements IMesh {
      * @see MeshBuilder
      */
     public static MeshBuilder builder(DrawMode drawMode, VertexFormat vertexFormat) {
-        return builder(786432, drawMode, vertexFormat);
+        return builder(CometRenderer.getConfig().DEFAULT_MESH_ALLOCATOR_SIZE.getValue(), drawMode, vertexFormat);
     }
 
     /**

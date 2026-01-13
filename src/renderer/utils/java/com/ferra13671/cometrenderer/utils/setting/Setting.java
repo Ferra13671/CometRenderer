@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils;
+package com.ferra13671.cometrenderer.utils.setting;
 
 import lombok.Getter;
 import lombok.Setter;
