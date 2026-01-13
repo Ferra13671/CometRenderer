@@ -46,7 +46,8 @@ public abstract class AbstractDrawer implements IDrawer {
 
     @Override
     public IDrawer makeStandalone() {
-        this.mesh.makeStandalone();
+        if (this.mesh != null)
+            this.mesh.makeStandalone();
 
         return this;
     }

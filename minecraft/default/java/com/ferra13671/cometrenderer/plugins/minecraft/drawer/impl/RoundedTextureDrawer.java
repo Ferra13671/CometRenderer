@@ -30,6 +30,15 @@ public class RoundedTextureDrawer extends AbstractDrawer {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.ROUNDED_TEXTURE));
     }
 
+    public RoundedTextureDrawer(int allocatorSize, Runnable preDrawRunnable) {
+        this(allocatorSize);
+        this.preDrawRunnable = preDrawRunnable;
+    }
+
+    public RoundedTextureDrawer(int allocatorSize) {
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.ROUNDED_TEXTURE));
+    }
+
     public RoundedTextureDrawer setTexture(int textureId) {
         SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().ROUNDED_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);

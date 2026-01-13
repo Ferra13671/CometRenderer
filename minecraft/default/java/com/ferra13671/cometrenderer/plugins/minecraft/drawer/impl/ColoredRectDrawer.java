@@ -21,6 +21,15 @@ public class ColoredRectDrawer extends AbstractDrawer {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_COLOR));
     }
 
+    public ColoredRectDrawer(int allocatorSize, Runnable preDrawRunnable) {
+        this(allocatorSize);
+        this.preDrawRunnable = preDrawRunnable;
+    }
+
+    public ColoredRectDrawer(int allocatorSize) {
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.POSITION_COLOR));
+    }
+
     public ColoredRectDrawer rectSized(float x, float y, float width, float height, RectColors rectColors) {
         return rectPositioned(x, y, x + width, y + height, rectColors);
     }

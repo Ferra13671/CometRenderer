@@ -26,6 +26,15 @@ public class BasicTextureDrawer extends AbstractDrawer {
         super(Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE));
     }
 
+    public BasicTextureDrawer(int allocatorSize, Runnable preDrawRunnable) {
+        this(allocatorSize);
+        this.preDrawRunnable = preDrawRunnable;
+    }
+
+    public BasicTextureDrawer(int allocatorSize) {
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE));
+    }
+
     public BasicTextureDrawer setTexture(int textureId) {
         SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);

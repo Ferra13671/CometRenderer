@@ -29,6 +29,15 @@ public class ColoredTextureDrawer extends AbstractDrawer {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
     }
 
+    public ColoredTextureDrawer(int allocatorSize, Runnable preDrawRunnable) {
+        this(allocatorSize);
+        this.preDrawRunnable = preDrawRunnable;
+    }
+
+    public ColoredTextureDrawer(int allocatorSize) {
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
+    }
+
     public ColoredTextureDrawer setTexture(int textureId) {
         SamplerUniform uniform = AbstractMinecraftPlugin.getInstance().getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);

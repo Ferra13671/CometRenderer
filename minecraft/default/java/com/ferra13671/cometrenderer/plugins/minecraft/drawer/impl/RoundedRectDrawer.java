@@ -24,6 +24,15 @@ public class RoundedRectDrawer extends AbstractDrawer {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.ROUNDED_RECT));
     }
 
+    public RoundedRectDrawer(int allocatorSize, Runnable preDrawRunnable) {
+        this(allocatorSize);
+        this.preDrawRunnable = preDrawRunnable;
+    }
+
+    public RoundedRectDrawer(int allocatorSize) {
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.ROUNDED_RECT));
+    }
+
     public RoundedRectDrawer rectSized(float x, float y, float width, float height, float radius, RectColors rectColors) {
         return rectPositioned(x, y, x + width, y + height, radius, rectColors, null);
     }

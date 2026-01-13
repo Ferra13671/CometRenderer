@@ -19,6 +19,15 @@ public class BasicRectDrawer extends AbstractDrawer {
         super(Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION));
     }
 
+    public BasicRectDrawer(int allocatorSize, Runnable preDrawRunnable) {
+        this(allocatorSize);
+        this.preDrawRunnable = preDrawRunnable;
+    }
+
+    public BasicRectDrawer(int allocatorSize) {
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CometVertexFormats.POSITION));
+    }
+
     public BasicRectDrawer rectSized(float x, float y, float width, float height) {
         return rectPositioned(x, y, x + width, y + height);
     }
