@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.gltextureutils.Pair;
 
@@ -49,9 +50,9 @@ public class ProgramPassBuilder {
 
     public ProgramPass build() {
         if (output == null)
-            CometRenderer.manageException(new IllegalProgramPassBuilderArgumentException("Missing output in program pipeline."));
+            CometRenderer.manageException(new IllegalBuilderArgumentException("program pipeline", "Missing output in program pipeline builder."));
         if (program == null)
-            CometRenderer.manageException(new IllegalProgramPassBuilderArgumentException("Missing program in program pipeline."));
+            CometRenderer.manageException(new IllegalBuilderArgumentException("program pipeline", "Missing program in program pipeline builder."));
 
         return new ProgramPass(program, inputs, output, preRenderConsumer);
     }
