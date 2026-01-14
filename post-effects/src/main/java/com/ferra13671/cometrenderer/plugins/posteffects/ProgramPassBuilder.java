@@ -16,7 +16,7 @@ public class ProgramPassBuilder extends Builder<ProgramPass> {
     private GlProgram program;
     private Consumer<GlProgram> preRenderConsumer = p -> {};
 
-    private ProgramPassBuilder() {
+    public ProgramPassBuilder() {
         super("program pass");
     }
 
