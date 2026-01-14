@@ -26,14 +26,14 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ferra13671:comet-renderer:2.2"
+    implementation "com.ferra13671:comet-renderer:2.3"
     implementation "com.ferra13671:gl-texture-utils:1.7.4-HOTFIX-1"
     
     //Plugins (optional)
     implementation "com.ferra13671:comet-renderer-minecraft:version"//check need version in https://github.com/Ferra13671/maven/tree/main/com/ferra13671/comet-renderer-minecraft
-    implementation "com.ferra13671:comet-renderer-better-exceptions:2.2"
-    implementation "com.ferra13671:comet-renderer-post-effects:2.2"
-    implementation "com.ferra13671:comet-renderer-shader-libraries:2.2"
+    implementation "com.ferra13671:comet-renderer-better-exceptions:2.3"
+    implementation "com.ferra13671:comet-renderer-post-effects:2.3"
+    implementation "com.ferra13671:comet-renderer-shader-libraries:2.3"
 }
 ```
 
