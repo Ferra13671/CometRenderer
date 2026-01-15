@@ -5,7 +5,7 @@ sourceSets {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
-    sourceSets.main.java.srcDirs += rootProject.file("minecraft/default/java")
+    sourceSets.main.java.srcDirs += rootProject.file("minecraft/general/java")
 }
 
 loom {
