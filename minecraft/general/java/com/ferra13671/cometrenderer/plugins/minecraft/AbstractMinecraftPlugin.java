@@ -1,11 +1,10 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
-import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.ShaderLibrariesPlugin;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,13 +13,10 @@ import java.util.function.Supplier;
 
 public abstract class AbstractMinecraftPlugin {
     @Getter
-    private static final GlProgramSnippet matrixSnippet = CometLoaders.IN_JAR.createProgramBuilder()
-            .uniform("Projection", UniformType.BUFFER)
-            .uniform("modelViewMat", UniformType.MATRIX4)
-            .buildSnippet();
-    @Getter
     @Setter
     private static AbstractMinecraftPlugin instance;
+    @Getter
+    private final GlProgramSnippet matrixSnippet = loadMatrixSnippet();
     protected final Supplier<Integer> scaleGetter;
     @Getter
     private final DefaultPrograms programs;
@@ -35,6 +31,10 @@ public abstract class AbstractMinecraftPlugin {
         this.scaleGetter = scaleGetter;
         this.programs = new DefaultPrograms();
     }
+
+    protected abstract GlProgramSnippet loadMatrixSnippet();
+
+    protected abstract GlslFileEntry getMatricesShaderLib();
 
     public abstract void setupUIProjection();
 
@@ -55,7 +55,7 @@ public abstract class AbstractMinecraftPlugin {
 
     private void initShaderLibraries() {
         ShaderLibrariesPlugin.registerShaderLibraries(
-                DefaultShaderLibraries.MATRICES,
+                getMatricesShaderLib(),
                 DefaultShaderLibraries.SHADER_COLOR,
                 DefaultShaderLibraries.ROUNDED
         );

@@ -9,24 +9,23 @@ import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.BufferRenderer;
 import com.ferra13671.cometrenderer.utils.Logger;
-import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.opengl.GlBuffer;
 import com.mojang.blaze3d.opengl.GlConst;
-import com.mojang.blaze3d.opengl.GlDevice;
 import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.GlGpuBuffer;
+import net.minecraft.client.render.BuiltBuffer;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -34,23 +33,19 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
     @Getter
     private static MinecraftPlugin instance;
     @Getter
-    private final Function<GlBuffer, Integer> bufferIdGetter;
+    private final Function<GlGpuBuffer, Integer> bufferIdGetter;
     private final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
-    public final BufferRenderer<MeshData> MINECRAFT_BUFFER = (builtBuffer, close) -> {
-        MeshData.DrawState drawState = builtBuffer.drawState();
+    public final BufferRenderer<BuiltBuffer> MINECRAFT_BUFFER = (builtBuffer, close) -> {
+        BuiltBuffer.DrawParameters drawState = builtBuffer.getDrawParameters();
 
         if (drawState.indexCount() > 0) {
-            RenderSystem.AutoStorageIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawState.mode());
+            RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawState.mode());
 
-            GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "CometRenderer vertex mesh", 40, builtBuffer.vertexBuffer());
-            GpuBuffer indexBuffer = shapeIndexBuffer.getBuffer(drawState.indexCount());
-            VertexFormat.IndexType indexType = shapeIndexBuffer.type();
+            GpuBuffer vertexBuffer = drawState.format().uploadImmediateVertexBuffer(builtBuffer.getBuffer());
+            GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawState.indexCount());
+            VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
 
-            ((GlDevice) RenderSystem.getDevice()).vertexArrayCache().bindVertexArray(
-                    drawState.format(),
-                    (GlBuffer) vertexBuffer
-            );
-            GL15.glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, getBufferIdGetter().apply((GlBuffer) indexBuffer));
+            GL15.glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
             GL11.glDrawElements(
                     GlConst.toGl(drawState.mode()),
                     drawState.indexCount(),
@@ -63,9 +58,9 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
         if (close)
             builtBuffer.close();
     };
-    private final CachedOrthoProjectionMatrixBuffer uiMatrix;
+    private final Stack<Matrix4f> matrix4fStack = new Stack<>();
 
-    private MinecraftPlugin(Function<GlBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+    private MinecraftPlugin(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
         super(scaleGetter);
 
         this.bufferIdGetter = bufferIdGetter;
@@ -118,11 +113,9 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
                 GlStateManager._bindTexture(texture);
             }
         };
-
-        this.uiMatrix = new CachedOrthoProjectionMatrixBuffer("ui-matrix", -1000, 1000, true);
     }
 
-    public static void init(Function<GlBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+    public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
         if (instance != null)
             throw new IllegalStateException("Minecraft plugin already initialized");
 
@@ -132,7 +125,7 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
     @Override
     protected GlProgramSnippet loadMatrixSnippet() {
         return CometLoaders.IN_JAR.createProgramBuilder()
-                .uniform("Projection", UniformType.BUFFER)
+                .uniform("projMat", UniformType.MATRIX4)
                 .uniform("modelViewMat", UniformType.MATRIX4)
                 .buildSnippet();
     }
@@ -143,9 +136,7 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
                 .name("matrices")
                 .library(
                         """
-                        layout(std140) uniform Projection {
-                            mat4 projMat;
-                        };
+                        uniform mat4 projMat;
                         uniform mat4 modelViewMat;
                         """
                 )
@@ -156,24 +147,35 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
     public void setupUIProjection() {
         float scale = scaleGetter.get();
 
+        this.matrix4fStack.push(RenderSystem.getProjectionMatrix());
         RenderSystem.setProjectionMatrix(
-                uiMatrix.getBuffer(
-                        Minecraft.getInstance().getWindow().getWidth() / scale,
-                        Minecraft.getInstance().getWindow().getHeight() / scale
+                (new Matrix4f()).setOrtho(
+                        0.0F,
+                        (float)((double)MinecraftClient.getInstance().getWindow().getWidth() / scale),
+                        (float)((double)MinecraftClient.getInstance().getWindow().getHeight() / scale),
+                        0.0F,
+                        1000.0F,
+                        21000.0F
                 ),
                 ProjectionType.ORTHOGRAPHIC
         );
     }
 
+    public void restoreProjection() {
+        RenderSystem.setProjectionMatrix(
+                this.matrix4fStack.peek(),
+                ProjectionType.ORTHOGRAPHIC
+        );
+        this.matrix4fStack.pop();
+    }
+
     @Override
     public void initMatrix() {
         CometRenderer.getGlobalProgram().consumeIfUniformPresent(
-                "Projection",
-                UniformType.BUFFER,
-                projectionUniform -> {
-                    GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
-                    projectionUniform.set(MinecraftBufferUniformUploaders.GPU_BUFFER_SLICE, slice);
-                }
+                "projMat",
+                UniformType.MATRIX4,
+                projectionUniform ->
+                    projectionUniform.set(RenderSystem.getProjectionMatrix())
         );
 
         CometRenderer.getGlobalProgram().consumeIfUniformPresent(
@@ -187,17 +189,17 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
     @Override
     public void bindMainFramebuffer(boolean setViewport) {
         if (mainFrameBuffer == null) {
-            if (Minecraft.getInstance().getMainRenderTarget() != null)
-                mainFrameBuffer = new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0);
+            if (MinecraftClient.getInstance().getFramebuffer() != null)
+                mainFrameBuffer = new MinecraftFramebuffer(MinecraftClient.getInstance().getFramebuffer(), new Color(0, 0, 0, 0), 0);
         } else
             mainFrameBuffer.bind(setViewport);
     }
 
-    public void draw(MeshData builtBuffer) {
+    public void draw(BuiltBuffer builtBuffer) {
         draw(builtBuffer, true);
     }
 
-    public void draw(MeshData builtBuffer, boolean close) {
+    public void draw(BuiltBuffer builtBuffer, boolean close) {
         CometRenderer.draw(MINECRAFT_BUFFER, builtBuffer, close);
     }
 }

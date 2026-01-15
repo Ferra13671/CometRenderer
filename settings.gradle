@@ -12,6 +12,7 @@ pluginManagement {
 include "shader-libraries"
 include "post-effects"
 include "better-exceptions"
+include "minecraft:minecraft-1_21_5-fabric"
 include "minecraft:minecraft-1_21_8-fabric"
 include "minecraft:minecraft-1_21_10-fabric"
 include "minecraft:minecraft-1_21_11-fabric"

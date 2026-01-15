@@ -9,18 +9,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class DefaultShaderLibraries {
 
-    public final GlslFileEntry MATRICES = new GlShaderLibraryBuilder<>(CometLoaders.STRING, AbstractMinecraftPlugin.getMatrixSnippet())
-            .name("matrices")
-            .library(
-                    """
-                    layout(std140) uniform Projection {
-                        mat4 projMat;
-                    };
-                    uniform mat4 modelViewMat;
-                    """
-            )
-            .build();
-
     public final GlslFileEntry SHADER_COLOR = new GlShaderLibraryBuilder<>(CometLoaders.STRING, CometRenderer.getColorSnippet())
             .name("shaderColor")
             .library(

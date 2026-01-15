@@ -1,7 +1,11 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
+import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.State;
+import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.plugins.shaderlibraries.GlShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.BufferRenderer;
 import com.ferra13671.cometrenderer.utils.Logger;
@@ -123,6 +127,29 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
             throw new IllegalStateException("Minecraft plugin already initialized");
 
         instance = new MinecraftPlugin(bufferIdGetter, scaleGetter);
+    }
+
+    @Override
+    protected GlProgramSnippet loadMatrixSnippet() {
+        return CometLoaders.IN_JAR.createProgramBuilder()
+                .uniform("Projection", UniformType.BUFFER)
+                .uniform("modelViewMat", UniformType.MATRIX4)
+                .buildSnippet();
+    }
+
+    @Override
+    protected GlslFileEntry getMatricesShaderLib() {
+        return new GlShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
+                .name("matrices")
+                .library(
+                        """
+                        layout(std140) uniform Projection {
+                            mat4 projMat;
+                        };
+                        uniform mat4 modelViewMat;
+                        """
+                )
+                .build();
     }
 
     @Override
