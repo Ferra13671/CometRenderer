@@ -40,7 +40,28 @@ public abstract class AbstractMinecraftPlugin {
 
     public abstract void initMatrix();
 
-    public abstract void bindMainFramebuffer(boolean setViewport);
+    public int getMainFramebufferWidth() {
+        if (this.mainFrameBuffer == null)
+            createMainFramebuffer();
+
+        return this.mainFrameBuffer.getWidth();
+    }
+
+    public int getMainFramebufferHeight() {
+        if (this.mainFrameBuffer == null)
+            createMainFramebuffer();
+
+        return this.mainFrameBuffer.getHeight();
+    }
+
+    public void bindMainFramebuffer(boolean setViewport) {
+        if (this.mainFrameBuffer == null)
+            createMainFramebuffer();
+
+        this.mainFrameBuffer.bind(setViewport);
+    }
+
+    protected abstract void createMainFramebuffer();
 
     public ScissorRect fixScissorRect(ScissorRect scissorRect) {
         int scale = this.scaleGetter.get();

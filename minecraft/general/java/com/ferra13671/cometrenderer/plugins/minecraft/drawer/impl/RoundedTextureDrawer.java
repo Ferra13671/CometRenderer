@@ -121,7 +121,7 @@ public class RoundedTextureDrawer extends AbstractDrawer {
 
         CometRenderer.initShaderColor();
         AbstractMinecraftPlugin.getInstance().initMatrix();
-        CometRenderer.getGlobalProgram().getUniform("height", UniformType.FLOAT).set((float) AbstractMinecraftPlugin.getInstance().getMainFrameBuffer().getHeight());
+        CometRenderer.getGlobalProgram().getUniform("height", UniformType.FLOAT).set((float) AbstractMinecraftPlugin.getInstance().getMainFramebufferHeight());
 
         if (this.uploadRunnable != null)
             this.uploadRunnable.run();

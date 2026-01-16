@@ -90,7 +90,7 @@ public class RoundedRectDrawer extends AbstractDrawer {
 
         CometRenderer.initShaderColor();
         AbstractMinecraftPlugin.getInstance().initMatrix();
-        CometRenderer.getGlobalProgram().getUniform("height", UniformType.FLOAT).set((float) AbstractMinecraftPlugin.getInstance().getMainFrameBuffer().getHeight());
+        CometRenderer.getGlobalProgram().getUniform("height", UniformType.FLOAT).set((float) AbstractMinecraftPlugin.getInstance().getMainFramebufferHeight());
 
         CometRenderer.draw(this.mesh, false);
     }

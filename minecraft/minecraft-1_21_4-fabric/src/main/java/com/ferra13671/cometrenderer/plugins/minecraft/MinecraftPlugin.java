@@ -9,61 +9,38 @@ import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.BufferRenderer;
 import com.ferra13671.cometrenderer.utils.Logger;
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.opengl.GlConst;
-import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.GlGpuBuffer;
 import net.minecraft.client.render.BuiltBuffer;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.Stack;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MinecraftPlugin extends AbstractMinecraftPlugin {
     @Getter
     private static MinecraftPlugin instance;
-    @Getter
-    private final Function<GlGpuBuffer, Integer> bufferIdGetter;
     private final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
     public final BufferRenderer<BuiltBuffer> MINECRAFT_BUFFER = (builtBuffer, close) -> {
         BuiltBuffer.DrawParameters drawState = builtBuffer.getDrawParameters();
 
         if (drawState.indexCount() > 0) {
-            RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(drawState.mode());
-
-            GpuBuffer vertexBuffer = drawState.format().uploadImmediateVertexBuffer(builtBuffer.getBuffer());
-            GpuBuffer indexBuffer = shapeIndexBuffer.getIndexBuffer(drawState.indexCount());
-            VertexFormat.IndexType indexType = shapeIndexBuffer.getIndexType();
-
-            GL15.glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, getBufferIdGetter().apply((GlGpuBuffer) indexBuffer));
-            GL11.glDrawElements(
-                    GlConst.toGl(drawState.mode()),
-                    drawState.indexCount(),
-                    GlConst.toGl(indexType),
-                    0
-            );
-
-            vertexBuffer.close();
+            drawState.format().getBuffer().upload(builtBuffer);
+            drawState.format().getBuffer().draw();
         }
         if (close)
             builtBuffer.close();
     };
     private final Stack<Matrix4f> matrix4fStack = new Stack<>();
 
-    private MinecraftPlugin(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+    private MinecraftPlugin(Supplier<Integer> scaleGetter) {
         super(scaleGetter);
 
-        this.bufferIdGetter = bufferIdGetter;
         CometRenderer.setLogger(new Logger() {
             @Override
             public void log(String message) {
@@ -115,11 +92,11 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
         };
     }
 
-    public static void init(Function<GlGpuBuffer, Integer> bufferIdGetter, Supplier<Integer> scaleGetter) {
+    public static void init(Supplier<Integer> scaleGetter) {
         if (instance != null)
             throw new IllegalStateException("Minecraft plugin already initialized");
 
-        instance = new MinecraftPlugin(bufferIdGetter, scaleGetter);
+        instance = new MinecraftPlugin(scaleGetter);
     }
 
     @Override
@@ -188,7 +165,7 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
 
     @Override
     protected void createMainFramebuffer() {
-        this.mainFrameBuffer = new MinecraftFramebuffer(MinecraftClient.getInstance().getFramebuffer(), new Color(0, 0, 0, 0), 0);
+        this.mainFrameBuffer = new MinecraftFramebuffer(MinecraftClient.getInstance().getFramebuffer(), RenderColor.TRANSLUCENT, 0);
     }
 
     public void draw(BuiltBuffer builtBuffer) {

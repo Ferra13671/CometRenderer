@@ -185,12 +185,8 @@ public class MinecraftPlugin extends AbstractMinecraftPlugin {
     }
 
     @Override
-    public void bindMainFramebuffer(boolean setViewport) {
-        if (mainFrameBuffer == null) {
-            if (Minecraft.getInstance().getMainRenderTarget() != null)
-                mainFrameBuffer = new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0);
-        } else
-            mainFrameBuffer.bind(setViewport);
+    protected void createMainFramebuffer() {
+        this.mainFrameBuffer = new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0);
     }
 
     public void draw(MeshData builtBuffer) {

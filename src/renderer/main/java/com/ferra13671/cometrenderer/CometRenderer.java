@@ -99,8 +99,6 @@ public class CometRenderer {
                 GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), indexBufferGenerator.getIndexType().glId, 0);
             } else
                 GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
-
-            GL30.glBindVertexArray(0);
         }
         if (close)
             mesh.close();
