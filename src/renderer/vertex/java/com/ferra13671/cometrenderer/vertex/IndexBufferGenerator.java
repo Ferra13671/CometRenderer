@@ -7,7 +7,6 @@ import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.function.Consumer;
 
 /**
  * Объект, представляющий собой сборщик буффера индексов для определенного буффера вершин.
@@ -56,16 +55,6 @@ public final class IndexBufferGenerator {
 	}
 
 	/**
-	 * Возвращает то, меньше ли требуемый размер от прошлого или нет.
-	 *
-	 * @param requiredSize требуемый размер.
-	 * @return меньше ли требуемый размер от прошлого или нет.
-	 */
-	public boolean isLargeEnough(int requiredSize) {
-		return requiredSize <= this.size;
-	}
-
-	/**
 	 * Возвращает буффер вершин с требуемым количеством индексов.
 	 *
 	 * @param requiredSize требуемый размер.
@@ -76,7 +65,7 @@ public final class IndexBufferGenerator {
 		if (standalone)
 			return generateIndexBuffer(requiredSize);
 		else {
-			if (!this.isLargeEnough(requiredSize)) {
+			if (requiredSize > this.size) {
 				if (this.indexBuffer != null)
 					this.indexBuffer.close();
 
@@ -88,35 +77,25 @@ public final class IndexBufferGenerator {
 	}
 
 	private GpuBuffer generateIndexBuffer(int requiredSize) {
-		requiredSize = roundUpToMultiple(requiredSize * 2, this.vertexCountInTriangulated);
-		int i = requiredSize / this.vertexCountInTriangulated;
-		IndexType indexType = IndexType.smallestFor(
-				i * this.vertexCountInShape
-		);
-		ByteBuffer byteBuffer = MemoryUtil.memAlloc(
-				roundUpToMultiple(requiredSize * indexType.bytes, 4)
-		);
+		requiredSize = roundUpToMultiple(requiredSize, this.vertexCountInTriangulated);
 
+		this.indexType = IndexType.best(requiredSize);
+		ByteBuffer buffer = MemoryUtil.memAlloc(requiredSize * indexType.bytes);
+
+		int shapeCount = requiredSize / this.vertexCountInTriangulated;
 		try {
-			this.indexType = indexType;
-			Consumer<Integer> intConsumer = this.getIndexConsumer(byteBuffer);
+			for (int i = 0; i < shapeCount; i++)
+				this.triangulator.accept(
+						index -> this.indexType.putConsumer.accept(buffer, index),
+						i * this.vertexCountInShape
+				);
 
-			for (int l = 0; l < requiredSize; l += this.vertexCountInTriangulated)
-				this.triangulator.accept(intConsumer, l * this.vertexCountInShape / this.vertexCountInTriangulated);
+			buffer.flip();
 
-			byteBuffer.flip();
-
-			return new GpuBuffer(byteBuffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER);
+			return new GpuBuffer(buffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER);
 		} finally {
-			MemoryUtil.memFree(byteBuffer);
+			MemoryUtil.memFree(buffer);
 		}
-	}
-
-	private Consumer<Integer> getIndexConsumer(ByteBuffer indexBuffer) {
-		if (this.indexType == IndexType.SHORT)
-			return index -> indexBuffer.putShort(index.shortValue());
-		else
-			return indexBuffer::putInt;
 	}
 
 	private int roundUpToMultiple(int value, int divisor) {
