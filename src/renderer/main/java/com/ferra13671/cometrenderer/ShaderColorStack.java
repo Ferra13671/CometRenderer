@@ -28,8 +28,6 @@ public class ShaderColorStack {
 
     public void pop() {
         this.stack.pop();
-        this.current = this.stack.peek();
-        if (this.current == null)
-            this.current = DEFAULT_COLOR;
+        this.current = this.stack.isEmpty() ? DEFAULT_COLOR : this.stack.peek();
     }
 }
