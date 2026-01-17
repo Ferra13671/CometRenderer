@@ -27,7 +27,6 @@ import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 import lombok.Getter;
 import lombok.Setter;
-import org.joml.Vector4f;
 import org.lwjgl.opengl.*;
 
 import java.util.function.Consumer;
@@ -43,10 +42,9 @@ public class CometRenderer {
     /** Конфиг с различными настройками. **/
     @Getter
     private static final Config config = new Config();
-    /** Глобальный шейдерный цвет, позволяющий контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
+    /** Стек глобального шейдерного цвета, позволяющего контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
     @Getter
-    @Setter
-    private static Vector4f shaderColor = new Vector4f(1f, 1f, 1f, 1f);
+    private static final ShaderColorStack shaderColorStack = new ShaderColorStack();
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     @Getter
     private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
@@ -82,9 +80,9 @@ public class CometRenderer {
     };
     private static final BufferRenderer<IMesh> COMET_BUFFER_RENDERER = (mesh, close) -> {
         int vertexCount = mesh.getVertexCount();
-        DrawMode drawMode = mesh.getDrawMode();
 
         if (vertexCount > 0) {
+            DrawMode drawMode = mesh.getDrawMode();
             VertexFormatManager.uploadFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             if (drawMode.useIndexBuffer()) {
@@ -161,13 +159,6 @@ public class CometRenderer {
     }
 
     /**
-     * Устанавливает глобальный шейдерный цвет по умолчанию.
-     */
-    public static void resetShaderColor() {
-        setShaderColor(new Vector4f(1f, 1f, 1f, 1f));
-    }
-
-    /**
      * Устанавливает глобальный шейдерный цвет в униформу, если программа использует фрагмент программы для глобального шейдерного цвета.
      *
      * @see CometRenderer#colorSnippet
@@ -177,7 +168,7 @@ public class CometRenderer {
                 "shaderColor",
                 UniformType.VEC4,
                 colorUniform ->
-                        colorUniform.set(getShaderColor())
+                        colorUniform.set(getShaderColorStack().getColor())
         );
     }
 

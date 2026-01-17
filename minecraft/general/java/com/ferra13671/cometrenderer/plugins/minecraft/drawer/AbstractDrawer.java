@@ -17,11 +17,12 @@ public abstract class AbstractDrawer implements IDrawer {
     @Override
     public IDrawer tryDraw() {
         if (this.mesh != null) {
+            CometRenderer.getShaderColorStack().push();
             this.preDrawRunnable.run();
 
             draw();
 
-            CometRenderer.resetShaderColor();
+            CometRenderer.getShaderColorStack().pop();
         }
 
         return this;

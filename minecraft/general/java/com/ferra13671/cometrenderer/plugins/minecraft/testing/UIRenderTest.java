@@ -51,7 +51,7 @@ public final class UIRenderTest {
     }
 
     private static void drawOneColorRect() {
-        new BasicRectDrawer(() -> CometRenderer.setShaderColor(RenderColor.of(Color.RED).toVector4f()))
+        new BasicRectDrawer(() -> CometRenderer.getShaderColorStack().setColor(RenderColor.of(Color.RED).toVector4f()))
                 .rectSized(800, 400, 100, 100)
                 .build()
                 .tryDraw()
