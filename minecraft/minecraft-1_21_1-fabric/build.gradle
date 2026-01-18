@@ -8,7 +8,7 @@ plugins {
 project.ext.projectName = "comet-renderer-minecraft"
 project.ext.minecraftVersion = project.minecraft_version
 project.ext.loaderVersion = project.loader_version
-version = "1.21.4-fabric-${project.main_version}"
+version = "1.21.1-fabric-${project.main_version}"
 
 apply from: rootProject.file("utils.gradle")
 apply from: rootProject.file("minecraft/minecraft-plugin.gradle")
