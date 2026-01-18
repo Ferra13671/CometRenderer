@@ -1,6 +1,9 @@
-package com.ferra13671.cometrenderer.vertex.format.uploader;
+package com.ferra13671.cometrenderer.vertex.format.manager;
 
+import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
@@ -8,18 +11,20 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class DefaultVertexFormatBufferUploader extends VertexFormatBufferUploader {
+public class DefaultVertexFormatBufferManager extends VertexFormatManager {
 
     @Override
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
-        VertexFormatBuffer vertexFormatBuffer = vertexFormat.getVertexFormatBufferOrCreate(() -> createVertexFormatBuffer(vertexFormat));
+        if (vertexBuffer.getTarget() != BufferTarget.ARRAY_BUFFER)
+            CometRenderer.manageException(new WrongGpuBufferTargetException(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId));
 
-        GL30.glBindVertexArray(vertexFormatBuffer.glId());
-        if (vertexFormatBuffer.buffer().get() != vertexBuffer) {
+        VertexFormatBuffer vertexFormatBuffer = vertexFormat.getOrCreateBuffer(() -> createVertexFormatBuffer(vertexFormat));
+
+        GL30.glBindVertexArray(vertexFormatBuffer.getGlId());
+        if (vertexFormatBuffer.getBuffer() != vertexBuffer) {
             vertexBuffer.bind();
-            vertexFormatBuffer.buffer().set(vertexBuffer);
+            vertexFormatBuffer.setBuffer(vertexBuffer);
             setupBuffer(vertexFormat, false);
         }
     }
@@ -29,7 +34,7 @@ public class DefaultVertexFormatBufferUploader extends VertexFormatBufferUploade
         int i = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(i);
         setupBuffer(vertexFormat, true);
-        return new VertexFormatBuffer(i, vertexFormat, new AtomicReference<>());
+        return new VertexFormatBuffer(i, vertexFormat);
     }
 
     private void setupBuffer(VertexFormat format, boolean vbaIsNew) {

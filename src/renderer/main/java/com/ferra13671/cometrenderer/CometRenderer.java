@@ -21,7 +21,9 @@ import com.ferra13671.cometrenderer.scissor.ScissorStack;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
-import com.ferra13671.cometrenderer.vertex.format.uploader.VertexFormatManager;
+import com.ferra13671.cometrenderer.vertex.format.manager.ARBVertexFormatBufferManager;
+import com.ferra13671.cometrenderer.vertex.format.manager.DefaultVertexFormatBufferManager;
+import com.ferra13671.cometrenderer.vertex.format.manager.VertexFormatManager;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
@@ -60,6 +62,8 @@ public class CometRenderer {
     private static final ScissorStack scissorStack = new ScissorStack();
     @Getter
     private static ISamplerManger samplerManager;
+    @Getter
+    private static VertexFormatManager vertexFormatManager;
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     @Getter
     @Setter
@@ -84,7 +88,7 @@ public class CometRenderer {
 
         if (vertexCount > 0) {
             DrawMode drawMode = mesh.getDrawMode();
-            VertexFormatManager.uploadFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
+            vertexFormatManager.applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             if (drawMode.useIndexBuffer()) {
 
@@ -122,6 +126,11 @@ public class CometRenderer {
                 new SamplerManagerImpl()
                 :
                 new EmptySamplerManager();
+
+        vertexFormatManager = GL.getCapabilities().GL_ARB_vertex_attrib_binding && CometRenderer.getConfig().USE_ARB_ATTRIB_BINDING_IF_SUPPORT.getValue() ?
+                new ARBVertexFormatBufferManager()
+                :
+                new DefaultVertexFormatBufferManager();
 
         registry.setImmutable(CometTags.INITIALIZED, true);
     }

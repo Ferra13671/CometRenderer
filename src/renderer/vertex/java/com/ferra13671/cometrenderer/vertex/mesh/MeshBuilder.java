@@ -138,15 +138,14 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
     private long beginVertex() {
         this.assertNotBuilt();
         this.endVertex();
-        if (this.vertexCount >= CometRenderer.getConfig().MAX_MESH_VERTEX_COUNT.getValue()) {
+
+        if (this.vertexCount >= CometRenderer.getConfig().MAX_MESH_VERTEX_COUNT.getValue())
             CometRenderer.manageException(new VertexOverflowException());
-            return -1L;
-        } else {
-            this.vertexCount++;
-            long l = this.allocator.allocate(this.vertexSize);
-            this.vertexPointer = l;
-            return l;
-        }
+
+        this.vertexCount++;
+        long l = this.allocator.allocate(this.vertexSize);
+        this.vertexPointer = l;
+        return l;
     }
 
     /**
@@ -154,7 +153,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
      */
     private void endVertex() {
         if (this.vertexCount != 0 && this.currentMask != 0) {
-            String string = vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getVertexElementName).collect(Collectors.joining(", "));
+            String string = this.vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getElementName).collect(Collectors.joining(", "));
             CometRenderer.manageException(new BadVertexStructureException(string));
         }
     }
@@ -208,7 +207,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
 
     @Override
     public <T> MeshBuilder element(String name, VertexElementType<T> elementType, T... values) {
-        long pointer = beginElement(this.vertexFormat.getVertexElement(name));
+        long pointer = beginElement(this.vertexFormat.getElement(name));
         if (pointer != -1L)
             elementType.uploadConsumer().accept(pointer, values);
 

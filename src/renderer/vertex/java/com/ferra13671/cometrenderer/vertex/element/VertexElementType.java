@@ -271,6 +271,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             )
             .build();
 
+    //TODO change
     public void verify() {
         if (
                 this.size <= 0

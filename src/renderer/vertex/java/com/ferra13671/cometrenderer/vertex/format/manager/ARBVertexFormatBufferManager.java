@@ -1,7 +1,9 @@
-package com.ferra13671.cometrenderer.vertex.format.uploader;
+package com.ferra13671.cometrenderer.vertex.format.manager;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
+import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
@@ -12,12 +14,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
+public class ARBVertexFormatBufferManager extends VertexFormatManager {
     private final boolean applyMesaWorkaround;
 
-    protected ARBVertexFormatBufferUploader() {
+    public ARBVertexFormatBufferManager() {
         Mesa3DVersion mesaVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow().getValue();
 
         if (mesaVersion != Mesa3DVersion.NONE)
@@ -28,16 +29,19 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
 
     @Override
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
-        VertexFormatBuffer vertexFormatBuffer = vertexFormat.getVertexFormatBufferOrCreate(() -> createVertexFormatBuffer(vertexFormat));
+        if (vertexBuffer.getTarget() != BufferTarget.ARRAY_BUFFER)
+            CometRenderer.manageException(new WrongGpuBufferTargetException(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId));
 
-        GL30.glBindVertexArray(vertexFormatBuffer.glId());
-        if (vertexFormatBuffer.buffer().get() != vertexBuffer) {
-            if (applyMesaWorkaround && vertexFormatBuffer.buffer().get() != null && vertexFormatBuffer.buffer().get().getId() == vertexBuffer.getId()) {
+        VertexFormatBuffer vertexFormatBuffer = vertexFormat.getOrCreateBuffer(() -> createVertexFormatBuffer(vertexFormat));
+
+        GL30.glBindVertexArray(vertexFormatBuffer.getGlId());
+        if (vertexFormatBuffer.getBuffer() != vertexBuffer) {
+            if (applyMesaWorkaround && vertexFormatBuffer.getBuffer() != null && vertexFormatBuffer.getBuffer().getId() == vertexBuffer.getId()) {
                 ARBVertexAttribBinding.glBindVertexBuffer(0, 0, 0L, 0);
             }
 
             ARBVertexAttribBinding.glBindVertexBuffer(0, vertexBuffer.getId(), 0L, vertexFormat.getVertexSize());
-            vertexFormatBuffer.buffer().set(vertexBuffer);
+            vertexFormatBuffer.setBuffer(vertexBuffer);
         }
     }
 
@@ -65,6 +69,6 @@ public class ARBVertexFormatBufferUploader extends VertexFormatBufferUploader {
             ARBVertexAttribBinding.glVertexAttribBinding(i, 0);
         }
 
-        return new VertexFormatBuffer(vertBuffId, vertexFormat, new AtomicReference<>());
+        return new VertexFormatBuffer(vertBuffId, vertexFormat);
     }
 }

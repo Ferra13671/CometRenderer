@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  */
 public class VertexFormat implements Closeable {
     /** Карта элементов формата вершины по их имени. **/
-    private final HashMap<String, VertexElement> vertexMap = new HashMap<>();
+    private final HashMap<String, VertexElement> elementsMap = new HashMap<>();
     /** Карта имен элементов структуры вершины. **/
     private final HashMap<VertexElement, String> namesMap = new HashMap<>();
     /** Список элементов формата вершины. **/
@@ -37,7 +37,7 @@ public class VertexFormat implements Closeable {
     @Getter
     private final int[] elementOffsets;
     /** Буффер формата вершины, используемый для быстрой привязки аттрибутов буфферу вершин. **/
-    private VertexFormatBuffer vertexFormatBuffer = null;
+    private VertexFormatBuffer buffer = null;
 
     /**
      * @param vertexElements список элементов формата вершины.
@@ -56,16 +56,12 @@ public class VertexFormat implements Closeable {
             //Добавляем к размеру формата размер элемента
             size += vertexElement.getSize();
 
-            if (i > 0) {
-                //Добавляем в массив оффсетов оффсет текущего элемента
-                this.elementOffsets[i] = elementOffset;
-            } else
-                this.elementOffsets[i] = 0;
+            this.elementOffsets[i] = i > 0 ? elementOffset : 0;
 
             elementOffset += vertexElement.getSize();
 
             //Добавляем в карту элементов элемент вместе с его именем
-            this.vertexMap.put(elementNames.get(i), vertexElement);
+            this.elementsMap.put(elementNames.get(i), vertexElement);
             this.namesMap.put(vertexElement, elementNames.get(i));
         }
         //Присваиваем размеру формата полученный размер
@@ -74,7 +70,7 @@ public class VertexFormat implements Closeable {
 
     @Override
     public void close() {
-        GpuBuffer buffer = this.vertexFormatBuffer.buffer().get();
+        GpuBuffer buffer = this.buffer.getBuffer();
         if (buffer != null)
             buffer.close();
     }
@@ -100,8 +96,8 @@ public class VertexFormat implements Closeable {
      *
      * @see VertexElement
      */
-    public VertexElement getVertexElement(String name) {
-        VertexElement vertexElement = this.vertexMap.get(name);
+    public VertexElement getElement(String name) {
+        VertexElement vertexElement = this.elementsMap.get(name);
         if (vertexElement == null)
             CometRenderer.manageException(new NoSuchVertexElementException(name));
         return vertexElement;
@@ -115,7 +111,7 @@ public class VertexFormat implements Closeable {
      *
      * @see VertexElement
      */
-    public String getVertexElementName(VertexElement vertexElement) {
+    public String getElementName(VertexElement vertexElement) {
         return this.namesMap.get(vertexElement);
     }
 
@@ -135,11 +131,11 @@ public class VertexFormat implements Closeable {
      * @param bufferSupplier метод, создающий новый буффер формата вершины.
      * @return буффер формата вершины.
      */
-    public VertexFormatBuffer getVertexFormatBufferOrCreate(Supplier<VertexFormatBuffer> bufferSupplier) {
-        if (this.vertexFormatBuffer == null)
-            this.vertexFormatBuffer = bufferSupplier.get();
+    public VertexFormatBuffer getOrCreateBuffer(Supplier<VertexFormatBuffer> bufferSupplier) {
+        if (this.buffer == null)
+            this.buffer = bufferSupplier.get();
 
-        return this.vertexFormatBuffer;
+        return this.buffer;
     }
 
     /**
