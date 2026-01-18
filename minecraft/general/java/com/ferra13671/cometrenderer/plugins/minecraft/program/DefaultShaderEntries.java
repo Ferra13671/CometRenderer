@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.plugins.minecraft.program;
 
 import com.ferra13671.cometrenderer.CometLoaders;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
 import lombok.experimental.UtilityClass;
 
 //Ооооо да, пишем ебучие шейдеры в стринге как ебучие пастерки бля сигмо троллинг

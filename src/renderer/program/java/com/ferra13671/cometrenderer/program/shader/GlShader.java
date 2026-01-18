@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.program.shader;
 
 import com.ferra13671.cometrenderer.utils.Compilable;
-import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.program.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;

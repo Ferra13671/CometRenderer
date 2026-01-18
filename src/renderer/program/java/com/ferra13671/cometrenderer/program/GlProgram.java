@@ -12,7 +12,7 @@ import com.ferra13671.cometrenderer.program.uniform.UniformType;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.program.shader.GlShader;
-import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.program.compiler.GlobalCometCompiler;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

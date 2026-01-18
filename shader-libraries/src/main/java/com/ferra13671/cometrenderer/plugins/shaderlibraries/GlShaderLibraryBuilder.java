@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;

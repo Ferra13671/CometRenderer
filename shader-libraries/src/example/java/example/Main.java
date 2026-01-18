@@ -1,7 +1,7 @@
 package example;
 
 import com.ferra13671.cometrenderer.CometLoaders;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.ShaderLibrariesPlugin;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;

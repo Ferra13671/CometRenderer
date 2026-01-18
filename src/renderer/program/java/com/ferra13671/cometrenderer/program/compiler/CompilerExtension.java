@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.compiler;
+package com.ferra13671.cometrenderer.program.compiler;
 
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 

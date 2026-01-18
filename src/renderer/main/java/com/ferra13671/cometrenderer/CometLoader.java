@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.compiler.GlobalCometCompiler;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.program.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.LoadGlslContentException;
 import com.ferra13671.cometrenderer.program.GlProgramBuilder;

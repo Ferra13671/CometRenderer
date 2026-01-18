@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.compiler;
+package com.ferra13671.cometrenderer.program.compiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
@@ -20,6 +20,7 @@ import java.util.*;
 /*
     TODO
         'extra-compiler' plugin
+        directive processor
  */
 public class GlobalCometCompiler {
     private static final List<CompilerExtension> extensions = new ArrayList<>();

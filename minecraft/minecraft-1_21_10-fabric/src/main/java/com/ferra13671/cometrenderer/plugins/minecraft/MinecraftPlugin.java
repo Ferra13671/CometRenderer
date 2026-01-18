@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.minecraft;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;

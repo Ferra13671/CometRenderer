@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.minecraft;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
@@ -18,7 +18,6 @@ import net.minecraft.client.render.BuiltBuffer;
 import org.joml.Matrix4f;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.util.Stack;
 import java.util.function.Supplier;
 
