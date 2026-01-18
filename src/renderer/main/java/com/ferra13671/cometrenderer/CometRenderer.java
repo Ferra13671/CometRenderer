@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
+import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.sampler.ISamplerManger;
 import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
@@ -89,7 +90,7 @@ public class CometRenderer {
 
                 IndexBufferGenerator indexBufferGenerator = mesh.getDrawMode().indexBufferGenerator();
 
-                com.ferra13671.cometrenderer.buffer.GpuBuffer indexBuffer = mesh.getIndexBuffer();
+                GpuBuffer indexBuffer = mesh.getIndexBuffer();
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
                     CometRenderer.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
                 indexBuffer.bind();
