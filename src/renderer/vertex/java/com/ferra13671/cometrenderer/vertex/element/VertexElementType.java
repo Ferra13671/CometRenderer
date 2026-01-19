@@ -8,7 +8,10 @@ import org.lwjgl.system.MemoryUtil;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 
 import java.awt.*;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Тип данных, передаваемых элементу.
@@ -271,30 +274,34 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             )
             .build();
 
-    //TODO change
     public void verify() {
-        if (
-                this.size <= 0
-                || this.offset <= 0
-                || (this.size % this.offset != 0)
-                        || (this.offset > this.size)
-        ) {
-            String reason = "";
-
-            if (this.size <= 0)
-                reason = String.format("size(%s) must be > 0", this.size);
-            else if (this.offset <= 0)
-                reason = String.format("offset(%s) must be > 0", this.offset);
-            else if (this.size % this.offset != 0)
-                reason = String.format("size(%s) must be a multiple of offset(%s)", this.size, this.offset);
-            else if (this.offset > this.size)
-                reason = String.format("offset(%s) must be <= size(%s)", this.offset, this.size);
-
-            CometRenderer.manageException(new IllegalVertexElementStructureException(this, reason));
-        }
+        for (ElementTypeVerifier verifier : ElementTypeVerifier.verifiers)
+            if (!verifier.verifyFunction.apply(this))
+                CometRenderer.manageException(new IllegalVertexElementStructureException(this, verifier.messageFunction.apply(this.size, this.offset)));
     }
 
     public static <T> VertexElementTypeBuilder<T> builder(Class<T> clazz) {
         return new VertexElementTypeBuilder<T>().clazz(clazz);
+    }
+
+    private record ElementTypeVerifier(Function<VertexElementType<?>, Boolean> verifyFunction, BiFunction<Integer, Integer, String> messageFunction) {
+        static final List<ElementTypeVerifier> verifiers = List.of(
+                new ElementTypeVerifier(
+                        type -> type.size > 0,
+                        (size, offset) -> String.format("size(%s) must be > 0", size)
+                ),
+                new ElementTypeVerifier(
+                        type -> type.offset > 0,
+                        (size, offset) -> String.format("offset(%s) must be > 0", offset)
+                ),
+                new ElementTypeVerifier(
+                        type -> type.size % type.offset == 0,
+                        (size, offset) -> String.format("size(%s) must be a multiple of offset(%s)", size, offset)
+                ),
+                new ElementTypeVerifier(
+                        type -> type.offset <= type.size,
+                        (size, offset) -> String.format("offset(%s) must be <= size(%s)", offset, size)
+                )
+        );
     }
 }
