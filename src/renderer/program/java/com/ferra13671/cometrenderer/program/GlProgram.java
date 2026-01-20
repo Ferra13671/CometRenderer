@@ -75,7 +75,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
             );
 
             if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
-                CometRenderer.manageException(new NoSuchUniformException(uniform.getName(), this.name));
+                CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(uniform.getName(), this.name));
 
             this.uniformsByName.put(uniformEntry.getKey(), uniform);
 
@@ -150,7 +150,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
         if (uniform == null)
-            CometRenderer.manageException(new NoSuchUniformException(name, this.name));
+            CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(name, this.name));
         return uniform;
     }
 
@@ -199,7 +199,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public SamplerUniform getSampler(int samplerId) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler == null)
-            CometRenderer.manageException(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
+            CometRenderer.getExceptionManager().manageException(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
         return sampler;
     }
 

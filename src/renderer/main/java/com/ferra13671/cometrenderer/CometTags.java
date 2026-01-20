@@ -5,7 +5,6 @@ import com.ferra13671.cometrenderer.utils.tag.Tag;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
 import com.ferra13671.cometrenderer.program.shader.ShaderType;
 import com.ferra13671.cometrenderer.program.uniform.UniformType;
-import com.ferra13671.cometrenderer.utils.ExceptionProvider;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 
@@ -29,6 +28,4 @@ public final class CometTags {
     public static final Tag<String[]> GL_EXTENSIONS = new Tag<>("gl-extensions");
     public static final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
     public static final Tag<Boolean> SAMPLER_OBJECT_SUPPORT = new Tag<>("sampler-object-support");
-
-    public static final Tag<ExceptionProvider> EXCEPTION_PROVIDER = new Tag<>("exception-provider");
 }

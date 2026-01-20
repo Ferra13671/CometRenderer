@@ -277,7 +277,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
     public void verify() {
         for (ElementTypeVerifier verifier : ElementTypeVerifier.verifiers)
             if (!verifier.verifyFunction.apply(this))
-                CometRenderer.manageException(new IllegalVertexElementStructureException(this, verifier.messageFunction.apply(this.size, this.offset)));
+                CometRenderer.getExceptionManager().manageException(new IllegalVertexElementStructureException(this, verifier.messageFunction.apply(this.size, this.offset)));
     }
 
     public static <T> VertexElementTypeBuilder<T> builder(Class<T> clazz) {

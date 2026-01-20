@@ -17,7 +17,7 @@ public class DefaultVertexFormatBufferManager extends VertexFormatManager {
     @Override
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
         if (vertexBuffer.getTarget() != BufferTarget.ARRAY_BUFFER)
-            CometRenderer.manageException(new WrongGpuBufferTargetException(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId));
+            CometRenderer.getExceptionManager().manageException(new WrongGpuBufferTargetException(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId));
 
         VertexFormatBuffer vertexFormatBuffer = vertexFormat.getOrCreateBuffer(() -> createVertexFormatBuffer(vertexFormat));
 

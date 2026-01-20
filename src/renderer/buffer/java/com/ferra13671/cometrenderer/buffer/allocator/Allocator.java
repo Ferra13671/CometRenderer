@@ -19,7 +19,7 @@ public class Allocator implements IAllocator {
 
     public long allocate(int size) {
         if (this.offset + size > this.size)
-            CometRenderer.manageException(new AllocatorOverflowException(size, this.size, this.size - this.offset));
+            CometRenderer.getExceptionManager().manageException(new AllocatorOverflowException(size, this.size, this.size - this.offset));
 
         long address = this.offset;
         this.offset += size;

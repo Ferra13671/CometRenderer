@@ -44,7 +44,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     @NonNull
     public <S extends GlUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
         if (this.uniforms.containsKey(name))
-            CometRenderer.manageException(new DoubleUniformAdditionException(name));
+            CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(name));
 
         this.uniforms.put(name, uniformType);
         return this;

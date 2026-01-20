@@ -22,7 +22,7 @@ public abstract class CometLoader<T> {
         try {
             content = load(path);
         } catch (Exception e) {
-            CometRenderer.manageException(new LoadGlslContentException(e));
+            CometRenderer.getExceptionManager().manageException(new LoadGlslContentException(e));
         }
         return content;
     }

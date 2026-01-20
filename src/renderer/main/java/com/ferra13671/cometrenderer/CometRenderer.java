@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.exceptions.ExceptionManager;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.sampler.ISamplerManger;
 import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
@@ -12,7 +13,6 @@ import com.ferra13671.cometrenderer.utils.Logger;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
-import com.ferra13671.cometrenderer.exceptions.CometException;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
 import com.ferra13671.cometrenderer.program.GlProgram;
 import com.ferra13671.cometrenderer.program.GlProgramSnippet;
@@ -64,6 +64,8 @@ public class CometRenderer {
     private static ISamplerManger samplerManager;
     @Getter
     private static VertexFormatManager vertexFormatManager;
+    @Getter
+    private static final ExceptionManager exceptionManager = new ExceptionManager();
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     @Getter
     @Setter
@@ -96,7 +98,7 @@ public class CometRenderer {
 
                 GpuBuffer indexBuffer = mesh.getIndexBuffer();
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
-                    CometRenderer.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
+                    exceptionManager.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
                 indexBuffer.bind();
 
                 GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), indexBufferGenerator.getIndexType().glId, 0);
@@ -119,7 +121,7 @@ public class CometRenderer {
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
             if (glVersion.id < GLVersion.GL32.id)
-                manageException(new UnsupportedOpenGLVersionException(glVersion, GLVersion.GL32));
+                exceptionManager.manageException(new UnsupportedOpenGLVersionException(glVersion, GLVersion.GL32));
         }
 
         samplerManager = registry.get(CometTags.SAMPLER_OBJECT_SUPPORT).orElseThrow().getValue() ?
@@ -153,19 +155,6 @@ public class CometRenderer {
         for (int i = 0; i < numExtensions; i++)
             extensions[i] = GL30.glGetStringi(GL11.GL_EXTENSIONS, i);
         registry.setImmutable(CometTags.GL_EXTENSIONS, extensions);
-
-        registry.set(CometTags.EXCEPTION_PROVIDER, CometRenderer::throwOrLogException);
-    }
-
-    public static void manageException(CometException exception) {
-        registry.get(CometTags.EXCEPTION_PROVIDER).orElseThrow().getValue().manageException(exception);
-    }
-
-    public static void throwOrLogException(CometException exception) {
-        if (config.DONT_THROW_EXCEPTIONS.getValue())
-            logger.error(exception.getClass().getName().concat(": ".concat(exception.getMessage())));
-        else
-            throw exception;
     }
 
     /**

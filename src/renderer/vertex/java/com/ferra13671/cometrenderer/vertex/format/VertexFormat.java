@@ -99,7 +99,7 @@ public class VertexFormat implements Closeable {
     public VertexElement getElement(String name) {
         VertexElement vertexElement = this.elementsMap.get(name);
         if (vertexElement == null)
-            CometRenderer.manageException(new NoSuchVertexElementException(name));
+            CometRenderer.getExceptionManager().manageException(new NoSuchVertexElementException(name));
         return vertexElement;
     }
 

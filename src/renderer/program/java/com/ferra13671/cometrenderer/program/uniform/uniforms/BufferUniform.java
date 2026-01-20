@@ -36,7 +36,7 @@ public class BufferUniform extends GlUniform {
 
         int index = GL31.glGetUniformBlockIndex(glProgram.getId(), name);
         if (index == -1) {
-            CometRenderer.manageException(new NoSuchUniformException(name, glProgram.getName()));
+            CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(name, glProgram.getName()));
             bufferIndex = -1;
         } else {
             bufferIndex = glProgram.getBuffersIndexAmount() + 1;

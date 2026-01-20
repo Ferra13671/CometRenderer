@@ -23,6 +23,6 @@ public abstract class Builder<T> {
     }
 
     protected void manageIllegalArgument(String message) {
-        CometRenderer.manageException(new IllegalBuilderArgumentException(this.builderName, message));
+        CometRenderer.getExceptionManager().manageException(new IllegalBuilderArgumentException(this.builderName, message));
     }
 }

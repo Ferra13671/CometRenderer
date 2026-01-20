@@ -51,7 +51,7 @@ public class ShaderDirective {
 
             fileEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
                 if (uniforms.containsKey(s1))
-                    CometRenderer.manageException(new DoubleUniformAdditionException(s1));
+                    CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
 
                 uniforms.put(s1, uniformType);
             });

@@ -47,7 +47,7 @@ public class GlobalCometCompiler {
 
             shader.extraUniforms().forEach((s, uniformType) -> {
                 if (uniforms.containsKey(s))
-                    CometRenderer.manageException(new DoubleUniformAdditionException(s));
+                    CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s));
 
                 uniforms.put(s, uniformType);
             });
@@ -60,7 +60,7 @@ public class GlobalCometCompiler {
         CompileResult compileResult = program.getCompileResult();
 
         if (compileResult.isFailure())
-            CometRenderer.manageException(new CompileProgramException(name, compileResult.message()));
+            CometRenderer.getExceptionManager().manageException(new CompileProgramException(name, compileResult.message()));
 
         return program;
     }
@@ -86,7 +86,7 @@ public class GlobalCometCompiler {
         CompileResult compileResult = shader.getCompileResult();
 
         if (compileResult.isFailure())
-            CometRenderer.manageException(new CompileShaderException(shaderEntry.getName(), compileResult.message()));
+            CometRenderer.getExceptionManager().manageException(new CompileShaderException(shaderEntry.getName(), compileResult.message()));
 
         return shader;
     }

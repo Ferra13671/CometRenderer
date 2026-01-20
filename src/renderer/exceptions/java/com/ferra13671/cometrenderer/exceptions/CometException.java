@@ -5,6 +5,4 @@ public class CometException extends RuntimeException {
     public CometException(String message) {
         super(message);
     }
-
-    public CometException() {}
 }
