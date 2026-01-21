@@ -38,7 +38,7 @@ public final class UIRenderTest {
 
         standaloneDrawer = new BasicTextureDrawer()
                 .setTexture(texture)
-                .rectSized(1200, 400, 100, 100, new TextureBorder(0, 0, 1, 1))
+                .rectSized(600, 100, 100, 100, new TextureBorder(0, 0, 1, 1))
                 .build()
                 .makeStandalone();
     }
@@ -52,7 +52,7 @@ public final class UIRenderTest {
 
     private static void drawOneColorRect() {
         new BasicRectDrawer(() -> CometRenderer.getShaderColor().setColor(RenderColor.of(Color.RED).toVector4f()))
-                .rectSized(800, 400, 100, 100)
+                .rectSized(200, 100, 100, 100)
                 .build()
                 .tryDraw()
                 .close();
@@ -60,7 +60,7 @@ public final class UIRenderTest {
 
     private static void drawMultiColorRect() {
         new ColoredRectDrawer()
-                .rectSized(800, 510, 100, 100, new RectColors(
+                .rectSized(200, 210, 100, 100, new RectColors(
                         RenderColor.of(1f, 1f, 1f, 1f),
                         RenderColor.of(1f, 0f, 0f, 1f),
                         RenderColor.of(0f, 1f, 0f, 1f),
@@ -76,7 +76,7 @@ public final class UIRenderTest {
 
         new RoundedTextureDrawer()
                 .setTexture(texture)
-                .rectSized(1200, 510, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
+                .rectSized(600, 210, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
                 .build()
                 .tryDraw()
                 .close();
@@ -84,8 +84,8 @@ public final class UIRenderTest {
 
     private static void drawRoundedRects() {
         new RoundedRectDrawer()
-                .rectSized(1000, 400, 100, 100, 20, RectColors.oneColor(RenderColor.of(Color.MAGENTA)))
-                .rectSized(1000, 510, 100, 100, 20, RectColors.horizontalGradient(RenderColor.of(Color.BLUE), RenderColor.of(Color.CYAN)))
+                .rectSized(400, 100, 100, 100, 20, RectColors.oneColor(RenderColor.of(Color.MAGENTA)))
+                .rectSized(400, 210, 100, 100, 20, RectColors.horizontalGradient(RenderColor.of(Color.BLUE), RenderColor.of(Color.CYAN)))
                 .build()
                 .tryDraw()
                 .close();
