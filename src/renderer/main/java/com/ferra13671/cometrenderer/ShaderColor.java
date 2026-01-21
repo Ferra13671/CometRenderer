@@ -4,7 +4,7 @@ import org.joml.Vector4f;
 
 import java.util.Stack;
 
-public class ShaderColorStack {
+public class ShaderColor {
     private static final Vector4f DEFAULT_COLOR = new Vector4f(1f, 1f, 1f, 1f);
 
     private final Stack<Vector4f> stack = new Stack<>();

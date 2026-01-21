@@ -47,7 +47,7 @@ public class CometRenderer {
     private static final Config config = new Config();
     /** Стек глобального шейдерного цвета, позволяющего контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
     @Getter
-    private static final ShaderColorStack shaderColorStack = new ShaderColorStack();
+    private static final ShaderColor shaderColor = new ShaderColor();
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     @Getter
     private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
@@ -138,7 +138,7 @@ public class CometRenderer {
     }
 
     private static void initRegistry() {
-        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "2.4");
+        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "2.5");
 
         String vendor = GL11.glGetString(GL11.GL_VENDOR);
         String version = GL11.glGetString(GL11.GL_VERSION);
@@ -167,7 +167,7 @@ public class CometRenderer {
                 "shaderColor",
                 UniformType.VEC4,
                 colorUniform ->
-                        colorUniform.set(getShaderColorStack().getColor())
+                        colorUniform.set(getShaderColor().getColor())
         );
     }
 
