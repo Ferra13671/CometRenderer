@@ -4,6 +4,7 @@
   "package": "com.ferra13671.cometrenderer.test.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "LevelRendererMixin"
   ],
   "client": [
     "GameRendererMixin",

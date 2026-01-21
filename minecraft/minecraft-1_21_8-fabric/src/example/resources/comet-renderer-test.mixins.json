@@ -8,7 +8,8 @@
   "client": [
     "GameRendererMixin",
     "IGlGpuBuffer",
-    "RenderSystemMixin"
+    "RenderSystemMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
