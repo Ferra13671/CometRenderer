@@ -120,7 +120,7 @@ public class CometRenderer {
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
-            if (glVersion.id < GLVersion.GL32.id)
+            if (glVersion.id < config.MINIMUM_OPENGL_VERSION.getValue())
                 exceptionManager.manageException(new UnsupportedOpenGLVersionException(glVersion, GLVersion.GL32));
         }
 
