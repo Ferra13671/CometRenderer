@@ -27,7 +27,7 @@ public class ShaderColorStack {
     }
 
     public void pop() {
+        this.current = this.stack.peek();
         this.stack.pop();
-        this.current = this.stack.isEmpty() ? DEFAULT_COLOR : this.stack.peek();
     }
 }
