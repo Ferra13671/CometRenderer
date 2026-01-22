@@ -20,15 +20,19 @@ import java.util.*;
 /*
     TODO
         'extra-compiler' plugin
-        directive processor
  */
 public class GlobalCometCompiler {
-    private static final List<CompilerExtension> extensions = new ArrayList<>();
+    private static final List<CompilerExtension> compileExtensions = new ArrayList<>();
+    protected static final List<DirectiveExtension> directiveExtensions = new ArrayList<>();
 
     public static final String DEFAULT_FILE = "DEFAULT";
 
-    public static void addExtensions(@NonNull CompilerExtension... extensions) {
-        GlobalCometCompiler.extensions.addAll(List.of(extensions));
+    public static void addCompileExtensions(@NonNull CompilerExtension... extensions) {
+        GlobalCometCompiler.compileExtensions.addAll(List.of(extensions));
+    }
+
+    public static void addDirectiveExtensions(@NonNull DirectiveExtension... extensions) {
+        GlobalCometCompiler.directiveExtensions.addAll(List.of(extensions));
     }
 
     @NonNull
@@ -67,7 +71,8 @@ public class GlobalCometCompiler {
 
     @NonNull
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
-        for (CompilerExtension extension : extensions)
+        GlslDirectiveProcessor.processContent(shaderEntry.getRegistry(), programRegistry);
+        for (CompilerExtension extension : compileExtensions)
             extension.modify(shaderEntry.getRegistry(), programRegistry);
         String content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 

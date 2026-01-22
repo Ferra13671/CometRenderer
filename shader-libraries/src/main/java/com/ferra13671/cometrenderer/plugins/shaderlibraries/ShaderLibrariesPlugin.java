@@ -18,7 +18,7 @@ public class ShaderLibrariesPlugin {
 
     static {
         CometRenderer.getRegistry().setImmutable(LIBRARIES_TAG, new HashMap<>());
-        GlobalCometCompiler.addExtensions(
+        GlobalCometCompiler.addCompileExtensions(
                 (shaderRegistry, registry) -> includeShaderLibraries(shaderRegistry)
         );
     }
