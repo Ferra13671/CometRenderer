@@ -2,9 +2,9 @@ package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
 import lombok.Setter;

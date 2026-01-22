@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.program.GlProgram;
+import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.gltextureutils.Pair;
 

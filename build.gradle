@@ -10,9 +10,11 @@ apply from: file("opengl.gradle")
 apply from: file("utils.gradle")
 apply from: file("publishing.gradle")
 
-void subSourceSet(String name) {
-    sourceSets.main.java.srcDirs += "src/renderer/" + name + "/java"
-    sourceSets.main.resources.srcDirs += "src/renderer/" + name + "/resources"
+void subSourceSets(String... names) {
+    for (String name : names) {
+        sourceSets.main.java.srcDirs += "src/renderer/" + name + "/java"
+        sourceSets.main.resources.srcDirs += "src/renderer/" + name + "/resources"
+    }
 }
 
 sourceSets {
@@ -21,13 +23,15 @@ sourceSets {
         resources.srcDirs = ["src/main/main/resources"]
     }
 
-    subSourceSet("main")
-    subSourceSet("buffer")
-    subSourceSet("exceptions")
-    subSourceSet("program")
-    subSourceSet("vertex")
-    subSourceSet("sampler")
-    subSourceSet("utils")
+    subSourceSets(
+            "main",
+            "buffer",
+            "exceptions",
+            "glsl",
+            "vertex",
+            "sampler",
+            "utils"
+    )
 }
 
 dependencies {

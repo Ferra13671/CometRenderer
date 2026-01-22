@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
-import com.ferra13671.cometrenderer.program.GlProgramSnippet;
-import com.ferra13671.cometrenderer.program.shader.ShaderType;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
+import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 

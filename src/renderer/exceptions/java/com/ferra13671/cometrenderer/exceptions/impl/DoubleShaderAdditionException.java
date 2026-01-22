@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.exceptions.impl;
 
 import com.ferra13671.cometrenderer.exceptions.CometException;
-import com.ferra13671.cometrenderer.program.shader.ShaderType;
+import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 
 /**
  * Ошибка, вызываемая в том случае, когда была произведена попытка добавить два шейдера с одинаковым типо в сборщик программы.

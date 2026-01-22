@@ -1,11 +1,11 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.program.compiler.GlobalCometCompiler;
-import com.ferra13671.cometrenderer.program.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.LoadGlslContentException;
-import com.ferra13671.cometrenderer.program.GlProgramBuilder;
-import com.ferra13671.cometrenderer.program.GlProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.GlProgramBuilder;
+import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 
 public abstract class CometLoader<T> {
 

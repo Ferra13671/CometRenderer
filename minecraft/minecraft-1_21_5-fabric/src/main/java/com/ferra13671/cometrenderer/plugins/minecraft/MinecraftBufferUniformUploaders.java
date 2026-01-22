@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
 import net.minecraft.client.gl.GlGpuBuffer;
 import org.lwjgl.opengl.GL32;
 

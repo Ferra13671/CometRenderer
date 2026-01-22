@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.plugins.minecraft;
 
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.opengl.GlTexture;

@@ -1,9 +1,9 @@
 package com.ferra13671.cometrenderer.plugins.minecraft.program;
 
 import com.ferra13671.cometrenderer.CometLoaders;
-import com.ferra13671.cometrenderer.program.GlProgram;
-import com.ferra13671.cometrenderer.program.shader.ShaderType;
-import com.ferra13671.cometrenderer.program.uniform.UniformType;
+import com.ferra13671.cometrenderer.glsl.GlProgram;
+import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
+import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 
 public class DefaultPrograms {
     public final GlProgram POSITION = CometLoaders.STRING.createProgramBuilder()

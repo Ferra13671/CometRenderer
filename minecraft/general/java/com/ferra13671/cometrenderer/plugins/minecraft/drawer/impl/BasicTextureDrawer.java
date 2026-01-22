@@ -4,7 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometVertexFormats;
 import com.ferra13671.cometrenderer.plugins.minecraft.AbstractMinecraftPlugin;
 import com.ferra13671.cometrenderer.plugins.minecraft.drawer.AbstractDrawer;
-import com.ferra13671.cometrenderer.program.uniform.uniforms.SamplerUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
