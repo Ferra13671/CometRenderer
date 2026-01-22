@@ -1,10 +1,12 @@
 package example;
 
 import com.ferra13671.cometrenderer.CometLoaders;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslDirectiveProcessor;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.plugins.shaderlibraries.ShaderLibrariesPlugin;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 
 public class Main {
 
@@ -30,7 +32,7 @@ public class Main {
         GlslFileEntry shaderEntry = CometLoaders.IN_JAR.createGlslFileEntry("exampleShader", "exampleShader.vsh");
         System.out.print(shaderEntry.getContent());
         System.out.println("\n\n\n\n");
-        ShaderLibrariesPlugin.includeShaderLibraries(shaderEntry.getRegistry());
+        GlslDirectiveProcessor.processContent(shaderEntry.getRegistry(), new Registry());
         System.out.println("\n\n\n\n");
         System.out.println(shaderEntry.getContent());
     }

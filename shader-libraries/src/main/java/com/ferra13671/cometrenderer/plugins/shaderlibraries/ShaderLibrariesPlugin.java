@@ -2,8 +2,12 @@ package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
+import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.NonNull;
@@ -18,8 +22,37 @@ public class ShaderLibrariesPlugin {
 
     static {
         CometRenderer.getRegistry().setImmutable(LIBRARIES_TAG, new HashMap<>());
-        GlobalCometCompiler.addCompileExtensions(
-                (shaderRegistry, registry) -> includeShaderLibraries(shaderRegistry)
+        GlobalCometCompiler.addDirectiveExtensions(
+                new DirectiveExtension() {
+                    @Override
+                    public boolean supportedDirective(GlslDirective directive) {
+                        return directive.directiveName().startsWith(includeLibDirective);
+                    }
+
+                    @Override
+                    public String processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+                        Map<String, UniformType<?>> uniforms = glslFileRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
+
+                        String libsLine = directive.line().substring(directive.directiveName().length() + 1, directive.line().length() - 1).replace(" ", "");
+                        String[] libs = libsLine.split(",");
+
+                        StringBuilder libsContent = new StringBuilder();
+                        for (String lib : libs) {
+                            GlslFileEntry libEntry = getShaderLibrary(lib).orElseThrow();
+
+                            libsContent.append(libEntry.getContent()).append('\n');
+
+                            libEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
+                                if (uniforms.containsKey(s1))
+                                    CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
+
+                                uniforms.put(s1, uniformType);
+                            });
+                        }
+
+                        return libsContent.toString();
+                    }
+                }
         );
     }
 
@@ -49,66 +82,5 @@ public class ShaderLibrariesPlugin {
     @NonNull
     public static Optional<GlslFileEntry> getShaderLibrary(String name) {
         return Optional.ofNullable(CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().get(name));
-    }
-
-    public static void includeShaderLibraries(@NonNull Registry registry) {
-        List<ShaderDirective> directives = getShaderDirectives(registry);
-        for (int i = 0; i < directives.size(); i++) {
-            ShaderDirective directive = directives.get(i);
-
-            directive.includeLibs(registry);
-
-            int s = directive.getIncludeLibsSize();
-            for (ShaderDirective d : directives) {
-                d.setDirectiveIndex(d.getDirectiveIndex() + s - directive.getDirectiveSize());
-            }
-        }
-    }
-
-    private static List<ShaderDirective> getShaderDirectives(Registry registry) {
-        List<ShaderDirective> directives = new ArrayList<>();
-        String content = registry.get(CometTags.CONTENT).orElseThrow().getValue();
-
-        boolean writeAction = false;
-        boolean writeLibNames = false;
-        StringBuilder s = new StringBuilder();
-        int startIndex = 0;
-        int i = 0;
-        while (i < content.length()) {
-            char ch = content.charAt(i);
-            i++;
-
-            if (ch == '#') {
-                s = new StringBuilder("#");
-                writeAction = true;
-                startIndex = i - 1;
-                continue;
-            }
-            if (ch == '<' && writeAction) {
-                writeAction = false;
-                if (s.toString().equals(includeLibDirective)) {
-                    writeLibNames = true;
-                }
-                s = new StringBuilder();
-                continue;
-            }
-            if (ch == '>' && writeLibNames) {
-                writeLibNames = false;
-
-                String libs = s.toString().replace(" ", "");
-
-                directives.add(new ShaderDirective(
-                        libs.split(","),
-                        startIndex,
-                        i - startIndex
-                ));
-
-                s = new StringBuilder();
-            }
-
-            s.append(ch);
-        }
-
-        return directives;
     }
 }
