@@ -72,8 +72,7 @@ public class GlobalCometCompiler {
     @NonNull
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
         GlslDirectiveProcessor.processContent(shaderEntry.getRegistry(), programRegistry);
-        for (CompilerExtension extension : compileExtensions)
-            extension.modify(shaderEntry.getRegistry(), programRegistry);
+        applyCompileExtensions(shaderEntry.getRegistry(), programRegistry);
         String content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 
         int shaderId = GL20.glCreateShader(shaderType.glId);
@@ -94,5 +93,10 @@ public class GlobalCometCompiler {
             CometRenderer.getExceptionManager().manageException(new CompileShaderException(shaderEntry.getName(), compileResult.message()));
 
         return shader;
+    }
+
+    public static void applyCompileExtensions(Registry shaderRegistry, Registry programRegistry) {
+        for (CompilerExtension extension : compileExtensions)
+            extension.modify(shaderRegistry, programRegistry);
     }
 }

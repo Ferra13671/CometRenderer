@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+project.ext.projectName = "comet-renderer-better-compiler"
+version = project.main_version
+group = "com.ferra13671"
+
+apply from: rootProject.file("utils.gradle")
+apply from: rootProject.file("publishing.gradle")
+
+sourceSets {
+    example {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+dependencies {
+    implementation rootProject
+    exampleImplementation sourceSets.main.output
+}
