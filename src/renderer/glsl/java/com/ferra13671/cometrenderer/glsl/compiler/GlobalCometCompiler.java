@@ -17,10 +17,6 @@ import org.lwjgl.opengl.GL20;
 
 import java.util.*;
 
-/*
-    TODO
-        'extra-compiler' plugin
- */
 public class GlobalCometCompiler {
     private static final List<CompilerExtension> compileExtensions = new ArrayList<>();
     protected static final List<DirectiveExtension> directiveExtensions = new ArrayList<>();
@@ -71,8 +67,7 @@ public class GlobalCometCompiler {
 
     @NonNull
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
-        GlslDirectiveProcessor.processContent(shaderEntry.getRegistry(), programRegistry);
-        applyCompileExtensions(shaderEntry.getRegistry(), programRegistry);
+        processContent(shaderEntry.getRegistry(), programRegistry);
         String content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 
         int shaderId = GL20.glCreateShader(shaderType.glId);
@@ -98,5 +93,62 @@ public class GlobalCometCompiler {
     public static void applyCompileExtensions(Registry shaderRegistry, Registry programRegistry) {
         for (CompilerExtension extension : compileExtensions)
             extension.modify(shaderRegistry, programRegistry);
+    }
+
+    public static void processContent(Registry shaderRegistry, Registry programRegistry) {
+        String[] lines = removeComments(toLines(shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue()));
+        shaderRegistry.set(CometTags.CONTENT, String.join("\n", lines));
+
+        GlslDirectiveProcessor.processContent(shaderRegistry, programRegistry);
+        applyCompileExtensions(shaderRegistry, programRegistry);
+    }
+
+    private static String[] removeComments(String[] lines) {
+        List<String> l = new ArrayList<>();
+
+        boolean comment = false;
+        for (String line : lines) {
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < line.length(); i++) {
+                char ch = line.charAt(i);
+
+                if (
+                        ch == '/'
+                        && i < line.length() - 1
+                ) {
+                    char c = line.charAt(i + 1);
+
+                    if (c == '/')
+                        if (!comment)
+                            break;
+
+                    if (c == '*')
+                        comment = true;
+                }
+
+                if (
+                        ch == '*'
+                        && i < line.length() - 1
+                        && line.charAt(i + 1) == '/'
+                ) {
+                    comment = false;
+                    i += 1;
+                    continue;
+                }
+
+                if (!comment)
+                    builder.append(ch);
+            }
+
+            if (!builder.isEmpty() || !comment)
+                l.add(builder.toString());
+        }
+
+        return l.toArray(new String[0]);
+    }
+
+    private static String[] toLines(String content) {
+        return content.split("\n");
     }
 }

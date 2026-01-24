@@ -10,11 +10,14 @@ public class GlslDirectiveProcessor {
 
         boolean listen = false;
         StringBuilder s = new StringBuilder();
+        StringBuilder lineBuilder = new StringBuilder();
         int startLineIndex = 0;
         int startDirectiveIndex = 0;
         int i = 0;
         while (i < content.length()) {
             char ch = content.charAt(i);
+            if (ch != '\n')
+                lineBuilder.append(ch);
             i++;
 
             if (ch == '#') {
@@ -29,15 +32,15 @@ public class GlslDirectiveProcessor {
                         listen = false;
 
                         String directiveName = s.toString();
-                        s.append(ch);
 
                         int endLineIndex;
 
                         String line;
                         if (ch == '\n') {
-                            line = s.toString();
+                            line = lineBuilder.toString();
                             endLineIndex = i - 1;
                         } else {
+                            s.append(ch);
                             int a = i;
                             for (; a < content.length(); a++) {
                                 ch = content.charAt(a);
@@ -45,10 +48,10 @@ public class GlslDirectiveProcessor {
                                 if (ch == '\n') {
                                     break;
                                 } else
-                                    s.append(ch);
+                                    lineBuilder.append(ch);
                             }
 
-                            line = s.toString();
+                            line = lineBuilder.toString();
                             endLineIndex = a;
                         }
 
@@ -76,6 +79,7 @@ public class GlslDirectiveProcessor {
                 if (ch == '\n') {
                     startLineIndex = i;
                     s = new StringBuilder();
+                    lineBuilder = new StringBuilder();
                 }
             }
         }
