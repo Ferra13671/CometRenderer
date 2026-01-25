@@ -16,4 +16,6 @@ public class CompilerExtension {
     }
 
     public void processCompile(Registry shaderRegistry, Registry programRegistry) {}
+
+    public void onCreateProgramBuilder(Registry programRegistry) {}
 }

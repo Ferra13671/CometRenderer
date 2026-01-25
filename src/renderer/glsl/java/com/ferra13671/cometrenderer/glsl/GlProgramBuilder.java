@@ -51,6 +51,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
         this.loader = loader;
 
         this.registry.setImmutable(CometTags.SNIPPETS, snippets);
+        GlobalCometCompiler.onCreateProgramBuilder(this.registry);
     }
 
     /**

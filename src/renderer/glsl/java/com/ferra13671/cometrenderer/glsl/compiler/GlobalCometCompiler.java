@@ -92,6 +92,11 @@ public class GlobalCometCompiler {
         return shader;
     }
 
+    public static void onCreateProgramBuilder(Registry programRegistry) {
+        for (CompilerExtension extension : getExtensions())
+            extension.onCreateProgramBuilder(programRegistry);
+    }
+
     @NonNull
     public static void processContent(Registry shaderRegistry, Registry programRegistry) {
         removeComments(shaderRegistry);
