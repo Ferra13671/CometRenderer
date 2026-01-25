@@ -10,7 +10,7 @@ The field before the directive must always follow the structure: $type $name.
 
 You can also add a default value to a directive (by adding <default = $value> after the directive), which will be set for the field if you do not specify a value in the program's registry.
 */
-float value; #constant
+float value; #constant<default = 5f>
 
 void main() {
     gl_Position = projMat * modelViewMat * position;
