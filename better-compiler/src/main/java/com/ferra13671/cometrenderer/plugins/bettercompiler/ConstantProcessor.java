@@ -33,7 +33,7 @@ public class ConstantProcessor {
                 return false;
             }
 
-            Optional<String> value = programRegistry.get(BetterCompilerTags.CONSTANTS).orElseThrow().getValue().getConstant(field[1]);
+            Optional<String> value = programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getConstant(field[1]);
             String defaultValue = getDefaultConstantValue(line);
 
             if (value.isEmpty() && defaultValue == null)
@@ -56,7 +56,7 @@ public class ConstantProcessor {
     private final CompilerExtension extension = new CompilerExtension("better-compiler-constant", directiveExtension) {
         @Override
         public void onCreateProgramBuilder(Registry programRegistry) {
-            programRegistry.setImmutable(BetterCompilerTags.CONSTANTS, new ConstantsStorage());
+            programRegistry.setImmutable(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo());
         }
     };
 

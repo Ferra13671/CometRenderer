@@ -6,12 +6,11 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerProgramInfo;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.ConstantsStorage;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 
-import java.awt.*;
 import java.util.function.Consumer;
 
 public class Main {
@@ -56,17 +55,17 @@ public class Main {
                     "constantTest.vsh",
                     shaderRegistry -> {},
                     programRegistry -> {
-                        ConstantsStorage storage = new ConstantsStorage();
-                        programRegistry.set(BetterCompilerTags.CONSTANTS, storage); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
+                        BetterCompilerProgramInfo info = new BetterCompilerProgramInfo();
+                        programRegistry.set(BetterCompilerTags.PROGRAM_INFO, info); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
 
-                        storage.setConstant("value", "1f");
+                        info.defineConstant("value", "1f");
                     }
             );
             startTest(
                     "Constant with default value",
                     "constantWithDefaultValueTest.vsh",
                     shaderRegistry -> {},
-                    programRegistry -> programRegistry.set(BetterCompilerTags.CONSTANTS, new ConstantsStorage()) //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
+                    programRegistry -> programRegistry.set(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo()) //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
             );
         });
     }

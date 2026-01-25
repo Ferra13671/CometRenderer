@@ -6,7 +6,6 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 TODO
     #autoBinding
     #autoPrecission
-    #constant
     #abstractMethod
  */
 public class BetterCompilerPlugin {

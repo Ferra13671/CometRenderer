@@ -11,13 +11,13 @@ import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.Getter;
 
 public class VersionProcessor {
-    private static final String directiveName = "version";
+    private static final String directiveName = "#version";
     private static final Tag<Boolean> FOUNDED_GLSL_VERSION = new Tag<>("founded-glsl-version");
 
     private final DirectiveExtension directiveExtension = new DirectiveExtension() {
         @Override
         public boolean supportedDirective(GlslDirective directive) {
-            return directive.directiveName().equals(directiveName);
+            return "#".concat(directive.directiveName()).equals(directiveName);
         }
 
         @Override
@@ -33,12 +33,12 @@ public class VersionProcessor {
             boolean autoVersion = directiveValue.equals("auto");
 
             if (redirectVersion) {
-                directive.glslContent().getLines()[directive.lineIndex()] = "#".concat(directiveName).concat(" ").concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion);
+                directive.glslContent().getLines()[directive.lineIndex()] = directiveName.concat(" ").concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion);
                 return false;
             }
 
             if (autoVersion) {
-                directive.glslContent().getLines()[directive.lineIndex()] = "#".concat(directiveName).concat(" ").concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glslVersion);
+                directive.glslContent().getLines()[directive.lineIndex()] = directiveName.concat(" ").concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glslVersion);
                 return false;
             }
 
