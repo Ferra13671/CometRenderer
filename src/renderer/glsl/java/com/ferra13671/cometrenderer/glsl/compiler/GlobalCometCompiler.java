@@ -18,17 +18,12 @@ import org.lwjgl.opengl.GL20;
 import java.util.*;
 
 public class GlobalCometCompiler {
-    private static final List<CompilerExtension> compileExtensions = new ArrayList<>();
-    protected static final List<DirectiveExtension> directiveExtensions = new ArrayList<>();
+    protected static final List<CompilerExtension> compilerExtensions = new ArrayList<>();
 
     public static final String DEFAULT_FILE = "DEFAULT";
 
-    public static void addCompileExtensions(@NonNull CompilerExtension... extensions) {
-        GlobalCometCompiler.compileExtensions.addAll(List.of(extensions));
-    }
-
-    public static void addDirectiveExtensions(@NonNull DirectiveExtension... extensions) {
-        GlobalCometCompiler.directiveExtensions.addAll(List.of(extensions));
+    public static void addCompilerExtensions(@NonNull CompilerExtension... extensions) {
+        GlobalCometCompiler.compilerExtensions.addAll(List.of(extensions));
     }
 
     @NonNull
@@ -90,16 +85,16 @@ public class GlobalCometCompiler {
         return shader;
     }
 
-    public static void applyCompileExtensions(Registry shaderRegistry, Registry programRegistry) {
-        for (CompilerExtension extension : compileExtensions)
-            extension.modify(shaderRegistry, programRegistry);
+    private static void applyCompilerExtensions(Registry shaderRegistry, Registry programRegistry) {
+        for (CompilerExtension extension : compilerExtensions)
+            extension.processCompile(shaderRegistry, programRegistry);
     }
 
     public static void processContent(Registry shaderRegistry, Registry programRegistry) {
         removeComments(shaderRegistry);
 
         GlslDirectiveProcessor.processContent(shaderRegistry, programRegistry);
-        applyCompileExtensions(shaderRegistry, programRegistry);
+        applyCompilerExtensions(shaderRegistry, programRegistry);
     }
 
     private static void removeComments(Registry glslFileRegistry) {

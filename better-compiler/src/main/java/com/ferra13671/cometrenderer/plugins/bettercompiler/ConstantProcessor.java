@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -10,7 +11,6 @@ import lombok.Getter;
 public class ConstantProcessor {
     private static final String directiveName = "constant";
 
-    @Getter
     private final DirectiveExtension directiveExtension = new DirectiveExtension() {
         @Override
         public boolean supportedDirective(GlslDirective directive) {
@@ -41,4 +41,6 @@ public class ConstantProcessor {
             return false;
         }
     };
+    @Getter
+    private final CompilerExtension extension = new CompilerExtension(directiveExtension) {};
 }

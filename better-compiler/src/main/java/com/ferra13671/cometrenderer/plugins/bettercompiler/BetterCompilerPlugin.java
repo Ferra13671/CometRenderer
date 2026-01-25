@@ -14,12 +14,9 @@ public class BetterCompilerPlugin {
     private static final ConstantProcessor CONSTANT_PROCESSOR = new ConstantProcessor();
 
     public static void init() {
-        GlobalCometCompiler.addDirectiveExtensions(
-                VERSION_PROCESSOR.getDirectiveExtension(),
-                CONSTANT_PROCESSOR.getDirectiveExtension()
-        );
-        GlobalCometCompiler.addCompileExtensions(
-                VERSION_PROCESSOR.getCompilerExtension()
+        GlobalCometCompiler.addCompilerExtensions(
+                VERSION_PROCESSOR.getExtension(),
+                CONSTANT_PROCESSOR.getExtension()
         );
     }
 }

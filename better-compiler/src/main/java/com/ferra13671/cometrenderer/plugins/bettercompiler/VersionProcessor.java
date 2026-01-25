@@ -14,7 +14,6 @@ public class VersionProcessor {
     private static final String directiveName = "version";
     private static final Tag<Boolean> FOUNDED_GLSL_VERSION = new Tag<>("founded-glsl-version");
 
-    @Getter
     private final DirectiveExtension directiveExtension = new DirectiveExtension() {
         @Override
         public boolean supportedDirective(GlslDirective directive) {
@@ -47,18 +46,21 @@ public class VersionProcessor {
         }
     };
     @Getter
-    private final CompilerExtension compilerExtension = (shaderRegistry, programRegistry) -> {
-        if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
-            shaderRegistry.set(
-                    CometTags.CONTENT,
-                    GlslContent.fromString(
-                            directiveName
-                                    .concat(" ")
-                                    .concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)
-                                    .concat("\n\n")
-                                    .concat(shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue().concatLines())
-                    )
-            );
+    private final CompilerExtension extension = new CompilerExtension(directiveExtension) {
+        @Override
+        public void processCompile(Registry shaderRegistry, Registry programRegistry) {
+            if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
+                shaderRegistry.set(
+                        CometTags.CONTENT,
+                        GlslContent.fromString(
+                                directiveName
+                                        .concat(" ")
+                                        .concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)
+                                        .concat("\n\n")
+                                        .concat(shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue().concatLines())
+                        )
+                );
+            }
         }
     };
 }

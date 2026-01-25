@@ -3,10 +3,7 @@ package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
-import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.*;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
@@ -22,42 +19,44 @@ public class ShaderLibrariesPlugin {
 
     static {
         CometRenderer.getRegistry().setImmutable(LIBRARIES_TAG, new HashMap<>());
-        GlobalCometCompiler.addDirectiveExtensions(
-                new DirectiveExtension() {
-                    @Override
-                    public boolean supportedDirective(GlslDirective directive) {
-                        return directive.directiveName().equals(includeLibDirective);
-                    }
+        GlobalCometCompiler.addCompilerExtensions(
+                new CompilerExtension(
+                        new DirectiveExtension() {
+                            @Override
+                            public boolean supportedDirective(GlslDirective directive) {
+                                return directive.directiveName().equals(includeLibDirective);
+                            }
 
-                    @Override
-                    public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
-                        Map<String, UniformType<?>> uniforms = glslFileRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
+                            @Override
+                            public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+                                Map<String, UniformType<?>> uniforms = glslFileRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
 
-                        String libsLine = directive.glslContent().getLines()[directive.lineIndex()].substring(directive.directiveName().length() + 1)
-                                .replace(" ", "")
-                                .replace("<", "")
-                                .replace(">", "");
-                        String[] libs = libsLine.split(",");
+                                String libsLine = directive.glslContent().getLines()[directive.lineIndex()].substring(directive.directiveName().length() + 1)
+                                        .replace(" ", "")
+                                        .replace("<", "")
+                                        .replace(">", "");
+                                String[] libs = libsLine.split(",");
 
-                        StringBuilder libsContent = new StringBuilder();
-                        for (String lib : libs) {
-                            GlslFileEntry libEntry = getShaderLibrary(lib).orElseThrow();
+                                StringBuilder libsContent = new StringBuilder();
+                                for (String lib : libs) {
+                                    GlslFileEntry libEntry = getShaderLibrary(lib).orElseThrow();
 
-                            libsContent.append(libEntry.getContent().concatLines()).append('\n');
+                                    libsContent.append(libEntry.getContent().concatLines()).append('\n');
 
-                            libEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
-                                if (uniforms.containsKey(s1))
-                                    CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
+                                    libEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
+                                        if (uniforms.containsKey(s1))
+                                            CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
 
-                                uniforms.put(s1, uniformType);
-                            });
+                                        uniforms.put(s1, uniformType);
+                                    });
+                                }
+
+                                directive.glslContent().getLines()[directive.lineIndex()] = libsContent.toString();
+
+                                return true;
+                            }
                         }
-
-                        directive.glslContent().getLines()[directive.lineIndex()] = libsContent.toString();
-
-                        return true;
-                    }
-                }
+                )
         );
     }
 
