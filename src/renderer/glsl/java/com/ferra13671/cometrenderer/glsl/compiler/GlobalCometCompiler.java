@@ -18,16 +18,23 @@ import org.lwjgl.opengl.GL20;
 import java.util.*;
 
 public class GlobalCometCompiler {
-    protected static final List<CompilerExtension> compilerExtensions = new ArrayList<>();
+    private static final HashMap<String, CompilerExtension> extensions = new HashMap<>();
+    public static final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
 
-    public static final String DEFAULT_FILE = "DEFAULT";
-
-    public static void addCompilerExtensions(@NonNull CompilerExtension... extensions) {
-        GlobalCometCompiler.compilerExtensions.addAll(List.of(extensions));
+    public static void addExtensions(@NonNull CompilerExtension... extensions) {
+        for (CompilerExtension extension : extensions)
+            GlobalCometCompiler.extensions.put(extension.getName(), extension);
     }
 
-    @NonNull
-    public static GlProgram compileProgram(Registry registry) {
+    public static Optional<CompilerExtension> getExtension(@NonNull String name) {
+        return Optional.ofNullable(extensions.get(name));
+    }
+
+    public static Collection<CompilerExtension> getExtensions() {
+        return extensions.values();
+    }
+
+    public static GlProgram compileProgram(@NonNull Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow().getValue();
 
         int programId = GL20.glCreateProgram();
@@ -85,19 +92,16 @@ public class GlobalCometCompiler {
         return shader;
     }
 
-    private static void applyCompilerExtensions(Registry shaderRegistry, Registry programRegistry) {
-        for (CompilerExtension extension : compilerExtensions)
-            extension.processCompile(shaderRegistry, programRegistry);
-    }
-
+    @NonNull
     public static void processContent(Registry shaderRegistry, Registry programRegistry) {
         removeComments(shaderRegistry);
 
         GlslDirectiveProcessor.processContent(shaderRegistry, programRegistry);
-        applyCompilerExtensions(shaderRegistry, programRegistry);
+        for (CompilerExtension extension : getExtensions())
+            extension.processCompile(shaderRegistry, programRegistry);
     }
 
-    private static void removeComments(Registry glslFileRegistry) {
+    private static void removeComments(@NonNull Registry glslFileRegistry) {
         List<String> l = new ArrayList<>();
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 

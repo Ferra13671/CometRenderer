@@ -46,7 +46,7 @@ public class VersionProcessor {
         }
     };
     @Getter
-    private final CompilerExtension extension = new CompilerExtension(directiveExtension) {
+    private final CompilerExtension extension = new CompilerExtension("better-compiler-version", directiveExtension) {
         @Override
         public void processCompile(Registry shaderRegistry, Registry programRegistry) {
             if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {

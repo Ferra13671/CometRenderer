@@ -7,10 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CompilerExtension {
     @Getter
+    private final String name;
+    @Getter
     private final DirectiveExtension directiveExtension;
 
-    public CompilerExtension() {
-        this(null);
+    public CompilerExtension(String name) {
+        this(name, null);
     }
 
     public void processCompile(Registry shaderRegistry, Registry programRegistry) {}

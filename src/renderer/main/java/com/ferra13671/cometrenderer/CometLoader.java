@@ -15,7 +15,7 @@ public abstract class CometLoader<T> {
     }
 
     public GlslFileEntry createGlslFileEntry(String name, T path) {
-        return new GlslFileEntry(name, GlslContent.fromString(getContent(path)), GlobalCometCompiler.DEFAULT_FILE, new Registry());
+        return new GlslFileEntry(name, GlslContent.fromString(getContent(path)), GlobalCometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
     }
 
     public String getContent(T path) {

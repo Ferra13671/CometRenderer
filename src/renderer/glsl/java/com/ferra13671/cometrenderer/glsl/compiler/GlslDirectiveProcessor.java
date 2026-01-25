@@ -49,7 +49,7 @@ public class GlslDirectiveProcessor {
     }
 
     public static boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
-        for (CompilerExtension extension : GlobalCometCompiler.compilerExtensions) {
+        for (CompilerExtension extension : GlobalCometCompiler.getExtensions()) {
             if (extension.getDirectiveExtension() != null) {
                 DirectiveExtension e = extension.getDirectiveExtension();
                 if (e.supportedDirective(directive))

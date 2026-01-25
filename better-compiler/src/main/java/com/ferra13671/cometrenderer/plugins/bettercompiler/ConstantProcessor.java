@@ -42,5 +42,5 @@ public class ConstantProcessor {
         }
     };
     @Getter
-    private final CompilerExtension extension = new CompilerExtension(directiveExtension) {};
+    private final CompilerExtension extension = new CompilerExtension("better-compiler-constant", directiveExtension) {};
 }
