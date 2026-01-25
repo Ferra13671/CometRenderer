@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.LoadGlslContentException;
@@ -14,7 +15,7 @@ public abstract class CometLoader<T> {
     }
 
     public GlslFileEntry createGlslFileEntry(String name, T path) {
-        return new GlslFileEntry(name, getContent(path), GlobalCometCompiler.DEFAULT_FILE, new Registry());
+        return new GlslFileEntry(name, GlslContent.fromString(getContent(path)), GlobalCometCompiler.DEFAULT_FILE, new Registry());
     }
 
     public String getContent(T path) {

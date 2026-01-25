@@ -30,10 +30,10 @@ public class Main {
         );
 
         GlslFileEntry shaderEntry = CometLoaders.IN_JAR.createGlslFileEntry("exampleShader", "exampleShader.vsh");
-        System.out.print(shaderEntry.getContent());
+        System.out.print(shaderEntry.getContent().concatLines());
         System.out.println("\n\n\n\n");
         GlslDirectiveProcessor.processContent(shaderEntry.getRegistry(), new Registry());
         System.out.println("\n\n\n\n");
-        System.out.println(shaderEntry.getContent());
+        System.out.println(shaderEntry.getContent().concatLines());
     }
 }

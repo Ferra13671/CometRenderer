@@ -16,7 +16,7 @@ import java.util.*;
 
 public class ShaderLibrariesPlugin {
     public static final Tag<HashMap<String, GlslFileEntry>> LIBRARIES_TAG = new Tag<>("shader-libraries");
-    public static final String includeLibDirective = "#include";
+    public static final String includeLibDirective = "include";
 
     public static final String SHADER_LIBRARY_FILE = "SHADER_LIB";
 
@@ -26,21 +26,24 @@ public class ShaderLibrariesPlugin {
                 new DirectiveExtension() {
                     @Override
                     public boolean supportedDirective(GlslDirective directive) {
-                        return directive.directiveName().startsWith(includeLibDirective);
+                        return directive.directiveName().equals(includeLibDirective);
                     }
 
                     @Override
-                    public String processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+                    public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
                         Map<String, UniformType<?>> uniforms = glslFileRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
 
-                        String libsLine = directive.line().substring(directive.directiveName().length() + 1, directive.line().length() - 1).replace(" ", "");
+                        String libsLine = directive.glslContent().getLines()[directive.lineIndex()].substring(directive.directiveName().length() + 1)
+                                .replace(" ", "")
+                                .replace("<", "")
+                                .replace(">", "");
                         String[] libs = libsLine.split(",");
 
                         StringBuilder libsContent = new StringBuilder();
                         for (String lib : libs) {
                             GlslFileEntry libEntry = getShaderLibrary(lib).orElseThrow();
 
-                            libsContent.append(libEntry.getContent()).append('\n');
+                            libsContent.append(libEntry.getContent().concatLines()).append('\n');
 
                             libEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
                                 if (uniforms.containsKey(s1))
@@ -50,7 +53,9 @@ public class ShaderLibrariesPlugin {
                             });
                         }
 
-                        return libsContent.toString();
+                        directive.glslContent().getLines()[directive.lineIndex()] = libsContent.toString();
+
+                        return true;
                     }
                 }
         );

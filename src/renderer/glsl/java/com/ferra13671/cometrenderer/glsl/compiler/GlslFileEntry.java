@@ -15,7 +15,7 @@ public class GlslFileEntry {
     @Getter
     private final Registry registry;
 
-    public GlslFileEntry(@NonNull String name, String content, @NonNull String type, @NonNull Registry registry) {
+    public GlslFileEntry(@NonNull String name, GlslContent content, @NonNull String type, @NonNull Registry registry) {
         this.registry = registry;
 
         registry.computeIfAbsent(CometTags.NAME, name, true);
@@ -27,7 +27,7 @@ public class GlslFileEntry {
         return this.registry.get(CometTags.NAME).orElseThrow().getValue();
     }
 
-    public String getContent() {
+    public GlslContent getContent() {
         return this.registry.get(CometTags.CONTENT).orElseThrow().getValue();
     }
 

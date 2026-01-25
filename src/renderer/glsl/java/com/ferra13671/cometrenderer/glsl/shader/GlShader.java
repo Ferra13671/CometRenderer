@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
+import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.utils.Compilable;
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @see ShaderType
  * @see GlobalCometCompiler
  */
-public record GlShader(String name, String content, int id, Map<String, UniformType<?>> extraUniforms, ShaderType shaderType) implements Compilable, Closeable {
+public record GlShader(String name, GlslContent content, int id, Map<String, UniformType<?>> extraUniforms, ShaderType shaderType) implements Compilable, Closeable {
 
     @Override
     public void close() {

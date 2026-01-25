@@ -6,90 +6,54 @@ import com.ferra13671.cometrenderer.utils.tag.Registry;
 public class GlslDirectiveProcessor {
 
     public static void processContent(Registry glslFileRegistry, Registry programRegistry) {
-        String content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
+        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 
-        boolean listen = false;
-        StringBuilder s = new StringBuilder();
-        StringBuilder lineBuilder = new StringBuilder();
-        int startLineIndex = 0;
-        int startDirectiveIndex = 0;
-        int i = 0;
-        while (i < content.length()) {
-            char ch = content.charAt(i);
-            if (ch != '\n')
-                lineBuilder.append(ch);
-            i++;
+        for (int l = 0; l < content.getLines().length; l++) {
+            String line = content.getLines()[l];
 
-            if (ch == '#') {
-                s = new StringBuilder("#");
-                listen = true;
-                startDirectiveIndex = i - 1;
-                continue;
-            }
-            if (listen) {
-                switch (ch) {
-                    case '\n', ' ', '<', '(', '[', '{' -> {
-                        listen = false;
-
-                        String directiveName = s.toString();
-
-                        int endLineIndex;
-
-                        String line;
-                        if (ch == '\n') {
-                            line = lineBuilder.toString();
-                            endLineIndex = i - 1;
-                        } else {
-                            s.append(ch);
-                            int a = i;
-                            for (; a < content.length(); a++) {
-                                ch = content.charAt(a);
-
-                                if (ch == '\n') {
-                                    break;
-                                } else
-                                    lineBuilder.append(ch);
-                            }
-
-                            line = lineBuilder.toString();
-                            endLineIndex = a;
-                        }
-
-                        GlslDirective directive = new GlslDirective(line, directiveName, startDirectiveIndex);
-                        String processedLine = processDirective(directive, glslFileRegistry, programRegistry);
-
-                        if (!directive.line().equals(processedLine)) {
-                            String beforeString = content.substring(0, startLineIndex);
-                            String afterString = content.substring(endLineIndex);
-
-                            glslFileRegistry.set(
-                                    CometTags.CONTENT,
-                                    beforeString.concat(processedLine).concat(afterString)
-                            );
-
-                            processContent(glslFileRegistry, programRegistry);
-
-                            return;
-                        }
-                    }
-                }
-
-                s.append(ch);
-            } else {
-                if (ch == '\n') {
-                    startLineIndex = i;
-                    s = new StringBuilder();
-                    lineBuilder = new StringBuilder();
-                }
+            if (line.contains("#")) {
+                GlslDirective directive = new GlslDirective(getDirectiveName(line), content, l);
+                if (
+                        processDirective(
+                                directive,
+                                glslFileRegistry,
+                                programRegistry
+                        )
+                )
+                    processContent(glslFileRegistry, programRegistry);
             }
         }
     }
 
-    public static String processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+    private static String getDirectiveName(String line) {
+        int directiveIndex = line.indexOf("#");
+
+        String directiveString = line.substring(directiveIndex + 1);
+        StringBuilder directiveNameBuilder = new StringBuilder();
+        for (int i = 0; i < directiveString.length(); i++) {
+            char ch = directiveString.charAt(i);
+
+            if (
+                    ch == ' '
+                            || ch == '<'
+                            || ch == '('
+                            || ch == '['
+                            || ch == '{'
+            )
+                break;
+
+            directiveNameBuilder.append(ch);
+        }
+
+        return directiveNameBuilder.toString();
+    }
+
+    public static boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
         for (DirectiveExtension extension : GlobalCometCompiler.directiveExtensions) {
             if (extension.supportedDirective(directive))
                 return extension.processDirective(directive, glslFileRegistry, programRegistry);
         }
-        return directive.line();
+
+        return false;
     }
 }

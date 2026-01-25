@@ -7,13 +7,14 @@ import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 
 import java.util.Map;
 
 public final class CometTags {
 
     public static final Tag<String> NAME = new Tag<>("name");
-    public static final Tag<String> CONTENT = new Tag<>("content");
+    public static final Tag<GlslContent> CONTENT = new Tag<>("content");
     public static final Tag<String> TYPE = new Tag<>("type");
     public static final Tag<Map<String, UniformType<?>>> UNIFORMS = new Tag<>("uniforms");
     public static final Tag<GlProgramSnippet[]> SNIPPETS = new Tag<>("snippets");

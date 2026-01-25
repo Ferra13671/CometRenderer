@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.plugins.shaderlibraries;
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -66,7 +67,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
 
         return new GlslFileEntry(
                 this.name,
-                this.loader.getContent(this.libraryPath),
+                GlslContent.fromString(this.loader.getContent(this.libraryPath)),
                 ShaderLibrariesPlugin.SHADER_LIBRARY_FILE,
                 registry
         );

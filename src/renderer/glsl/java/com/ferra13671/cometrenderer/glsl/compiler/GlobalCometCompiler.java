@@ -68,10 +68,10 @@ public class GlobalCometCompiler {
     @NonNull
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
         processContent(shaderEntry.getRegistry(), programRegistry);
-        String content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
+        GlslContent content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 
         int shaderId = GL20.glCreateShader(shaderType.glId);
-        GL20.glShaderSource(shaderId, content);
+        GL20.glShaderSource(shaderId, content.concatLines());
         GL20.glCompileShader(shaderId);
 
         GlShader shader = new GlShader(
@@ -96,18 +96,18 @@ public class GlobalCometCompiler {
     }
 
     public static void processContent(Registry shaderRegistry, Registry programRegistry) {
-        String[] lines = removeComments(toLines(shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue()));
-        shaderRegistry.set(CometTags.CONTENT, String.join("\n", lines));
+        removeComments(shaderRegistry);
 
         GlslDirectiveProcessor.processContent(shaderRegistry, programRegistry);
         applyCompileExtensions(shaderRegistry, programRegistry);
     }
 
-    private static String[] removeComments(String[] lines) {
+    private static void removeComments(Registry glslFileRegistry) {
         List<String> l = new ArrayList<>();
+        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 
         boolean comment = false;
-        for (String line : lines) {
+        for (String line : content.getLines()) {
             StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < line.length(); i++) {
@@ -145,10 +145,6 @@ public class GlobalCometCompiler {
                 l.add(builder.toString());
         }
 
-        return l.toArray(new String[0]);
-    }
-
-    private static String[] toLines(String content) {
-        return content.split("\n");
+        content.setLines(l.toArray(new String[0]));
     }
 }
