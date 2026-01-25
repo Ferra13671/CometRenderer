@@ -11,12 +11,12 @@ import lombok.Getter;
 import java.util.Optional;
 
 public class ConstantProcessor {
-    private static final String directiveName = "constant";
+    private static final String directiveName = "#constant";
 
-    private final DirectiveExtension directiveExtension = new DirectiveExtension() {
+    final DirectiveExtension directiveExtension = new DirectiveExtension() {
         @Override
         public boolean supportedDirective(GlslDirective directive) {
-            return directive.directiveName().equals(directiveName);
+            return "#".concat(directive.directiveName()).equals(directiveName);
         }
 
         @Override
@@ -51,14 +51,8 @@ public class ConstantProcessor {
             return false;
         }
     };
-
     @Getter
-    private final CompilerExtension extension = new CompilerExtension("better-compiler-constant", directiveExtension) {
-        @Override
-        public void onCreateProgramBuilder(Registry programRegistry) {
-            programRegistry.setImmutable(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo());
-        }
-    };
+    private final CompilerExtension extension = new CompilerExtension("better-compiler-constant", this.directiveExtension);
 
     private String getDefaultConstantValue(String line) {
         if (line.contains("default = ")) {

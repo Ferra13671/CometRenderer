@@ -14,7 +14,7 @@ public class VersionProcessor {
     private static final String directiveName = "#version";
     private static final Tag<Boolean> FOUNDED_GLSL_VERSION = new Tag<>("founded-glsl-version");
 
-    private final DirectiveExtension directiveExtension = new DirectiveExtension() {
+    final DirectiveExtension directiveExtension = new DirectiveExtension() {
         @Override
         public boolean supportedDirective(GlslDirective directive) {
             return "#".concat(directive.directiveName()).equals(directiveName);
@@ -46,7 +46,7 @@ public class VersionProcessor {
         }
     };
     @Getter
-    private final CompilerExtension extension = new CompilerExtension("better-compiler-version", directiveExtension) {
+    private final CompilerExtension extension = new CompilerExtension("better-compiler-version", this.directiveExtension) {
         @Override
         public void processCompile(Registry shaderRegistry, Registry programRegistry) {
             if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {

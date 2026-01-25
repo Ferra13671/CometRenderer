@@ -21,6 +21,7 @@ public class Main {
 
         testGlslVersionDirective();
         testConstantDirective();
+        testMethodFeatures();
     }
 
     public static void testGlslVersionDirective() {
@@ -54,18 +55,31 @@ public class Main {
                     "Constant without default value",
                     "constantTest.vsh",
                     shaderRegistry -> {},
-                    programRegistry -> {
-                        BetterCompilerProgramInfo info = new BetterCompilerProgramInfo();
-                        programRegistry.set(BetterCompilerTags.PROGRAM_INFO, info); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
-
-                        info.defineConstant("value", "1f");
-                    }
+                    programRegistry ->
+                        programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineConstant("value", "1f")
             );
             startTest(
                     "Constant with default value",
                     "constantWithDefaultValueTest.vsh",
                     shaderRegistry -> {},
-                    programRegistry -> programRegistry.set(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo()) //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
+                    programRegistry -> {}
+            );
+        });
+    }
+
+    public static void testMethodFeatures() {
+        startGroupTest("Method features", () -> {
+            startTest(
+                    "Abstract method directive",
+                    "abstractMethodTest.vsh",
+                    shaderRegistry -> {},
+                    programRegistry ->
+                            programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineMethod(
+                                    "main",
+                                    """
+                                            gl_Position = projMat * modelViewMat * position;
+                                            """
+                            )
             );
         });
     }
@@ -94,6 +108,7 @@ public class Main {
 
         Registry registry = new Registry();
         shaderRegistryConsumer.accept(fileEntry.getRegistry());
+        registry.set(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo()); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
         programRegistryConsumer.accept(registry);
         GlobalCometCompiler.processContent(fileEntry.getRegistry(), registry);
 
