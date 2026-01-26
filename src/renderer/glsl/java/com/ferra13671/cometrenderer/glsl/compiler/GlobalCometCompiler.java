@@ -43,7 +43,7 @@ public class GlobalCometCompiler {
         for (Map.Entry<ShaderType, GlslFileEntry> shaderEntry : shaders.entrySet()) {
             GlShader shader = compileShader(shaderEntry.getValue(), shaderEntry.getKey(), registry);
 
-            GL20.glAttachShader(programId, shader.id());
+            GL20.glAttachShader(programId, shader.getId());
         }
 
         GL20.glLinkProgram(programId);
@@ -63,21 +63,15 @@ public class GlobalCometCompiler {
         processContent(shaderEntry.getRegistry(), programRegistry);
         GlslContent content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 
-        int shaderId = GL20.glCreateShader(shaderType.glId);
-        GL20.glShaderSource(shaderId, content.concatLines());
-        GL20.glCompileShader(shaderId);
-
         GlShader shader = new GlShader(
                 shaderEntry.getName(),
-                content,
-                shaderId,
                 shaderType
         );
+        shader.setContent(content);
+        shader.compile();
 
-        CompileResult compileResult = shader.getCompileResult();
-
-        if (compileResult.isFailure())
-            CometRenderer.getExceptionManager().manageException(new CompileShaderException(shaderEntry.getName(), compileResult.message()));
+        if (shader.getCompileResult().isFailure())
+            CometRenderer.getExceptionManager().manageException(new CompileShaderException(shaderEntry.getName(), shader.getCompileResult().message()));
 
         return shader;
     }
