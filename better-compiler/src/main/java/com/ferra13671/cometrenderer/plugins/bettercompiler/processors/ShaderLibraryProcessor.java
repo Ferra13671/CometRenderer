@@ -26,7 +26,7 @@ public class ShaderLibraryProcessor {
 
         @Override
         public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
-            Map<String, UniformType<?>> uniforms = glslFileRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
+            Map<String, UniformType<?>> uniforms = programRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
 
             String libsLine = directive.glslContent().getLines()[directive.lineIndex()].substring(directive.directiveName().length() + 1)
                     .replace(" ", "")

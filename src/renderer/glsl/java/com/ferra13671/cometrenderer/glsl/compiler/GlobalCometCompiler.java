@@ -2,9 +2,7 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.utils.tag.DefaultTagEntry;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
@@ -46,13 +44,6 @@ public class GlobalCometCompiler {
             GlShader shader = compileShader(shaderEntry.getValue(), shaderEntry.getKey(), registry);
 
             GL20.glAttachShader(programId, shader.id());
-
-            shader.extraUniforms().forEach((s, uniformType) -> {
-                if (uniforms.containsKey(s))
-                    CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s));
-
-                uniforms.put(s, uniformType);
-            });
         }
 
         GL20.glLinkProgram(programId);
@@ -80,7 +71,6 @@ public class GlobalCometCompiler {
                 shaderEntry.getName(),
                 content,
                 shaderId,
-                shaderEntry.getRegistry().get(CometTags.UNIFORMS).orElse(new DefaultTagEntry<>(CometTags.UNIFORMS, new HashMap<>())).getValue(),
                 shaderType
         );
 
@@ -92,13 +82,12 @@ public class GlobalCometCompiler {
         return shader;
     }
 
-    public static void onCreateProgramBuilder(Registry programRegistry) {
+    public static void onCreateProgramBuilder(@NonNull Registry programRegistry) {
         for (CompilerExtension extension : getExtensions())
             extension.onCreateProgramBuilder(programRegistry);
     }
 
-    @NonNull
-    public static void processContent(Registry shaderRegistry, Registry programRegistry) {
+    public static void processContent(@NonNull Registry shaderRegistry, @NonNull Registry programRegistry) {
         removeComments(shaderRegistry);
 
         GlslDirectiveProcessor.processContent(shaderRegistry, programRegistry);
