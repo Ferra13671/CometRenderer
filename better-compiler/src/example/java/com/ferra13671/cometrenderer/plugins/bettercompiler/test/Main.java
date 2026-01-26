@@ -5,9 +5,11 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerProgramInfo;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 
@@ -19,9 +21,28 @@ public class Main {
         CometRenderer.getRegistry().set(CometTags.GL_VERSION, GLVersion.GL40);
         BetterCompilerPlugin.init();
 
+        BetterCompilerPlugin.registerShaderLibraries(
+                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                        .name("exampleLib1")
+                        .library("exampleLibrary1.glsl")
+                        .uniform("shaderColor", UniformType.VEC4)
+                        .build(),
+                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                        .name("exampleLib2")
+                        .library("exampleLibrary2.glsl")
+                        .uniform("Projection", UniformType.BUFFER)
+                        .uniform("modelViewMat", UniformType.MATRIX4)
+                        .build(),
+                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                        .name("exampleLib3")
+                        .library("exampleLibrary3.glsl")
+                        .build()
+        );
+
         testGlslVersionDirective();
         testConstantDirective();
         testMethodFeatures();
+        testShaderLibraryDirective();
     }
 
     public static void testGlslVersionDirective() {
@@ -80,6 +101,23 @@ public class Main {
                                             gl_Position = projMat * modelViewMat * position;
                                             """
                             )
+            );
+        });
+    }
+
+    public static void testShaderLibraryDirective() {
+        startGroupTest("Shader library directive", () -> {
+            startTest(
+                    "Default shader library include",
+                    "defaultShaderLibraryTest.vsh",
+                    shaderRegistry -> {},
+                    programRegistry -> {}
+            );
+            startTest(
+                    "Multi shader library include",
+                    "multiShaderLibraryTest.vsh",
+                    shaderRegistry -> {},
+                    programRegistry -> {}
             );
         });
     }

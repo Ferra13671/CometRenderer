@@ -106,7 +106,7 @@ public class GlobalCometCompiler {
             extension.processCompile(shaderRegistry, programRegistry);
     }
 
-    private static void removeComments(@NonNull Registry glslFileRegistry) {
+    protected static void removeComments(@NonNull Registry glslFileRegistry) {
         List<String> l = new ArrayList<>();
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 

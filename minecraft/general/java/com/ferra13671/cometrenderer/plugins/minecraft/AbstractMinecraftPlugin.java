@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.plugins.minecraft;
 
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.plugins.minecraft.program.DefaultPrograms;
-import com.ferra13671.cometrenderer.plugins.shaderlibraries.ShaderLibrariesPlugin;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class AbstractMinecraftPlugin {
     }
 
     private void initShaderLibraries() {
-        ShaderLibrariesPlugin.registerShaderLibraries(
+        BetterCompilerPlugin.registerShaderLibraries(
                 getMatricesShaderLib(),
                 DefaultShaderLibraries.SHADER_COLOR,
                 DefaultShaderLibraries.ROUNDED

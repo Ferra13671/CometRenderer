@@ -19,8 +19,10 @@ public class GlslDirectiveProcessor {
                                 glslFileRegistry,
                                 programRegistry
                         )
-                )
+                ) {
+                    GlobalCometCompiler.removeComments(glslFileRegistry);
                     processContent(glslFileRegistry, programRegistry);
+                }
             }
         }
     }

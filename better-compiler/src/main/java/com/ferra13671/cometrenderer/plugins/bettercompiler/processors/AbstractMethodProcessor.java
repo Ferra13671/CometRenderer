@@ -1,10 +1,11 @@
-package com.ferra13671.cometrenderer.plugins.bettercompiler;
+package com.ferra13671.cometrenderer.plugins.bettercompiler.processors;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.utils.StringExtension;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;

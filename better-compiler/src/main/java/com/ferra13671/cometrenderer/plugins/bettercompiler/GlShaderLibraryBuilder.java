@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.plugins.shaderlibraries;
+package com.ferra13671.cometrenderer.plugins.bettercompiler;
 
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
@@ -68,7 +68,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
         return new GlslFileEntry(
                 this.name,
                 GlslContent.fromString(this.loader.getContent(this.libraryPath)),
-                ShaderLibrariesPlugin.SHADER_LIBRARY_FILE,
+                BetterCompilerPlugin.SHADER_LIBRARY_GLSL_FILE_ENTRY,
                 registry
         );
     }
