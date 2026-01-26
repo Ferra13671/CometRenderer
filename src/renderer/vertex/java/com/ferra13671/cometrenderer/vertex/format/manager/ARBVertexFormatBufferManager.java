@@ -13,8 +13,6 @@ import org.lwjgl.opengl.ARBVertexAttribBinding;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import java.util.List;
-
 public class ARBVertexFormatBufferManager extends VertexFormatManager {
     private final boolean applyMesaWorkaround;
 
@@ -50,10 +48,10 @@ public class ARBVertexFormatBufferManager extends VertexFormatManager {
         int vertBuffId = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vertBuffId);
 
-        List<VertexElement> vertexElements = vertexFormat.getVertexElements();
+        VertexElement[] elements = vertexFormat.getVertexElements();
 
-        for (int i = 0; i < vertexElements.size(); i++) {
-            VertexElement vertexElement = vertexElements.get(i);
+        for (int i = 0; i < elements.length; i++) {
+            VertexElement vertexElement = elements[i];
             GL30.glEnableVertexAttribArray(i);
 
             if (vertexElement.getType().glId() == GL11.GL_FLOAT) {

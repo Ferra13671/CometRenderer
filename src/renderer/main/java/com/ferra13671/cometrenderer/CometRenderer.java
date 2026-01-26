@@ -20,7 +20,6 @@ import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.manager.ARBVertexFormatBufferManager;
 import com.ferra13671.cometrenderer.vertex.format.manager.DefaultVertexFormatBufferManager;
 import com.ferra13671.cometrenderer.vertex.format.manager.VertexFormatManager;
@@ -93,15 +92,12 @@ public class CometRenderer {
             vertexFormatManager.applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             if (drawMode.useIndexBuffer()) {
-
-                IndexBufferGenerator indexBufferGenerator = mesh.getDrawMode().indexBufferGenerator();
-
                 GpuBuffer indexBuffer = mesh.getIndexBuffer();
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
                     exceptionManager.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
                 indexBuffer.bind();
 
-                GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), indexBufferGenerator.getIndexType().glId, 0);
+                GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), mesh.getDrawMode().indexBufferGenerator().getIndexType().glId, 0);
             } else
                 GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
         }

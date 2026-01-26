@@ -10,8 +10,6 @@ import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import java.util.List;
-
 public class DefaultVertexFormatBufferManager extends VertexFormatManager {
 
     @Override
@@ -39,10 +37,10 @@ public class DefaultVertexFormatBufferManager extends VertexFormatManager {
 
     private void setupBuffer(VertexFormat format, boolean vbaIsNew) {
         int i = format.getVertexSize();
-        List<VertexElement> list = format.getVertexElements();
+        VertexElement[] elements = format.getVertexElements();
 
-        for (int j = 0; j < list.size(); j++) {
-            VertexElement vertexElement = list.get(j);
+        for (int j = 0; j < elements.length; j++) {
+            VertexElement vertexElement = elements[j];
             if (vbaIsNew)
                 GL30.glEnableVertexAttribArray(j);
 

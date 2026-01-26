@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import lombok.Getter;
 
 import java.io.Closeable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
@@ -26,7 +27,7 @@ public class VertexFormat implements Closeable {
     private final HashMap<VertexElement, String> namesMap = new HashMap<>();
     /** Список элементов формата вершины. **/
     @Getter
-    private final List<VertexElement> vertexElements;
+    private final VertexElement[] vertexElements;
     /** Маска формата вершины, используемая в билдере меша для проверки целостности вершины при окончании её сборки. **/
     @Getter
     private final int elementsMask;
@@ -43,28 +44,24 @@ public class VertexFormat implements Closeable {
      * @param vertexElements список элементов формата вершины.
      * @param elementNames список имен элементов формата вершины.
      */
-    public VertexFormat(List<VertexElement> vertexElements, List<String> elementNames) {
+    public VertexFormat(VertexElement[] vertexElements, List<String> elementNames) {
         this.vertexElements = vertexElements;
-        this.elementOffsets = new int[this.vertexElements.size()];
-        this.elementsMask = vertexElements.stream().mapToInt(VertexElement::mask).reduce(0, (a, b) -> a | b);
+        this.elementOffsets = new int[this.vertexElements.length];
+        this.elementsMask = Arrays.stream(vertexElements).mapToInt(VertexElement::mask).reduce(0, (a, b) -> a | b);
 
         int size = 0;
         int elementOffset = 0;
-        //Проходимся по списку элементов
-        for (int i = 0; i < vertexElements.size(); i++) {
-            VertexElement vertexElement = vertexElements.get(i);
-            //Добавляем к размеру формата размер элемента
+        for (int i = 0; i < vertexElements.length; i++) {
+            VertexElement vertexElement = vertexElements[i];
             size += vertexElement.getSize();
 
             this.elementOffsets[i] = i > 0 ? elementOffset : 0;
 
             elementOffset += vertexElement.getSize();
 
-            //Добавляем в карту элементов элемент вместе с его именем
             this.elementsMap.put(elementNames.get(i), vertexElement);
             this.namesMap.put(vertexElement, elementNames.get(i));
         }
-        //Присваиваем размеру формата полученный размер
         this.vertexSize = size;
     }
 
@@ -84,7 +81,7 @@ public class VertexFormat implements Closeable {
      * @see VertexElement
      */
     public Stream<VertexElement> getElementsFromMask(int mask) {
-        return this.vertexElements.stream().filter(element -> element != null && (mask & element.mask()) != 0);
+        return Arrays.stream(this.vertexElements).filter(element -> element != null && (mask & element.mask()) != 0);
     }
 
     /**

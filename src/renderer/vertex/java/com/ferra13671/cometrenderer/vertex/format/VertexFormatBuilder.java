@@ -47,6 +47,6 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
 
     @Override
     public VertexFormat build() {
-        return new VertexFormat(this.vertexElements, this.elementNames);
+        return new VertexFormat(this.vertexElements.toArray(new VertexElement[0]), this.elementNames);
     }
 }
