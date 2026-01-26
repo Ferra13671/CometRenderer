@@ -26,6 +26,7 @@ public abstract class AbstractMinecraftPlugin {
     public AbstractMinecraftPlugin(Supplier<Integer> scaleGetter) {
         setInstance(this);
 
+        BetterCompilerPlugin.init();
         initShaderLibraries();
 
         this.scaleGetter = scaleGetter;
