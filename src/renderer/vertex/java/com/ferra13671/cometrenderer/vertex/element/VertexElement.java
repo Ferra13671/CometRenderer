@@ -10,6 +10,8 @@ import lombok.Getter;
 public class VertexElement {
     /** Айди элемента в формате вершины. **/
     private final int id;
+    /** Маска элемента. **/
+    private final int mask;
     /** Количество данных в элементе. **/
     private final int count;
     /** Размер элемента в байтах. **/
@@ -26,17 +28,9 @@ public class VertexElement {
         type.verify();
 
         this.id = id;
+        this.mask = 1 << this.id;
         this.count = count * (type.size() / type.offset());
         this.size = this.count * type.size();
         this.type = type;
-    }
-
-    /**
-     * Возвращает маску элемента.
-     *
-     * @return маска элемента.
-     */
-    public int mask() {
-        return 1 << this.id;
     }
 }

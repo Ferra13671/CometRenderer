@@ -21,13 +21,12 @@ import java.util.stream.Stream;
  * @see VertexElement
  */
 public class VertexFormat implements Closeable {
-    /** Карта элементов формата вершины по их имени. **/
-    private final HashMap<String, VertexElement> elementsMap = new HashMap<>();
-    /** Карта имен элементов структуры вершины. **/
-    private final HashMap<VertexElement, String> namesMap = new HashMap<>();
-    /** Список элементов формата вершины. **/
+    /** Массив элементов формата вершины. **/
     @Getter
     private final VertexElement[] vertexElements;
+    /** Массив имен элементов формата вершины. **/
+    private final String[] names;
+    private final HashMap<String, VertexElement> elementsForNames = new HashMap<>();
     /** Маска формата вершины, используемая в билдере меша для проверки целостности вершины при окончании её сборки. **/
     @Getter
     private final int elementsMask;
@@ -44,23 +43,23 @@ public class VertexFormat implements Closeable {
      * @param vertexElements список элементов формата вершины.
      * @param elementNames список имен элементов формата вершины.
      */
-    public VertexFormat(VertexElement[] vertexElements, List<String> elementNames) {
-        this.vertexElements = vertexElements;
+    public VertexFormat(List<VertexElement> vertexElements, List<String> elementNames) {
+        this.vertexElements = vertexElements.toArray(new VertexElement[0]);
+        this.names = elementNames.toArray(new String[0]);
         this.elementOffsets = new int[this.vertexElements.length];
-        this.elementsMask = Arrays.stream(vertexElements).mapToInt(VertexElement::mask).reduce(0, (a, b) -> a | b);
+        this.elementsMask = Arrays.stream(this.vertexElements).mapToInt(VertexElement::getMask).reduce(0, (a, b) -> a | b);
 
         int size = 0;
         int elementOffset = 0;
-        for (int i = 0; i < vertexElements.length; i++) {
-            VertexElement vertexElement = vertexElements[i];
+        for (int i = 0; i < this.vertexElements.length; i++) {
+            VertexElement vertexElement = this.vertexElements[i];
             size += vertexElement.getSize();
 
             this.elementOffsets[i] = i > 0 ? elementOffset : 0;
 
             elementOffset += vertexElement.getSize();
 
-            this.elementsMap.put(elementNames.get(i), vertexElement);
-            this.namesMap.put(vertexElement, elementNames.get(i));
+            this.elementsForNames.put(this.names[i], vertexElement);
         }
         this.vertexSize = size;
     }
@@ -81,7 +80,7 @@ public class VertexFormat implements Closeable {
      * @see VertexElement
      */
     public Stream<VertexElement> getElementsFromMask(int mask) {
-        return Arrays.stream(this.vertexElements).filter(element -> element != null && (mask & element.mask()) != 0);
+        return Arrays.stream(this.vertexElements).filter(element -> element != null && (mask & element.getMask()) != 0);
     }
 
     /**
@@ -94,7 +93,7 @@ public class VertexFormat implements Closeable {
      * @see VertexElement
      */
     public VertexElement getElement(String name) {
-        VertexElement vertexElement = this.elementsMap.get(name);
+        VertexElement vertexElement = this.elementsForNames.get(name);
         if (vertexElement == null)
             CometRenderer.getExceptionManager().manageException(new NoSuchVertexElementException(name));
         return vertexElement;
@@ -109,7 +108,7 @@ public class VertexFormat implements Closeable {
      * @see VertexElement
      */
     public String getElementName(VertexElement vertexElement) {
-        return this.namesMap.get(vertexElement);
+        return this.names[vertexElement.getId()];
     }
 
     /**

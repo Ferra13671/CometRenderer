@@ -166,12 +166,14 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
      */
     private long beginElement(VertexElement element) {
         int i = this.currentMask;
-        int j = i & ~element.mask();
+        int j = i & ~element.getMask();
+
         if (j == i) {
             return -1L;
         } else {
             this.currentMask = j;
             long l = this.vertexPointer;
+
             if (l == -1L) {
                 CometRenderer.getExceptionManager().manageException(new IllegalMeshBuilderStateException(
                         "Not currently building vertex.",
