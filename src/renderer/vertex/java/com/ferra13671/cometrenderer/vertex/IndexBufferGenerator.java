@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.vertex;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.utils.MathUtils;
 import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 
@@ -77,7 +78,7 @@ public final class IndexBufferGenerator {
 	}
 
 	private GpuBuffer generateIndexBuffer(int requiredSize) {
-		requiredSize = roundUpToMultiple(requiredSize, this.vertexCountInTriangulated);
+		requiredSize = MathUtils.roundUpToMultiple(requiredSize, this.vertexCountInTriangulated);
 
 		this.indexType = IndexType.best(requiredSize);
 		ByteBuffer buffer = MemoryUtil.memAlloc(requiredSize * indexType.bytes);
@@ -96,13 +97,5 @@ public final class IndexBufferGenerator {
 		} finally {
 			MemoryUtil.memFree(buffer);
 		}
-	}
-
-	private int roundUpToMultiple(int value, int divisor) {
-		return ceilDiv(value, divisor) * divisor;
-	}
-
-	private int ceilDiv(int a, int b) {
-		return -Math.floorDiv(-a, b);
 	}
 }
