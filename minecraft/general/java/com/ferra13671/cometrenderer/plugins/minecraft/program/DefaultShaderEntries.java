@@ -10,7 +10,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_VERTEX = CometLoaders.STRING.createGlslFileEntry(
             "shader.position.vertex",
             """
-            #version 330 core
+            #version auto
             
             in vec4 position;
             
@@ -24,7 +24,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
             "shader.position.fragment",
             """
-            #version 330 core
+            #version auto
             
             precision lowp float;
             
@@ -40,7 +40,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_COLOR_VERTEX = CometLoaders.STRING.createGlslFileEntry(
             "shader.position-color.vertex",
             """
-            #version 330 core
+            #version auto
             
             in vec4 pos;
             in vec4 color;
@@ -59,7 +59,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_COLOR_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
             "shader.position-color.fragment",
             """
-            #version 330 core
+            #version auto
             
             precision lowp float;
             
@@ -77,7 +77,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_TEXTURE_VERTEX = CometLoaders.STRING.createGlslFileEntry(
             "shader.position-texture.vertex",
             """
-            #version 330 core
+            #version auto
             
             in vec4 position;
             in vec2 UV;
@@ -96,7 +96,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_TEXTURE_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
             "shader.position-texture.fragment",
             """
-            #version 330 core
+            #version auto
             
             precision lowp float;
             
@@ -115,7 +115,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_TEXTURE_COLOR_VERTEX = CometLoaders.STRING.createGlslFileEntry(
             "shader.position-texture-color.vertex",
             """
-            #version 330 core
+            #version auto
             
             in vec4 pos;
             in vec2 UV;
@@ -137,7 +137,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry POSITION_TEXTURE_COLOR_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
             "shader.position-texture-color.fragment",
             """
-            #version 330 core
+            #version auto
             
             in vec2 texPos;
             in vec4 vertexColor;
@@ -155,7 +155,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry ROUNDED_RECT_VERTEX = CometLoaders.STRING.createGlslFileEntry(
             "shader.rounded-rect.vertex",
             """
-            #version 330 core
+            #version auto
             
             in vec4 pos;
             in vec4 color;
@@ -182,7 +182,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry ROUNDED_RECT_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
             "shader.rounded-rect.fragment",
             """
-            #version 330 core
+            #version auto
             
             precision lowp float;
             
@@ -210,7 +210,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry ROUNDED_TEXTURE_VERTEX = CometLoaders.STRING.createGlslFileEntry(
             "shader.rounded-texture.vertex",
             """
-            #version 330 core
+            #version auto
             
             in vec4 pos;
             in vec2 UV;
@@ -240,7 +240,7 @@ public class DefaultShaderEntries {
     public final GlslFileEntry ROUNDED_TEXTURE_FRAGMENT = CometLoaders.STRING.createGlslFileEntry(
             "shader.rounded-texture.fragment",
             """
-            #version 330 core
+            #version auto
             
             precision lowp float;
             
