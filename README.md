@@ -8,9 +8,9 @@ This rendering system provides a wide range of tools that can be used to easily 
 
 ## Official CometRenderer plugins
 Several official plugins were also created for the project, expanding the functionality of the rendering system:
+* better-compiler
 * better-exceptions
 * post-effects
-* shader-libraries
 * minecraft
 
 ## Documentation
@@ -26,14 +26,14 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ferra13671:comet-renderer:2.4"
+    implementation "com.ferra13671:comet-renderer:2.5"
     implementation "com.ferra13671:gl-texture-utils:1.7.4-HOTFIX-1"
     
     //Plugins (optional)
     implementation "com.ferra13671:comet-renderer-minecraft:version"//check need version in https://github.com/Ferra13671/maven/tree/main/com/ferra13671/comet-renderer-minecraft
-    implementation "com.ferra13671:comet-renderer-better-exceptions:2.4"
-    implementation "com.ferra13671:comet-renderer-post-effects:2.4"
-    implementation "com.ferra13671:comet-renderer-shader-libraries:2.4"
+    implementation "com.ferra13671:comet-renderer-better-compiler:2.5"
+    implementation "com.ferra13671:comet-renderer-better-exceptions:2.5"
+    implementation "com.ferra13671:comet-renderer-post-effects:2.5"
 }
 ```
 
