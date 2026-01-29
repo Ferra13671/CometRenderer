@@ -23,6 +23,12 @@ public class GlslFileEntry {
         registry.computeIfAbsent(CometTags.TYPE, type, true);
     }
 
+    public GlslFileEntry(GlslFileEntry instance) {
+        this.registry = new Registry(instance.getRegistry());
+
+        registry.set(CometTags.CONTENT, new GlslContent(instance.getContent()));
+    }
+
     public String getName() {
         return this.registry.get(CometTags.NAME).orElseThrow().getValue();
     }

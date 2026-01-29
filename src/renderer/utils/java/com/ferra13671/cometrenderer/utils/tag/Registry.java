@@ -2,21 +2,26 @@ package com.ferra13671.cometrenderer.utils.tag;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Registry {
     private final HashMap<Tag<?>, TagEntry<?>> tagMap = new HashMap<>();
 
+    public Registry() {}
+
+    public Registry(Registry instance) {
+        instance.forEach(this::set);
+    }
+
     public <T> void set(Tag<T> tag, T value) {
-        setInternal(new DefaultTagEntry<>(tag, value));
+        set(new DefaultTagEntry<>(tag, value));
     }
 
     public <T> void setImmutable(Tag<T> tag, T value) {
-        setInternal(new ImmutableTagEntry<>(tag, value));
+        set(new ImmutableTagEntry<>(tag, value));
     }
 
-    private <T> void setInternal(TagEntry<T> entry) {
+    public <T> void set(TagEntry<T> entry) {
         if (contains(entry.getTag()) && get(entry.getTag()).orElseThrow() instanceof ImmutableTagEntry<?>)
             throw new UnsupportedOperationException("Unable to change value for ImmutableTagEntry");
 
@@ -35,14 +40,14 @@ public class Registry {
         TagEntry<T> tagEntry = (TagEntry<T>) this.tagMap.get(tag);
         if (tagEntry == null) {
             tagEntry = immutable ? new ImmutableTagEntry<>(tag, value) : new DefaultTagEntry<>(tag, value);
-            setInternal(tagEntry);
+            set(tagEntry);
         }
 
         return tagEntry;
     }
 
-    public void forEach(BiConsumer<Tag<?>, TagEntry<?>> consumer) {
-        this.tagMap.forEach(consumer);
+    public void forEach(Consumer<TagEntry<?>> consumer) {
+        this.tagMap.values().forEach(consumer);
     }
 
     public void forEachTags(Consumer<Tag<?>> consumer) {

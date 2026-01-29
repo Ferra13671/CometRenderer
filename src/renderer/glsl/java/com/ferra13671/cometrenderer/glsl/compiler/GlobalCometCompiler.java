@@ -60,18 +60,19 @@ public class GlobalCometCompiler {
 
     @NonNull
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
-        processContent(shaderEntry.getRegistry(), programRegistry);
-        GlslContent content = shaderEntry.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
+        GlslFileEntry processedShader = new GlslFileEntry(shaderEntry);
+        processContent(processedShader.getRegistry(), programRegistry);
+        GlslContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 
         GlShader shader = new GlShader(
-                shaderEntry.getName(),
+                processedShader.getName(),
                 shaderType
         );
         shader.setContent(content);
         shader.compile();
 
         if (shader.getCompileResult().isFailure())
-            CometRenderer.getExceptionManager().manageException(new CompileShaderException(shaderEntry.getName(), shader.getCompileResult().message()));
+            CometRenderer.getExceptionManager().manageException(new CompileShaderException(processedShader.getName(), shader.getCompileResult().message()));
 
         return shader;
     }
