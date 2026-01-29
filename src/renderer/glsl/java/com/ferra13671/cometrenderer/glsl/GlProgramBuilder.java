@@ -110,6 +110,10 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
         return this;
     }
 
+    public <S> S getFromTag(Tag<S> tag) {
+        return this.registry.get(tag).orElseThrow().getValue();
+    }
+
     /**
      * Добавляет униформу программе.
      *
