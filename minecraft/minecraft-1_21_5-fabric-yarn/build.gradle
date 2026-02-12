@@ -6,14 +6,8 @@ plugins {
 }
 
 project.ext.projectName = "comet-renderer-minecraft"
-project.ext.minecraftVersion = project.minecraft_version
-project.ext.loaderVersion = project.loader_version
-version = "1.21.5-fabric-${project.main_version}"
 
 apply from: rootProject.file("utils.gradle")
 apply from: rootProject.file("minecraft/minecraft-plugin.gradle")
 apply from: rootProject.file("minecraft/old-fabric-loader.gradle")
-
-dependencies {
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-}
+apply from: rootProject.file("minecraft/yarn-mappings.gradle")

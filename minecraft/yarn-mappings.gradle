@@ -1,0 +1,5 @@
+version = ((String) version).replace("fabric", "fabric-yarn")
+
+dependencies {
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+}
