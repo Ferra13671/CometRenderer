@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'net.fabricmc.fabric-loom' version '1.14-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom-remap' version '1.14-SNAPSHOT'
     id 'maven-publish'
     id 'com.gradleup.shadow' version '9.0.0-beta4'
 }
@@ -8,8 +8,12 @@ plugins {
 project.ext.projectName = "comet-renderer-minecraft"
 project.ext.minecraftVersion = project.minecraft_version
 project.ext.loaderVersion = project.loader_version
-version = "26.1-snapshot-5-fabric-${project.main_version}"
+version = "1.21.5-fabric-${project.main_version}"
 
 apply from: rootProject.file("utils.gradle")
 apply from: rootProject.file("minecraft/minecraft-plugin.gradle")
-apply from: rootProject.file("minecraft/new-fabric-loader.gradle")
+apply from: rootProject.file("minecraft/old-fabric-loader.gradle")
+
+dependencies {
+    mappings loom.officialMojangMappings()
+}
