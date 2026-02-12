@@ -4,6 +4,8 @@ sourceSets {
     example {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
+
+        resources.srcDirs += rootProject.file("minecraft/general/test-resources")
     }
     sourceSets.main.java.srcDirs += rootProject.file("minecraft/general/java")
 }
