@@ -5,8 +5,5 @@ plugins {
     id 'com.gradleup.shadow' version '9.0.0-beta4'
 }
 
-project.ext.projectName = "comet-renderer-minecraft"
-
-apply from: rootProject.file("scripts/utils.gradle")
 apply from: rootProject.file("minecraft/scripts/minecraft-plugin.gradle")
 apply from: rootProject.file("minecraft/scripts/new-fabric-loader.gradle")

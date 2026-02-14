@@ -1,6 +1,8 @@
-version = "${project.minecraft_version}-fabric-${project.main_version}"
+project.ext.projectName = "comet-renderer-minecraft"
 
-apply from: rootProject.file("scripts/publishing.gradle")
+apply from: rootProject.file("scripts/plugin.gradle")
+
+version = "${project.minecraft_version}-fabric-${project.main_version}"
 
 sourceSets {
     example {
@@ -36,6 +38,5 @@ dependencies {
     implementation "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
     implementation rootProject.project("plugins:better-compiler")
 
-    implementation rootProject
     exampleImplementation sourceSets.main.output
 }

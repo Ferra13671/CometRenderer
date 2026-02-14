@@ -1,5 +1,0 @@
-version = ((String) version).replace("fabric", "fabric-mojang")
-
-dependencies {
-    mappings loom.officialMojangMappings()
-}
