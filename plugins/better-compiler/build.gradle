@@ -4,11 +4,7 @@ plugins {
 }
 
 project.ext.projectName = "comet-renderer-better-compiler"
-version = project.main_version
-group = "com.ferra13671"
-
-apply from: rootProject.file("utils.gradle")
-apply from: rootProject.file("publishing.gradle")
+apply from: rootProject.file("scripts/plugin.gradle")
 
 sourceSets {
     example {
@@ -18,6 +14,5 @@ sourceSets {
 }
 
 dependencies {
-    implementation rootProject
     exampleImplementation sourceSets.main.output
 }

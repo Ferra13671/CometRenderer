@@ -1,6 +1,6 @@
 version = "${project.minecraft_version}-fabric-${project.main_version}"
 
-apply from: rootProject.file("publishing.gradle")
+apply from: rootProject.file("scripts/publishing.gradle")
 
 sourceSets {
     example {
@@ -34,7 +34,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.ext.minecraft_version}"
 
     implementation "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
-    implementation rootProject.project("better-compiler")
+    implementation rootProject.project("plugins:better-compiler")
 
     implementation rootProject
     exampleImplementation sourceSets.main.output

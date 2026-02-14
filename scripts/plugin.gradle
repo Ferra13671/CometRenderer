@@ -1,0 +1,9 @@
+version = project.main_version
+group = "com.ferra13671"
+
+apply from: rootProject.file("scripts/utils.gradle")
+apply from: rootProject.file("scripts/publishing.gradle")
+
+dependencies {
+    implementation rootProject
+}

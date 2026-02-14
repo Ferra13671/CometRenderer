@@ -9,9 +9,9 @@ pluginManagement {
     }
 }
 
-include "post-effects"
-include "better-exceptions"
-include "better-compiler"
+include "plugins:post-effects"
+include "plugins:better-exceptions"
+include "plugins:better-compiler"
 include "minecraft:minecraft-1_21_1-fabric-mojang"
 include "minecraft:minecraft-1_21_4-fabric-mojang"
 include "minecraft:minecraft-1_21_5-fabric-mojang"

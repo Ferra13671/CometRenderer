@@ -6,9 +6,9 @@ plugins {
 project.ext.projectName = "comet-renderer"
 version = project.main_version
 
-apply from: file("opengl.gradle")
-apply from: file("utils.gradle")
-apply from: file("publishing.gradle")
+apply from: file("scripts/opengl.gradle")
+apply from: file("scripts/utils.gradle")
+apply from: file("scripts/publishing.gradle")
 
 void subSourceSets(String... names) {
     for (String name : names) {

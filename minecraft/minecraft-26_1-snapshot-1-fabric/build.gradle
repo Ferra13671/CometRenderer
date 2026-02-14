@@ -7,6 +7,6 @@ plugins {
 
 project.ext.projectName = "comet-renderer-minecraft"
 
-apply from: rootProject.file("utils.gradle")
-apply from: rootProject.file("minecraft/minecraft-plugin.gradle")
-apply from: rootProject.file("minecraft/new-fabric-loader.gradle")
+apply from: rootProject.file("scripts/utils.gradle")
+apply from: rootProject.file("minecraft/scripts/minecraft-plugin.gradle")
+apply from: rootProject.file("minecraft/scripts/new-fabric-loader.gradle")
