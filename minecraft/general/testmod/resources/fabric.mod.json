@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "crm-testmod",
+  "version": "${version}",
+  "name": "CRM Testmod",
+  "description": "",
+  "authors": ["ferra13671"],
+  "contact": {
+    "repo": ""
+  },
+  "license": "MIT",
+  "icon": "",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": [
+      "com.ferra13671.cometrenderer.testmod.TestMod"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {}
+}

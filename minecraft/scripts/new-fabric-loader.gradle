@@ -1,3 +1,4 @@
 dependencies {
     implementation "net.fabricmc:fabric-loader:${project.ext.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }

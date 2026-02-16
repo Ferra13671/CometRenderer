@@ -1,0 +1,73 @@
+project.ext.projectName = "crm"
+
+version = "${project.minecraft_version}-fabric-${project.main_version}"
+group = "com.ferra13671"
+
+apply from: rootProject.file("scripts/utils.gradle")
+apply from: rootProject.file("scripts/publishing.gradle")
+
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+
+        java.srcDirs += rootProject.file("minecraft/general/testmod/java")
+        resources.srcDirs += rootProject.file("minecraft/general/testmod/resources")
+    }
+
+    sourceSets.main.java.srcDirs += rootProject.file("minecraft/general/crm/java")
+    sourceSets.main.resources.srcDirs += rootProject.file("minecraft/general/crm/resources")
+}
+
+loom {
+    runs {
+        testmodClient {
+            client()
+            name = "Testmod Client"
+            source sourceSets.testmod
+        }
+    }
+}
+
+configurations {
+    modImplementation.extendsFrom(modInclude)
+    include.extendsFrom(modInclude)
+
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.ext.minecraft_version}"
+
+    library "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
+    library(rootProject.project("plugins:better-compiler")) {
+        transitive = false
+    }
+    library(rootProject) {
+        transitive = false
+    }
+
+    testmodImplementation sourceSets.main.output
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version,
+                "minecraft_version": project.minecraft_version,
+                "loader_version": project.loader_version
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
+
+jar {
+    dependsOn shadowJar
+}
