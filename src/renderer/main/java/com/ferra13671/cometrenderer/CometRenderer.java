@@ -113,6 +113,7 @@ public class CometRenderer {
             throw new IllegalStateException("CometRenderer has already initialized.");
 
         initRegistry();
+        config.MAX_VERTICES.setValue(registry.get(CometTags.MAX_INDICES).orElseThrow().getValue());
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();

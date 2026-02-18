@@ -11,5 +11,5 @@ public class Config {
     public final Setting<Boolean> COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS = new Setting<>(true);
     public final Setting<Boolean> USE_ARB_ATTRIB_BINDING_IF_SUPPORT = new Setting<>(true);
     public final NumberSetting<Integer> DEFAULT_MESH_ALLOCATOR_SIZE = new NumberSetting<>(786432, 0, Integer.MAX_VALUE);
-    public final NumberSetting<Integer> MAX_MESH_VERTEX_COUNT = new NumberSetting<>(16777215, 0, Integer.MAX_VALUE);
+    public final NumberSetting<Integer> MAX_VERTICES = new NumberSetting<>(0, 0, Integer.MAX_VALUE); //Sets from CometTags.MAX_VERTICES after init
 }

@@ -139,7 +139,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
         this.assertNotBuilt();
         this.endVertex();
 
-        if (this.vertexCount >= CometRenderer.getConfig().MAX_MESH_VERTEX_COUNT.getValue())
+        if (this.vertexCount >= CometRenderer.getConfig().MAX_VERTICES.getValue())
             CometRenderer.getExceptionManager().manageException(new VertexOverflowException());
 
         this.vertexCount++;
