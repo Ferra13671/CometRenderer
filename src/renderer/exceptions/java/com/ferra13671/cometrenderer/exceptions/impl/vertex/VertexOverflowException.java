@@ -9,6 +9,6 @@ import com.ferra13671.cometrenderer.exceptions.CometException;
 public class VertexOverflowException extends CometException {
 
     public VertexOverflowException() {
-        super(String.format("The number of vertices in VertexBuilder exceeded the maximum value (%s).", CometRenderer.getConfig().MAX_VERTICES.getValue()));
+        super(String.format("The number of vertices in MeshBuilder exceeded the maximum value (%s).", CometRenderer.getConfig().MAX_VERTICES.getValue()));
     }
 }

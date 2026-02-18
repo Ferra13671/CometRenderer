@@ -1,8 +1,10 @@
 package com.ferra13671.cometrenderer.vertex;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.exceptions.impl.vertex.IndexOverflowException;
 import com.ferra13671.cometrenderer.utils.MathUtils;
 import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
@@ -79,6 +81,9 @@ public final class IndexBufferGenerator {
 
 	private GpuBuffer generateIndexBuffer(int requiredSize) {
 		requiredSize = MathUtils.roundUpToMultiple(requiredSize, this.vertexCountInTriangulated);
+
+		if (requiredSize > CometRenderer.getConfig().MAX_INDICES.getValue())
+			CometRenderer.getExceptionManager().manageException(new IndexOverflowException());
 
 		this.indexType = IndexType.best(requiredSize);
 		ByteBuffer buffer = MemoryUtil.memAlloc(requiredSize * indexType.bytes);

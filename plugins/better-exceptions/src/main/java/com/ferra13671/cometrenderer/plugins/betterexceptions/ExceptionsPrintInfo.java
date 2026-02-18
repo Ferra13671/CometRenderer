@@ -93,6 +93,16 @@ public class ExceptionsPrintInfo {
                         "Check the method where you add vertices to VertexBuilder and fix it."
                 }
         ));
+        add(IndexOverflowException.class, exception -> makeRegistry(
+                "Indices overflow.",
+                exception.getMessage(),
+                new String[]{
+                        "While generating the index buffer, the required size exceeded the maximum value."
+                },
+                new String[]{
+                        "You may be trying to render too many vertices, try splitting the draw multiple draws."
+                }
+        ));
         add(DoubleShaderAdditionException.class, exception -> makeRegistry(
                 "Double shader addition in program builder.",
                 exception.getMessage(),
