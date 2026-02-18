@@ -145,6 +145,7 @@ public class CometRenderer {
         registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
         registry.setImmutable(CometTags.MAX_VERTICES, GL11.glGetInteger(GL12.GL_MAX_ELEMENTS_VERTICES));
+        registry.setImmutable(CometTags.MAX_INDICES, GL11.glGetInteger(GL12.GL_MAX_ELEMENTS_INDICES));
         registry.setImmutable(CometTags.SAMPLER_OBJECT_SUPPORT, registry.get(CometTags.GL_VERSION).orElseThrow().getValue().id >= GLVersion.GL33.id);
 
         int numExtensions = GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS);

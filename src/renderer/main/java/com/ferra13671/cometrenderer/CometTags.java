@@ -29,5 +29,6 @@ public final class CometTags {
     public static final Tag<String[]> GL_EXTENSIONS = new Tag<>("gl-extensions");
     public static final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
     public static final Tag<Integer> MAX_VERTICES = new Tag<>("max-vertices");
+    public static final Tag<Integer> MAX_INDICES = new Tag<>("max-indices");
     public static final Tag<Boolean> SAMPLER_OBJECT_SUPPORT = new Tag<>("sampler-object-support");
 }
