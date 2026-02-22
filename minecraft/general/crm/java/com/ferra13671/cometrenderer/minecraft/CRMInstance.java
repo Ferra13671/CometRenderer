@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.minecraft;
 
-import com.ferra13671.cometrenderer.scissor.ScissorRect;
+import com.ferra13671.cometrenderer.CometRenderer;import com.ferra13671.cometrenderer.scissor.ScissorRect;
 
 import java.util.function.Supplier;
 
@@ -19,8 +19,13 @@ public class CRMInstance {
         CRM.controller.restoreUIProjection();
     }
 
-    public ScissorRect fixScissorRect(ScissorRect scissorRect) {
+    public void pushScissor(ScissorRect scissorRect) {
+        CometRenderer.getScissorStack().push(fixScissorRect(scissorRect));
+    }
+
+    private ScissorRect fixScissorRect(ScissorRect scissorRect) {
         int scale = this.scaleGetter.get();
+
         return new ScissorRect(
                 scissorRect.x() * scale,
                 CRM.getMainFramebufferHeight() - ((scissorRect.y() + scissorRect.height()) * scale),
