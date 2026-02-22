@@ -20,17 +20,6 @@ public class CRMInstance {
     }
 
     public void pushScissor(ScissorRect scissorRect) {
-        CometRenderer.getScissorStack().push(fixScissorRect(scissorRect));
-    }
-
-    private ScissorRect fixScissorRect(ScissorRect scissorRect) {
-        int scale = this.scaleGetter.get();
-
-        return new ScissorRect(
-                scissorRect.x() * scale,
-                CRM.getMainFramebufferHeight() - ((scissorRect.y() + scissorRect.height()) * scale),
-                scissorRect.width() * scale,
-                scissorRect.height() * scale
-        );
+        CometRenderer.getScissorStack().push(CRM.fixScissorRect(scissorRect, this.scaleGetter.get()));
     }
 }

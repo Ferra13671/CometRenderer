@@ -28,7 +28,7 @@ public class LevelRendererMixin {
             return;
 
         CometRenderer.applyDefaultBlend();
-        CRM.bindMainFramebuffer(true);
+        CRM.getMainFramebuffer().bind(true);
 
         RenderWorldCallback.EVENT.invoker().onRenderWorld();
     }

@@ -103,7 +103,7 @@ public class CRMController extends AbstractCRMController {
     }
 
     @Override
-    protected void initMatrix() {
+    protected void applyMatrixUniform() {
         CometRenderer.getGlobalProgram().consumeIfUniformPresent(
                 "projMat",
                 UniformType.MATRIX4,

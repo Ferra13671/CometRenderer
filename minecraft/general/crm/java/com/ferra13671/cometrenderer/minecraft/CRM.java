@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.minecraft.program.DefaultPrograms;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
+import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import com.ferra13671.cometrenderer.utils.Logger;
 import lombok.Getter;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class CRM {
         CometRenderer.getLogger().log(String.format("OpenGL extensions: %s", Arrays.toString(CometRenderer.getRegistry().get(CometTags.GL_EXTENSIONS).orElseThrow().getValue())));
 
         BetterCompilerPlugin.init();
-        controller = AbstractCRMController.loadImpl();
+        controller = new CRMController();
         BetterCompilerPlugin.registerShaderLibraries(
                 controller.getMatricesShaderLib(),
                 DefaultShaderLibraries.SHADER_COLOR,
@@ -52,28 +53,23 @@ public class CRM {
         programs = new DefaultPrograms();
     }
 
+    static ScissorRect fixScissorRect(ScissorRect scissorRect, int scale) {
+        return new ScissorRect(
+                scissorRect.x() * scale,
+                getMainFramebuffer().getHeight() - ((scissorRect.y() + scissorRect.height()) * scale),
+                scissorRect.width() * scale,
+                scissorRect.height() * scale
+        );
+    }
+
     public static void applyMatrixUniform() {
         controller.applyMatrixUniform();
     }
 
-    public static int getMainFramebufferWidth() {
+    public static Framebuffer getMainFramebuffer() {
         if (mainFramebuffer == null)
             mainFramebuffer = controller.createMainFramebuffer();
 
-        return mainFramebuffer.getWidth();
-    }
-
-    public static int getMainFramebufferHeight() {
-        if (mainFramebuffer == null)
-            mainFramebuffer = controller.createMainFramebuffer();
-
-        return mainFramebuffer.getHeight();
-    }
-
-    public static void bindMainFramebuffer(boolean setViewport) {
-        if (mainFramebuffer == null)
-            mainFramebuffer = controller.createMainFramebuffer();
-
-        mainFramebuffer.bind(setViewport);
+        return mainFramebuffer;
     }
 }
