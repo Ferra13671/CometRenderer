@@ -105,7 +105,7 @@ public class CRMController extends AbstractCRMController {
     }
 
     @Override
-    protected void setupUIProjection(int scale) {
+    protected void setupUIMatrix(int scale) {
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(
                 uiMatrix.getBuffer(
@@ -117,7 +117,7 @@ public class CRMController extends AbstractCRMController {
     }
 
     @Override
-    protected void restoreUIProjection() {
+    protected void restoreUIMatrix() {
         RenderSystem.restoreProjectionMatrix();
     }
 

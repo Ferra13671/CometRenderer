@@ -77,7 +77,7 @@ public class CRMController extends AbstractCRMController {
     }
 
     @Override
-    protected void setupUIProjection(int scale) {
+    protected void setupUIMatrix(int scale) {
         this.matrix4fStack.push(RenderSystem.getProjectionMatrix());
         RenderSystem.setProjectionMatrix(
                 (new Matrix4f()).setOrtho(
@@ -93,7 +93,7 @@ public class CRMController extends AbstractCRMController {
     }
 
     @Override
-    protected void restoreUIProjection() {
+    protected void restoreUIMatrix() {
         RenderSystem.setProjectionMatrix(
                 this.matrix4fStack.peek(),
                 VertexSorting.ORTHOGRAPHIC_Z

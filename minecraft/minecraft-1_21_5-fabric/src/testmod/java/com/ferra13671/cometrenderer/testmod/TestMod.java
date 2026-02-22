@@ -22,9 +22,9 @@ public class TestMod implements PreLaunchEntrypoint, Mc {
         });
 
         RenderHudCallback.EVENT.register(() -> {
-            instance.setupUIProjection();
+            instance.setupUIMatrix();
             UIRenderTest.draw();
-            instance.restoreUIProjection();
+            instance.restoreUIMatrix();
         });
         RenderWorldCallback.EVENT.register(this::renderBoxes);
     }

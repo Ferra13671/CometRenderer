@@ -13,9 +13,9 @@ abstract class AbstractCRMController {
 
     protected abstract GlslFileEntry getMatricesShaderLib();
 
-    protected abstract void setupUIProjection(int scale);
+    protected abstract void setupUIMatrix(int scale);
 
-    protected abstract void restoreUIProjection();
+    protected abstract void restoreUIMatrix();
 
     protected abstract void applyMatrixUniform();
 
