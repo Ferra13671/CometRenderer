@@ -52,8 +52,8 @@ public class CRM {
         programs = new DefaultPrograms();
     }
 
-    public static void initMatrix() {
-        controller.initMatrix();
+    public static void applyMatrixUniform() {
+        controller.applyMatrixUniform();
     }
 
     public static int getMainFramebufferWidth() {

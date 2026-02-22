@@ -120,7 +120,7 @@ public class RoundedTextureDrawer extends AbstractDrawer {
         CometRenderer.setGlobalProgram(CRM.getPrograms().ROUNDED_TEXTURE);
 
         CometRenderer.initShaderColor();
-        CRM.initMatrix();
+        CRM.applyMatrixUniform();
         CometRenderer.getGlobalProgram().getUniform("height", UniformType.FLOAT).set((float) CRM.getMainFramebufferHeight());
 
         if (this.uploadRunnable != null)

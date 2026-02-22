@@ -99,7 +99,7 @@ public class ColoredTextureDrawer extends AbstractDrawer {
         CometRenderer.setGlobalProgram(CRM.getPrograms().POSITION_TEXTURE_COLOR);
 
         CometRenderer.initShaderColor();
-        CRM.initMatrix();
+        CRM.applyMatrixUniform();
 
         if (this.uploadRunnable != null)
             this.uploadRunnable.run();

@@ -19,7 +19,7 @@ abstract class AbstractCRMController {
 
     protected abstract void restoreUIProjection();
 
-    protected abstract void initMatrix();
+    protected abstract void applyMatrixUniform();
 
     protected abstract Framebuffer createMainFramebuffer();
 
