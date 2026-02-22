@@ -12,11 +12,11 @@ public class CRMInstance {
     }
 
     public void setupUIProjection() {
-        CRM.getController().setupUIProjection(this.scaleGetter.get());
+        CRM.controller.setupUIProjection(this.scaleGetter.get());
     }
 
     public void restoreUIProjection() {
-        CRM.getController().restoreUIProjection();
+        CRM.controller.restoreUIProjection();
     }
 
     public ScissorRect fixScissorRect(ScissorRect scissorRect) {

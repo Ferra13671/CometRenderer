@@ -38,7 +38,7 @@ public class MinecraftFramebuffer implements Framebuffer {
     @Override
     public void bind(boolean setViewport) {
         int id = ((GlTexture) this.framebuffer.getColorTexture()).getFbo(
-                ((CRMController) CRM.getController()).getDirectStateAccess(),
+                ((CRMController) CRM.controller).getDirectStateAccess(),
                 this.framebuffer.useDepth ? this.framebuffer.getDepthTexture() : null
         );
 

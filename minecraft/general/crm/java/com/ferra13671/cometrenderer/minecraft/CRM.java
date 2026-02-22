@@ -13,8 +13,7 @@ import java.util.Arrays;
 
 public class CRM {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
-    @Getter
-    private static AbstractCRMController controller;
+    static AbstractCRMController controller;
     @Getter
     private static DefaultPrograms programs;
     private static Framebuffer mainFramebuffer;

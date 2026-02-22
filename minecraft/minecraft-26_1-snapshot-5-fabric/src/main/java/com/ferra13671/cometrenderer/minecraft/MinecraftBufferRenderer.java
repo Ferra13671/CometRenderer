@@ -25,7 +25,7 @@ public class MinecraftBufferRenderer {
             GpuBuffer indexBuffer = shapeIndexBuffer.getBuffer(drawState.indexCount());
             VertexFormat.IndexType indexType = shapeIndexBuffer.type();
 
-            ((CRMController) CRM.getController()).getVertexArrayCache().bindVertexArray(
+            ((CRMController) CRM.controller).getVertexArrayCache().bindVertexArray(
                     drawState.format(),
                     (GlBuffer) vertexBuffer
             );
