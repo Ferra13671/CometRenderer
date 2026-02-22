@@ -24,7 +24,7 @@ public class GameRendererMixin {
             return;
 
         GlStateManager._disableDepthTest();
-        CometRenderer.applyDefaultBlend();
+        CometRenderer.setDefaultBlend();
         CRM.getMainFramebuffer().bind(true);
 
         RenderHudCallback.EVENT.invoker().onRenderHud();

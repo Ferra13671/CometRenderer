@@ -177,7 +177,7 @@ public class CometRenderer {
      * @see <a href="https://docs.gl/gl4/glBlendFunc">OpenGL glBlendFunc wiki</a>
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
-    public static void applyDefaultBlend() {
+    public static void setDefaultBlend() {
         State.BLEND.enable();
         GL11.glBlendFunc(SrcFactor.SRC_ALPHA.glId, DstFactor.ONE_MINUS_SRC_ALPHA.glId);
     }
@@ -191,7 +191,7 @@ public class CometRenderer {
      * @see <a href="https://docs.gl/gl4/glBlendFunc">OpenGL glBlendFunc wiki</a>
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
-    public static void applyBlend(SrcFactor srcFactor, DstFactor dstFactor) {
+    public static void setBlend(SrcFactor srcFactor, DstFactor dstFactor) {
         State.BLEND.enable();
         GL11.glBlendFunc(srcFactor.glId, dstFactor.glId);
     }
@@ -207,7 +207,7 @@ public class CometRenderer {
      * @see <a href="https://docs.gl/gl4/glBlendFuncSeparate">OpenGL glBlendFuncSeparate wiki</a>
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
-    public static void applyBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
+    public static void setBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
         State.BLEND.enable();
         GL14.glBlendFuncSeparate(srcColor.glId, dstColor.glId, srcAlpha.glId, dstAlpha.glId);
     }

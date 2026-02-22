@@ -29,7 +29,7 @@ public class LevelRendererMixin {
         if (minecraft.player == null)
             return;
 
-        CometRenderer.applyDefaultBlend();
+        CometRenderer.setDefaultBlend();
         CRM.getMainFramebuffer().bind(true);
 
         RenderWorldCallback.EVENT.invoker().onRenderWorld();
