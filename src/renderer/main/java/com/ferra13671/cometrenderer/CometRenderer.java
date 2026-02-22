@@ -52,10 +52,10 @@ public class CometRenderer {
     private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
-    /** Глобальная активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
+    /** Текущая активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
     @Getter
     @Setter
-    private static GlProgram globalProgram;
+    private static GlProgram currentProgram;
     /** Стек для областей, используемых ножницами. **/
     @Getter
     private static final ScissorStack scissorStack = new ScissorStack();
@@ -163,7 +163,7 @@ public class CometRenderer {
      * @see CometRenderer#colorSnippet
      */
     public static void applyShaderColorUniform() {
-        globalProgram.consumeIfUniformPresent(
+        currentProgram.consumeIfUniformPresent(
                 "shaderColor",
                 UniformType.VEC4,
                 colorUniform ->
@@ -275,10 +275,10 @@ public class CometRenderer {
         } else
             State.SCISSOR.disable();
 
-        globalProgram.bind();
+        currentProgram.bind();
 
         bufferRenderer.draw(buffer, close);
 
-        globalProgram.unbind();
+        currentProgram.unbind();
     }
 }

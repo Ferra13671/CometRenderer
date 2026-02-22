@@ -86,11 +86,11 @@ public class RoundedRectDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
-        CometRenderer.setGlobalProgram(CRM.getPrograms().ROUNDED_RECT);
+        CometRenderer.setCurrentProgram(CRM.getPrograms().ROUNDED_RECT);
 
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
-        CometRenderer.getGlobalProgram().getUniform("height", UniformType.FLOAT).set((float) CRM.getMainFramebuffer().getHeight());
+        CometRenderer.getCurrentProgram().getUniform("height", UniformType.FLOAT).set((float) CRM.getMainFramebuffer().getHeight());
 
         CometRenderer.draw(this.mesh, false);
     }

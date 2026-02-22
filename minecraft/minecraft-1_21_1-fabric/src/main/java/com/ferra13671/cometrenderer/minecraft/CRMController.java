@@ -103,14 +103,14 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected void applyMatrixUniform() {
-        CometRenderer.getGlobalProgram().consumeIfUniformPresent(
+        CometRenderer.getCurrentProgram().consumeIfUniformPresent(
                 "projMat",
                 UniformType.MATRIX4,
                 projectionUniform ->
                         projectionUniform.set(RenderSystem.getProjectionMatrix())
         );
 
-        CometRenderer.getGlobalProgram().consumeIfUniformPresent(
+        CometRenderer.getCurrentProgram().consumeIfUniformPresent(
                 "modelViewMat",
                 UniformType.MATRIX4,
                 modelViewUniform ->

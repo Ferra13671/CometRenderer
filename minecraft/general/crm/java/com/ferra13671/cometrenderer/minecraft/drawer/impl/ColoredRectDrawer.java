@@ -58,7 +58,7 @@ public class ColoredRectDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
-        CometRenderer.setGlobalProgram(CRM.getPrograms().POSITION_COLOR);
+        CometRenderer.setCurrentProgram(CRM.getPrograms().POSITION_COLOR);
 
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();

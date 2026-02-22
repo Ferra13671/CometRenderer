@@ -26,7 +26,7 @@ public class ProgramPass {
         Framebuffer outputFrameBuffer = output.apply(context);
         outputFrameBuffer.bind(true);
 
-        CometRenderer.setGlobalProgram(program);
+        CometRenderer.setCurrentProgram(program);
         for (Pair<Integer, Function<PostEffectContext, Framebuffer>> input : inputs)
             program.getSampler(input.getLeft()).set(input.getRight().apply(context).getColorTextureId());
         preRenderConsumer.accept(program);

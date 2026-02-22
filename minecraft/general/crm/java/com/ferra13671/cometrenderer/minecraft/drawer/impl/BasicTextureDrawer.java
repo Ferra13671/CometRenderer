@@ -84,7 +84,7 @@ public class BasicTextureDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
-        CometRenderer.setGlobalProgram(CRM.getPrograms().POSITION_TEXTURE);
+        CometRenderer.setCurrentProgram(CRM.getPrograms().POSITION_TEXTURE);
 
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();

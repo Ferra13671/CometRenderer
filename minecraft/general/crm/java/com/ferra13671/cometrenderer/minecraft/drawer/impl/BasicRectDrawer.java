@@ -56,7 +56,7 @@ public class BasicRectDrawer extends AbstractDrawer {
 
     @Override
     protected void draw() {
-        CometRenderer.setGlobalProgram(CRM.getPrograms().POSITION);
+        CometRenderer.setCurrentProgram(CRM.getPrograms().POSITION);
 
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();

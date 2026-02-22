@@ -16,7 +16,7 @@ public class BoxRenderTest {
     private static long lastRotateTime = System.currentTimeMillis();
 
     public static void draw(Vector3f position, RenderColor color) {
-        CometRenderer.setGlobalProgram(CRM.getPrograms().POSITION_COLOR);
+        CometRenderer.setCurrentProgram(CRM.getPrograms().POSITION_COLOR);
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
 
