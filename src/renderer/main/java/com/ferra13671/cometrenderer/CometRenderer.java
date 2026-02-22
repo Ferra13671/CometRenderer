@@ -162,7 +162,7 @@ public class CometRenderer {
      *
      * @see CometRenderer#colorSnippet
      */
-    public static void initShaderColor() {
+    public static void applyShaderColorUniform() {
         globalProgram.consumeIfUniformPresent(
                 "shaderColor",
                 UniformType.VEC4,

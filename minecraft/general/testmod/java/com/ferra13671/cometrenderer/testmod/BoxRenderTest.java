@@ -17,7 +17,7 @@ public class BoxRenderTest {
 
     public static void draw(Vector3f position, RenderColor color) {
         CometRenderer.setGlobalProgram(CRM.getPrograms().POSITION_COLOR);
-        CometRenderer.initShaderColor();
+        CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
 
         MeshBuilder cubeBuilder = Mesh.builder(CustomDrawMode.CUBE, CustomVertexFormats.POSITION_COLOR);
