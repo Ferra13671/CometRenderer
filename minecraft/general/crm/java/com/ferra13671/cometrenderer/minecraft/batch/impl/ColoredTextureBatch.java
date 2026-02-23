@@ -1,11 +1,11 @@
-package com.ferra13671.cometrenderer.minecraft.drawer.impl;
+package com.ferra13671.cometrenderer.minecraft.batch.impl;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexElementTypes;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
-import com.ferra13671.cometrenderer.minecraft.drawer.AbstractDrawer;
+import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -17,61 +17,61 @@ import org.joml.Matrix4f;
 
 import java.util.function.BiConsumer;
 
-public class ColoredTextureDrawer extends AbstractDrawer {
+public class ColoredTextureBatch extends AbstractPrimitiveBatch {
     private Runnable uploadRunnable = null;
 
-    public ColoredTextureDrawer(Runnable preDrawRunnable) {
+    public ColoredTextureBatch(Runnable preDrawRunnable) {
         this();
         this.preDrawRunnable = preDrawRunnable;
     }
 
-    public ColoredTextureDrawer() {
+    public ColoredTextureBatch() {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
     }
 
-    public ColoredTextureDrawer(int allocatorSize, Runnable preDrawRunnable) {
+    public ColoredTextureBatch(int allocatorSize, Runnable preDrawRunnable) {
         this(allocatorSize);
         this.preDrawRunnable = preDrawRunnable;
     }
 
-    public ColoredTextureDrawer(int allocatorSize) {
+    public ColoredTextureBatch(int allocatorSize) {
         super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
     }
 
-    public ColoredTextureDrawer setTexture(int textureId) {
+    public ColoredTextureBatch setTexture(int textureId) {
         SamplerUniform uniform = CRM.getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);
 
         return this;
     }
 
-    public ColoredTextureDrawer setTexture(GlTex texture) {
+    public ColoredTextureBatch setTexture(GlTex texture) {
         SamplerUniform uniform = CRM.getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(texture);
 
         return this;
     }
 
-    public <T> ColoredTextureDrawer setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
+    public <T> ColoredTextureBatch setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
         SamplerUniform uniform = CRM.getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
         this.uploadRunnable = () -> uniform.set(uploadConsumer, texture);
 
         return this;
     }
 
-    public ColoredTextureDrawer rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder) {
+    public ColoredTextureBatch rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder) {
         return rectPositioned(x, y, x + width, y + height, rectColors, textureBorder, null);
     }
 
-    public ColoredTextureDrawer rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
+    public ColoredTextureBatch rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
         return rectPositioned(x, y, x + width, y + height, rectColors, textureBorder, matrix4f);
     }
 
-    public ColoredTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder) {
+    public ColoredTextureBatch rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder) {
         return rectPositioned(x1, y1, x2, y2, rectColors, textureBorder, null);
     }
 
-    public ColoredTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
+    public ColoredTextureBatch rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
         vertex(x1, y1, matrix4f)
                 .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y1Color());

@@ -1,20 +1,24 @@
 package com.ferra13671.cometrenderer.testmod;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.minecraft.drawer.impl.*;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
-import com.ferra13671.cometrenderer.minecraft.drawer.IDrawer;
 import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.FileEntry;
 import com.ferra13671.gltextureutils.loader.TextureLoaders;
+import com.ferra13671.cometrenderer.minecraft.batch.IPrimitiveBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.BasicTextureBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.BasicRectBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.ColoredRectBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedTextureBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedRectBatch;
 
 import java.awt.*;
 
 public final class UIRenderTest {
     private static GLTexture texture;
-    public static IDrawer standaloneDrawer;
+    public static IPrimitiveBatch standaloneDrawer;
 
     public static void init() {
         texture =
@@ -25,7 +29,7 @@ public final class UIRenderTest {
                         .wrapping(TextureWrapping.DEFAULT)
                         .build();
 
-        standaloneDrawer = new BasicTextureDrawer()
+        standaloneDrawer = new BasicTextureBatch()
                 .setTexture(texture)
                 .rectSized(600, 100, 100, 100, new TextureBorder(0, 0, 1, 1))
                 .build()
@@ -40,7 +44,7 @@ public final class UIRenderTest {
     }
 
     private static void drawOneColorRect() {
-        new BasicRectDrawer(() -> CometRenderer.getShaderColor().setColor(RenderColor.of(Color.RED).toVector4f()))
+        new BasicRectBatch(() -> CometRenderer.getShaderColor().setColor(RenderColor.of(Color.RED).toVector4f()))
                 .rectSized(200, 100, 100, 100)
                 .build()
                 .tryDraw()
@@ -48,7 +52,7 @@ public final class UIRenderTest {
     }
 
     private static void drawMultiColorRect() {
-        new ColoredRectDrawer()
+        new ColoredRectBatch()
                 .rectSized(200, 210, 100, 100, new RectColors(
                         RenderColor.of(1f, 1f, 1f, 1f),
                         RenderColor.of(1f, 0f, 0f, 1f),
@@ -63,7 +67,7 @@ public final class UIRenderTest {
     private static void drawTextures() {
         standaloneDrawer.tryDraw();
 
-        new RoundedTextureDrawer()
+        new RoundedTextureBatch()
                 .setTexture(texture)
                 .rectSized(600, 210, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
                 .build()
@@ -72,7 +76,7 @@ public final class UIRenderTest {
     }
 
     private static void drawRoundedRects() {
-        new RoundedRectDrawer()
+        new RoundedRectBatch()
                 .rectSized(400, 100, 100, 100, 20, RectColors.oneColor(RenderColor.of(Color.MAGENTA)))
                 .rectSized(400, 210, 100, 100, 20, RectColors.horizontalGradient(RenderColor.of(Color.BLUE), RenderColor.of(Color.CYAN)))
                 .build()

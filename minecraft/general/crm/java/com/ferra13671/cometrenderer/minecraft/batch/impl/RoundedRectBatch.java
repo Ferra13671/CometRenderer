@@ -1,11 +1,11 @@
-package com.ferra13671.cometrenderer.minecraft.drawer.impl;
+package com.ferra13671.cometrenderer.minecraft.batch.impl;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexElementTypes;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
-import com.ferra13671.cometrenderer.minecraft.drawer.AbstractDrawer;
+import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -13,39 +13,39 @@ import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 import org.joml.Matrix4f;
 
-public class RoundedRectDrawer extends AbstractDrawer {
+public class RoundedRectBatch extends AbstractPrimitiveBatch {
 
-    public RoundedRectDrawer(Runnable preDrawRunnable) {
+    public RoundedRectBatch(Runnable preDrawRunnable) {
         this();
         this.preDrawRunnable = preDrawRunnable;
     }
 
-    public RoundedRectDrawer() {
+    public RoundedRectBatch() {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.ROUNDED_RECT));
     }
 
-    public RoundedRectDrawer(int allocatorSize, Runnable preDrawRunnable) {
+    public RoundedRectBatch(int allocatorSize, Runnable preDrawRunnable) {
         this(allocatorSize);
         this.preDrawRunnable = preDrawRunnable;
     }
 
-    public RoundedRectDrawer(int allocatorSize) {
+    public RoundedRectBatch(int allocatorSize) {
         super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.ROUNDED_RECT));
     }
 
-    public RoundedRectDrawer rectSized(float x, float y, float width, float height, float radius, RectColors rectColors) {
+    public RoundedRectBatch rectSized(float x, float y, float width, float height, float radius, RectColors rectColors) {
         return rectPositioned(x, y, x + width, y + height, radius, rectColors, null);
     }
 
-    public RoundedRectDrawer rectSized(float x, float y, float width, float height, float radius, RectColors rectColors, Matrix4f matrix4f) {
+    public RoundedRectBatch rectSized(float x, float y, float width, float height, float radius, RectColors rectColors, Matrix4f matrix4f) {
         return rectPositioned(x, y, x + width, y + height, radius, rectColors, matrix4f);
     }
 
-    public RoundedRectDrawer rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors) {
+    public RoundedRectBatch rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors) {
         return rectPositioned(x1, y1, x2, y2, radius, rectColors, null);
     }
 
-    public RoundedRectDrawer rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors, Matrix4f matrix4f) {
+    public RoundedRectBatch rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors, Matrix4f matrix4f) {
         float[] halfSize = {(x2 - x1) / 2, (y2 - y1) / 2};
         float[] pos = {x1 + halfSize[0], y1 + halfSize[1]};
 

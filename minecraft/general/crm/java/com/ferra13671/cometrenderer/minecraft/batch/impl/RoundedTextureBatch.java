@@ -1,11 +1,11 @@
-package com.ferra13671.cometrenderer.minecraft.drawer.impl;
+package com.ferra13671.cometrenderer.minecraft.batch.impl;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexElementTypes;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
-import com.ferra13671.cometrenderer.minecraft.drawer.AbstractDrawer;
+import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
@@ -18,61 +18,61 @@ import org.joml.Matrix4f;
 
 import java.util.function.BiConsumer;
 
-public class RoundedTextureDrawer extends AbstractDrawer {
+public class RoundedTextureBatch extends AbstractPrimitiveBatch {
     private Runnable uploadRunnable = null;
 
-    public RoundedTextureDrawer(Runnable preDrawRunnable) {
+    public RoundedTextureBatch(Runnable preDrawRunnable) {
         this();
         this.preDrawRunnable = preDrawRunnable;
     }
 
-    public RoundedTextureDrawer() {
+    public RoundedTextureBatch() {
         super(Mesh.builder(DrawMode.QUADS, CustomVertexFormats.ROUNDED_TEXTURE));
     }
 
-    public RoundedTextureDrawer(int allocatorSize, Runnable preDrawRunnable) {
+    public RoundedTextureBatch(int allocatorSize, Runnable preDrawRunnable) {
         this(allocatorSize);
         this.preDrawRunnable = preDrawRunnable;
     }
 
-    public RoundedTextureDrawer(int allocatorSize) {
+    public RoundedTextureBatch(int allocatorSize) {
         super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.ROUNDED_TEXTURE));
     }
 
-    public RoundedTextureDrawer setTexture(int textureId) {
+    public RoundedTextureBatch setTexture(int textureId) {
         SamplerUniform uniform = CRM.getPrograms().ROUNDED_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(textureId);
 
         return this;
     }
 
-    public RoundedTextureDrawer setTexture(GlTex texture) {
+    public RoundedTextureBatch setTexture(GlTex texture) {
         SamplerUniform uniform = CRM.getPrograms().ROUNDED_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(texture);
 
         return this;
     }
 
-    public <T> RoundedTextureDrawer setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
+    public <T> RoundedTextureBatch setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
         SamplerUniform uniform = CRM.getPrograms().ROUNDED_TEXTURE.getSampler(0);
         this.uploadRunnable = () -> uniform.set(uploadConsumer, texture);
 
         return this;
     }
 
-    public RoundedTextureDrawer rectSized(float x, float y, float width, float height, float radius, RectColors rectColors, TextureBorder textureBorder) {
+    public RoundedTextureBatch rectSized(float x, float y, float width, float height, float radius, RectColors rectColors, TextureBorder textureBorder) {
         return rectPositioned(x, y, x + width, y + height, radius, rectColors, textureBorder, null);
     }
 
-    public RoundedTextureDrawer rectSized(float x, float y, float width, float height, float radius, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
+    public RoundedTextureBatch rectSized(float x, float y, float width, float height, float radius, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
         return rectPositioned(x, y, x + width, y + height, radius, rectColors, textureBorder, matrix4f);
     }
 
-    public RoundedTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors, TextureBorder textureBorder) {
+    public RoundedTextureBatch rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors, TextureBorder textureBorder) {
         return rectPositioned(x1, y1, x2, y2, radius, rectColors, textureBorder, null);
     }
 
-    public RoundedTextureDrawer rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
+    public RoundedTextureBatch rectPositioned(float x1, float y1, float x2, float y2, float radius, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
         float[] halfSize = {(x2 - x1) / 2, (y2 - y1) / 2};
         float[] pos = {x1 + halfSize[0], y1 + halfSize[1]};
 
