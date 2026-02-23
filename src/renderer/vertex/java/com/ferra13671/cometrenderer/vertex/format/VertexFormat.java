@@ -55,8 +55,7 @@ public class VertexFormat implements Closeable {
             VertexElement vertexElement = this.vertexElements[i];
             size += vertexElement.getSize();
 
-            this.elementOffsets[i] = i > 0 ? elementOffset : 0;
-
+            this.elementOffsets[i] = elementOffset;
             elementOffset += vertexElement.getSize();
 
             this.elementsForNames.put(this.names[i], vertexElement);

@@ -83,9 +83,9 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
 
     @Override
     public Mesh buildNullable() {
-        this.assertNotBuilt();
-        this.endVertex();
-        Mesh mesh = this.buildInternal();
+        assertNotBuilt();
+        assertVertexStructure();
+        Mesh mesh = buildInternal();
         if (this.closeAllocatorAfterBuild)
             this.allocator.close();
         this.built = true;
@@ -95,7 +95,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
 
     @Override
     public Mesh build() {
-        Mesh mesh = this.buildNullable();
+        Mesh mesh = buildNullable();
         if (mesh == null) {
             CometRenderer.getExceptionManager().manageException(new IllegalMeshBuilderStateException(
                     "MeshBuilder was empty.",
@@ -118,16 +118,20 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
      * @return цельный меш.
      */
     private Mesh buildInternal() {
-        if (this.vertexCount == 0) {
-            return null;
-        } else {
-            if (this.allocator.isEmpty()) {
-                return null;
-            } else {
-                int i = this.drawMode.indexCountFunction().apply(this.vertexCount);
-                return new Mesh(this.allocator, this.vertexFormat, this.vertexCount, i, this.drawMode);
-            }
-        }
+        return
+            this.vertexCount == 0 ?
+                null
+                :
+                this.allocator.isEmpty() ?
+                    null
+                    :
+                    new Mesh(
+                            this.allocator,
+                            this.vertexFormat,
+                            this.vertexCount,
+                            this.drawMode.indexCountFunction().apply(this.vertexCount),
+                            this.drawMode
+                    );
     }
 
     /**
@@ -136,22 +140,19 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
      * @return адрес новой вершины.
      */
     private long beginVertex() {
-        this.assertNotBuilt();
-        this.endVertex();
+        assertNotBuilt();
+        assertVertexStructure();
 
+        this.vertexCount++;
         if (this.vertexCount >= CometRenderer.getConfig().MAX_VERTICES.getValue())
             CometRenderer.getExceptionManager().manageException(new VertexOverflowException());
 
-        this.vertexCount++;
         long l = this.allocator.allocate(this.vertexSize);
         this.vertexPointer = l;
         return l;
     }
 
-    /**
-     * Заканчивает сборку текущей вершины.
-     */
-    private void endVertex() {
+    private void assertVertexStructure() {
         if (this.vertexCount != 0 && this.currentMask != 0) {
             String string = this.vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getElementName).collect(Collectors.joining(", "));
             CometRenderer.getExceptionManager().manageException(new BadVertexStructureException(string));
@@ -193,7 +194,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuild
 
     @Override
     public MeshBuilder vertex(float x, float y, float z) {
-        long l = this.beginVertex() + this.elementOffsets[0];
+        long l = beginVertex() + this.elementOffsets[0];
         this.currentMask = this.requiredMask;
         MemoryUtil.memPutFloat(l, x);
         MemoryUtil.memPutFloat(l + 4L, y);
