@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.minecraft.program.DefaultPrograms;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import com.ferra13671.cometrenderer.utils.Logger;
+import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import lombok.Getter;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,10 @@ public class CRM {
         CometRenderer.init();
 
         CometRenderer.getLogger().log(String.format("Initialized CometRenderer %s", CometRenderer.getRegistry().get(CometTags.COMET_RENDERER_VERSION).orElseThrow().getValue()));
+        CometRenderer.getLogger().log(String.format("OpenGL version: %s", CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glVersion));
+        Mesa3DVersion mesa3DVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow().getValue();
+        CometRenderer.getLogger().log(String.format("Mesa3D version: %s", mesa3DVersion == Mesa3DVersion.NONE ? "not supported" : mesa3DVersion.version()));
+        CometRenderer.getLogger().log(String.format("GPU: %s", CometRenderer.getRegistry().get(CometTags.GPU).orElseThrow().getValue()));
         CometRenderer.getLogger().log(String.format("OpenGL extensions: %s", Arrays.toString(CometRenderer.getRegistry().get(CometTags.GL_EXTENSIONS).orElseThrow().getValue())));
 
         BetterCompilerPlugin.init();
