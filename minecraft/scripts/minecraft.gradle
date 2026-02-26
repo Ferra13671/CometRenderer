@@ -66,8 +66,10 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadow]
+
+    archiveClassifier.set('')
 }
 
-jar {
+build {
     dependsOn shadowJar
 }

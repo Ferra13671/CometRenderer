@@ -3,7 +3,11 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.ferra13671'
             artifactId = project.ext.projectName
-            artifact source: jar, classifier: null
+            if (tasks.findByName("shadowJar")) {
+                artifact source: shadowJar, classifier: null
+            } else {
+                artifact source: jar, classifier: null
+            }
             artifact sourcesJar
         }
     }
