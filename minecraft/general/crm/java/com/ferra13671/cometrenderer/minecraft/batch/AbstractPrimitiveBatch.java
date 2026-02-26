@@ -9,6 +9,7 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
     protected final MeshBuilder meshBuilder;
     protected Mesh mesh;
     protected boolean built = false;
+    protected boolean closed = false;
 
     public AbstractPrimitiveBatch(MeshBuilder meshBuilder) {
         this.meshBuilder = meshBuilder;
@@ -16,6 +17,9 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
 
     @Override
     public IPrimitiveBatch tryDraw() {
+        assertBuilt();
+        assertNotClosed();
+
         if (this.mesh != null) {
             CometRenderer.getShaderColor().push();
             this.preDrawRunnable.run();
@@ -38,6 +42,7 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
     @Override
     public IPrimitiveBatch build() {
         assertNotBuilt();
+        assertNotClosed();
 
         this.mesh = this.meshBuilder.buildNullable();
         this.built = true;
@@ -47,6 +52,9 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
 
     @Override
     public IPrimitiveBatch makeStandalone() {
+        assertBuilt();
+        assertNotClosed();
+
         if (this.mesh != null)
             this.mesh.makeStandalone();
 
@@ -63,9 +71,18 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
             throw new IllegalStateException("Drawer already built");
     }
 
+    protected void assertNotClosed() {
+        if (this.closed)
+            throw new IllegalStateException("Drawer already closed");
+    }
+
     @Override
     public void close() {
-        if (this.mesh != null)
-            this.mesh.close();
+        if (!this.closed) {
+
+            if (this.mesh != null)
+                this.mesh.close();
+            this.closed = true;
+        }
     }
 }
