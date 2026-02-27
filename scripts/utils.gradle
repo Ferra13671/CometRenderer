@@ -25,7 +25,9 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
 
-    withSourcesJar()
+    if (project.with_sources) {
+        withSourcesJar()
+    }
 }
 
 dependencies {

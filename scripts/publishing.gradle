@@ -3,12 +3,17 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.ferra13671'
             artifactId = project.ext.projectName
+            if (tasks.findByName("remapJar")) {
+                artifact source: remapJar.archiveFile, classifier: null
+            } else
             if (tasks.findByName("shadowJar")) {
-                artifact source: shadowJar, classifier: null
+                artifact source: shadowJar.archiveFile, classifier: null
             } else {
-                artifact source: jar, classifier: null
+                artifact source: jar.archiveFile, classifier: null
             }
-            artifact sourcesJar
+            if (project.with_sources) {
+                artifact sourcesJar
+            }
         }
     }
 

@@ -3,6 +3,8 @@ project.ext.projectName = "crm"
 version = "${project.minecraft_version}-fabric-${project.main_version}"
 group = "com.ferra13671"
 
+project.with_sources = false;
+
 apply from: rootProject.file("scripts/utils.gradle")
 apply from: rootProject.file("scripts/publishing.gradle")
 
@@ -67,9 +69,20 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadow]
 
-    archiveClassifier.set('')
+    if (tasks.findByName("remapJar")) {
+        archiveClassifier.set('shadow')
+    } else {
+        archiveClassifier.set('')
+    }
 }
 
-build {
-    dependsOn shadowJar
+if (tasks.findByName("remapJar")) {
+    tasks.getByName("remapJar") {
+        dependsOn shadowJar
+        inputFile.set(shadowJar.archiveFile)
+    }
+} else {
+    build {
+        finalizedBy shadowJar
+    }
 }
