@@ -11,7 +11,6 @@ Several official plugins were also created for the project, expanding the functi
 * better-compiler
 * better-exceptions
 * post-effects
-* minecraft
 
 ## Documentation
 CometRenderer has its own documentation, which you can read on the <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation">website</a>.
@@ -26,19 +25,20 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ferra13671:comet-renderer:2.5-HOTFIX-1"
+    implementation "com.ferra13671:comet-renderer:2.6"
     implementation "com.ferra13671:gl-texture-utils:1.7.4-HOTFIX-1"
     
     //Plugins (optional)
-    implementation "com.ferra13671:comet-renderer-minecraft:version"//check need version in https://github.com/Ferra13671/maven/tree/main/com/ferra13671/comet-renderer-minecraft
-    implementation "com.ferra13671:comet-renderer-better-compiler:2.5-HOTFIX-1"
-    implementation "com.ferra13671:comet-renderer-better-exceptions:2.5-HOTFIX-1"
-    implementation "com.ferra13671:comet-renderer-post-effects:2.5-HOTFIX-1"
+    implementation "com.ferra13671:comet-renderer-better-compiler:2.6"
+    implementation "com.ferra13671:comet-renderer-better-exceptions:2.6"
+    implementation "com.ferra13671:comet-renderer-post-effects:2.6"
 }
 ```
 
-## Minecraft example
-For example to use in minecraft check out `minecraft/{plugin-version}/src/example/com/ferra13671/cometrenderer/test/TestMod.java`.  
+## CRM
+CRM (CometRenderer Mod) is a Minecraft library mod that provides various utilities for using CometRenderer within Minecraft.
+<p>
+You can learn more about it in the <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation/crm/about">documentation</a>.
 
 ## JavaDoc
 JavaDoc is written entirely in Russian, but I may rewrite it into English in the future.
