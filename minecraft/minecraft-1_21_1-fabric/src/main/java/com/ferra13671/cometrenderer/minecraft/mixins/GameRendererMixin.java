@@ -4,10 +4,14 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.VAOState;
 import com.ferra13671.cometrenderer.minecraft.event.RenderHudCallback;
+import com.ferra13671.cometrenderer.minecraft.event.RenderWorldCallback;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,5 +41,22 @@ public class GameRendererMixin {
 
         CometRenderer.disableBlend();
         VAOState.load();
+    }
+
+    @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V", shift = At.Shift.AFTER))
+    public void modifyRenderLevelAfterRenderLevel(DeltaTracker deltaTracker, CallbackInfo ci, @Local(name = "matrix4f2") Matrix4f rotationMatrix) {
+        if (minecraft.player == null)
+            return;
+
+        CometRenderer.setDefaultBlend();
+        CRM.getMainFramebuffer().bind(true);
+        RenderSystem.getModelViewStack().pushMatrix().mul(rotationMatrix);
+        RenderSystem.applyModelViewMatrix();
+
+        RenderWorldCallback.EVENT.invoker().onRenderWorld();
+
+        GlStateManager._disableDepthTest();
+        GlStateManager._depthMask(true);
+        RenderSystem.getModelViewStack().popMatrix();
     }
 }
