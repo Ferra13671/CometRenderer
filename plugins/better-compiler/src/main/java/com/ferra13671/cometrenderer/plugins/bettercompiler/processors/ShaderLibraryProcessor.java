@@ -9,11 +9,13 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.exceptions.NoSuchShaderLibraryException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ShaderLibraryProcessor {
     private static final String directiveName = "#include";
@@ -36,16 +38,22 @@ public class ShaderLibraryProcessor {
 
             StringBuilder libsContent = new StringBuilder();
             for (String lib : libs) {
-                GlslFileEntry libEntry = BetterCompilerPlugin.getShaderLibrary(lib).orElseThrow();
+                Optional<GlslFileEntry> shaderLibOpt = BetterCompilerPlugin.getShaderLibrary(lib);
 
-                libsContent.append(libEntry.getContent().concatLines()).append('\n');
+                if (shaderLibOpt.isEmpty()) {
+                    CometRenderer.getExceptionManager().manageException(new NoSuchShaderLibraryException(lib));
+                } else {
+                    GlslFileEntry shaderLib = shaderLibOpt.get();
 
-                libEntry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
-                    if (uniforms.containsKey(s1))
-                        CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
+                    libsContent.append(shaderLib.getContent().concatLines()).append('\n');
 
-                    uniforms.put(s1, uniformType);
-                });
+                    shaderLib.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
+                        if (uniforms.containsKey(s1))
+                            CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
+
+                        uniforms.put(s1, uniformType);
+                    });
+                }
             }
 
             String[] libsLines = libsContent.toString().split("\n");
@@ -60,6 +68,7 @@ public class ShaderLibraryProcessor {
             return true;
         }
     };
+
     @Getter
     private final CompilerExtension extension = new CompilerExtension("better-compiler-shader-library", this.directiveExtension);
 }
