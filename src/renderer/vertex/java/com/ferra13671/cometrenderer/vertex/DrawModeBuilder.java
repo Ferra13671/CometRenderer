@@ -5,7 +5,6 @@ import org.apiguardian.api.API;
 
 import java.util.function.Function;
 
-//TODO combine indexBufferGenerator(...) and indexCountFunction(...) methods
 @API(status = API.Status.MAINTAINED, since = "2.3")
 public class DrawModeBuilder extends Builder<DrawMode> {
     private Integer glId;
@@ -23,23 +22,13 @@ public class DrawModeBuilder extends Builder<DrawMode> {
         return this;
     }
 
-    public DrawModeBuilder useIndexBuffer(boolean useIndexBuffer) {
-        this.useIndexBuffer = useIndexBuffer;
-
-        return this;
-    }
-
-    public DrawModeBuilder indexBufferGenerator(IndexBufferGenerator indexBufferGenerator) {
+    public DrawModeBuilder indexGeneration(IndexBufferGenerator indexBufferGenerator, Function<Integer, Integer> indexCountFunction) {
         this.indexBufferGenerator = indexBufferGenerator;
-
-        return this;
-    }
-
-    public DrawModeBuilder indexCountFunction(Function<Integer, Integer> indexCountFunction) {
         if (indexCountFunction == null)
             indexCountFunction = v -> 0;
 
         this.indexCountFunction = indexCountFunction;
+        this.useIndexBuffer = indexBufferGenerator != null;
 
         return this;
     }

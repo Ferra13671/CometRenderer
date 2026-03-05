@@ -13,7 +13,6 @@ import java.util.function.Function;
  * @param indexBufferGenerator генератор буффера индексов.
  * @param indexCountFunction функция, возвращающая количество индексов для данного количества вершин.
  */
-//TODO remove useIndexBuffer
 @API(status = API.Status.MAINTAINED, since = "1.4")
 public record DrawMode(int glId, boolean useIndexBuffer, IndexBufferGenerator indexBufferGenerator, Function<Integer, Integer> indexCountFunction) {
 	public static final DrawMode LINES = builder()
@@ -33,8 +32,7 @@ public record DrawMode(int glId, boolean useIndexBuffer, IndexBufferGenerator in
 			.build();
 	public static final DrawMode QUADS = builder()
 			.glId(GL11.GL_TRIANGLES)
-			.useIndexBuffer(true)
-			.indexBufferGenerator(
+			.indexGeneration(
 					new IndexBufferGenerator(4, 6, (indexConsumer, firstVertexIndex) -> {
 						indexConsumer.accept(firstVertexIndex);
 						indexConsumer.accept(firstVertexIndex + 1);
@@ -42,9 +40,7 @@ public record DrawMode(int glId, boolean useIndexBuffer, IndexBufferGenerator in
 						indexConsumer.accept(firstVertexIndex + 2);
 						indexConsumer.accept(firstVertexIndex + 3);
 						indexConsumer.accept(firstVertexIndex);
-					})
-			)
-			.indexCountFunction(
+					}),
 					vertices -> vertices / 4 * 6
 			)
 			.build();
