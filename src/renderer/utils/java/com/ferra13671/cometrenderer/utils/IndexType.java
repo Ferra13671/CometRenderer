@@ -1,5 +1,6 @@
-package com.ferra13671.cometrenderer.vertex;
+package com.ferra13671.cometrenderer.utils;
 
+import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import lombok.AllArgsConstructor;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
