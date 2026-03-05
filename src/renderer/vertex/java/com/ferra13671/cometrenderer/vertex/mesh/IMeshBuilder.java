@@ -7,24 +7,14 @@ import org.joml.Matrix4f;
 /**
  * Объект, собирающий вершины в цельный меш.
  *
- * @param <T> класс сборщика, который будет расширять данный интерфейс.
- * @param <G> класс, расширяющий интерфейс меша.
- *
  * @see IMesh
  */
-//TODO remove using generics
 @API(status = API.Status.MAINTAINED, since = "1.7")
-public interface IMeshBuilder<T, G extends IMesh> {
+public interface IMeshBuilder {
 
-    /**
-     * Собирает все добавленные вершины в цельный меш.
-     * Если не удалось собрать меш, то вернется null.
-     *
-     * @return готовый меш либо null, если собрать его не удалось.
-     *
-     * @see IMesh
-     */
-    G buildNullable();
+    IMesh build();
+
+    IMesh buildNullable();
 
     /**
      * Создаёт новую вершину в сборщике меша.
@@ -34,7 +24,7 @@ public interface IMeshBuilder<T, G extends IMesh> {
      * @param z координата вершины по Z.
      * @return сборщик меша.
      */
-    T vertex(float x, float y, float z);
+    IMeshBuilder vertex(float x, float y, float z);
 
     /**
      * Создаёт новую вершину в сборщике меша.
@@ -45,7 +35,7 @@ public interface IMeshBuilder<T, G extends IMesh> {
      * @param z координата вершины по Z.
      * @return сборщик меша.
      */
-    T vertex(Matrix4f matrix4f, float x, float y, float z);
+    IMeshBuilder vertex(Matrix4f matrix4f, float x, float y, float z);
 
     /**
      * Добавляет элемент к последней созданной вершине в сборщике.
@@ -56,5 +46,5 @@ public interface IMeshBuilder<T, G extends IMesh> {
      * @return сборщик меша.
      * @param <S> тип значений, передаваемых в элемент.
      */
-    <S> T element(String name, VertexElementType<S> elementType, S... values);
+    <S> IMeshBuilder element(String name, VertexElementType<S> elementType, S... values);
 }

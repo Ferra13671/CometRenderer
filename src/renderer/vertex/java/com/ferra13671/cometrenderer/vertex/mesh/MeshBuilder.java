@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @see IMeshBuilder
  * @see Mesh
  */
-public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder<MeshBuilder, Mesh> {
+public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     /** Аллокатор. **/
     private final IAllocator allocator;
     /** Тип отрисовки вершин. **/

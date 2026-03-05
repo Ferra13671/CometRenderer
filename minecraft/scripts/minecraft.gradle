@@ -1,3 +1,6 @@
+//TODO port crm to versions: 1.20.6, 1.20.4, 1.20.1
+//TODO port crm to forge?
+
 project.ext.projectName = "crm"
 
 version = "${project.minecraft_version}-fabric-${project.main_version}"
