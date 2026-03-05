@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.buffer;
 
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.*;
 
 /**
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.*;
  * @see GpuBuffer
  */
 @AllArgsConstructor
+@API(status = API.Status.STABLE, since = "1.7.1")
 public enum BufferTarget {
     ARRAY_BUFFER(GL15.GL_ARRAY_BUFFER),
     ELEMENT_ARRAY_BUFFER(GL15.GL_ELEMENT_ARRAY_BUFFER),

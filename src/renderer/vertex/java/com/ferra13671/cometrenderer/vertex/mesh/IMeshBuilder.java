@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
+import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 
 /**
@@ -11,6 +12,8 @@ import org.joml.Matrix4f;
  *
  * @see IMesh
  */
+//TODO remove using generics
+@API(status = API.Status.MAINTAINED, since = "1.7")
 public interface IMeshBuilder<T, G extends IMesh> {
 
     /**

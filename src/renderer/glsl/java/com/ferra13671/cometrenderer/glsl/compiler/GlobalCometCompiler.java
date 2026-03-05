@@ -11,27 +11,33 @@ import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.NonNull;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
 import java.util.*;
 
+@API(status = API.Status.MAINTAINED, since = "1.3")
 public class GlobalCometCompiler {
     private static final HashMap<String, CompilerExtension> extensions = new HashMap<>();
     public static final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
 
+    @API(status = API.Status.EXPERIMENTAL, since = "1.9")
     public static void addExtensions(@NonNull CompilerExtension... extensions) {
         for (CompilerExtension extension : extensions)
             GlobalCometCompiler.extensions.put(extension.getName(), extension);
     }
 
+    @API(status = API.Status.EXPERIMENTAL, since = "2.5")
     public static Optional<CompilerExtension> getExtension(@NonNull String name) {
         return Optional.ofNullable(extensions.get(name));
     }
 
+    @API(status = API.Status.EXPERIMENTAL, since = "2.5")
     public static Collection<CompilerExtension> getExtensions() {
         return extensions.values();
     }
 
+    @API(status = API.Status.INTERNAL)
     public static GlProgram compileProgram(@NonNull Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow().getValue();
 
@@ -59,6 +65,7 @@ public class GlobalCometCompiler {
     }
 
     @NonNull
+    @API(status = API.Status.INTERNAL)
     public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
         GlslFileEntry processedShader = new GlslFileEntry(shaderEntry);
         processContent(processedShader.getRegistry(), programRegistry);
@@ -77,11 +84,13 @@ public class GlobalCometCompiler {
         return shader;
     }
 
+    @API(status = API.Status.INTERNAL)
     public static void onCreateProgramBuilder(@NonNull Registry programRegistry) {
         for (CompilerExtension extension : getExtensions())
             extension.onCreateProgramBuilder(programRegistry);
     }
 
+    @API(status = API.Status.INTERNAL)
     public static void processContent(@NonNull Registry shaderRegistry, @NonNull Registry programRegistry) {
         removeComments(shaderRegistry);
 
@@ -90,6 +99,7 @@ public class GlobalCometCompiler {
             extension.processCompile(shaderRegistry, programRegistry);
     }
 
+    @API(status = API.Status.INTERNAL)
     protected static void removeComments(@NonNull Registry glslFileRegistry) {
         List<String> l = new ArrayList<>();
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();

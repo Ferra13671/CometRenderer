@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IndexOverflowException;
 import com.ferra13671.cometrenderer.utils.MathUtils;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -35,6 +36,7 @@ import java.nio.ByteBuffer;
  * @see IndexType
  * @see GpuBuffer
  */
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public final class IndexBufferGenerator {
 
 	/** Количество вершин до триангуляции. **/

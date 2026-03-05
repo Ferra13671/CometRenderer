@@ -1,9 +1,12 @@
 package com.ferra13671.cometrenderer.utils.tag;
 
+import org.apiguardian.api.API;
+
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@API(status = API.Status.MAINTAINED, since = "1.9")
 public class Registry {
     private final HashMap<Tag<?>, TagEntry<?>> tagMap = new HashMap<>();
 
@@ -21,6 +24,7 @@ public class Registry {
         set(new ImmutableTagEntry<>(tag, value));
     }
 
+    @API(status = API.Status.INTERNAL)
     public <T> void set(TagEntry<T> entry) {
         if (contains(entry.getTag()) && get(entry.getTag()).orElseThrow() instanceof ImmutableTagEntry<?>)
             throw new UnsupportedOperationException("Unable to change value for ImmutableTagEntry");
@@ -46,6 +50,7 @@ public class Registry {
         return tagEntry;
     }
 
+    @API(status = API.Status.INTERNAL)
     public void forEach(Consumer<TagEntry<?>> consumer) {
         this.tagMap.values().forEach(consumer);
     }

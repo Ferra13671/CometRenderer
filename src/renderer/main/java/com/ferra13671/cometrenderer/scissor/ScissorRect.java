@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.scissor;
 
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
 /**
@@ -10,6 +11,7 @@ import org.lwjgl.opengl.GL20;
  * @param width длина области по X.
  * @param height длина области по Y.
  */
+@API(status = API.Status.STABLE, since = "1.1")
 public record ScissorRect(int x, int y, int width, int height) {
 
     /**
@@ -25,6 +27,7 @@ public record ScissorRect(int x, int y, int width, int height) {
      * @param other область, с которой надо найти область пересечения.
      * @return область пересечения двух областей.
      */
+    @API(status = API.Status.INTERNAL)
     public ScissorRect intersection(ScissorRect other) {
         int x1 = Math.max(this.x, other.x);
         int y1 = Math.max(this.y, other.y);

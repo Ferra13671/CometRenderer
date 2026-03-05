@@ -1,7 +1,9 @@
 package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.utils.tag.Registry;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.EXPERIMENTAL, since = "2.5")
 public abstract class DirectiveExtension {
 
     /**

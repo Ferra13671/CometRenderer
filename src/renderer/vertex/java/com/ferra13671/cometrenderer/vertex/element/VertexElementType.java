@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.vertex.element;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalVertexElementStructureException;
+import org.apiguardian.api.API;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
@@ -28,6 +29,7 @@ import java.util.function.Function;
  * @see VertexElement
  * @see VertexFormat
  */
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public record VertexElementType<T>(String name, int size, int offset, int glId, Class<T> clazz, BiConsumer<Long, T[]> uploadConsumer) {
     public static final VertexElementType<Float> FLOAT = builder(Float.class)
             .name("Float")

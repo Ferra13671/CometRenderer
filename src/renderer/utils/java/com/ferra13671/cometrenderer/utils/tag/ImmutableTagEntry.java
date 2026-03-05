@@ -1,5 +1,8 @@
 package com.ferra13671.cometrenderer.utils.tag;
 
+import org.apiguardian.api.API;
+
+@API(status = API.Status.INTERNAL)
 public class ImmutableTagEntry<T> extends DefaultTagEntry<T> {
 
     public ImmutableTagEntry(Tag<T> tag, T value) {

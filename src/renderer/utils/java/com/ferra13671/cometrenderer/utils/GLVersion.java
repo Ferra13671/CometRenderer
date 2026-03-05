@@ -1,8 +1,10 @@
 package com.ferra13671.cometrenderer.utils;
 
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 
 @AllArgsConstructor
+@API(status = API.Status.STABLE, since = "1.9")
 public enum GLVersion {
     GL10("1.0", null, 10),
     GL11("1.1", null, 11),
@@ -25,7 +27,9 @@ public enum GLVersion {
     GL46("4.6", "460 core", 46);
 
     public final String glVersion;
+    @API(status = API.Status.MAINTAINED)
     public final String glslVersion;
+    @API(status = API.Status.MAINTAINED)
     public final int id;
 
     public static GLVersion fromString(String version) {

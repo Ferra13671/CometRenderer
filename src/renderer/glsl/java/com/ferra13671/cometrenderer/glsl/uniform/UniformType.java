@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.glsl.uniform.uniforms.*;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.utils.TriFunction;
+import org.apiguardian.api.API;
 
 /**
  * Объект, представляющий собой тип униформы.
@@ -16,6 +17,7 @@ import com.ferra13671.cometrenderer.utils.TriFunction;
  *
  * @see GlUniform
  */
+@API(status = API.Status.STABLE, since = "1.1")
 public record UniformType<T extends GlUniform>(Class<T> clazz, TriFunction<String, Integer, GlProgram, GlUniform> uniformCreator) {
     public static final UniformType<IntUniform> INT = new UniformType<>(IntUniform.class, IntUniform::new);
     public static final UniformType<FloatUniform> FLOAT = new UniformType<>(FloatUniform.class, FloatUniform::new);

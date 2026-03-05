@@ -3,10 +3,12 @@ package com.ferra13671.cometrenderer.vertex.mesh;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import org.apiguardian.api.API;
 
 /**
  * Объект, хранящий в себе буффер вершин и различную информацию для него.
  */
+@API(status = API.Status.MAINTAINED, since = "1.7")
 public interface IMesh extends AutoCloseable {
 
     /**

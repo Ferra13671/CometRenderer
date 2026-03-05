@@ -1,8 +1,10 @@
 package com.ferra13671.cometrenderer;
 
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
+@API(status = API.Status.MAINTAINED, since = "2.0")
 public final class State {
     public static BooleanState BLEND = new BooleanState() {
 

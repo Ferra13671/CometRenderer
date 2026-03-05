@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.buffer;
 import com.ferra13671.cometrenderer.utils.MathUtils;
 import com.ferra13671.gltextureutils.Pair;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.joml.*;
 
 import java.lang.Math;
@@ -10,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+@API(status = API.Status.EXPERIMENTAL, since = "2.5")
 public class Std140BufferBuilder {
     private final List<Pair<Integer, Object>> elements = new ArrayList<>();
     private int pos = 0;

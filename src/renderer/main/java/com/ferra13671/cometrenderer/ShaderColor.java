@@ -1,9 +1,11 @@
 package com.ferra13671.cometrenderer;
 
+import org.apiguardian.api.API;
 import org.joml.Vector4f;
 
 import java.util.Stack;
 
+@API(status = API.Status.MAINTAINED, since = "2.4")
 public class ShaderColor {
     private static final Vector4f DEFAULT_COLOR = new Vector4f(1f, 1f, 1f, 1f);
 
@@ -32,10 +34,12 @@ public class ShaderColor {
         this.stack.pop();
     }
 
+    @API(status = API.Status.EXPERIMENTAL)
     public void pushMask(Vector4f mask) {
         this.maskStack.push(new Vector4f(mask).mul(this.maskStack.peek()));
     }
 
+    @API(status = API.Status.EXPERIMENTAL)
     public void popMask() {
         this.maskStack.pop();
     }

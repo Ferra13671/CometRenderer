@@ -5,11 +5,14 @@ import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentExcept
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 
 @AllArgsConstructor
+@API(status = API.Status.INTERNAL)
 public abstract class Builder<T> {
     protected final String builderName;
 
+    @API(status = API.Status.MAINTAINED)
     public abstract T build();
 
     protected void assertNotNull(Object value, String valueName) {

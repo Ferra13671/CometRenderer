@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apiguardian.api.API;
 
 /**
  * Буффер вершинного формата.
@@ -13,6 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @RequiredArgsConstructor
+@API(status = API.Status.INTERNAL)
 public final class VertexFormatBuffer {
     /** Айди массива вершин. **/
     private final int glId;

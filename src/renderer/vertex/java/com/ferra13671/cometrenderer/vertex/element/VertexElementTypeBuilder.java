@@ -1,9 +1,11 @@
 package com.ferra13671.cometrenderer.vertex.element;
 
 import com.ferra13671.cometrenderer.utils.Builder;
+import org.apiguardian.api.API;
 
 import java.util.function.BiConsumer;
 
+@API(status = API.Status.MAINTAINED, since = "2.3")
 public class VertexElementTypeBuilder<T> extends Builder<VertexElementType<T>>  {
     private String name;
     private Integer size;

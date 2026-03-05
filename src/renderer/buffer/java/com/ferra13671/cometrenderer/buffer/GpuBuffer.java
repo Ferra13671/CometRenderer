@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.buffer;
 
 import com.ferra13671.cometrenderer.utils.Bindable;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
@@ -9,6 +10,7 @@ import java.nio.ByteBuffer;
 /**
  * Буффер, хранящийся на GPU и используемый в различных направлениях.
  */
+@API(status = API.Status.MAINTAINED, since = "1.7.1")
 public class GpuBuffer implements Bindable, AutoCloseable {
     /** Айди буффера в OpenGL. **/
     @Getter

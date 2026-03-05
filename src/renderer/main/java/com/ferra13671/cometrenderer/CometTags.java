@@ -8,11 +8,12 @@ import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
+import org.apiguardian.api.API;
 
 import java.util.Map;
 
+@API(status = API.Status.MAINTAINED, since = "1.9")
 public final class CometTags {
-
     public static final Tag<String> NAME = new Tag<>("name");
     public static final Tag<GlslContent> CONTENT = new Tag<>("content");
     public static final Tag<String> TYPE = new Tag<>("type");

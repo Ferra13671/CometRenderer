@@ -6,6 +6,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.vertex.NoSuchVertexElementEx
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 import java.io.Closeable;
 import java.util.Arrays;
@@ -20,21 +21,26 @@ import java.util.stream.Stream;
  *
  * @see VertexElement
  */
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public class VertexFormat implements Closeable {
     /** Массив элементов формата вершины. **/
     @Getter
+    @API(status = API.Status.INTERNAL)
     private final VertexElement[] vertexElements;
     /** Массив имен элементов формата вершины. **/
     private final String[] names;
     private final HashMap<String, VertexElement> elementsForNames = new HashMap<>();
     /** Маска формата вершины, используемая в билдере меша для проверки целостности вершины при окончании её сборки. **/
     @Getter
+    @API(status = API.Status.INTERNAL)
     private final int elementsMask;
     /** Размер вершины в байтах. **/
     @Getter
+    @API(status = API.Status.INTERNAL)
     private final int vertexSize;
     /** Оффсеты элементов формата вершины. **/
     @Getter
+    @API(status = API.Status.INTERNAL)
     private final int[] elementOffsets;
     /** Буффер формата вершины, используемый для быстрой привязки аттрибутов буфферу вершин. **/
     private VertexFormatBuffer buffer = null;
@@ -43,6 +49,7 @@ public class VertexFormat implements Closeable {
      * @param vertexElements список элементов формата вершины.
      * @param elementNames список имен элементов формата вершины.
      */
+    @API(status = API.Status.INTERNAL)
     public VertexFormat(List<VertexElement> vertexElements, List<String> elementNames) {
         this.vertexElements = vertexElements.toArray(new VertexElement[0]);
         this.names = elementNames.toArray(new String[0]);
@@ -78,6 +85,7 @@ public class VertexFormat implements Closeable {
      *
      * @see VertexElement
      */
+    @API(status = API.Status.INTERNAL)
     public Stream<VertexElement> getElementsFromMask(int mask) {
         return Arrays.stream(this.vertexElements).filter(element -> element != null && (mask & element.getMask()) != 0);
     }
@@ -91,6 +99,7 @@ public class VertexFormat implements Closeable {
      *
      * @see VertexElement
      */
+    @API(status = API.Status.MAINTAINED)
     public VertexElement getElement(String name) {
         VertexElement vertexElement = this.elementsForNames.get(name);
         if (vertexElement == null)
@@ -106,6 +115,7 @@ public class VertexFormat implements Closeable {
      *
      * @see VertexElement
      */
+    @API(status = API.Status.INTERNAL)
     public String getElementName(VertexElement vertexElement) {
         return this.names[vertexElement.getId()];
     }
@@ -116,6 +126,7 @@ public class VertexFormat implements Closeable {
      * @param vertexElement элемент формата вершины.
      * @return оффсет для данного элемента.
      */
+    @API(status = API.Status.INTERNAL)
     public int getElementOffset(VertexElement vertexElement) {
         return this.elementOffsets[vertexElement.getId()];
     }
@@ -126,6 +137,7 @@ public class VertexFormat implements Closeable {
      * @param bufferSupplier метод, создающий новый буффер формата вершины.
      * @return буффер формата вершины.
      */
+    @API(status = API.Status.INTERNAL)
     public VertexFormatBuffer getOrCreateBuffer(Supplier<VertexFormatBuffer> bufferSupplier) {
         if (this.buffer == null)
             this.buffer = bufferSupplier.get();

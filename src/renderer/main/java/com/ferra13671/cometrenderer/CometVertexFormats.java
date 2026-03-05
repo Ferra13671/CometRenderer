@@ -2,12 +2,14 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import org.apiguardian.api.API;
 
 /**
  * Самые примитивные форматы вершин, которые можно вообще придумать.
  *
  * @see VertexFormat
  */
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public final class CometVertexFormats {
 
     public static final VertexFormat POSITION = VertexFormat.builder().build();

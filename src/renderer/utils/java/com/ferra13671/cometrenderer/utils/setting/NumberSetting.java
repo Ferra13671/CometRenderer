@@ -1,5 +1,8 @@
 package com.ferra13671.cometrenderer.utils.setting;
 
+import org.apiguardian.api.API;
+
+@API(status = API.Status.MAINTAINED)
 public class NumberSetting<T extends Number> extends Setting<T> {
     private final T min;
     private final T max;

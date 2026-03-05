@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import com.ferra13671.cometrenderer.utils.tag.TagEntry;
+import org.apiguardian.api.API;
 
 /**
  * Фрагмент программы, который может быть добавлен любой программе.
@@ -14,6 +15,7 @@ import com.ferra13671.cometrenderer.utils.tag.TagEntry;
  * @see GlProgram
  * @see GlProgramSnippet
  */
+@API(status = API.Status.EXPERIMENTAL, since = "1.1")
 public record GlProgramSnippet(Registry registry) {
 
     /**
@@ -22,6 +24,7 @@ public record GlProgramSnippet(Registry registry) {
      * @param builder сборщик программы.
      * @param <T> тип объекта, используемого как путь к контенту шейдеров.
      */
+    @API(status = API.Status.INTERNAL)
     public <T> void applyTo(GlProgramBuilder<T> builder) {
         this.registry.forEachTags(tag ->
             processTag(tag, builder)

@@ -3,8 +3,10 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 @AllArgsConstructor
+@API(status = API.Status.EXPERIMENTAL, since = "1.9")
 public class CompilerExtension {
     @Getter
     private final String name;

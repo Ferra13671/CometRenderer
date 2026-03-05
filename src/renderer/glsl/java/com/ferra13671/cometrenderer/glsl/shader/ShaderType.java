@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.glsl.shader;
 
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
@@ -23,6 +24,7 @@ import org.lwjgl.opengl.GL43;
  * @see GlShader
  */
 @AllArgsConstructor
+@API(status = API.Status.STABLE, since = "1.1")
 public enum ShaderType {
     Vertex(GL20.GL_VERTEX_SHADER, GLVersion.GL20),
     Fragment(GL20.GL_FRAGMENT_SHADER, GLVersion.GL20),

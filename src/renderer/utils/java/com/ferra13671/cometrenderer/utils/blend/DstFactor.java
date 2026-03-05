@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.utils.blend;
 
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -10,6 +11,7 @@ import org.lwjgl.opengl.GL14;
  * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
  */
 @AllArgsConstructor
+@API(status = API.Status.STABLE, since = "1.2")
 public enum DstFactor {
     CONSTANT_ALPHA(GL14.GL_CONSTANT_ALPHA),
     CONSTANT_COLOR(GL14.GL_CONSTANT_COLOR),

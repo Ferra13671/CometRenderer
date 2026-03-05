@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.utils.compile;
 
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -12,6 +13,7 @@ import org.lwjgl.opengl.GL11;
  * </table>
  */
 @AllArgsConstructor
+@API(status = API.Status.INTERNAL)
 public enum CompileStatus {
     SUCCESSFUL(GL11.GL_TRUE),
     FAILURE(GL11.GL_FALSE);

@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex;
 
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
 import java.util.function.Function;
@@ -12,6 +13,8 @@ import java.util.function.Function;
  * @param indexBufferGenerator генератор буффера индексов.
  * @param indexCountFunction функция, возвращающая количество индексов для данного количества вершин.
  */
+//TODO remove useIndexBuffer
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public record DrawMode(int glId, boolean useIndexBuffer, IndexBufferGenerator indexBufferGenerator, Function<Integer, Integer> indexCountFunction) {
 	public static final DrawMode LINES = builder()
 			.glId(GL11.GL_LINES)

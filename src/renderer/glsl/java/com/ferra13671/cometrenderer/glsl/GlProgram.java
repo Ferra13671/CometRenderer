@@ -16,6 +16,7 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
@@ -32,6 +33,7 @@ import java.util.function.Consumer;
  *
  * @see GlobalCometCompiler
  */
+@API(status = API.Status.MAINTAINED, since = "1.1")
 public class GlProgram implements Bindable, Compilable, Closeable {
     /** Имя программы. **/
     @Getter
@@ -49,10 +51,12 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     /** Количество всех семплеров программы. **/
     @Getter
     @Setter
+    @API(status = API.Status.INTERNAL)
     private int samplersAmount = 0;
     /** Количество привязанных индексов буфферов для униформ с типом BUFFER. **/
     @Getter
     @Setter
+    @API(status = API.Status.INTERNAL)
     private int buffersIndexAmount = 0;
     /** Список униформ, которые были обновлены. Данный список нужен для того, что бы повторно загружать в GPU только те униформы, которые были обновлены. **/
     private final List<GlUniform> updatedUniforms = new ArrayList<>();
@@ -62,6 +66,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param id айди программы в OpenGL.
      * @param uniforms список всех униформ программы.
      */
+    @API(status = API.Status.INTERNAL)
     public GlProgram(@NonNull String name, int id, @NonNull HashSet<GlProgramSnippet> snippets, @NonNull Map<String, UniformType<?>> uniforms) {
         this.name = name;
         this.id = id;
@@ -131,6 +136,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @see GlUniform
      * @see OneTypeGlUniform
      */
+    @API(status = API.Status.INTERNAL)
     public void addUpdatedUniform(GlUniform uniform) {
         this.updatedUniforms.add(uniform);
     }
@@ -147,6 +153,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @see GlUniform
      * @see UniformType
      */
+    @API(status = API.Status.STABLE, since = "1.6")
     public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
         if (uniform == null)
@@ -165,6 +172,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @see GlUniform
      * @see UniformType
      */
+    @API(status = API.Status.MAINTAINED, since = "1.8.3")
     public <T extends GlUniform> void consumeIfUniformPresent(String name, UniformType<T> type, Consumer<T> consumer) {
         T uniform = getUniformNullable(name, type);
         if (uniform != null)
@@ -183,6 +191,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @see GlUniform
      * @see UniformType
      */
+    @API(status = API.Status.STABLE, since = "1.6")
     public <T extends GlUniform> T getUniformNullable(String name, UniformType<T> type) {
         return (T) uniformsByName.get(name);
     }
@@ -196,6 +205,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      *
      * @see SamplerUniform
      */
+    @API(status = API.Status.MAINTAINED, since = "1.5")
     public SamplerUniform getSampler(int samplerId) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler == null)
@@ -211,6 +221,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      *
      * @see SamplerUniform
      */
+    @API(status = API.Status.MAINTAINED, since = "1.8.3")
     public void consumerIfSamplerPresent(int samplerId, Consumer<SamplerUniform> consumer) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler != null)
@@ -226,6 +237,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      *
      * @see SamplerUniform
      */
+    @API(status = API.Status.MAINTAINED, since = "1.8.3")
     public SamplerUniform getSamplerNullable(int samplerId) {
         return this.samplers.get(samplerId);
     }

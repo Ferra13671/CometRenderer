@@ -1,5 +1,7 @@
 package com.ferra13671.cometrenderer;
 
+import org.apiguardian.api.API;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
  *
  * @see CometLoader
  */
+@API(status = API.Status.MAINTAINED, since = "1.1")
 public final class CometLoaders {
     public static final CometLoader<String> IN_JAR = new CometLoader<>() {
         @Override

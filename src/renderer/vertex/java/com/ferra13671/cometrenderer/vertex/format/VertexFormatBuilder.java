@@ -6,6 +6,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexFormatOverflowE
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
+import org.apiguardian.api.API;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  *
  * @see VertexFormat
  */
+@API(status = API.Status.MAINTAINED)
 public final class VertexFormatBuilder extends Builder<VertexFormat> {
     /** Список элементов вершин. **/
     private final List<VertexElement> vertexElements = new ArrayList<>();

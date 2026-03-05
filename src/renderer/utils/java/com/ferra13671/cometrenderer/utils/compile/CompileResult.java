@@ -1,5 +1,7 @@
 package com.ferra13671.cometrenderer.utils.compile;
 
+import org.apiguardian.api.API;
+
 /**
  * Объект, представляющий себя как результат компиляции чего-либо.
  *
@@ -8,6 +10,7 @@ package com.ferra13671.cometrenderer.utils.compile;
  *
  * @see CompileStatus
  */
+@API(status = API.Status.INTERNAL)
 public record CompileResult(CompileStatus status, String message) {
 
     /**

@@ -1,9 +1,12 @@
 package com.ferra13671.cometrenderer.vertex;
 
 import com.ferra13671.cometrenderer.utils.Builder;
+import org.apiguardian.api.API;
 
 import java.util.function.Function;
 
+//TODO combine indexBufferGenerator(...) and indexCountFunction(...) methods
+@API(status = API.Status.MAINTAINED, since = "2.3")
 public class DrawModeBuilder extends Builder<DrawMode> {
     private Integer glId;
     private boolean useIndexBuffer = false;

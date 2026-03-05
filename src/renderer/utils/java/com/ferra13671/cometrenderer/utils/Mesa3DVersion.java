@@ -1,5 +1,8 @@
 package com.ferra13671.cometrenderer.utils;
 
+import org.apiguardian.api.API;
+
+@API(status = API.Status.MAINTAINED, since = "1.9")
 public record Mesa3DVersion(String version) {
     public static final Mesa3DVersion NONE = new Mesa3DVersion("-1");
 

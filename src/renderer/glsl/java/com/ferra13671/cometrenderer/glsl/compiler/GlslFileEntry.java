@@ -4,12 +4,14 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
 import lombok.NonNull;
+import org.apiguardian.api.API;
 
 /**
  * Объект, представляющий собой контент glsl файла, используемые в различных целях.
  * Данные объекты позволяют хранить контент в памяти и использовать его повторно бесконечное количество раз, повторно не загружая его.
  * Данная реализация хорошо может хорошо оптимизировать моменты, когда вам надо, например, для большого количество программ использовать один и тот же шейдер.
  */
+@API(status = API.Status.MAINTAINED, since = "1.8.2")
 public class GlslFileEntry {
     /** Реестр, хранящий всю нужную и дополнительную информацию о контенте. **/
     @Getter

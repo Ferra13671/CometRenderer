@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.vertex;
 
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
@@ -12,6 +13,7 @@ import java.util.function.BiConsumer;
  * @see IndexBufferGenerator
  */
 @AllArgsConstructor
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public enum IndexType {
 	SHORT(
 			2,

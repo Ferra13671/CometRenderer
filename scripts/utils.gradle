@@ -33,4 +33,6 @@ java {
 dependencies {
     compileOnly("org.projectlombok:lombok:${project.lombok_version}")
     annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
+
+    compileOnly "org.apiguardian:apiguardian-api:${apiguardian_version}"
 }

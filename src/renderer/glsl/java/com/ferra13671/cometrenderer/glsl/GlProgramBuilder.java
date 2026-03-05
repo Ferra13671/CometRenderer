@@ -17,6 +17,7 @@ import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.NonNull;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Map;
  *
  * @see GlProgram
  */
+@API(status = API.Status.MAINTAINED, since = "1.1")
 public class GlProgramBuilder<T> extends Builder<GlProgram> {
     private final Registry registry = new Registry();
     /** Загрузчик контента шейдеров. **/

@@ -3,10 +3,12 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.apiguardian.api.API;
 
 import java.util.Arrays;
 
 @AllArgsConstructor
+@API(status = API.Status.EXPERIMENTAL, since = "2.5")
 public class GlslContent {
     @Getter
     @Setter

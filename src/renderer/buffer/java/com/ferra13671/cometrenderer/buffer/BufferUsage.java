@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.buffer;
 
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL15;
 
 /**
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.GL15;
  * @see GpuBuffer
  */
 @AllArgsConstructor
+@API(status = API.Status.STABLE, since = "1.7.1")
 public enum BufferUsage {
     STREAM_DRAW(GL15.GL_STREAM_DRAW),
     STATIC_DRAW(GL15.GL_STATIC_DRAW),

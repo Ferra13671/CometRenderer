@@ -2,7 +2,9 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.INTERNAL, since = "2.5")
 public class GlslDirectiveProcessor {
 
     public static void processContent(Registry glslFileRegistry, Registry programRegistry) {

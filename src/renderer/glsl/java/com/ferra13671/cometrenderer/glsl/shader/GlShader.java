@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
@@ -19,6 +20,7 @@ import java.io.Closeable;
  * @see ShaderType
  * @see GlobalCometCompiler
  */
+@API(status = API.Status.INTERNAL, since = "1.1")
 public class GlShader implements Compilable, Closeable {
     @Getter
     private final String name;

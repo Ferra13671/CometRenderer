@@ -3,9 +3,10 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.setting.NumberSetting;
 import com.ferra13671.cometrenderer.utils.setting.Setting;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.MAINTAINED)
 public class Config {
-
     public final Setting<Boolean> CHECK_OPENGL_VERSION = new Setting<>(true);
     public final NumberSetting<Integer> MINIMUM_OPENGL_VERSION = new NumberSetting<>(GLVersion.GL32.id, GLVersion.GL32.id, GLVersion.GL46.id);
     public final Setting<Boolean> COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS = new Setting<>(true);

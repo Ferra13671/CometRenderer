@@ -1,12 +1,14 @@
 package com.ferra13671.cometrenderer.vertex.element;
 
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 /**
  * Объект, представляющий собой структурный элемент формата вершины.
  * Совокупность нескольких таких элементов формата вершины составляют целостный формат вершины.
  */
 @Getter
+@API(status = API.Status.INTERNAL, since = "1.4")
 public class VertexElement {
     /** Айди элемента в формате вершины. **/
     private final int id;

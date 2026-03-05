@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.exceptions;
 import com.ferra13671.cometrenderer.CometRenderer;
 import lombok.Getter;
 import lombok.Setter;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -11,6 +12,7 @@ import java.util.function.Consumer;
  * Менеджер, отвечающий за управление возникающими ошибками.
  * Позволяет изменить тип действия для каждой ошибки по отдельности, либо изменить сам метод, вызываемый для определённого типа действия.
  */
+@API(status = API.Status.EXPERIMENTAL, since = "2.5")
 public class ExceptionManager {
     private final HashMap<Class<? extends CometException>, ExceptionAction> actionHashMap = new HashMap<>();
     @Getter
