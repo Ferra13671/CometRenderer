@@ -6,7 +6,7 @@ project.ext.projectName = "crm"
 version = "${project.minecraft_version}-fabric-${project.main_version}"
 group = "com.ferra13671"
 
-project.with_sources = false;
+project.with_sources = false
 
 apply from: rootProject.file("scripts/utils.gradle")
 apply from: rootProject.file("scripts/publishing.gradle")
