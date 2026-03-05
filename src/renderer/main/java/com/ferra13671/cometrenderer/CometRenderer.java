@@ -24,9 +24,9 @@ import com.ferra13671.cometrenderer.vertex.format.manager.ARBVertexFormatBufferM
 import com.ferra13671.cometrenderer.vertex.format.manager.DefaultVertexFormatBufferManager;
 import com.ferra13671.cometrenderer.vertex.format.manager.VertexFormatManager;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
+import com.ferra13671.cometrenderer.vertex.mesh.IMeshBuilder;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.apiguardian.api.API;
@@ -249,10 +249,9 @@ public class CometRenderer {
      * @param buildConsumer метод для добавления в сборщика данных о вершинах.
      * @return готовый меш либо null, если в сборщике нет вершин.
      */
-    //TODO rewrite to IMesh and IMeshBuilder
     @API(status = API.Status.STABLE, since = "1.7")
-    public static Mesh createMesh(DrawMode drawMode, VertexFormat vertexFormat, Consumer<MeshBuilder> buildConsumer) {
-        MeshBuilder meshBuilder = Mesh.builder(drawMode, vertexFormat);
+    public static IMesh createMesh(DrawMode drawMode, VertexFormat vertexFormat, Consumer<IMeshBuilder> buildConsumer) {
+        IMeshBuilder meshBuilder = Mesh.builder(drawMode, vertexFormat);
         buildConsumer.accept(meshBuilder);
         return meshBuilder.buildNullable();
     }
