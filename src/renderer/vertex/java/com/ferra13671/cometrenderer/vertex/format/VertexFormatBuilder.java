@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @see VertexFormat
  */
-@API(status = API.Status.MAINTAINED)
+@API(status = API.Status.MAINTAINED, since = "1.4")
 public final class VertexFormatBuilder extends Builder<VertexFormat> {
     /** Список элементов вершин. **/
     private final List<VertexElement> vertexElements = new ArrayList<>();
@@ -27,22 +27,29 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
         super("vertex format");
     }
 
-    /**
-     * Добавляет элемент вершины в сборщика.
-     *
-     * @param name имя элемента вершины.
-     * @param type тип элемента вершины.
-     * @param count количество параметров в элементе.
-     * @return сборщик вершинного формата.
-     */
     public VertexFormatBuilder element(String name, VertexElementType<?> type, int count) {
+        return element(this.vertexElements.size(), name, type, count);
+    }
+
+    public VertexFormatBuilder element(int position, String name, VertexElementType<?> type, int count) {
         int id = this.vertexElements.size();
-        this.elementNames.add(name);
-        this.vertexElements.add(new VertexElement(id, count, type));
+        this.elementNames.add(position, name);
+        this.vertexElements.add(position, new VertexElement(id, count, type));
 
         int maxElements = CometRenderer.getRegistry().get(CometTags.MAX_VERTEX_ELEMENTS).orElseThrow().getValue();
         if (this.vertexElements.size() > maxElements)
             CometRenderer.getExceptionManager().manageException(new VertexFormatOverflowException(maxElements));
+
+        return this;
+    }
+
+    public VertexFormatBuilder removeElement(String name) {
+        for (int i = 0; i < this.elementNames.size(); i++) {
+            if (this.elementNames.get(i).equals(name)) {
+                this.elementNames.remove(i);
+                this.vertexElements.remove(i);
+            }
+        }
 
         return this;
     }
