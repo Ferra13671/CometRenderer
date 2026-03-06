@@ -167,6 +167,16 @@ public class ExceptionsPrintInfo {
                         "Make sure you are search the right uniform and have not made a mistake in its name"
                 }
         ));
+        add(NoSuchCompilerExtensionException.class, exception -> makeRegistry(
+                "No such compiler extension error.",
+                exception.getMessage(),
+                new String[]{
+                        "The extension you want to get has not been initialized and added to the CometRenderer compiler extension list."
+                },
+                new String[]{
+                        "Before trying to get an compiler extension, initialize it first."
+                }
+        ));
         add(WrongGpuBufferTargetException.class, exception -> makeRegistry(
                 "Wrong gpu buffer target.",
                 exception.getMessage(),

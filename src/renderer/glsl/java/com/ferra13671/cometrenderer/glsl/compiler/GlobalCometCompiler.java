@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.exceptions.impl.NoSuchCompilerExtensionException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
@@ -16,23 +17,24 @@ import org.lwjgl.opengl.GL20;
 
 import java.util.*;
 
-@API(status = API.Status.MAINTAINED, since = "1.3")
+@API(status = API.Status.EXPERIMENTAL, since = "1.3")
 public class GlobalCometCompiler {
     private static final HashMap<String, CompilerExtension> extensions = new HashMap<>();
     public static final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
 
-    @API(status = API.Status.EXPERIMENTAL, since = "1.9")
     public static void addExtensions(@NonNull CompilerExtension... extensions) {
-        for (CompilerExtension extension : extensions)
+        for (CompilerExtension extension : extensions) {
+            if (GlobalCometCompiler.extensions.containsKey(extension.getName()))
+                CometRenderer.getLogger().warn(String.format("Found 2 compiler extensions named %s, overwriting prev compiler extension.", extension.getName()));
+
             GlobalCometCompiler.extensions.put(extension.getName(), extension);
+        }
     }
 
-    @API(status = API.Status.EXPERIMENTAL, since = "2.5")
     public static Optional<CompilerExtension> getExtension(@NonNull String name) {
         return Optional.ofNullable(extensions.get(name));
     }
 
-    @API(status = API.Status.EXPERIMENTAL, since = "2.5")
     public static Collection<CompilerExtension> getExtensions() {
         return extensions.values();
     }
