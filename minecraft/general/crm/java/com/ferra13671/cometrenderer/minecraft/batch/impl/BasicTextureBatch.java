@@ -1,12 +1,12 @@
 package com.ferra13671.cometrenderer.minecraft.batch.impl;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.CometVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.gltextureutils.GlTex;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
@@ -23,7 +23,7 @@ public class BasicTextureBatch extends AbstractPrimitiveBatch {
     }
 
     public BasicTextureBatch() {
-        super(Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE));
+        super(Mesh.builder(DrawMode.QUADS, VertexFormat.POSITION_TEXTURE));
     }
 
     public BasicTextureBatch(int allocatorSize, Runnable preDrawRunnable) {
@@ -32,7 +32,7 @@ public class BasicTextureBatch extends AbstractPrimitiveBatch {
     }
 
     public BasicTextureBatch(int allocatorSize) {
-        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CometVertexFormats.POSITION_TEXTURE));
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, VertexFormat.POSITION_TEXTURE));
     }
 
     public BasicTextureBatch setTexture(int textureId) {

@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer.minecraft.batch.impl;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.CometVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import org.joml.Matrix4f;
 
@@ -16,7 +16,7 @@ public class BasicRectBatch extends AbstractPrimitiveBatch {
     }
 
     public BasicRectBatch() {
-        super(Mesh.builder(DrawMode.QUADS, CometVertexFormats.POSITION));
+        super(Mesh.builder(DrawMode.QUADS, VertexFormat.POSITION));
     }
 
     public BasicRectBatch(int allocatorSize, Runnable preDrawRunnable) {
@@ -25,7 +25,7 @@ public class BasicRectBatch extends AbstractPrimitiveBatch {
     }
 
     public BasicRectBatch(int allocatorSize) {
-        super(Mesh.builder(allocatorSize, DrawMode.QUADS, CometVertexFormats.POSITION));
+        super(Mesh.builder(allocatorSize, DrawMode.QUADS, VertexFormat.POSITION));
     }
 
     public BasicRectBatch rectSized(float x, float y, float width, float height) {

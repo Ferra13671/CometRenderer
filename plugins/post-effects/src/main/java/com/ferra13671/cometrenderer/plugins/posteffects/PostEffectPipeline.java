@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.CometVertexFormats;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class PostEffectPipeline {
             frameBuffers.put(info.name(), f);
         }
 
-        PostEffectContext context = new PostEffectContext(CometRenderer.createMesh(DrawMode.QUADS, CometVertexFormats.POSITION, builder -> {
+        PostEffectContext context = new PostEffectContext(CometRenderer.createMesh(DrawMode.QUADS, VertexFormat.POSITION, builder -> {
             builder.vertex(0f, textureHeight, 0f);
             builder.vertex(textureWidth, textureHeight, 0f);
             builder.vertex(textureWidth, 0, 0f);
