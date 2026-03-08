@@ -21,9 +21,7 @@ public class CustomVertexFormats {
             .element("Radius", VertexElementType.FLOAT, 1)
             .build();
 
-    public VertexFormat ROUNDED_TEXTURE = CustomVertexFormats.POSITION_TEXTURE_COLOR.toBuilder()
-            .element("Rect Position", VertexElementType.FLOAT, 2)
-            .element("Half Size", VertexElementType.FLOAT, 2)
-            .element("Radius", VertexElementType.FLOAT, 1)
+    public VertexFormat ROUNDED_TEXTURE = CustomVertexFormats.ROUNDED_RECT.toBuilder()
+            .element(1, "Texture", VertexElementType.FLOAT, 2)
             .build();
 }
