@@ -12,14 +12,8 @@ pluginManagement {
 include "plugins:post-effects"
 include "plugins:better-exceptions"
 include "plugins:better-compiler"
-include "minecraft:minecraft-1_20_1-fabric"
-include "minecraft:minecraft-1_20_4-fabric"
-include "minecraft:minecraft-1_21_1-fabric"
-include "minecraft:minecraft-1_21_4-fabric"
-include "minecraft:minecraft-1_21_5-fabric"
-include "minecraft:minecraft-1_21_8-fabric"
-include "minecraft:minecraft-1_21_10-fabric"
-include "minecraft:minecraft-1_21_11-fabric"
-include "minecraft:minecraft-26_1-snapshot-1-fabric"
-include "minecraft:minecraft-26_1-snapshot-2-fabric"
-include "minecraft:minecraft-26_1-snapshot-5-fabric"
+
+for (File dir : file("minecraft").listFiles()) {
+    if (dir.getName().startsWith("minecraft-"))
+        include "minecraft:${dir.getName()}"
+}
