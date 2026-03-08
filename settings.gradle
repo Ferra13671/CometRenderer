@@ -12,6 +12,7 @@ pluginManagement {
 include "plugins:post-effects"
 include "plugins:better-exceptions"
 include "plugins:better-compiler"
+include "minecraft:minecraft-1_20_1-fabric"
 include "minecraft:minecraft-1_20_4-fabric"
 include "minecraft:minecraft-1_21_1-fabric"
 include "minecraft:minecraft-1_21_4-fabric"
