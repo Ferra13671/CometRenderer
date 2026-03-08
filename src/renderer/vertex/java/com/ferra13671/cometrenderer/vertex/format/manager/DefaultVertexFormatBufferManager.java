@@ -46,10 +46,10 @@ public class DefaultVertexFormatBufferManager extends VertexFormatManager {
 
             if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
                 GL30.glVertexAttribPointer(
-                        j, vertexElement.getCount(), vertexElement.getType().glId(), false, i, format.getElementOffset(vertexElement)
+                        j, vertexElement.getTypeCount(), vertexElement.getType().glId(), false, i, format.getElementOffset(vertexElement)
                 );
             } else {
-                GL30.glVertexAttribIPointer(j, vertexElement.getCount(), vertexElement.getType().glId(), i, format.getElementOffset(vertexElement));
+                GL30.glVertexAttribIPointer(j, vertexElement.getTypeCount(), vertexElement.getType().glId(), i, format.getElementOffset(vertexElement));
             }
         }
     }

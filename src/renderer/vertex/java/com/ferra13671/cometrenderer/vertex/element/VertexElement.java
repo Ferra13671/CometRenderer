@@ -16,6 +16,8 @@ public class VertexElement {
     private final int mask;
     /** Количество данных в элементе. **/
     private final int count;
+    /** Количество данных в элементе после обработки типом элемента. **/
+    private final int typeCount;
     /** Размер элемента в байтах. **/
     private final int size;
     /** Тип данных элемента. **/
@@ -31,8 +33,9 @@ public class VertexElement {
 
         this.id = id;
         this.mask = 1 << this.id;
-        this.count = count * (type.size() / type.offset());
-        this.size = this.count * type.size();
+        this.count = count;
+        this.typeCount = count * (type.size() / type.offset());
+        this.size = this.typeCount * type.size();
         this.type = type;
     }
 }

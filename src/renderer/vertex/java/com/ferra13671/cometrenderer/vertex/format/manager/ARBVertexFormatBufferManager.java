@@ -56,11 +56,11 @@ public class ARBVertexFormatBufferManager extends VertexFormatManager {
 
             if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
                 ARBVertexAttribBinding.glVertexAttribFormat(
-                        i, vertexElement.getCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
+                        i, vertexElement.getTypeCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
                 );
             } else {
                 ARBVertexAttribBinding.glVertexAttribIFormat(
-                        i, vertexElement.getCount(), vertexElement.getType().glId(), vertexFormat.getElementOffset(vertexElement)
+                        i, vertexElement.getTypeCount(), vertexElement.getType().glId(), vertexFormat.getElementOffset(vertexElement)
                 );
             }
 

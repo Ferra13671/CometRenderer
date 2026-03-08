@@ -30,12 +30,10 @@ public class VertexFormat implements Closeable {
     public static final VertexFormat POSITION_TEXTURE = VertexFormat.builder()
             .element("Texture", VertexElementType.FLOAT, 2)
             .build();
-    public static final VertexFormat POSITION_COLOR_TEXTURE = VertexFormat.builder()
-            .element("Color", VertexElementType.FLOAT, 4)
+    public static final VertexFormat POSITION_COLOR_TEXTURE = POSITION_COLOR.toBuilder()
             .element("Texture", VertexElementType.FLOAT, 2)
             .build();
-    public static final VertexFormat POSITION_TEXTURE_COLOR = VertexFormat.builder()
-            .element("Texture", VertexElementType.FLOAT, 2)
+    public static final VertexFormat POSITION_TEXTURE_COLOR = POSITION_TEXTURE.toBuilder()
             .element("Color", VertexElementType.FLOAT, 4)
             .build();
 
@@ -159,6 +157,19 @@ public class VertexFormat implements Closeable {
             this.buffer = bufferSupplier.get();
 
         return this.buffer;
+    }
+
+    @API(status = API.Status.EXPERIMENTAL, since = "2.7")
+    public VertexFormatBuilder toBuilder() {
+        VertexFormatBuilder builder = new VertexFormatBuilder();
+
+        for (String name : this.names) {
+            VertexElement element = this.elementsForNames.get(name);
+
+            builder.element(name, element.getType(), element.getCount());
+        }
+
+        return builder;
     }
 
     /**
