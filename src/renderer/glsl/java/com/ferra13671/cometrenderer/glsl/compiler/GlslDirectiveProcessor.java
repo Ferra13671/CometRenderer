@@ -7,7 +7,7 @@ import org.apiguardian.api.API;
 @API(status = API.Status.INTERNAL, since = "2.5")
 public class GlslDirectiveProcessor {
 
-    public static void processContent(Registry glslFileRegistry, Registry programRegistry) {
+    public static void processContent(Registry glslFileRegistry, Registry builderRegistry) {
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 
         for (int l = 0; l < content.getLines().length; l++) {
@@ -19,11 +19,11 @@ public class GlslDirectiveProcessor {
                         processDirective(
                                 directive,
                                 glslFileRegistry,
-                                programRegistry
+                                builderRegistry
                         )
                 ) {
                     GlobalCometCompiler.removeComments(glslFileRegistry);
-                    processContent(glslFileRegistry, programRegistry);
+                    processContent(glslFileRegistry, builderRegistry);
                 }
             }
         }
@@ -52,12 +52,12 @@ public class GlslDirectiveProcessor {
         return directiveNameBuilder.toString();
     }
 
-    public static boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+    public static boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
         for (CompilerExtension extension : GlobalCometCompiler.getExtensions()) {
             if (extension.getDirectiveExtension() != null) {
                 DirectiveExtension e = extension.getDirectiveExtension();
                 if (e.supportedDirective(directive))
-                    return e.processDirective(directive, glslFileRegistry, programRegistry);
+                    return e.processDirective(directive, glslFileRegistry, builderRegistry);
             }
         }
 

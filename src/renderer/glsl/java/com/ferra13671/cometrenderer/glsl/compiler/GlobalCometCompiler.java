@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.exceptions.impl.NoSuchCompilerExtensionException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
@@ -11,6 +10,7 @@ import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
+import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.NonNull;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
@@ -46,13 +46,25 @@ public class GlobalCometCompiler {
         int programId = GL20.glCreateProgram();
 
         Map<ShaderType, GlslFileEntry> shaders = registry.get(CometTags.SHADERS).orElseThrow().getValue();
+        Map<ShaderType, GlShader> compiledShaders = registry.contains(CometTags.COMPILED_SHADERS) ? registry.get(CometTags.COMPILED_SHADERS).orElseThrow().getValue() : null;
         Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow().getValue();
 
-        for (Map.Entry<ShaderType, GlslFileEntry> shaderEntry : shaders.entrySet()) {
-            GlShader shader = compileShader(shaderEntry.getValue(), shaderEntry.getKey(), registry);
+        if (compiledShaders != null)
+            compiledShaders.forEach((type, shader) -> {
+                if (shader.getRegistry().contains(CometTags.UNIFORMS))
+                    uniforms.putAll(shader.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue());
+
+                GL20.glAttachShader(programId, shader.getId());
+            });
+
+        shaders.forEach((type, entry) -> {
+            GlShader shader = compileShader(entry, type, registry);
+
+            if (entry.getRegistry().contains(CometTags.UNIFORMS))
+                uniforms.putAll(entry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue());
 
             GL20.glAttachShader(programId, shader.getId());
-        }
+        });
 
         GL20.glLinkProgram(programId);
 
@@ -68,14 +80,23 @@ public class GlobalCometCompiler {
 
     @NonNull
     @API(status = API.Status.INTERNAL)
-    public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry programRegistry) {
+    public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry builderRegistry) {
+        //Experimental
+        Registry shaderRegistry = new Registry();
+        if (builderRegistry.contains(CometTags.TAGS_TO_COPY)) {
+            for (Tag<?> tag : builderRegistry.get(CometTags.TAGS_TO_COPY).orElseThrow().getValue())
+                if (builderRegistry.contains(tag))
+                    shaderRegistry.set(builderRegistry.get(tag).orElseThrow());
+        }
+
         GlslFileEntry processedShader = new GlslFileEntry(shaderEntry);
-        processContent(processedShader.getRegistry(), programRegistry);
+        processContent(processedShader.getRegistry(), builderRegistry);
         GlslContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
 
         GlShader shader = new GlShader(
                 processedShader.getName(),
-                shaderType
+                shaderType,
+                shaderRegistry
         );
         shader.setContent(content);
         shader.compile();
@@ -87,18 +108,12 @@ public class GlobalCometCompiler {
     }
 
     @API(status = API.Status.INTERNAL)
-    public static void onCreateProgramBuilder(@NonNull Registry programRegistry) {
-        for (CompilerExtension extension : getExtensions())
-            extension.onCreateProgramBuilder(programRegistry);
-    }
-
-    @API(status = API.Status.INTERNAL)
-    public static void processContent(@NonNull Registry shaderRegistry, @NonNull Registry programRegistry) {
+    public static void processContent(@NonNull Registry shaderRegistry, @NonNull Registry builderRegistry) {
         removeComments(shaderRegistry);
 
-        GlslDirectiveProcessor.processContent(shaderRegistry, programRegistry);
+        GlslDirectiveProcessor.processContent(shaderRegistry, builderRegistry);
         for (CompilerExtension extension : getExtensions())
-            extension.processCompile(shaderRegistry, programRegistry);
+            extension.processCompile(shaderRegistry, builderRegistry);
     }
 
     @API(status = API.Status.INTERNAL)

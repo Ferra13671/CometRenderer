@@ -34,8 +34,8 @@ public class BetterCompilerPlugin {
         GlobalCometCompiler.addExtensions(
                 new CompilerExtension("better-compiler-main") {
                     @Override
-                    public void onCreateProgramBuilder(Registry programRegistry) {
-                        programRegistry.setImmutable(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo());
+                    public void onCreateGlslBuilder(Registry builderRegistry) {
+                        builderRegistry.setImmutable(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo());
                     }
                 },
                 VERSION_PROCESSOR.getExtension(),

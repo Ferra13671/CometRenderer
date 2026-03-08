@@ -22,7 +22,7 @@ public class VersionProcessor {
         }
 
         @Override
-        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
             glslFileRegistry.set(FOUNDED_GLSL_VERSION, true);
 
             if (directive.glslContent().getLines()[directive.lineIndex()].length() == directiveName.length())
@@ -30,11 +30,11 @@ public class VersionProcessor {
 
             String directiveValue = directive.glslContent().getLines()[directive.lineIndex()].substring(directiveName.length() + 1).replace(" ", "");
 
-            boolean redirectVersion = programRegistry.contains(BetterCompilerTags.GLSL_VERSION);
+            boolean redirectVersion = builderRegistry.contains(BetterCompilerTags.GLSL_VERSION);
             boolean autoVersion = directiveValue.equals("auto");
 
             if (redirectVersion) {
-                directive.glslContent().getLines()[directive.lineIndex()] = directiveName.concat(" ").concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion);
+                directive.glslContent().getLines()[directive.lineIndex()] = directiveName.concat(" ").concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion);
                 return false;
             }
 

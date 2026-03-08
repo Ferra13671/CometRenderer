@@ -21,7 +21,7 @@ public class ConstantProcessor {
         }
 
         @Override
-        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
             String line = directive.glslContent().getLines()[directive.lineIndex()];
 
             String[] field = line.substring(0, line.indexOf(";")).split(" ");
@@ -34,7 +34,7 @@ public class ConstantProcessor {
                 return false;
             }
 
-            Optional<String> value = programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getConstant(field[1]);
+            Optional<String> value = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getConstant(field[1]);
             String defaultValue = getDefaultConstantValue(line);
 
             if (value.isEmpty() && defaultValue == null)

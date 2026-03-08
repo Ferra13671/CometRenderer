@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.shader.GlShaderBuilder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.LoadGlslContentException;
 import com.ferra13671.cometrenderer.glsl.GlProgramBuilder;
@@ -15,6 +16,11 @@ public abstract class CometLoader<T> {
     @API(status = API.Status.MAINTAINED, since = "1.3")
     public GlProgramBuilder<T> createProgramBuilder(GlProgramSnippet... snippets) {
         return new GlProgramBuilder<>(this, snippets);
+    }
+
+    @API(status = API.Status.EXPERIMENTAL, since = "2.7")
+    public GlShaderBuilder<T> createShaderBuilder() {
+        return new GlShaderBuilder<>(this);
     }
 
     @API(status = API.Status.MAINTAINED, since = "1.8.2")

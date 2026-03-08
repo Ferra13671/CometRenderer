@@ -6,6 +6,7 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
+import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
@@ -20,30 +21,32 @@ import java.io.Closeable;
  * @see ShaderType
  * @see GlobalCometCompiler
  */
-@API(status = API.Status.INTERNAL, since = "1.1")
+@Getter
+@API(status = API.Status.MAINTAINED, since = "2.7")
 public class GlShader implements Compilable, Closeable {
-    @Getter
     private final String name;
-    @Getter
     private final ShaderType shaderType;
-    @Getter
+    private final Registry registry;
     private int id;
-    @Getter
     private GlslContent content = null;
-    @Getter
     private CompileResult compileResult = null;
 
-    public GlShader(String name, ShaderType shaderType) {
+    @API(status = API.Status.INTERNAL)
+    public GlShader(String name, ShaderType shaderType, Registry registry) {
         this.name = name;
         this.shaderType = shaderType;
+        this.registry = registry;
+
         this.id = GL20.glCreateShader(shaderType.glId);
     }
 
+    @API(status = API.Status.INTERNAL)
     public void setContent(GlslContent content) {
         this.content = content;
         this.compileResult = null;
     }
 
+    @API(status = API.Status.INTERNAL)
     public void compile() {
         if (this.compileResult == null) {
             GL20.glShaderSource(this.id, this.content.concatLines());
@@ -58,6 +61,7 @@ public class GlShader implements Compilable, Closeable {
     }
 
     @Override
+    @API(status = API.Status.INTERNAL)
     public void close() {
         GL20.glDeleteShader(this.id);
         this.id = -1;

@@ -24,7 +24,7 @@ public class AbstractMethodProcessor {
         }
 
         @Override
-        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry programRegistry) {
+        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
             String line = directive.glslContent().getLines()[directive.lineIndex()];
 
             if (
@@ -44,7 +44,7 @@ public class AbstractMethodProcessor {
             method[1] = line.substring(line.indexOf(" ") + 1, line.indexOf(")") + 1);
 
             String methodName = method[1].substring(0, method[1].indexOf("("));
-            Optional<String> methodContent = programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getMethodContent(methodName);
+            Optional<String> methodContent = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getMethodContent(methodName);
 
             String content = "";
 

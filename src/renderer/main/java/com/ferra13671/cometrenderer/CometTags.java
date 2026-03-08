@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
@@ -10,6 +11,7 @@ import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import org.apiguardian.api.API;
 
+import java.util.List;
 import java.util.Map;
 
 @API(status = API.Status.MAINTAINED, since = "1.9")
@@ -20,6 +22,8 @@ public final class CometTags {
     public static final Tag<Map<String, UniformType<?>>> UNIFORMS = new Tag<>("uniforms");
     public static final Tag<GlProgramSnippet[]> SNIPPETS = new Tag<>("snippets");
     public static final Tag<Map<ShaderType, GlslFileEntry>> SHADERS = new Tag<>("shaders");
+    public static final Tag<Map<ShaderType, GlShader>> COMPILED_SHADERS = new Tag<>("compiled-shaders");
+    public static final Tag<List<Tag<?>>> TAGS_TO_COPY = new Tag<>("tags-to-copy");
 
     public static final Tag<Boolean> INITIALIZED = new Tag<>("initialized");
     public static final Tag<String> COMET_RENDERER_VERSION = new Tag<>("comet-renderer-version");
