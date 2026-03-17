@@ -39,7 +39,7 @@ public class TestMod implements PreLaunchEntrypoint, Mc {
         GlStateManager._depthMask(false);
         BoxRenderTest.draw(vec1.toVector3f(), RenderColor.WHITE);
 
-        //Color without depth (Cyan)
+        //Box without depth (Cyan)
         GlStateManager._disableDepthTest();
         BoxRenderTest.draw(vec2.toVector3f(), RenderColor.of(Color.CYAN));
     }
