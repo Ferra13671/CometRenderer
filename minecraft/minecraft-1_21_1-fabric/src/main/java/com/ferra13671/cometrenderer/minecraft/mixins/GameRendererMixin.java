@@ -44,7 +44,7 @@ public class GameRendererMixin {
     }
 
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V", shift = At.Shift.AFTER))
-    public void modifyRenderLevelAfterRenderLevel(DeltaTracker deltaTracker, CallbackInfo ci, @Local(name = "matrix4f2") Matrix4f rotationMatrix) {
+    public void modifyRenderLevelAfterRenderLevel(DeltaTracker deltaTracker, CallbackInfo ci, @Local(ordinal = 1) Matrix4f rotationMatrix) {
         if (minecraft.player == null)
             return;
 
