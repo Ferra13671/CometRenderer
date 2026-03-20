@@ -31,14 +31,14 @@ dependencies {
         include "com.ferra13671:crm:${crm_version}"
     //------------//
     //Else if you don't want to use CRM or you not use CometRenderer in Minecraft:
-        implementation "com.ferra13671:comet-renderer:2.7"
+        implementation "com.ferra13671:comet-renderer:2.7.0.1"
         implementation "com.ferra13671:gl-texture-utils:1.7.4-HOTFIX-1"
     //------------//
     
     //Plugins (optional)
-    implementation "com.ferra13671:comet-renderer-better-compiler:2.7" //By default it is in CRM
-    implementation "com.ferra13671:comet-renderer-better-exceptions:2.7"
-    implementation "com.ferra13671:comet-renderer-post-effects:2.7"
+    implementation "com.ferra13671:comet-renderer-better-compiler:2.7.0.1" //By default it is in CRM
+    implementation "com.ferra13671:comet-renderer-better-exceptions:2.7.0.1"
+    implementation "com.ferra13671:comet-renderer-post-effects:2.7.0.1"
 }
 ```
 
