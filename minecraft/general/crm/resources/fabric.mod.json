@@ -12,10 +12,14 @@
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
+    "preLaunch": [
+      "com.ferra13671.cometrenderer.minecraft.PreLaunch"
+    ]
   },
   "mixins": [
     "crm.mixins.json"
   ],
+  "accessWidener" : "crm.accesswidener",
   "depends": {
     "minecraft": "${minecraft_version}",
     "fabric-api-base": "*"

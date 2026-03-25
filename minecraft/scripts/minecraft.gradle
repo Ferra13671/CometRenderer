@@ -24,6 +24,8 @@ sourceSets {
 }
 
 loom {
+    accessWidenerPath = file("src/main/resources/crm.accesswidener")
+
     runs {
         testmodClient {
             client()
