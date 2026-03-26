@@ -12,7 +12,7 @@ uniform float height;
 
 out vec4 fragColor;
 
-const float edgeSoftness  = 2.;
+float edgeSoftness; #constant<default = 2f>
 
 void main() {
     vec2 _position = vec2(rectPosition.x, height - rectPosition.y);
