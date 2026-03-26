@@ -12,9 +12,6 @@
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
-    "preLaunch": [
-      "com.ferra13671.cometrenderer.minecraft.PreLaunch"
-    ]
   },
   "mixins": [
     "crm.mixins.json"
