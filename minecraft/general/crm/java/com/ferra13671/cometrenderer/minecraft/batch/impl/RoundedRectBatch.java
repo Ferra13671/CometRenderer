@@ -6,7 +6,6 @@ import com.ferra13671.cometrenderer.minecraft.CustomVertexElementTypes;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
-import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -90,7 +89,6 @@ public class RoundedRectBatch extends AbstractPrimitiveBatch {
 
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
-        CometRenderer.getCurrentProgram().getUniform("height", UniformType.FLOAT).set((float) CRM.getMainFramebuffer().getHeight());
 
         CometRenderer.draw(this.mesh, false);
     }

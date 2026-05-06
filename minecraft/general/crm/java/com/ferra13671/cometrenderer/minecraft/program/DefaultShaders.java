@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer.minecraft.program;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
-import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -79,7 +78,6 @@ public class DefaultShaders {
                     "assets/crm/shaders/rounded-rect.frag",
                     ShaderType.Fragment
             )
-            .uniform("height", UniformType.FLOAT)
             .build();
     public final GlShader ROUNDED_TEXTURE_VERTEX = CometLoaders.IN_JAR.createShaderBuilder()
             .info(
@@ -95,6 +93,5 @@ public class DefaultShaders {
                     ShaderType.Fragment
             )
             .sampler("u_Texture")
-            .uniform("height", UniformType.FLOAT)
             .build();
 }

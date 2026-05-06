@@ -4,22 +4,19 @@ precision lowp float;
 
 in vec2 texPos;
 in vec4 vertexColor;
-in vec2 rectPosition;
+in vec2 offset;
 in vec2 halfSize;
 in float radius;
 
 #include<rounded, shaderColor>
 uniform sampler2D u_Texture;
-uniform float height;
 
 out vec4 fragColor;
 
 float edgeSoftness; #constant<default = 2f>
 
 void main() {
-    vec2 _position = vec2(rectPosition.x, height - rectPosition.y);
-
-    float distance = roundedBoxSDF(gl_FragCoord.xy - _position, halfSize, radius);
+    float distance = roundedBoxSDF(offset, halfSize, radius);
 
     vec4 col = vertexColor * texture(u_Texture, texPos);
 
