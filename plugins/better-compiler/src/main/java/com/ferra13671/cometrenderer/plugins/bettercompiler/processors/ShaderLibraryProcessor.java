@@ -4,44 +4,44 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.exceptions.NoSuchShaderLibraryException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
 public class ShaderLibraryProcessor {
-    private static final String directiveName = "#include";
 
-    final DirectiveExtension directiveExtension = new DirectiveExtension() {
+    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<]*)>", Pattern.MULTILINE)) {
         @Override
-        public boolean supportedDirective(GlslDirective directive) {
-            return "#".concat(directive.directiveName()).equals(directiveName);
-        }
-
-        @Override
-        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
             Map<String, UniformType<?>> uniforms = builderRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
+            String libsLine = result.group("libs").strip();
 
-            String libsLine = directive.glslContent().getLines()[directive.lineIndex()].substring(directive.directiveName().length() + 1)
-                    .replace(" ", "")
-                    .replace("<", "")
-                    .replace(">", "");
+            if (libsLine.isEmpty()) {
+                CometRenderer.getLogger().error(String.format("[better-compiler] Found empty #version directive. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()));
+                return false;
+            }
+
             String[] libs = libsLine.split(",");
 
             StringBuilder libsContent = new StringBuilder();
-            for (String lib : libs) {
+
+            for (String l : libs) {
+                String lib = l.strip();
+
                 Optional<GlslFileEntry> shaderLibOpt = BetterCompilerPlugin.getShaderLibrary(lib);
 
                 if (shaderLibOpt.isEmpty()) {
-                    CometRenderer.getExceptionManager().manageException(new NoSuchShaderLibraryException(lib));
+                    CometRenderer.getLogger().error(String.format("[better-compiler] Found #include directive with unknown library '%s'. [%s]", lib, glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()));
                 } else {
                     GlslFileEntry shaderLib = shaderLibOpt.get();
 
@@ -56,19 +56,17 @@ public class ShaderLibraryProcessor {
                 }
             }
 
-            String[] libsLines = libsContent.toString().split("\n");
+            if (!libsContent.isEmpty()) {
+                content.set(content.concatLines().replace(result.group(), libsContent.toString()));
+                return true;
+            }
 
-            String[] newLines = new String[directive.glslContent().getLines().length - 1 + libsLines.length];
-            System.arraycopy(directive.glslContent().getLines(), 0, newLines, 0, directive.lineIndex());
-            System.arraycopy(libsLines, 0, newLines, directive.lineIndex(), libsLines.length);
-            System.arraycopy(directive.glslContent().getLines(), directive.lineIndex() + 1, newLines, directive.lineIndex() + libsLines.length, directive.glslContent().getLines().length - directive.lineIndex() - 1);
-
-            directive.glslContent().setLines(newLines);
-
-            return true;
+            return false;
         }
     };
 
     @Getter
-    private final CompilerExtension extension = new CompilerExtension("better-compiler-shader-library", this.directiveExtension);
+    private final CompilerExtension extension = new CompilerExtension("better-compiler-shader-library") {{
+        registerRegexExtensions(regexExtension);
+    }};
 }

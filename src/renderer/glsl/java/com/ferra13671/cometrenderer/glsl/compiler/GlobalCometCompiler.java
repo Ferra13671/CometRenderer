@@ -12,17 +12,19 @@ import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
 import java.util.*;
 
 @API(status = API.Status.EXPERIMENTAL, since = "1.3")
+@UtilityClass
 public class GlobalCometCompiler {
-    private static final HashMap<String, CompilerExtension> extensions = new HashMap<>();
-    public static final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
+    private final HashMap<String, CompilerExtension> extensions = new HashMap<>();
+    public final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
 
-    public static void addExtensions(@NonNull CompilerExtension... extensions) {
+    public void addExtensions(@NonNull CompilerExtension... extensions) {
         for (CompilerExtension extension : extensions) {
             if (GlobalCometCompiler.extensions.containsKey(extension.getName()))
                 CometRenderer.getLogger().warn(String.format("Found 2 compiler extensions named %s, overwriting prev compiler extension.", extension.getName()));
@@ -31,16 +33,16 @@ public class GlobalCometCompiler {
         }
     }
 
-    public static Optional<CompilerExtension> getExtension(@NonNull String name) {
+    public Optional<CompilerExtension> getExtension(@NonNull String name) {
         return Optional.ofNullable(extensions.get(name));
     }
 
-    public static Collection<CompilerExtension> getExtensions() {
+    public Collection<CompilerExtension> getExtensions() {
         return extensions.values();
     }
 
     @API(status = API.Status.INTERNAL)
-    public static GlProgram compileProgram(@NonNull Registry registry) {
+    public GlProgram compileProgram(@NonNull Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow().getValue();
 
         int programId = GL20.glCreateProgram();
@@ -80,7 +82,7 @@ public class GlobalCometCompiler {
 
     @NonNull
     @API(status = API.Status.INTERNAL)
-    public static GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry builderRegistry) {
+    public GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry builderRegistry) {
         //Experimental
         Registry shaderRegistry = new Registry();
         if (builderRegistry.contains(CometTags.TAGS_TO_COPY)) {
@@ -108,16 +110,16 @@ public class GlobalCometCompiler {
     }
 
     @API(status = API.Status.INTERNAL)
-    public static void processContent(@NonNull Registry shaderRegistry, @NonNull Registry builderRegistry) {
+    public void processContent(@NonNull Registry shaderRegistry, @NonNull Registry builderRegistry) {
         removeComments(shaderRegistry);
 
-        GlslDirectiveProcessor.processContent(shaderRegistry, builderRegistry);
+        RegexCompilerProcessor.processContent(shaderRegistry, builderRegistry);
         for (CompilerExtension extension : getExtensions())
             extension.processCompile(shaderRegistry, builderRegistry);
     }
 
     @API(status = API.Status.INTERNAL)
-    protected static void removeComments(@NonNull Registry glslFileRegistry) {
+    protected void removeComments(@NonNull Registry glslFileRegistry) {
         List<String> l = new ArrayList<>();
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 

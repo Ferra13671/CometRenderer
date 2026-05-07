@@ -3,63 +3,59 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.processors;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
+import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.Getter;
 
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+
 public class VersionProcessor {
-    private static final String directiveName = "#version";
     private static final Tag<Boolean> FOUNDED_GLSL_VERSION = new Tag<>("founded-glsl-version");
 
-    final DirectiveExtension directiveExtension = new DirectiveExtension() {
+    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#version\\h+.*", Pattern.MULTILINE)) {
         @Override
-        public boolean supportedDirective(GlslDirective directive) {
-            return "#".concat(directive.directiveName()).equals(directiveName);
-        }
-
-        @Override
-        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
             glslFileRegistry.set(FOUNDED_GLSL_VERSION, true);
 
-            if (directive.glslContent().getLines()[directive.lineIndex()].length() == directiveName.length())
-                CometRenderer.getLogger().error(String.format("[better-compiler] Founded #version directive without value. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()));
+            String version = result.group().replaceFirst("#version", "").strip();
+            if (version.isBlank())
+                CometRenderer.getLogger().error(String.format("[better-compiler] Found #version directive without value. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()));
 
-            String directiveValue = directive.glslContent().getLines()[directive.lineIndex()].substring(directiveName.length() + 1).replace(" ", "");
-
-            boolean redirectVersion = builderRegistry.contains(BetterCompilerTags.GLSL_VERSION);
-            boolean autoVersion = directiveValue.equals("auto");
-
-            if (redirectVersion) {
-                directive.glslContent().getLines()[directive.lineIndex()] = directiveName.concat(" ").concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion);
+            if (builderRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
+                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)));
                 return false;
             }
 
-            if (autoVersion) {
-                directive.glslContent().getLines()[directive.lineIndex()] = directiveName.concat(" ").concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glslVersion);
+            if (version.equals("auto")) {
+                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glslVersion)));
                 return false;
             }
 
             return false;
         }
     };
+
     @Getter
-    private final CompilerExtension extension = new CompilerExtension("better-compiler-version", this.directiveExtension) {
+    private final CompilerExtension extension = new CompilerExtension("better-compiler-version") {
+
+        {
+            registerRegexExtensions(regexExtension);
+        }
+
         @Override
         public void processCompile(Registry shaderRegistry, Registry programRegistry) {
             if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
-                shaderRegistry.set(
-                        CometTags.CONTENT,
-                        GlslContent.fromString(
-                                directiveName
-                                        .concat(" ")
-                                        .concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)
-                                        .concat("\n\n")
-                                        .concat(shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue().concatLines())
-                        )
+                GlslContent content = shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
+
+                content.set(
+                        "#version "
+                                .concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)
+                                .concat("\n\n")
+                                .concat(content.concatLines())
                 );
             }
         }

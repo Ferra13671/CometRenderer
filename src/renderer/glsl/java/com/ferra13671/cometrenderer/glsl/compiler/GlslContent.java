@@ -22,6 +22,10 @@ public class GlslContent {
         return String.join("\n", lines);
     }
 
+    public void set(String content) {
+        setLines(content.split("\n"));
+    }
+
     public static GlslContent fromString(String string) {
         return new GlslContent(
                 string.split("\n")

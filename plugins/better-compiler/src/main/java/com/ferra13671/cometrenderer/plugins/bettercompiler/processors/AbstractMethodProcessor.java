@@ -3,74 +3,53 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.processors;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.DirectiveExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslDirective;
+import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
+import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.utils.StringExtension;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
-import lombok.experimental.ExtensionMethod;
 
 import java.util.Optional;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
-@ExtensionMethod(value = {StringExtension.class})
 public class AbstractMethodProcessor {
-    private static final String directiveName = "#abstractMethod";
 
-    final DirectiveExtension directiveExtension = new DirectiveExtension() {
+    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<methodtype>\\w+)\\h+(?<methodname>\\w+)\\h*\\((?<args>.+)?\\);\\h+#abstractMethod", Pattern.MULTILINE)) {
         @Override
-        public boolean supportedDirective(GlslDirective directive) {
-            return "#".concat(directive.directiveName()).equals(directiveName);
-        }
+        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            Optional<String> methodContentOpt = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getMethodContent(result.group("methodname"));
 
-        @Override
-        public boolean processDirective(GlslDirective directive, Registry glslFileRegistry, Registry builderRegistry) {
-            String line = directive.glslContent().getLines()[directive.lineIndex()];
+            String methodContent = "";
 
-            if (
-                    line.charCount('(') != 1
-                    || line.charCount(')') != 1
-            ) {
-                CometRenderer.getLogger().error(String.format(
-                        "[better-compiler] Founded #abstractmethod directive, but the method '%s' is not suitable for the structure: $type $name($params). [%s]",
-                        line.substring(0, line.indexOf(";")),
-                        glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()
-                ));
-                return false;
-            }
-
-            String[] method = new String[2];
-            method[0] = line.substring(0, line.indexOf(" "));
-            method[1] = line.substring(line.indexOf(" ") + 1, line.indexOf(")") + 1);
-
-            String methodName = method[1].substring(0, method[1].indexOf("("));
-            Optional<String> methodContent = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getMethodContent(methodName);
-
-            String content = "";
-
-            if (methodContent.isEmpty()) {
+            if (methodContentOpt.isEmpty()) {
                 CometRenderer.getLogger().error(String.format(
                         "[better-compiler] Founded #abstractMethod directive, but the content for method with name '%s' is not specified. [%s]",
-                        methodName,
+                        result.group("methodname"),
                         glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()
                 ));
             } else
-                content = methodContent.get();
+                methodContent = methodContentOpt.get();
 
-            content = processContent(content);
+            methodContent = processContent(methodContent);
 
-            directive.glslContent().getLines()[directive.lineIndex()] =
-                    method[0].concat(" ").concat(method[1]).concat(" {").concat("\n")
-                            .concat(
-                                    content
-                            )
-                            .concat("\n}");
+            content.set(content.concatLines().replace(
+                    result.group(),
+                    result.group("methodtype")
+                            .concat(" ").concat(result.group("methodname"))
+                            .concat("(").concat(Optional.ofNullable(result.group("args")).orElse("")).concat(") {\n")
+                            .concat(methodContent)
+                            .concat("\n}")
+            ));
 
-            return false;
+            return true;
         }
     };
+
     @Getter
-    private final CompilerExtension extension = new CompilerExtension("better-compile-abstract-method", this.directiveExtension);
+    private final CompilerExtension extension = new CompilerExtension("better-compile-abstract-method") {{
+        registerRegexExtensions(regexExtension);
+    }};
 
     private String processContent(String content) {
         String[] lines = content.split("\n");
