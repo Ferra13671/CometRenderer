@@ -10,8 +10,10 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
+import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 public class RoundedRectBatch extends AbstractPrimitiveBatch {
 
     public RoundedRectBatch(Runnable preDrawRunnable) {

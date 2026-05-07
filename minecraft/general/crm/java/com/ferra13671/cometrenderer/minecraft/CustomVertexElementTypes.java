@@ -2,9 +2,11 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 @UtilityClass
 public class CustomVertexElementTypes {
 

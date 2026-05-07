@@ -17,6 +17,7 @@ import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 @API(status = API.Status.EXPERIMENTAL, since = "1.3")
 @UtilityClass
@@ -120,48 +121,9 @@ public class GlobalCometCompiler {
 
     @API(status = API.Status.INTERNAL)
     protected void removeComments(@NonNull Registry glslFileRegistry) {
-        List<String> l = new ArrayList<>();
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 
-        boolean comment = false;
-        for (String line : content.getLines()) {
-            StringBuilder builder = new StringBuilder();
-
-            for (int i = 0; i < line.length(); i++) {
-                char ch = line.charAt(i);
-
-                if (
-                        ch == '/'
-                        && i < line.length() - 1
-                ) {
-                    char c = line.charAt(i + 1);
-
-                    if (c == '/')
-                        if (!comment)
-                            break;
-
-                    if (c == '*')
-                        comment = true;
-                }
-
-                if (
-                        ch == '*'
-                        && i < line.length() - 1
-                        && line.charAt(i + 1) == '/'
-                ) {
-                    comment = false;
-                    i += 1;
-                    continue;
-                }
-
-                if (!comment)
-                    builder.append(ch);
-            }
-
-            if (!builder.isEmpty() || !comment)
-                l.add(builder.toString());
-        }
-
-        content.setLines(l.toArray(new String[0]));
+        content.set(Pattern.compile("//.*", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));
+        content.set(Pattern.compile("/\\*[\\s\\S]*\\*/", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));
     }
 }

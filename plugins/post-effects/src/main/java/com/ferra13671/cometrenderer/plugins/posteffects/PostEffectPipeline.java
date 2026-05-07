@@ -5,11 +5,13 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import org.apiguardian.api.API;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 
+@API(status = API.Status.MAINTAINED)
 public class PostEffectPipeline {
     private final List<LocalFrameBufferInfo> localFrameBuffers;
     private final List<ProgramPass> passes;

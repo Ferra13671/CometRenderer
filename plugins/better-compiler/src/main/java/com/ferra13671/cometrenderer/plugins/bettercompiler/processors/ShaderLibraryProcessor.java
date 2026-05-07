@@ -11,6 +11,8 @@ import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
+import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,8 @@ import java.util.Optional;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
+@API(status = API.Status.INTERNAL, since = "2.5")
+@UtilityClass
 public class ShaderLibraryProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<]*)>", Pattern.MULTILINE)) {

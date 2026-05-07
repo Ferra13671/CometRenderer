@@ -2,7 +2,9 @@ package com.ferra13671.cometrenderer.minecraft.program;
 
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 public class DefaultPrograms {
     public final GlProgram POSITION = CometLoaders.STRING.createProgramBuilder()
             .name("position")

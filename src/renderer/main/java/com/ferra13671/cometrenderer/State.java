@@ -1,12 +1,14 @@
 package com.ferra13671.cometrenderer;
 
+import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 @API(status = API.Status.MAINTAINED, since = "2.0")
-public final class State {
-    public static BooleanState BLEND = new BooleanState() {
+@UtilityClass
+public class State {
+    public BooleanState BLEND = new BooleanState() {
 
         @Override
         public void enable() {
@@ -24,7 +26,7 @@ public final class State {
             }
         }
     };
-    public static BooleanState SCISSOR = new BooleanState() {
+    public BooleanState SCISSOR = new BooleanState() {
 
         @Override
         public void enable() {
@@ -42,7 +44,7 @@ public final class State {
             }
         }
     };
-    public static TextureState TEXTURE = new TextureState() {
+    public TextureState TEXTURE = new TextureState() {
         @Override
         public void activeTexture(int activeTexture) {
             GL13.glActiveTexture(activeTexture);

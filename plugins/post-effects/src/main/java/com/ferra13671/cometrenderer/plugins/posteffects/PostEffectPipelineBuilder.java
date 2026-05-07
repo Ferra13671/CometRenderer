@@ -1,10 +1,12 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.utils.Builder;
+import org.apiguardian.api.API;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@API(status = API.Status.MAINTAINED)
 public class PostEffectPipelineBuilder extends Builder<PostEffectPipeline> {
     private final List<LocalFrameBufferInfo> localFrameBuffers = new ArrayList<>();
     private final List<ProgramPass> passes = new ArrayList<>();

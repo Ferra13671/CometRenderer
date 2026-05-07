@@ -5,7 +5,9 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
 import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.INTERNAL, since = "2.2")
 @UtilityClass
 public class DefaultShaderLibraries {
 

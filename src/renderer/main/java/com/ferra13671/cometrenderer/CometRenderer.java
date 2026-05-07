@@ -29,6 +29,7 @@ import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.*;
 
@@ -39,48 +40,49 @@ import java.util.function.Consumer;
  * Контролирует всю работу рендера.
  */
 @API(status = API.Status.STABLE, since = "1.1")
+@UtilityClass
 public class CometRenderer {
     /** Реестр различных данных. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.9")
-    private static final Registry registry = new Registry();
+    private final Registry registry = new Registry();
     /** Конфиг с различными настройками. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.9")
-    private static final Config config = new Config();
+    private final Config config = new Config();
     /** Стек глобального шейдерного цвета, позволяющего контролировать цвет выходных объектов рендеринга, если программа реализовала данную возможность. **/
     @Getter
     @API(status = API.Status.MAINTAINED, since = "2.5")
-    private static final ShaderColor shaderColor = new ShaderColor();
+    private final ShaderColor shaderColor = new ShaderColor();
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
-    private static final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
+    private final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
     /** Текущая активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
     @Getter
     @Setter
     @API(status = API.Status.STABLE, since = "2.6")
-    private static GlProgram currentProgram;
+    private GlProgram currentProgram;
     /** Стек для областей, используемых ножницами. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
-    private static final ScissorStack scissorStack = new ScissorStack();
+    private final ScissorStack scissorStack = new ScissorStack();
     @Getter
     @API(status = API.Status.MAINTAINED, since = "2.1")
-    private static ISamplerManger samplerManager;
+    private ISamplerManger samplerManager;
     @Getter
     @API(status = API.Status.INTERNAL, since = "2.5")
-    private static VertexFormatManager vertexFormatManager;
+    private VertexFormatManager vertexFormatManager;
     @Getter
     @API(status = API.Status.MAINTAINED, since = "2.5")
-    private static final ExceptionManager exceptionManager = new ExceptionManager();
+    private final ExceptionManager exceptionManager = new ExceptionManager();
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     @Getter
     @Setter
     @API(status = API.Status.MAINTAINED, since = "2.1")
-    private static Logger logger = new Logger() {
+    private Logger logger = new Logger() {
         @Override
         public void log(String message) {
             System.out.println(message);
@@ -97,7 +99,7 @@ public class CometRenderer {
         }
     };
     @API(status = API.Status.INTERNAL, since = "2.0")
-    private static final BufferRenderer<IMesh> COMET_BUFFER_RENDERER = (mesh, close) -> {
+    private final BufferRenderer<IMesh> COMET_BUFFER_RENDERER = (mesh, close) -> {
         int vertexCount = mesh.getVertexCount();
 
         if (vertexCount > 0) {
@@ -122,7 +124,7 @@ public class CometRenderer {
      * Инициализирует CometRenderer.
      */
     @API(status = API.Status.STABLE, since = "2.0")
-    public static void init() {
+    public void init() {
         if (registry.contains(CometTags.INITIALIZED))
             throw new IllegalStateException("CometRenderer has already initialized.");
 
@@ -149,7 +151,7 @@ public class CometRenderer {
         registry.setImmutable(CometTags.INITIALIZED, true);
     }
 
-    private static void initRegistry() {
+    private void initRegistry() {
         registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "2.7");
 
         String vendor = GL11.glGetString(GL11.GL_VENDOR);
@@ -177,7 +179,7 @@ public class CometRenderer {
      * @see CometRenderer#colorSnippet
      */
     @API(status = API.Status.STABLE, since = "2.6")
-    public static void applyShaderColorUniform() {
+    public void applyShaderColorUniform() {
         currentProgram.consumeIfUniformPresent(
                 "shaderColor",
                 UniformType.VEC4,
@@ -193,7 +195,7 @@ public class CometRenderer {
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
-    public static void setDefaultBlend() {
+    public void setDefaultBlend() {
         State.BLEND.enable();
         GL11.glBlendFunc(SrcFactor.SRC_ALPHA.glId, DstFactor.ONE_MINUS_SRC_ALPHA.glId);
     }
@@ -208,7 +210,7 @@ public class CometRenderer {
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
-    public static void setBlend(SrcFactor srcFactor, DstFactor dstFactor) {
+    public void setBlend(SrcFactor srcFactor, DstFactor dstFactor) {
         State.BLEND.enable();
         GL11.glBlendFunc(srcFactor.glId, dstFactor.glId);
     }
@@ -225,7 +227,7 @@ public class CometRenderer {
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
-    public static void setBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
+    public void setBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
         State.BLEND.enable();
         GL14.glBlendFuncSeparate(srcColor.glId, dstColor.glId, srcAlpha.glId, dstAlpha.glId);
     }
@@ -236,7 +238,7 @@ public class CometRenderer {
      * @see <a href="https://wikis.khronos.org/opengl/Blending">OpenGL blending wiki</a>
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
-    public static void disableBlend() {
+    public void disableBlend() {
         State.BLEND.disable();
     }
 
@@ -250,7 +252,7 @@ public class CometRenderer {
      * @return готовый меш либо null, если в сборщике нет вершин.
      */
     @API(status = API.Status.STABLE, since = "1.7")
-    public static IMesh createMesh(DrawMode drawMode, VertexFormat vertexFormat, Consumer<IMeshBuilder> buildConsumer) {
+    public IMesh createMesh(DrawMode drawMode, VertexFormat vertexFormat, Consumer<IMeshBuilder> buildConsumer) {
         IMeshBuilder meshBuilder = Mesh.builder(drawMode, vertexFormat);
         buildConsumer.accept(meshBuilder);
         return meshBuilder.buildNullable();
@@ -264,7 +266,7 @@ public class CometRenderer {
      * @see IMesh
      */
     @API(status = API.Status.STABLE, since = "1.7")
-    public static void draw(IMesh mesh) {
+    public void draw(IMesh mesh) {
         draw(COMET_BUFFER_RENDERER, mesh, true);
     }
 
@@ -277,7 +279,7 @@ public class CometRenderer {
      * @see IMesh
      */
     @API(status = API.Status.STABLE, since = "1.7")
-    public static void draw(IMesh mesh, boolean close) {
+    public void draw(IMesh mesh, boolean close) {
         draw(COMET_BUFFER_RENDERER, mesh, close);
     }
 
@@ -291,7 +293,7 @@ public class CometRenderer {
      * @param <T> тип буффера вершин.
      */
     @API(status = API.Status.MAINTAINED, since = "1.7")
-    public static <T> void draw(BufferRenderer<T> bufferRenderer, T buffer, boolean close) {
+    public <T> void draw(BufferRenderer<T> bufferRenderer, T buffer, boolean close) {
         if (!scissorStack.isEmpty()) {
             State.SCISSOR.enable();
             scissorStack.peek().bind();

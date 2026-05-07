@@ -9,18 +9,22 @@ import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import com.ferra13671.cometrenderer.utils.Logger;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import lombok.Getter;
+import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+@API(status = API.Status.STABLE, since = "2.6")
+@UtilityClass
 public class CRM {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
-    static AbstractCRMController controller;
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger("CometRenderer");
+    AbstractCRMController controller;
     @Getter
-    private static DefaultPrograms programs;
-    private static Framebuffer mainFramebuffer;
+    private DefaultPrograms programs;
+    private Framebuffer mainFramebuffer;
 
-    static void initRender() {
+    void initRender() {
         CometRenderer.setLogger(new Logger() {
             @Override
             public void log(String message) {
@@ -58,7 +62,7 @@ public class CRM {
         programs = new DefaultPrograms();
     }
 
-    static ScissorRect fixScissorRect(ScissorRect scissorRect, int scale) {
+    ScissorRect fixScissorRect(ScissorRect scissorRect, int scale) {
         return new ScissorRect(
                 scissorRect.x() * scale,
                 getMainFramebuffer().getHeight() - ((scissorRect.y() + scissorRect.height()) * scale),
@@ -67,11 +71,11 @@ public class CRM {
         );
     }
 
-    public static void applyMatrixUniform() {
+    public void applyMatrixUniform() {
         controller.applyMatrixUniform();
     }
 
-    public static Framebuffer getMainFramebuffer() {
+    public Framebuffer getMainFramebuffer() {
         if (mainFramebuffer == null)
             mainFramebuffer = controller.createMainFramebuffer();
 

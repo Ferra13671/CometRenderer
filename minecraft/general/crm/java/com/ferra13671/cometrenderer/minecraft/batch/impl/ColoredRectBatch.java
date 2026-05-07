@@ -8,8 +8,10 @@ import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
+import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 public class ColoredRectBatch extends AbstractPrimitiveBatch {
 
     public ColoredRectBatch(Runnable preDrawRunnable) {

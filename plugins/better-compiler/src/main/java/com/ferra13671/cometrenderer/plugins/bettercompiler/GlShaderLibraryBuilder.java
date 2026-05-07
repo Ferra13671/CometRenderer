@@ -12,10 +12,12 @@ import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.NonNull;
+import org.apiguardian.api.API;
 
 import java.util.Collections;
 import java.util.HashMap;
 
+@API(status = API.Status.MAINTAINED, since = "2.5")
 public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     private String name;
     private T libraryPath;

@@ -2,11 +2,12 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.joml.Vector4f;
 
 import java.awt.*;
 
-//Да, тут будет использоваться своя реализация цвета, сосите лол
+@API(status = API.Status.MAINTAINED, since = "2.2")
 @AllArgsConstructor
 @Getter
 public class RenderColor {

@@ -6,12 +6,16 @@ import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramExcept
 import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.*;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
+import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@API(status = API.Status.INTERNAL)
+@UtilityClass
 public class ExceptionsPrintInfo {
-    private static final Map<Class<? extends CometException>, PrintInfoCreator<?>> exceptionsPrintInfo = new HashMap<>();
+    private final Map<Class<? extends CometException>, PrintInfoCreator<?>> exceptionsPrintInfo = new HashMap<>();
     static {
         add(CompileProgramException.class, exception -> makeRegistry(
                 "Compile program error.",
@@ -221,15 +225,15 @@ public class ExceptionsPrintInfo {
         ));
     }
 
-    private static <T extends CometException> void add(Class<T> clazz, PrintInfoCreator<T> printInfoCreator) {
+    private <T extends CometException> void add(Class<T> clazz, PrintInfoCreator<T> printInfoCreator) {
         exceptionsPrintInfo.put(clazz, printInfoCreator);
     }
 
-    public static Map<Class<? extends CometException>, PrintInfoCreator<?>> getMap() {
+    public Map<Class<? extends CometException>, PrintInfoCreator<?>> getMap() {
         return exceptionsPrintInfo;
     }
 
-    private static Registry makeRegistry(String description, String details, String[] reasons, String[] solutions) {
+    private Registry makeRegistry(String description, String details, String[] reasons, String[] solutions) {
         Registry registry = new Registry();
         registry.setImmutable(BetterExceptionsPlugin.DESCRIPTION, description);
         registry.setImmutable(BetterExceptionsPlugin.DETAILS, details);

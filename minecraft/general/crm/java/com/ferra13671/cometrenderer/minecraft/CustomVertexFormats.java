@@ -3,7 +3,9 @@ package com.ferra13671.cometrenderer.minecraft;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 @UtilityClass
 public class CustomVertexFormats {
 

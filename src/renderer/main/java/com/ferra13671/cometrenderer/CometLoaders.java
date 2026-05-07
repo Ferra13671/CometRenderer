@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer;
 
+import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
 import java.io.BufferedReader;
@@ -15,8 +16,9 @@ import java.util.stream.Collectors;
  * @see CometLoader
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
-public final class CometLoaders {
-    public static final CometLoader<String> IN_JAR = new CometLoader<>() {
+@UtilityClass
+public class CometLoaders {
+    public final CometLoader<String> IN_JAR = new CometLoader<>() {
         @Override
         public String load(String path) throws Exception {
             InputStream inputStream = CometLoaders.class.getClassLoader().getResourceAsStream(path);
@@ -25,7 +27,7 @@ public final class CometLoaders {
             return content;
         }
     };
-    public static final CometLoader<InputStream> INPUT_STREAM = new CometLoader<>() {
+    public final CometLoader<InputStream> INPUT_STREAM = new CometLoader<>() {
         @Override
         public String load(InputStream path) throws Exception {
             String content = new BufferedReader(new InputStreamReader(path, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
@@ -33,7 +35,7 @@ public final class CometLoaders {
             return content;
         }
     };
-    public static final CometLoader<URI> URI = new CometLoader<>() {
+    public final CometLoader<URI> URI = new CometLoader<>() {
         @Override
         public String load(URI path) throws Exception {
             InputStream inputStream = path.toURL().openStream();
@@ -42,7 +44,7 @@ public final class CometLoaders {
             return content;
         }
     };
-    public static final CometLoader<String> STRING = new CometLoader<>() {
+    public final CometLoader<String> STRING = new CometLoader<>() {
         @Override
         public String load(String path) {
             return path;

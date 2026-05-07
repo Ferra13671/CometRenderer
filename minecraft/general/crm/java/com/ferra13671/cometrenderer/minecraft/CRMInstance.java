@@ -1,9 +1,11 @@
 package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.CometRenderer;import com.ferra13671.cometrenderer.scissor.ScissorRect;
+import org.apiguardian.api.API;
 
 import java.util.function.Supplier;
 
+@API(status = API.Status.STABLE, since = "2.6")
 public class CRMInstance {
     private final Supplier<Integer> scaleGetter;
 

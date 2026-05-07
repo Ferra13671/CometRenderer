@@ -3,7 +3,9 @@ package com.ferra13671.cometrenderer.minecraft.batch;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
     protected Runnable preDrawRunnable = () -> {};
     protected final MeshBuilder meshBuilder;

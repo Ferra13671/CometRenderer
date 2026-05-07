@@ -13,10 +13,12 @@ import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
 import com.ferra13671.gltextureutils.GlTex;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
+import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 
 import java.util.function.BiConsumer;
 
+@API(status = API.Status.MAINTAINED, since = "2.2")
 public class RoundedTextureBatch extends AbstractPrimitiveBatch {
     private Runnable uploadRunnable = null;
 

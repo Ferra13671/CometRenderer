@@ -1,5 +1,8 @@
 package com.ferra13671.cometrenderer.minecraft;
 
+import org.apiguardian.api.API;
+
+@API(status = API.Status.MAINTAINED, since = "2.2")
 public record RectColors(RenderColor x1y1Color, RenderColor x1y2Color, RenderColor x2y2Color, RenderColor x2y1Color) {
 
     public static RectColors oneColor(RenderColor color) {

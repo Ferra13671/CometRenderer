@@ -5,12 +5,16 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
+import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
+@API(status = API.Status.STABLE)
+@UtilityClass
 public class BetterExceptionsPlugin {
-    private static final String exceptionText = """
+    private final String exceptionText = """
     
     ----------------------------------------------
             CometRenderer error occurred!
@@ -32,13 +36,13 @@ public class BetterExceptionsPlugin {
     %s
     ----------------------------------------------
     """;
-    public static final Tag<Map<Class<? extends CometException>, PrintInfoCreator<?>>> EXCEPTIONS_PRINT_INFO = new Tag<>("exceptions-print-info");
-    public static final Tag<String> DESCRIPTION = new Tag<>("description");
-    public static final Tag<String> DETAILS = new Tag<>("details");
-    public static final Tag<String[]> REASONS = new Tag<>("reasons");
-    public static final Tag<String[]> SOLUTIONS = new Tag<>("solutions");
+    public final Tag<Map<Class<? extends CometException>, PrintInfoCreator<?>>> EXCEPTIONS_PRINT_INFO = new Tag<>("exceptions-print-info");
+    public final Tag<String> DESCRIPTION = new Tag<>("description");
+    public final Tag<String> DETAILS = new Tag<>("details");
+    public final Tag<String[]> REASONS = new Tag<>("reasons");
+    public final Tag<String[]> SOLUTIONS = new Tag<>("solutions");
 
-    public static void init() {
+    public void init() {
         if (!CometRenderer.getRegistry().contains(CometTags.INITIALIZED))
             throw new IllegalStateException("CometRenderer is not initialized!");
 
@@ -51,7 +55,7 @@ public class BetterExceptionsPlugin {
         });
     }
 
-    private static void manageException(CometException exception, Consumer<CometException> prevLogConsumer) {
+    private void manageException(CometException exception, Consumer<CometException> prevLogConsumer) {
         Map<Class<? extends CometException>, PrintInfoCreator<?>> map = CometRenderer.getRegistry().get(EXCEPTIONS_PRINT_INFO).orElseThrow().getValue();
         if (map.containsKey(exception.getClass())) {
             printException(((PrintInfoCreator<CometException>) map.get(exception.getClass())).create(exception));
@@ -63,7 +67,7 @@ public class BetterExceptionsPlugin {
         }
     }
 
-    private static void printException(Registry registry) {
+    private void printException(Registry registry) {
         CometRenderer.getLogger().error(
                 String.format(
                         exceptionText,
@@ -75,7 +79,7 @@ public class BetterExceptionsPlugin {
         );
     }
 
-    private static String createList(String[] elements) {
+    private String createList(String[] elements) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < elements.length; i++)
             builder.append(i + 1).append(".").append(elements[i]).append("\n");

@@ -2,11 +2,15 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
+import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
-public final class CustomDrawMode {
+@API(status = API.Status.MAINTAINED, since = "2.5")
+@UtilityClass
+public class CustomDrawMode {
 
-    public static final DrawMode CUBE = DrawMode.builder()
+    public final DrawMode CUBE = DrawMode.builder()
             .glId(GL11.GL_TRIANGLES)
             .indexGeneration(
                     new IndexBufferGenerator(8, 36, (indexConsumer, firstVertexIndex) -> {
@@ -62,7 +66,7 @@ public final class CustomDrawMode {
             )
             .build();
 
-    public static final DrawMode CUBE_OUTLINE = DrawMode.builder()
+    public final DrawMode CUBE_OUTLINE = DrawMode.builder()
             .glId(GL11.GL_LINES)
             .indexGeneration(
                     new IndexBufferGenerator(8, 24, (indexConsumer, firstVertexIndex) -> {

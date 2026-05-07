@@ -4,7 +4,9 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.INTERNAL, since = "2.6")
 abstract class AbstractCRMController {
     @Getter
     private final GlProgramSnippet matrixSnippet = loadMatrixSnippet();

@@ -1,10 +1,12 @@
 package com.ferra13671.cometrenderer.plugins.bettercompiler;
 
 import lombok.NonNull;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Optional;
 
+@API(status = API.Status.MAINTAINED, since = "2.5")
 public class BetterCompilerProgramInfo {
     private final HashMap<String, String> definedConstants = new HashMap<>();
     private final HashMap<String, String> definedMethods = new HashMap<>();

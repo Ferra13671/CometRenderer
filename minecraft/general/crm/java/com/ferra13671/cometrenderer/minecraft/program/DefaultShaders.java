@@ -4,7 +4,9 @@ import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.MAINTAINED, since = "2.7")
 @UtilityClass
 public class DefaultShaders {
     public final GlShader POSITION_VERTEX = CometLoaders.IN_JAR.createShaderBuilder()
