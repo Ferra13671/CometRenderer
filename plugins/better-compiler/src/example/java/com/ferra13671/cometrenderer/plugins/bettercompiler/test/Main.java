@@ -43,6 +43,7 @@ public class Main {
         testConstantDirective();
         testMethodFeatures();
         testShaderLibraryDirective();
+        testInterfaceBlocksDirectives();
     }
 
     public void testGlslVersionDirective() {
@@ -120,6 +121,24 @@ public class Main {
                 new Test(
                         "Multi shader library include",
                         "multiShaderLibraryTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry -> {}
+                )
+        ));
+    }
+
+    public void testInterfaceBlocksDirectives() {
+        startGroup(new TestGroup(
+                "interface blocks directives",
+                new Test(
+                        "Default directives",
+                        "defaultInterfaceBlocksTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry -> {}
+                ),
+                new Test(
+                        "Inouts directive",
+                        "inoutsDirectiveTest.vsh",
                         shaderRegistry -> {},
                         programRegistry -> {}
                 )

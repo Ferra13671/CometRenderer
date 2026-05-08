@@ -4,10 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.AbstractMethodProcessor;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.ConstantProcessor;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.ShaderLibraryProcessor;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.VersionProcessor;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.*;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.NonNull;
@@ -41,7 +38,8 @@ public class BetterCompilerPlugin {
                 VersionProcessor.getExtension(),
                 ConstantProcessor.getExtension(),
                 AbstractMethodProcessor.getExtension(),
-                ShaderLibraryProcessor.getExtension()
+                ShaderLibraryProcessor.getExtension(),
+                BlocksConvertProcessor.getExtension()
         );
     }
 
