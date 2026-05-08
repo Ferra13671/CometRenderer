@@ -3,21 +3,21 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.test;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerProgramInfo;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.utils.GLVersion;
-import com.ferra13671.cometrenderer.utils.tag.Registry;
+import lombok.experimental.UtilityClass;
 
-import java.util.function.Consumer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+@UtilityClass
 public class Main {
+    private final Path testsPath = Paths.get("plugins/better-compiler/tests_output");
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         CometRenderer.getRegistry().set(CometTags.GL_VERSION, GLVersion.GL40);
         BetterCompilerPlugin.init();
 
@@ -45,117 +45,88 @@ public class Main {
         testShaderLibraryDirective();
     }
 
-    public static void testGlslVersionDirective() {
-        startGroupTest("Glsl version directive", () -> {
-            startTest(
-                    "Auto glsl version",
-                    "autoGlslVersionTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry -> {}
-            );
-            startTest(
-                    "Redirect glsl version",
-                    "redirectGlslVersionTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry ->
-                            programRegistry.set(BetterCompilerTags.GLSL_VERSION, GLVersion.GL46)
-            );
-            startTest(
-                    "Paste glsl version",
-                    "pasteGlslVersionTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry ->
-                            programRegistry.set(BetterCompilerTags.GLSL_VERSION, CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue())
-            );
-        });
+    public void testGlslVersionDirective() {
+        startGroup(new TestGroup(
+                "Glsl version directive",
+                new Test(
+                        "Auto glsl version",
+                        "autoGlslVersionTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry -> {}
+                ),
+                new Test(
+                        "Redirect glsl version",
+                        "redirectGlslVersionTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry ->
+                                programRegistry.set(BetterCompilerTags.GLSL_VERSION, GLVersion.GL46)
+                ),
+                new Test(
+                        "Paste glsl version",
+                        "pasteGlslVersionTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry ->
+                                programRegistry.set(BetterCompilerTags.GLSL_VERSION, CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue())
+                )
+        ));
     }
 
-    public static void testConstantDirective() {
-        startGroupTest("Constant directive", () -> {
-            startTest(
-                    "Constant without default value",
-                    "constantTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry ->
-                        programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineConstant("value", "1f")
-            );
-            startTest(
-                    "Constant with default value",
-                    "constantWithDefaultValueTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry -> {}
-            );
-        });
+    public void testConstantDirective() {
+        startGroup(new TestGroup(
+                "Constant directive",
+                new Test(
+                        "Constant without default value",
+                        "constantTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry ->
+                                programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineConstant("value", "1f")
+                ),
+                new Test(
+                        "Constant with default value",
+                        "constantWithDefaultValueTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry -> {}
+                )
+        ));
     }
 
-    public static void testMethodFeatures() {
-        startGroupTest("Method features", () -> {
-            startTest(
-                    "Abstract method directive",
-                    "abstractMethodTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry ->
-                            programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineMethod(
-                                    "main",
-                                    """
-                                            gl_Position = projMat * modelViewMat * position;
-                                            """
-                            )
-            );
-        });
+    public void testMethodFeatures() {
+        startGroup(new TestGroup(
+                "Method features",
+                new Test(
+                        "Abstract method directive",
+                        "abstractMethodTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry ->
+                                programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineMethod(
+                                        "main",
+                                        """
+                                                gl_Position = projMat * modelViewMat * position;
+                                                """
+                                )
+                )
+        ));
     }
 
-    public static void testShaderLibraryDirective() {
-        startGroupTest("Shader library directive", () -> {
-            startTest(
-                    "Default shader library include",
-                    "defaultShaderLibraryTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry -> {}
-            );
-            startTest(
-                    "Multi shader library include",
-                    "multiShaderLibraryTest.vsh",
-                    shaderRegistry -> {},
-                    programRegistry -> {}
-            );
-        });
+    public void testShaderLibraryDirective() {
+        startGroup(new TestGroup(
+                "Shader library directive",
+                new Test(
+                        "Default shader library include",
+                        "defaultShaderLibraryTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry -> {}
+                ),
+                new Test(
+                        "Multi shader library include",
+                        "multiShaderLibraryTest.vsh",
+                        shaderRegistry -> {},
+                        programRegistry -> {}
+                )
+        ));
     }
 
-
-
-
-
-
-    public static void println(String s) {
-        System.out.println(s + ColorCode.RESET);
-    }
-
-    public static void printTest(String name, String beforeProcess, String afterProcess) {
-        println(ColorCode.CYAN + "Test: " + name);
-        println(ColorCode.GREEN + "Before process:");
-        println(ColorCode.YELLOW + beforeProcess);
-        println(ColorCode.GREEN + "After process:");
-        println(ColorCode.YELLOW + afterProcess);
-        println(ColorCode.PURPLE + "Test finished");
-    }
-
-    public static void startTest(String name, String shaderName, Consumer<Registry> shaderRegistryConsumer, Consumer<Registry> programRegistryConsumer) {
-        GlslFileEntry fileEntry = CometLoaders.IN_JAR.createGlslFileEntry(shaderName, shaderName);
-        String beforeProcessContent = fileEntry.getContent().concatLines();
-
-        Registry registry = new Registry();
-        shaderRegistryConsumer.accept(fileEntry.getRegistry());
-        registry.set(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo()); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
-        programRegistryConsumer.accept(registry);
-        GlobalCometCompiler.processContent(fileEntry.getRegistry(), registry);
-
-        printTest(name, beforeProcessContent, fileEntry.getContent().concatLines());
-    }
-
-    public static void startGroupTest(String groupName, Runnable groupRunnable) {
-        println(ColorCode.RED + String.format("##### Test group: %s #####", groupName));
-        groupRunnable.run();
-        println(ColorCode.RED + "##### ----- #####");
+    public void startGroup(TestGroup testGroup) {
+        testGroup.startAndLog(testsPath.resolve(testGroup.getName() + ".txt").toFile());
     }
 }
