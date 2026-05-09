@@ -1,22 +1,26 @@
 #version auto
 
-in vec4 pos;
-in vec4 color;
-in vec2 _rectPosition;
-in vec2 _halfSize;
-in float _radius;
+#inputs {
+    vec4 pos;
+    vec4 color;
+    vec2 rectPosition;
+    vec2 _halfSize;
+    float _radius;
+};
 
 #include<matrices>
 
-out vec4 vertexColor;
-out vec2 offset;
-out vec2 halfSize;
-out float radius;
+#outputs {
+    vec4 vertexColor;
+    vec2 offset;
+    vec2 halfSize;
+    float radius;
+};
 
 void main() {
     gl_Position = projMat * modelViewMat * pos;
     vertexColor = color;
-    offset = pos.xy - _rectPosition;
+    offset = pos.xy - rectPosition;
     halfSize = _halfSize;
     radius = _radius;
 }

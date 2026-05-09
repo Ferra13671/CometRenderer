@@ -1,17 +1,16 @@
 #version auto
 
 in vec4 pos;
-in vec2 UV;
-in vec4 color;
+#inouts {
+    vec2 texPos;
+    vec4 vertexColor;
+};
 
 #include<matrices>
-
-out vec2 texPos;
-out vec4 vertexColor;
 
 void main() {
     gl_Position = projMat * modelViewMat * pos;
 
-    texPos = UV;
-    vertexColor = color;
+    texPos = texPos_in;
+    vertexColor = vertexColor_in;
 }

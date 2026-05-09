@@ -1,19 +1,23 @@
 #version auto
 
-in vec4 pos;
-in vec2 UV;
-in vec4 color;
-in vec2 _rectPosition;
-in vec2 _halfSize;
-in float _radius;
+#inputs {
+    vec4 pos;
+    vec2 UV;
+    vec4 color;
+    vec2 _rectPosition;
+    vec2 _halfSize;
+    float _radius;
+};
 
 #include<matrices>
 
-out vec2 texPos;
-out vec4 vertexColor;
-out vec2 offset;
-out vec2 halfSize;
-out float radius;
+#outputs {
+    vec2 texPos;
+    vec4 vertexColor;
+    vec2 offset;
+    vec2 halfSize;
+    float radius;
+};
 
 void main() {
     gl_Position = projMat * modelViewMat * pos;

@@ -1,14 +1,15 @@
 #version auto
 
 in vec4 position;
+#inouts {
+    vec2 texPos;
+};
 in vec2 UV;
 
 #include<matrices>
 
-out vec2 texPos;
-
 void main() {
     gl_Position = projMat * modelViewMat * position;
 
-    texPos = UV;
+    texPos = texPos_in;
 }

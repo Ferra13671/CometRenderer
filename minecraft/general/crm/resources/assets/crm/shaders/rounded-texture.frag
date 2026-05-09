@@ -2,11 +2,13 @@
 
 precision lowp float;
 
-in vec2 texPos;
-in vec4 vertexColor;
-in vec2 offset;
-in vec2 halfSize;
-in float radius;
+#inputs {
+    vec2 texPos;
+    vec4 vertexColor;
+    vec2 offset;
+    vec2 halfSize;
+    float radius;
+};
 
 #include<rounded, shaderColor>
 uniform sampler2D u_Texture;
