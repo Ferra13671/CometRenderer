@@ -45,7 +45,7 @@ public class BlocksConvertProcessor {
         public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
             content.set(content.concatLines().replace(result.group(),
                     parseFields("in", result, name -> name.concat("_in")) + "\n"
-                    + parseFields("out", result, name -> name.concat("_out"))
+                    + parseFields("out", result, name -> name)
             ));
             return true;
         }
