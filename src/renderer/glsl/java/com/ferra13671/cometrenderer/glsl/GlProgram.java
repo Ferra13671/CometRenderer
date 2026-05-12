@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.glsl;
 
+import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.utils.Compilable;
@@ -12,7 +13,6 @@ import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * <p>
  * Программа также может иметь в себе униформы ({@link GlUniform}), предназначенные для передачи различных параметров для настройки обработки пикселей программой.
  *
- * @see GlobalCometCompiler
+ * @see CometCompiler
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
 public class GlProgram implements Bindable, Compilable, Closeable {

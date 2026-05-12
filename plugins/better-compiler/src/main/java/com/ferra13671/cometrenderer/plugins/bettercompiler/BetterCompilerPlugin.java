@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.*;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -28,7 +28,7 @@ public class BetterCompilerPlugin {
 
     public void init() {
         CometRenderer.getRegistry().setImmutable(LIBRARIES_TAG, new HashMap<>());
-        GlobalCometCompiler.addExtensions(
+        CometCompiler.addExtensions(
                 new CompilerExtension("better-compiler-main") {
                     @Override
                     public void onCreateGlslBuilder(Registry builderRegistry) {

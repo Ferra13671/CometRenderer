@@ -21,16 +21,16 @@ import java.util.regex.Pattern;
 
 @API(status = API.Status.EXPERIMENTAL, since = "1.3")
 @UtilityClass
-public class GlobalCometCompiler {
+public class CometCompiler {
     private final HashMap<String, CompilerExtension> extensions = new HashMap<>();
     public final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
 
     public void addExtensions(@NonNull CompilerExtension... extensions) {
         for (CompilerExtension extension : extensions) {
-            if (GlobalCometCompiler.extensions.containsKey(extension.getName()))
+            if (CometCompiler.extensions.containsKey(extension.getName()))
                 CometRenderer.getLogger().warn(String.format("Found 2 compiler extensions named %s, overwriting prev compiler extension.", extension.getName()));
 
-            GlobalCometCompiler.extensions.put(extension.getName(), extension);
+            CometCompiler.extensions.put(extension.getName(), extension);
         }
     }
 

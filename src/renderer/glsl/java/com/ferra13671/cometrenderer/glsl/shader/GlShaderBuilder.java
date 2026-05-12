@@ -5,8 +5,8 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedShaderException;
+import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -37,7 +37,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
             add(CometTags.UNIFORMS);
         }});
 
-        for (CompilerExtension extension : GlobalCometCompiler.getExtensions())
+        for (CompilerExtension extension : CometCompiler.getExtensions())
             extension.onCreateGlslBuilder(this.registry);
     }
 
@@ -90,6 +90,6 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
 
     @Override
     public GlShader build() {
-        return GlobalCometCompiler.compileShader(this.entry, this.type, this.registry);
+        return CometCompiler.compileShader(this.entry, this.type, this.registry);
     }
 }

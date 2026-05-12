@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.glsl;
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.utils.Builder;
@@ -14,7 +15,6 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleShaderAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
 import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -57,7 +57,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
 
         this.registry.setImmutable(CometTags.SNIPPETS, snippets);
 
-        for (CompilerExtension extension : GlobalCometCompiler.getExtensions())
+        for (CompilerExtension extension : CometCompiler.getExtensions())
             extension.onCreateGlslBuilder(this.registry);
     }
 
@@ -189,7 +189,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
             if (!shaders.containsKey(ShaderType.Fragment) && !compiledShaders.containsKey(ShaderType.Fragment))
                 CometRenderer.getExceptionManager().manageException(new IllegalBuilderArgumentException("program", String.format("Missing fragment shader in program '%s'.", this.registry.get(CometTags.NAME).orElseThrow().getValue())));
         }
-        return GlobalCometCompiler.compileProgram(this.registry);
+        return CometCompiler.compileProgram(this.registry);
     }
 
     /**

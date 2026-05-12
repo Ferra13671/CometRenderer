@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
+import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.utils.Compilable;
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
@@ -19,7 +19,7 @@ import java.io.Closeable;
  * @see <a href="https://wikis.khronos.org/opengl/Shader">OpenGL shader wiki</a>
  * @see GlProgram
  * @see ShaderType
- * @see GlobalCometCompiler
+ * @see CometCompiler
  */
 @Getter
 @API(status = API.Status.MAINTAINED, since = "2.7")

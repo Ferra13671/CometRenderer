@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.glsl.compiler.GlobalCometCompiler;
+import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.shader.GlShaderBuilder;
@@ -25,7 +25,7 @@ public abstract class CometLoader<T> {
 
     @API(status = API.Status.MAINTAINED, since = "1.8.2")
     public GlslFileEntry createGlslFileEntry(String name, T path) {
-        return new GlslFileEntry(name, GlslContent.fromString(getContent(path)), GlobalCometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
+        return new GlslFileEntry(name, GlslContent.fromString(getContent(path)), CometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
     }
 
     @API(status = API.Status.MAINTAINED, since = "1.9")
