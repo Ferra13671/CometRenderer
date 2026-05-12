@@ -8,7 +8,7 @@ import org.apiguardian.api.API;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
-@API(status = API.Status.EXPERIMENTAL, since = "2.7.1")
+@API(status = API.Status.EXPERIMENTAL, since = "2.8")
 @AllArgsConstructor
 public abstract class RegexCompilerExtension {
     @Getter

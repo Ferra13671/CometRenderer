@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 
-@API(status = API.Status.EXPERIMENTAL, since = "2.7.1")
+@API(status = API.Status.EXPERIMENTAL, since = "2.8")
 @UtilityClass
 public class RegexCompilerProcessor {
 
