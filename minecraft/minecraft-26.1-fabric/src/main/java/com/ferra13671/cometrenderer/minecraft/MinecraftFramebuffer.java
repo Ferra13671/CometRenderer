@@ -36,13 +36,16 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
-    public void bind(boolean setViewport) {
-        int id = ((GlTexture) this.framebuffer.getColorTexture()).getFbo(
+    public int getId() {
+        return ((GlTexture) this.framebuffer.getColorTexture()).getFbo(
                 ((CRMController) CRM.controller).getDirectStateAccess(),
                 this.framebuffer.useDepth ? this.framebuffer.getDepthTexture() : null
         );
+    }
 
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, id);
+    @Override
+    public void bind(boolean setViewport) {
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, getId());
         if (setViewport)
             GL11.glViewport(0, 0, getWidth(), getHeight());
     }

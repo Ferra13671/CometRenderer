@@ -18,6 +18,7 @@ public class FramebufferImpl implements Framebuffer {
     private final boolean useDepth;
     private final Color clearColor;
     private final double clearDepth;
+    @Getter
     private final int id;
     @Getter
     protected GLTexture colorTexture;

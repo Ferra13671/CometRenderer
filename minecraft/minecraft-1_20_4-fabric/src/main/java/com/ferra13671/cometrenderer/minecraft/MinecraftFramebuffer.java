@@ -32,6 +32,11 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
+    public int getId() {
+        return this.framebuffer.frameBufferId;
+    }
+
+    @Override
     public void bind(boolean setViewport) {
         this.framebuffer.bindWrite(setViewport);
     }

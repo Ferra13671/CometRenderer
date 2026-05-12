@@ -11,6 +11,8 @@ public interface Framebuffer {
 
     int getHeight();
 
+    int getId();
+
     void bind(boolean setViewport);
 
     int getColorTextureId();
