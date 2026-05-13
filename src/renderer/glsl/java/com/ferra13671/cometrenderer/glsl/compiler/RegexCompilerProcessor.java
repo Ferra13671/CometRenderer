@@ -18,12 +18,12 @@ public class RegexCompilerProcessor {
     public void processContent(Registry glslFileRegistry, Registry builderRegistry) {
         GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
 
-        for (CompilerExtension e : CometCompiler.getExtensions()) {
-            Set<RegexCompilerExtension> extensions = e.getRegexExtensions();
+        Set<RegexCompilerExtension> extensions = new HashSet<>();
+        for (CompilerExtension e : CometCompiler.getExtensions())
+            extensions.addAll(e.getRegexExtensions());
 
-            if (!extensions.isEmpty())
-                processExtensions(extensions, content, glslFileRegistry, builderRegistry);
-        }
+        if (!extensions.isEmpty())
+            processExtensions(extensions, content, glslFileRegistry, builderRegistry);
 
         CometCompiler.removeComments(glslFileRegistry);
     }
