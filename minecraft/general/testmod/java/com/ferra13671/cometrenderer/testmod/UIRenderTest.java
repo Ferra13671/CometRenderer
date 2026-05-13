@@ -4,24 +4,24 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
+import com.ferra13671.cometrenderer.minecraft.blur.BlurProvider;
 import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.FileEntry;
 import com.ferra13671.gltextureutils.loader.TextureLoaders;
 import com.ferra13671.cometrenderer.minecraft.batch.IPrimitiveBatch;
-import com.ferra13671.cometrenderer.minecraft.batch.impl.BasicTextureBatch;
-import com.ferra13671.cometrenderer.minecraft.batch.impl.BasicRectBatch;
-import com.ferra13671.cometrenderer.minecraft.batch.impl.ColoredRectBatch;
-import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedTextureBatch;
-import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedRectBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.*;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.TextBatch;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedBlurBatch;
+import com.ferra13671.cometrenderer.minecraft.blur.BlurConfig;
 
 import java.awt.*;
 
 public final class UIRenderTest {
     private static GLTexture texture;
     private static TTFFont font;
+    private static final BlurProvider blurProvider = new BlurProvider(BlurConfig.DEFAULT);
     public static IPrimitiveBatch standaloneDrawer;
 
     public static void init() {
@@ -41,17 +41,20 @@ public final class UIRenderTest {
 
         standaloneDrawer = new BasicTextureBatch()
                 .setTexture(texture)
-                .rectSized(600, 100, 100, 100, new TextureBorder(0, 0, 1, 1))
+                .rectSized(460, 100, 100, 100, new TextureBorder(0, 0, 1, 1))
                 .build()
                 .makeStandalone();
     }
 
     public static void draw() {
+        blurProvider.blurFrame();
+
         drawOneColorRect();
         drawMultiColorRect();
         drawTextures();
         drawRoundedRects();
         drawText();
+        drawBlur();
     }
 
     private static void drawOneColorRect() {
@@ -80,7 +83,7 @@ public final class UIRenderTest {
 
         new RoundedTextureBatch()
                 .setTexture(texture)
-                .rectSized(600, 210, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
+                .rectSized(460, 210, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
                 .build()
                 .tryDraw()
                 .close();
@@ -88,8 +91,22 @@ public final class UIRenderTest {
 
     private static void drawRoundedRects() {
         new RoundedRectBatch()
-                .rectSized(400, 100, 100, 100, 20, RectColors.oneColor(RenderColor.of(Color.MAGENTA)))
-                .rectSized(400, 210, 100, 100, 20, RectColors.horizontalGradient(RenderColor.of(Color.BLUE), RenderColor.of(Color.CYAN)))
+                .rectSized(330, 100, 100, 100, 20, RectColors.oneColor(RenderColor.of(Color.MAGENTA)))
+                .rectSized(330, 210, 100, 100, 20, RectColors.horizontalGradient(RenderColor.of(Color.BLUE), RenderColor.of(Color.CYAN)))
+                .build()
+                .tryDraw()
+                .close();
+    }
+
+    private static void drawBlur() {
+        new BasicBlurBatch(blurProvider)
+                .rectSized(590, 100, 100, 100)
+                .build()
+                .tryDraw()
+                .close();
+
+        new RoundedBlurBatch(blurProvider)
+                .rectSized(590, 210, 100, 100, 20)
                 .build()
                 .tryDraw()
                 .close();

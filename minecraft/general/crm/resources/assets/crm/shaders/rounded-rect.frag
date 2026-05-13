@@ -1,6 +1,4 @@
-#version auto
-
-precision lowp float;
+#include<rounded-base>
 
 #inputs {
     vec4 vertexColor;
@@ -8,12 +6,6 @@ precision lowp float;
     vec2 halfSize;
     float radius;
 };
-
-#include<rounded, shaderColor>
-
-out vec4 fragColor;
-
-float edgeSoftness; #constant<default = 2f>
 
 void main() {
     float distance = roundedBoxSDF(offset, halfSize, radius);

@@ -57,7 +57,8 @@ public class CRM {
         BetterCompilerPlugin.registerShaderLibraries(
                 controller.getMatricesShaderLib(),
                 DefaultShaderLibraries.SHADER_COLOR,
-                DefaultShaderLibraries.ROUNDED
+                DefaultShaderLibraries.ROUNDED,
+                DefaultShaderLibraries.ROUNDED_BASE
         );
 
         programs = new DefaultPrograms();

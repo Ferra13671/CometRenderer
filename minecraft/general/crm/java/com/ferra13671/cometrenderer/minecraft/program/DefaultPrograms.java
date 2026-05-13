@@ -41,4 +41,22 @@ public class DefaultPrograms {
             .shader(DefaultShaders.ROUNDED_TEXTURE_VERTEX)
             .shader(DefaultShaders.ROUNDED_TEXTURE_FRAGMENT)
             .build();
+
+    public final GlProgram BLUR_FRAME = CometLoaders.STRING.createProgramBuilder()
+            .name("blur-frame")
+            .shader(DefaultShaders.POSITION_VERTEX)
+            .shader(DefaultShaders.BLUR_FRAME_FRAGMENT)
+            .build();
+
+    public final GlProgram ROUNDED_BLUR = CometLoaders.STRING.createProgramBuilder()
+            .name("rounded-blur")
+            .shader(DefaultShaders.ROUNDED_BLUR_VERTEX)
+            .shader(DefaultShaders.ROUNDED_BLUR_FRAGMENT)
+            .build();
+
+    public final GlProgram BLIT = CometLoaders.STRING.createProgramBuilder()
+            .name("blit")
+            .shader(DefaultShaders.POSITION_VERTEX)
+            .shader(DefaultShaders.BLIT_FRAGMENT)
+            .build();
 }

@@ -21,4 +21,9 @@ public class DefaultShaderLibraries {
             .name("rounded")
             .library("assets/crm/shader-libraries/rounded.glsl")
             .build();
+
+    public final GlslFileEntry ROUNDED_BASE = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+            .name("rounded-base")
+            .library("assets/crm/shader-libraries/rounded-base.glsl")
+            .build();
 }
