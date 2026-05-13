@@ -11,24 +11,14 @@ import org.apiguardian.api.API;
 @UtilityClass
 public class DefaultShaderLibraries {
 
-    public final GlslFileEntry SHADER_COLOR = new GlShaderLibraryBuilder<>(CometLoaders.STRING, CometRenderer.getColorSnippet())
+    public final GlslFileEntry SHADER_COLOR = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR, CometRenderer.getColorSnippet())
             .name("shaderColor")
-            .library(
-                    """
-                    uniform vec4 shaderColor;
-                    """
-            )
+            .library("assets/crm/shader-libraries/shader-color.glsl")
             .build();
 
     //https://iquilezles.org/articles/distfunctions прикольные фигурки там да ок
-    public final GlslFileEntry ROUNDED = new GlShaderLibraryBuilder<>(CometLoaders.STRING)
+    public final GlslFileEntry ROUNDED = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
             .name("rounded")
-            .library(
-                    """
-                    float roundedBoxSDF(vec2 centerPosition, vec2 size, float radius) {
-                        return length(max(abs(centerPosition) - size + radius, 0.)) - radius;
-                    }
-                    """
-            )
+            .library("assets/crm/shader-libraries/rounded.glsl")
             .build();
 }
