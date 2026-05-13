@@ -11,6 +11,7 @@ import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilde
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexSorting;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import org.joml.Matrix4f;
 
@@ -121,5 +122,12 @@ public class CRMController extends AbstractCRMController {
     @Override
     protected Framebuffer createMainFramebuffer() {
         return new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), RenderColor.TRANSLUCENT, 0);
+    }
+
+    @Override
+    protected RenderColor getColorFromMinecraftCode(char code) {
+        ChatFormatting formatting = ChatFormatting.getByCode(code);
+
+        return formatting != null ? formatting.isColor() ? RenderColor.ofRGB(formatting.getColor()) : formatting == ChatFormatting.RESET ? RenderColor.WHITE : null : null;
     }
 }

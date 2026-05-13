@@ -23,6 +23,8 @@ abstract class AbstractCRMController {
 
     protected abstract Framebuffer createMainFramebuffer();
 
+    protected abstract RenderColor getColorFromMinecraftCode(char code);
+
     public static void initMod() {
         CRM.initRender();
     }

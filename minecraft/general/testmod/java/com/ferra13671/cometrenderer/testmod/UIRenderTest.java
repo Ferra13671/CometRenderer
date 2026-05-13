@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.testmod;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
 import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.FileEntry;
@@ -13,11 +14,14 @@ import com.ferra13671.cometrenderer.minecraft.batch.impl.BasicRectBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.ColoredRectBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedTextureBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedRectBatch;
+import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
+import com.ferra13671.cometrenderer.minecraft.batch.impl.text.TextBatch;
 
 import java.awt.*;
 
 public final class UIRenderTest {
     private static GLTexture texture;
+    private static TTFFont font;
     public static IPrimitiveBatch standaloneDrawer;
 
     public static void init() {
@@ -28,6 +32,12 @@ public final class UIRenderTest {
                         .filtering(TextureFiltering.SMOOTH)
                         .wrapping(TextureWrapping.DEFAULT)
                         .build();
+
+        try {
+            font = new TTFFont(Font.createFont(Font.TRUETYPE_FONT, UIRenderTest.class.getClassLoader().getResourceAsStream("test-font.otf")).deriveFont(26f));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         standaloneDrawer = new BasicTextureBatch()
                 .setTexture(texture)
@@ -41,6 +51,7 @@ public final class UIRenderTest {
         drawMultiColorRect();
         drawTextures();
         drawRoundedRects();
+        drawText();
     }
 
     private static void drawOneColorRect() {
@@ -79,6 +90,27 @@ public final class UIRenderTest {
         new RoundedRectBatch()
                 .rectSized(400, 100, 100, 100, 20, RectColors.oneColor(RenderColor.of(Color.MAGENTA)))
                 .rectSized(400, 210, 100, 100, 20, RectColors.horizontalGradient(RenderColor.of(Color.BLUE), RenderColor.of(Color.CYAN)))
+                .build()
+                .tryDraw()
+                .close();
+    }
+
+    private static void drawText() {
+        float x = 200;
+        float y = 350;
+
+        new TextBatch(font)
+                .text(
+                        new RenderText("Example text", x, y)
+                )
+                .text(
+                        new RenderText("text with shadow", x, y + font.getTextHeight())
+                                .withColor(RenderColor.of(Color.YELLOW))
+                                .withShadow(true)
+                )
+                .text(
+                        new RenderText("абвгде§cёжзий", x, y + (font.getTextHeight() * 2))
+                )
                 .build()
                 .tryDraw()
                 .close();

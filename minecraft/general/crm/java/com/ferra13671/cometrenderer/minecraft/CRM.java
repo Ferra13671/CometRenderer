@@ -24,6 +24,7 @@ public class CRM {
     private DefaultPrograms programs;
     private Framebuffer mainFramebuffer;
 
+    @API(status = API.Status.INTERNAL)
     void initRender() {
         CometRenderer.setLogger(new Logger() {
             @Override
@@ -62,15 +63,6 @@ public class CRM {
         programs = new DefaultPrograms();
     }
 
-    ScissorRect fixScissorRect(ScissorRect scissorRect, int scale) {
-        return new ScissorRect(
-                scissorRect.x() * scale,
-                getMainFramebuffer().getHeight() - ((scissorRect.y() + scissorRect.height()) * scale),
-                scissorRect.width() * scale,
-                scissorRect.height() * scale
-        );
-    }
-
     public void applyMatrixUniform() {
         controller.applyMatrixUniform();
     }
@@ -80,5 +72,20 @@ public class CRM {
             mainFramebuffer = controller.createMainFramebuffer();
 
         return mainFramebuffer;
+    }
+
+    @API(status = API.Status.INTERNAL)
+    ScissorRect fixScissorRect(ScissorRect scissorRect, int scale) {
+        return new ScissorRect(
+                scissorRect.x() * scale,
+                getMainFramebuffer().getHeight() - ((scissorRect.y() + scissorRect.height()) * scale),
+                scissorRect.width() * scale,
+                scissorRect.height() * scale
+        );
+    }
+
+    @API(status = API.Status.INTERNAL)
+    public RenderColor getColorFromMinecraftCode(char code) {
+        return controller.getColorFromMinecraftCode(code);
     }
 }

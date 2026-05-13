@@ -12,6 +12,7 @@ import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 
@@ -120,5 +121,12 @@ public class CRMController extends AbstractCRMController {
     @Override
     protected Framebuffer createMainFramebuffer() {
         return new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0);
+    }
+
+    @Override
+    protected RenderColor getColorFromMinecraftCode(char code) {
+        ChatFormatting formatting = ChatFormatting.getByCode(code);
+
+        return formatting != null ? formatting.isColor() ? RenderColor.ofRGB(formatting.getColor()) : formatting == ChatFormatting.RESET ? RenderColor.WHITE : null : null;
     }
 }
