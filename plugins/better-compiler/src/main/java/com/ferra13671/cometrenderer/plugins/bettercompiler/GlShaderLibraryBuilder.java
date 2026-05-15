@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.ShaderLibraryProcessor;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     private String name;
     private T libraryPath;
+    private boolean singleIncludeOnly = false;
     private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
     private final CometLoader<T> loader;
 
@@ -41,6 +43,11 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     @NonNull
     public GlShaderLibraryBuilder<T> library(T libraryPath) {
         this.libraryPath = libraryPath;
+        return this;
+    }
+
+    public GlShaderLibraryBuilder<T> singleIncludeOnly() {
+        this.singleIncludeOnly = true;
         return this;
     }
 
@@ -66,6 +73,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
 
         Registry registry = new Registry();
         registry.setImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));
+        registry.setImmutable(ShaderLibraryProcessor.SINGLE_INCLUDE_ONLY, this.singleIncludeOnly);
 
         return new GlslFileEntry(
                 this.name,

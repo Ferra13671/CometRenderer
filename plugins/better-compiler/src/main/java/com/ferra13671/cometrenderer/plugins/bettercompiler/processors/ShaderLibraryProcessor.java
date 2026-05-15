@@ -10,23 +10,25 @@ import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
+import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
 @API(status = API.Status.INTERNAL, since = "2.5")
 @UtilityClass
 public class ShaderLibraryProcessor {
+    public static final Tag<List<String>> INCLUDED_LIBRARIES = new Tag<>("included-libraries");
+    public static final Tag<Boolean> SINGLE_INCLUDE_ONLY = new Tag<>("single-include-only");
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<]*)>", Pattern.MULTILINE)) {
         @Override
         public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            List<String> includedLibraries = glslFileRegistry.computeIfAbsent(INCLUDED_LIBRARIES, new ArrayList<>(), true).getValue();
             Map<String, UniformType<?>> uniforms = builderRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true).getValue();
             String libsLine = result.group("libs").strip();
 
@@ -49,6 +51,11 @@ public class ShaderLibraryProcessor {
                 } else {
                     GlslFileEntry shaderLib = shaderLibOpt.get();
 
+                    if (shaderLib.getRegistry().get(SINGLE_INCLUDE_ONLY).orElseThrow().getValue() && includedLibraries.contains(shaderLib.getName())) {
+                        CometRenderer.getLogger().warn(String.format("[better-compiler] Shader library '%s' cannot be re-included because it is prohibited by the library itself. [%s]", lib, glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()));
+                        continue;
+                    }
+
                     libsContent.append(shaderLib.getContent().concatLines()).append('\n');
 
                     shaderLib.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach((s1, uniformType) -> {
@@ -57,6 +64,8 @@ public class ShaderLibraryProcessor {
 
                         uniforms.put(s1, uniformType);
                     });
+
+                    includedLibraries.add(shaderLib.getName());
                 }
             }
 

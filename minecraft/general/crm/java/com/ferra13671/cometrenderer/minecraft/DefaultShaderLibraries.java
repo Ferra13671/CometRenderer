@@ -14,16 +14,19 @@ public class DefaultShaderLibraries {
     public final GlslFileEntry SHADER_COLOR = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR, CometRenderer.getColorSnippet())
             .name("shaderColor")
             .library("assets/crm/shader-libraries/shader-color.glsl")
+            .singleIncludeOnly()
             .build();
 
     //https://iquilezles.org/articles/distfunctions прикольные фигурки там да ок
     public final GlslFileEntry ROUNDED = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
             .name("rounded")
             .library("assets/crm/shader-libraries/rounded.glsl")
+            .singleIncludeOnly()
             .build();
 
     public final GlslFileEntry ROUNDED_BASE = new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
             .name("rounded-base")
             .library("assets/crm/shader-libraries/rounded-base.glsl")
+            .singleIncludeOnly()
             .build();
 }
