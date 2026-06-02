@@ -6,4 +6,4 @@ precision lowp float;
 
 out vec4 fragColor;
 
-float edgeSoftness; #constant<default = 2f>
+float edgeSoftness; #constant<default = 2.0>
