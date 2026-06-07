@@ -8,13 +8,13 @@ import com.ferra13671.cometrenderer.minecraft.blur.BlurProvider;
 import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.FileEntry;
-import com.ferra13671.gltextureutils.loader.TextureLoaders;
 import com.ferra13671.cometrenderer.minecraft.batch.IPrimitiveBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.*;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.TextBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedBlurBatch;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurConfig;
+import com.ferra13671.gltextureutils.loader.TextureLoader;
 
 import java.awt.*;
 
@@ -26,7 +26,7 @@ public final class UIRenderTest {
 
     public static void init() {
         texture =
-                TextureLoaders.FILE_ENTRY.createTextureBuilder()
+                TextureLoader.FILE_ENTRY.createTextureBuilder()
                         .name("Test-texture")
                         .info(new FileEntry("texture.jpg", PathMode.INSIDE_JAR))
                         .filtering(TextureFiltering.SMOOTH)

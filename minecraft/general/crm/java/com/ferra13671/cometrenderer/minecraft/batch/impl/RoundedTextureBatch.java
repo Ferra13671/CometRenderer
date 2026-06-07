@@ -83,25 +83,25 @@ public class RoundedTextureBatch extends AbstractPrimitiveBatch {
         y2 += 2;
 
         vertex(x1, y1, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV1())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u1(), textureBorder.v1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y1Color())
                 .element("Rect Position", VertexElementType.FLOAT, pos[0], pos[1])
                 .element("Half Size", VertexElementType.FLOAT, halfSize[0], halfSize[1])
                 .element("Radius", VertexElementType.FLOAT, radius);
         vertex(x1, y2, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV2())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u1(), textureBorder.v2())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y2Color())
                 .element("Rect Position", VertexElementType.FLOAT, pos[0], pos[1])
                 .element("Half Size", VertexElementType.FLOAT, halfSize[0], halfSize[1])
                 .element("Radius", VertexElementType.FLOAT, radius);
         vertex(x2, y2, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV2())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u2(), textureBorder.v2())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y2Color())
                 .element("Rect Position", VertexElementType.FLOAT, pos[0], pos[1])
                 .element("Half Size", VertexElementType.FLOAT, halfSize[0], halfSize[1])
                 .element("Radius", VertexElementType.FLOAT, radius);
         vertex(x2, y1, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV1())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u2(), textureBorder.v1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y1Color())
                 .element("Rect Position", VertexElementType.FLOAT, pos[0], pos[1])
                 .element("Half Size", VertexElementType.FLOAT, halfSize[0], halfSize[1])

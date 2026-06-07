@@ -5,7 +5,7 @@ import com.ferra13671.gltextureutils.ColorMode;
 import com.ferra13671.gltextureutils.GLTexture;
 import com.ferra13671.gltextureutils.TextureFiltering;
 import com.ferra13671.gltextureutils.TextureWrapping;
-import com.ferra13671.gltextureutils.loader.TextureLoaders;
+import com.ferra13671.gltextureutils.loader.TextureLoader;
 import lombok.Getter;
 import lombok.NonNull;
 import org.lwjgl.opengl.GL11;
@@ -41,7 +41,7 @@ public class FramebufferImpl implements Framebuffer {
         deleteTextures();
 
         setColorTexture(
-                TextureLoaders.INPUT_STREAM.createTextureBuilder()
+                TextureLoader.INPUT_STREAM.createTextureBuilder()
                         .name(this.name + "[Color]")
                         .info(width, height)
                         .filtering(TextureFiltering.DEFAULT)
@@ -50,7 +50,7 @@ public class FramebufferImpl implements Framebuffer {
         );
         if (isUseDepth()) {
             setDepthTexture(
-                    TextureLoaders.INPUT_STREAM.createTextureBuilder()
+                    TextureLoader.INPUT_STREAM.createTextureBuilder()
                             .name(this.name + "[Depth]")
                             .info(width, height, ColorMode.DEPTH)
                             .filtering(TextureFiltering.DEFAULT)

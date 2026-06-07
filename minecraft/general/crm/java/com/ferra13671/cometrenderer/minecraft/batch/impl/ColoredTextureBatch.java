@@ -75,16 +75,16 @@ public class ColoredTextureBatch extends AbstractPrimitiveBatch {
 
     public ColoredTextureBatch rectPositioned(float x1, float y1, float x2, float y2, RectColors rectColors, TextureBorder textureBorder, Matrix4f matrix4f) {
         vertex(x1, y1, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV1())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u1(), textureBorder.v1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y1Color());
         vertex(x1, y2, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU1(), textureBorder.getV2())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u1(), textureBorder.v2())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x1y2Color());
         vertex(x2, y2, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV2())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u2(), textureBorder.v2())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y2Color());
         vertex(x2, y1, matrix4f)
-                .element("Texture", VertexElementType.FLOAT, textureBorder.getU2(), textureBorder.getV1())
+                .element("Texture", VertexElementType.FLOAT, textureBorder.u2(), textureBorder.v1())
                 .element("Color", CustomVertexElementTypes.RENDER_COLOR, rectColors.x2y1Color());
 
         return this;

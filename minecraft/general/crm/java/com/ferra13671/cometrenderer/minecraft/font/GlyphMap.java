@@ -4,7 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;import com.ferra13671.gltextur
 import com.ferra13671.gltextureutils.TextureFiltering;
 import com.ferra13671.gltextureutils.TextureWrapping;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
-import com.ferra13671.gltextureutils.loader.TextureLoaders;
+import com.ferra13671.gltextureutils.loader.TextureLoader;
 import io.netty.util.collection.IntObjectHashMap;
 import lombok.Getter;
 
@@ -86,7 +86,7 @@ public class GlyphMap implements Closeable {
 
         this.glyphs = glyphs;
 
-        this.texture = TextureLoaders.BUFFERED_IMAGE.createTextureBuilder()
+        this.texture = TextureLoader.BUFFERED_IMAGE.createTextureBuilder()
                 .name(String.format("GlyphMap[%s, %s]", this.font.getName(), this.index))
                 .info(bufferedImage)
                 .filtering(TextureFiltering.SMOOTH)
