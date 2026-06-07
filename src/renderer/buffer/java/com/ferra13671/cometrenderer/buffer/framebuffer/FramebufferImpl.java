@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.buffer.framebuffer;
 
+import com.ferra13671.cometrenderer.State;
 import com.ferra13671.gltextureutils.ColorMode;
 import com.ferra13671.gltextureutils.GLTexture;
 import com.ferra13671.gltextureutils.TextureFiltering;
@@ -97,9 +98,7 @@ public class FramebufferImpl implements Framebuffer {
 
     @Override
     public void bind(boolean setViewport) {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.id);
-        if (setViewport)
-            GL11.glViewport(0, 0, getWidth(), getHeight());
+        State.FRAMEBUFFER.bindFramebuffer(this.id, setViewport, getWidth(), getHeight());
     }
 
     @Override
@@ -128,10 +127,14 @@ public class FramebufferImpl implements Framebuffer {
     }
 
     private void deleteTextures() {
-        if (this.colorTexture != null)
+        if (this.colorTexture != null) {
             this.colorTexture.delete();
-        if (this.depthTexture != null)
+            this.colorTexture = null;
+        }
+        if (this.depthTexture != null) {
             this.depthTexture.delete();
+            this.depthTexture = null;
+        }
     }
 
     @Override

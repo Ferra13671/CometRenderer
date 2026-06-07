@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL30;
 
 @API(status = API.Status.MAINTAINED, since = "2.0")
 @UtilityClass
@@ -55,6 +56,11 @@ public class State {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
         }
     };
+    public FramebufferState FRAMEBUFFER = (id, viewport, width, height) -> {
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, id);
+        if (viewport)
+            GL11.glViewport(0, 0, width, height);
+    };
 
     public static abstract class BooleanState {
         protected boolean state = false;
@@ -64,10 +70,15 @@ public class State {
         public abstract void disable();
     }
 
-    public static abstract class TextureState {
+    public interface TextureState {
 
-        public abstract void activeTexture(int activeTexture);
+        void activeTexture(int activeTexture);
 
-        public abstract void bindTexture(int texture);
+        void bindTexture(int texture);
+    }
+
+    public interface FramebufferState {
+
+        void bindFramebuffer(int id, boolean viewport, int width, int height);
     }
 }
