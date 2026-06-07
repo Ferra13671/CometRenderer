@@ -16,6 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL30;
 
 import java.awt.*;
 
@@ -55,6 +56,11 @@ public class CRMController extends AbstractCRMController {
             public void bindTexture(int texture) {
                 GlStateManager._bindTexture(texture);
             }
+        };
+        State.FRAMEBUFFER = (id, viewport, width, height) -> {
+            GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, id);
+            if (viewport)
+                GlStateManager._viewport(0,0, width, height);
         };
 
         this.uiMatrix = new CachedOrthoProjectionMatrixBuffer("ui-matrix", -1000, 1000, true);
