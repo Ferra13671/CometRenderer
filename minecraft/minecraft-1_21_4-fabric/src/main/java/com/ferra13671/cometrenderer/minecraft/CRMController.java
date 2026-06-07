@@ -14,6 +14,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 
 import java.util.Stack;
 
@@ -101,6 +102,14 @@ public class CRMController extends AbstractCRMController {
                 ProjectionType.ORTHOGRAPHIC
         );
         this.matrix4fStack.pop();
+    }
+
+    @Override
+    protected Vector2f getScaledMousePos(int scale) {
+        return new Vector2f(
+                (float) Minecraft.getInstance().mouseHandler.xpos(),
+                (float) Minecraft.getInstance().mouseHandler.ypos()
+        ).mul(1f / scale);
     }
 
     @Override

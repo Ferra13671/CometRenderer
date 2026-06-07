@@ -47,6 +47,7 @@ public final class UIRenderTest {
     }
 
     public static void draw() {
+        //TODO пофиксить на версиях: 1.21.4
         blurProvider.blurFrame();
 
         drawOneColorRect();

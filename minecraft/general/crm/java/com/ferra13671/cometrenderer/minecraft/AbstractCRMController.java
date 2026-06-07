@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import lombok.Getter;
 import org.apiguardian.api.API;
+import org.joml.Vector2f;
 
 @API(status = API.Status.INTERNAL, since = "2.6")
 abstract class AbstractCRMController {
@@ -18,6 +19,8 @@ abstract class AbstractCRMController {
     protected abstract void setupUIMatrix(int scale);
 
     protected abstract void restoreUIMatrix();
+
+    protected abstract Vector2f getScaledMousePos(int scale);
 
     protected abstract void applyMatrixUniform();
 

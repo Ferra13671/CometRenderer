@@ -15,6 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
+import org.joml.Vector2f;
 
 import java.awt.*;
 
@@ -97,6 +98,14 @@ public class CRMController extends AbstractCRMController {
     @Override
     protected void restoreUIMatrix() {
         RenderSystem.restoreProjectionMatrix();
+    }
+
+    @Override
+    protected Vector2f getScaledMousePos(int scale) {
+        return new Vector2f(
+                (float) Minecraft.getInstance().mouseHandler.xpos(),
+                (float) Minecraft.getInstance().mouseHandler.ypos()
+        ).mul(1f / scale);
     }
 
     @Override

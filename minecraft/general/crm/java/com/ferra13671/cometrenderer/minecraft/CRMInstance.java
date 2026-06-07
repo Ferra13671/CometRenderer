@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.CometRenderer;import com.ferra13671.cometrenderer.scissor.ScissorRect;
 import org.apiguardian.api.API;
+import org.joml.Vector2f;
 
 import java.util.function.Supplier;
 
@@ -19,6 +20,10 @@ public class CRMInstance {
 
     public void restoreUIMatrix() {
         CRM.controller.restoreUIMatrix();
+    }
+
+    public Vector2f getScaledMousePos() {
+        return CRM.controller.getScaledMousePos(this.scaleGetter.get());
     }
 
     public void pushScissor(ScissorRect scissorRect) {
