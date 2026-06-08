@@ -1,5 +1,7 @@
 package com.ferra13671.cometrenderer;
 
+import com.ferra13671.cometrenderer.utils.AlphaFunction;
+import com.ferra13671.cometrenderer.utils.StencilOpAction;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
@@ -10,6 +12,7 @@ import org.lwjgl.opengl.GL30;
 @UtilityClass
 public class State {
     public BooleanState BLEND = new BooleanState() {
+        private static boolean state = false;
 
         @Override
         public void enable() {
@@ -28,6 +31,7 @@ public class State {
         }
     };
     public BooleanState SCISSOR = new BooleanState() {
+        private static boolean state = false;
 
         @Override
         public void enable() {
@@ -61,13 +65,81 @@ public class State {
         if (viewport)
             GL11.glViewport(0, 0, width, height);
     };
+    public StencilState STENCIL = new StencilState() {
+        private boolean state = false;
+        private boolean maskState = false;
+        private AlphaFunction function = AlphaFunction.ALWAYS;
+        private int ref = 0;
+        private int mask = 1;
+        private StencilOpAction stencilFailed = StencilOpAction.KEEP;
+        private StencilOpAction stencilPassedDepthFailed = StencilOpAction.KEEP;
+        private StencilOpAction allPassed = StencilOpAction.KEEP;
 
-    public static abstract class BooleanState {
-        protected boolean state = false;
+        @Override
+        public void enable() {
+            if (!this.state) {
+                GL11.glEnable(GL11.GL_STENCIL_TEST);
+                this.state = true;
+            }
+        }
 
-        public abstract void enable();
+        @Override
+        public void disable() {
+            if (this.state) {
+                GL11.glDisable(GL11.GL_STENCIL_TEST);
+                this.state = false;
+            }
+        }
 
-        public abstract void disable();
+        @Override
+        public void enableMask() {
+            if (!this.maskState) {
+                GL11.glStencilMask(0xFF);
+                this.maskState = true;
+            }
+        }
+
+        @Override
+        public void disableMask() {
+            if (this.maskState) {
+                GL11.glStencilMask(0x00);
+            }
+        }
+
+        @Override
+        public void function(AlphaFunction function, int ref, int mask) {
+            if (
+                    this.function != function
+                    || this.ref != ref
+                    || this.mask != mask
+            ) {
+                GL11.glStencilFunc(function.glId, ref, mask);
+                this.function = function;
+                this.ref = ref;
+                this.mask = mask;
+            }
+        }
+
+        @Override
+        public void op(StencilOpAction stencilFailed, StencilOpAction stencilPassedDepthFailed, StencilOpAction allPassed) {
+            if (
+                    this.stencilFailed != stencilFailed
+                    || this.stencilPassedDepthFailed != stencilPassedDepthFailed
+                    || this.allPassed != allPassed
+            ) {
+                GL11.glStencilOp(stencilFailed.glId, stencilPassedDepthFailed.glId, allPassed.glId);
+                this.stencilFailed = stencilFailed;
+                this.stencilPassedDepthFailed = stencilPassedDepthFailed;
+                this.allPassed = allPassed;
+            }
+        }
+    };
+
+    public interface BooleanState {
+
+        void enable();
+
+        void disable();
     }
 
     public interface TextureState {
@@ -80,5 +152,16 @@ public class State {
     public interface FramebufferState {
 
         void bindFramebuffer(int id, boolean viewport, int width, int height);
+    }
+
+    public interface StencilState extends BooleanState {
+
+        void enableMask();
+
+        void disableMask();
+
+        void function(AlphaFunction function, int ref, int mask);
+
+        void op(StencilOpAction stencilFailed, StencilOpAction stencilPassedDepthFailed, StencilOpAction allPassed);
     }
 }
