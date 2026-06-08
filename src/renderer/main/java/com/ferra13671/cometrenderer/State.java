@@ -134,6 +134,28 @@ public class State {
             }
         }
     };
+    public ColorMaskState COLOR_MASK = new ColorMaskState() {
+        boolean redState = true;
+        boolean greenState = true;
+        boolean blueState = true;
+        boolean alphaState = true;
+
+        @Override
+        public void colorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+            if (
+                    this.redState != red
+                    || this.greenState != green
+                    || this.blueState != blue
+                    || this.alphaState != alpha
+            ) {
+                GL11.glColorMask(red, green, blue, alpha);
+                this.redState = red;
+                this.greenState = green;
+                this.blueState = blue;
+                this.alphaState = alpha;
+            }
+        }
+    };
 
     public interface BooleanState {
 
@@ -163,5 +185,10 @@ public class State {
         void function(AlphaFunction function, int ref, int mask);
 
         void op(StencilOpAction stencilFailed, StencilOpAction stencilPassedDepthFailed, StencilOpAction allPassed);
+    }
+
+    public interface ColorMaskState {
+
+        void colorMask(boolean red, boolean green, boolean blue, boolean alpha);
     }
 }
