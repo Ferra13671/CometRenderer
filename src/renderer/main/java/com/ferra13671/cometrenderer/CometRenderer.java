@@ -7,10 +7,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetExceptio
 import com.ferra13671.cometrenderer.sampler.ISamplerManger;
 import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
 import com.ferra13671.cometrenderer.sampler.impl.SamplerManagerImpl;
-import com.ferra13671.cometrenderer.utils.BufferRenderer;
-import com.ferra13671.cometrenderer.utils.GLVersion;
-import com.ferra13671.cometrenderer.utils.Logger;
-import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
+import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
@@ -18,6 +15,8 @@ import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
+import com.ferra13671.cometrenderer.utils.stencil.StencilFunction;
+import com.ferra13671.cometrenderer.utils.stencil.StencilOp;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.manager.ARBVertexFormatBufferManager;
@@ -240,6 +239,38 @@ public class CometRenderer {
     @API(status = API.Status.MAINTAINED, since = "2.6")
     public void disableBlend() {
         State.BLEND.disable();
+    }
+
+    @API(status = API.Status.EXPERIMENTAL, since = "2.9")
+    public void setStencil(StencilInfo stencil) {
+        State.STENCIL.enable();
+
+        if (stencil.stencilMask() != null) {
+            if (stencil.stencilMask())
+                State.STENCIL.enableMask();
+            else
+                State.STENCIL.disableMask();
+        }
+        if (stencil.depthMask() != null) {
+            if (stencil.depthMask())
+                State.DEPTH_TEST.enableMask();
+            else
+                State.DEPTH_TEST.disableMask();
+        }
+        ColorMask colorMask = stencil.colorMask();
+        if (colorMask != null)
+            State.COLOR_MASK.colorMask(colorMask.red(), colorMask.green(), colorMask.blue(), colorMask.alpha());
+        StencilFunction function = stencil.func();
+        if (function != null)
+            State.STENCIL.function(function.function(), function.ref(), function.mask());
+        StencilOp op = stencil.op();
+        if (op != null)
+            State.STENCIL.op(op.stencilFailed(), op.stencilPassedDepthFailed(), op.allPassed());
+    }
+
+    @API(status = API.Status.EXPERIMENTAL, since = "2.9")
+    public void disableStencil() {
+        State.STENCIL.disable();
     }
 
     /**

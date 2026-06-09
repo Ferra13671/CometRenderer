@@ -156,6 +156,42 @@ public class State {
             }
         }
     };
+    public BooleanWithMaskState DEPTH_TEST = new BooleanWithMaskState() {
+        private boolean state = false;
+        private boolean maskState = true;
+
+        @Override
+        public void enable() {
+            if (!this.state) {
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                this.state = true;
+            }
+        }
+
+        @Override
+        public void disable() {
+            if (this.state) {
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                this.state = false;
+            }
+        }
+
+        @Override
+        public void enableMask() {
+            if (!this.maskState) {
+                GL11.glDepthMask(true);
+                this.maskState = true;
+            }
+        }
+
+        @Override
+        public void disableMask() {
+            if (this.maskState) {
+                GL11.glDepthMask(false);
+                this.maskState = false;
+            }
+        }
+    };
 
     public interface BooleanState {
 
@@ -176,11 +212,7 @@ public class State {
         void bindFramebuffer(int id, boolean viewport, int width, int height);
     }
 
-    public interface StencilState extends BooleanState {
-
-        void enableMask();
-
-        void disableMask();
+    public interface StencilState extends BooleanWithMaskState {
 
         void function(AlphaFunction function, int ref, int mask);
 
@@ -190,5 +222,12 @@ public class State {
     public interface ColorMaskState {
 
         void colorMask(boolean red, boolean green, boolean blue, boolean alpha);
+    }
+
+    public interface BooleanWithMaskState extends BooleanState {
+
+        void enableMask();
+
+        void disableMask();
     }
 }
