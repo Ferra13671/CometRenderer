@@ -7,7 +7,6 @@ import com.ferra13671.gltextureutils.TextureFiltering;
 import com.ferra13671.gltextureutils.TextureWrapping;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
 import lombok.Getter;
-import lombok.NonNull;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -17,23 +16,29 @@ public class FramebufferImpl implements Framebuffer {
     private final String name;
     @Getter
     private final boolean useDepth;
+    @Getter
+    private final boolean useStencil;
     private final Color clearColor;
     private final double clearDepth;
+    private final int clearStencil;
     @Getter
     private final int id;
     @Getter
     protected GLTexture colorTexture;
     @Getter
-    protected GLTexture depthTexture;
+    protected GLTexture depthAndStencilTexture;
 
-    public FramebufferImpl(@NonNull String name, boolean useDepth, int width, int height, @NonNull Color clearColor, double clearDepth) {
-        this.name = name;
-        this.useDepth = useDepth;
+    public FramebufferImpl(FramebufferInfo framebufferInfo) {
         this.id = GL30.glGenFramebuffers();
-        this.clearColor = clearColor;
-        this.clearDepth = clearDepth;
 
-        resize(width, height);
+        this.name = framebufferInfo.getName();
+        this.useDepth = framebufferInfo.isUseDepth();
+        this.useStencil = framebufferInfo.isUseStencil();
+        this.clearColor = framebufferInfo.getClearColor();
+        this.clearDepth = framebufferInfo.getClearDepth();
+        this.clearStencil = framebufferInfo.getClearStencil();
+
+        resize(framebufferInfo.getWidth(), framebufferInfo.getHeight());
     }
 
     @Override
@@ -49,10 +54,10 @@ public class FramebufferImpl implements Framebuffer {
                         .build()
         );
         if (isUseDepth()) {
-            setDepthTexture(
+            setDepthAndStencilTexture(
                     TextureLoader.INPUT_STREAM.createTextureBuilder()
                             .name(this.name + "[Depth]")
-                            .info(width, height, ColorMode.DEPTH)
+                            .info(width, height, isUseStencil() ? ColorMode.DEPTH_AND_STENCIL : ColorMode.DEPTH)
                             .filtering(TextureFiltering.DEFAULT)
                             .wrapping(TextureWrapping.DEFAULT)
                             .build()
@@ -61,18 +66,20 @@ public class FramebufferImpl implements Framebuffer {
     }
 
     public void setColorTexture(GLTexture colorTexture) {
+        deleteColor();
         this.colorTexture = colorTexture;
         bind(false);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture != null ? colorTexture.getTexId() : 0, 0);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
-    public void setDepthTexture(GLTexture depthTexture) {
+    public void setDepthAndStencilTexture(GLTexture depthAndStencilTexture) {
         if (isUseDepth()) {
-            this.depthTexture = depthTexture;
+            deleteDepthAndStencil();
+            this.depthAndStencilTexture = depthAndStencilTexture;
             bind(false);
-            GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture != null ? depthTexture.getTexId() : 0, 0);
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+            GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthAndStencilTexture != null ? depthAndStencilTexture.getTexId() : 0, 0);
+            State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
         }
     }
 
@@ -82,8 +89,8 @@ public class FramebufferImpl implements Framebuffer {
     }
 
     @Override
-    public int getDepthTextureId() {
-        return this.depthTexture != null ? this.depthTexture.getTexId() : -1;
+    public int getDepthAndStencilTextureId() {
+        return this.depthAndStencilTexture != null ? this.depthAndStencilTexture.getTexId() : -1;
     }
 
     @Override
@@ -106,7 +113,7 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
@@ -114,7 +121,15 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearDepth(this.clearDepth);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
+    }
+
+    @Override
+    public void clearStencil() {
+        bind(false);
+        GL11.glClearStencil(this.clearStencil);
+        GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
@@ -122,18 +137,27 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);
         GL11.glClearDepth(this.clearDepth);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        GL11.glClearStencil(this.clearStencil);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     private void deleteTextures() {
+        deleteColor();
+        deleteDepthAndStencil();
+    }
+
+    private void deleteColor() {
         if (this.colorTexture != null) {
             this.colorTexture.delete();
             this.colorTexture = null;
         }
-        if (this.depthTexture != null) {
-            this.depthTexture.delete();
-            this.depthTexture = null;
+    }
+
+    private void deleteDepthAndStencil() {
+        if (this.depthAndStencilTexture != null) {
+            this.depthAndStencilTexture.delete();
+            this.depthAndStencilTexture = null;
         }
     }
 

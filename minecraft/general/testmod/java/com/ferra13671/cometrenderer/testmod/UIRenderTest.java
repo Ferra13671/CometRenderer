@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.testmod;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.StencilInfo;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
@@ -15,6 +16,8 @@ import com.ferra13671.cometrenderer.minecraft.batch.impl.text.TextBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedBlurBatch;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurConfig;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
+import org.joml.Random;
+import org.joml.Vector4f;
 
 import java.awt.*;
 
@@ -55,6 +58,7 @@ public final class UIRenderTest {
         drawRoundedRects();
         drawText();
         drawBlur();
+        drawWithStencilTest();
     }
 
     private static void drawOneColorRect() {
@@ -131,5 +135,27 @@ public final class UIRenderTest {
                 .build()
                 .tryDraw()
                 .close();
+    }
+
+    private static void drawWithStencilTest() {
+        CometRenderer.setStencil(StencilInfo.WRITE);
+        BasicRectBatch b = new BasicRectBatch();
+        if (new Random().nextFloat() > 0.5f)
+            b.rectSized(775, 520, 50, 160);
+        if (new Random().nextFloat() > 0.5f)
+            b.rectSized(730, 635, 45, 45);
+        if (new Random().nextFloat() > 0.5f)
+            b.rectSized(825, 635, 45, 45);
+        b.build().tryDraw().close();
+        CometRenderer.setStencil(StencilInfo.READ);
+
+        new BasicRectBatch(() -> CometRenderer.getShaderColor().setColor(new Vector4f(1, 0, 0, 1)))
+                .rectSized(680, 480, 240, 240)
+                .build()
+                .tryDraw()
+                .close();
+
+        CometRenderer.clearStencil(0);
+        CometRenderer.disableStencil();
     }
 }

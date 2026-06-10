@@ -17,11 +17,13 @@ public interface Framebuffer {
 
     int getColorTextureId();
 
-    int getDepthTextureId();
+    int getDepthAndStencilTextureId();
 
     void clearColor();
 
     void clearDepth();
+
+    void clearStencil();
 
     void clearAll();
 

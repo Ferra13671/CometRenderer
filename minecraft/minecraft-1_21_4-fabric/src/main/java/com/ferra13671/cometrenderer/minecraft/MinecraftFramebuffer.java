@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.minecraft;
 
+import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import org.lwjgl.opengl.GL11;
@@ -9,11 +10,13 @@ public class MinecraftFramebuffer implements Framebuffer {
     private final RenderTarget framebuffer;
     private final RenderColor clearColor;
     private final double clearDepth;
+    private final int clearStencil;
 
-    public MinecraftFramebuffer(RenderTarget framebuffer, RenderColor clearColor, double clearDepth) {
+    public MinecraftFramebuffer(RenderTarget framebuffer, RenderColor clearColor, double clearDepth, int clearStencil) {
         this.framebuffer = framebuffer;
         this.clearColor = clearColor;
         this.clearDepth = clearDepth;
+        this.clearStencil = clearStencil;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
-    public int getDepthTextureId() {
+    public int getDepthAndStencilTextureId() {
         return this.framebuffer.useDepth ? this.framebuffer.getDepthTextureId() : -1;
     }
 
@@ -75,9 +78,18 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
+    public void clearStencil() {
+        bind(false);
+        GL11.glClearStencil(this.clearStencil);
+        GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
+    }
+
+    @Override
     public void clearAll() {
         clearColor();
         clearDepth();
+        clearStencil();
     }
 
     @Override

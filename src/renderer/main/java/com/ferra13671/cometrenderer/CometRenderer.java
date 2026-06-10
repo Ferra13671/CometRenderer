@@ -273,6 +273,13 @@ public class CometRenderer {
         State.STENCIL.disable();
     }
 
+    @API(status = API.Status.EXPERIMENTAL, since = "2.9")
+    public void clearStencil(int clearStencil) {
+        State.STENCIL.enableMask();
+        GL11.glClearStencil(clearStencil);
+        GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+    }
+
     /**
      * Создаёт готовый меш с вершинами. Перед сборкой меша вызывается данный вами метод, что бы добавить в сборщика данные о вершинах.
      * Метод ввернет null, если в сборщике нет вершин.

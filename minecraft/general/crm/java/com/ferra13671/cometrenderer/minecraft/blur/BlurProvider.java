@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.minecraft.blur;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
+import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.FramebufferUtils;
@@ -21,9 +22,33 @@ public class BlurProvider {
     private BlurConfig blurConfig;
 
     @Getter
-    private final FramebufferImpl blurFrameBuffer = new FramebufferImpl("Blur framebuffer", false, 1, 1, Color.blue, 1);
-    private final FramebufferImpl blurFrameBufferInternal1 = new FramebufferImpl("Blur framebuffer internal 1", false, 1, 1, Color.blue, 1);
-    private final FramebufferImpl blurFrameBufferInternal2 = new FramebufferImpl("Blur framebuffer internal 2", false, 1, 1, Color.blue, 1);
+    private final FramebufferImpl blurFrameBuffer = new FramebufferImpl(
+            FramebufferInfo.builder()
+                    .name("Blur framebuffer")
+                    .useDepth(false)
+                    .clearColor(Color.blue)
+                    .width(1)
+                    .height(1)
+                    .build()
+    );
+    private final FramebufferImpl blurFrameBufferInternal1 = new FramebufferImpl(
+            FramebufferInfo.builder()
+                    .name("Blur framebuffer internal 1")
+                    .useDepth(false)
+                    .clearColor(Color.blue)
+                    .width(1)
+                    .height(1)
+                    .build()
+    );
+    private final FramebufferImpl blurFrameBufferInternal2 = new FramebufferImpl(
+            FramebufferInfo.builder()
+                    .name("Blur framebuffer internal 2")
+                    .useDepth(false)
+                    .clearColor(Color.blue)
+                    .width(1)
+                    .height(1)
+                    .build()
+    );
 
     public BlurProvider(BlurConfig blurConfig) {
         this.blurConfig = blurConfig;

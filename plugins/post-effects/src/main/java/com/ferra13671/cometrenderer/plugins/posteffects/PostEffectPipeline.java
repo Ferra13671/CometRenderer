@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.plugins.posteffects;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
+import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import org.apiguardian.api.API;
@@ -24,7 +25,15 @@ public class PostEffectPipeline {
     public void execute(int textureWidth, int textureHeight) {
         HashMap<String, Framebuffer> frameBuffers = new HashMap<>();
         for (LocalFrameBufferInfo info : localFrameBuffers) {
-            FramebufferImpl f = new FramebufferImpl(info.name(), false, textureWidth, textureHeight, new Color(info.clearColor()), 0);
+            FramebufferImpl f = new FramebufferImpl(
+                    FramebufferInfo.builder()
+                            .name(info.name())
+                            .useDepth(false)
+                            .width(textureWidth)
+                            .height(textureHeight)
+                            .clearColor(new Color(info.clearColor()))
+                            .build()
+            );
             f.clearColor();
             frameBuffers.put(info.name(), f);
         }

@@ -1,11 +1,11 @@
 package com.ferra13671.cometrenderer.minecraft;
 
+import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 import java.awt.*;
 
@@ -13,11 +13,13 @@ public class MinecraftFramebuffer implements Framebuffer {
     private final RenderTarget framebuffer;
     private final Color clearColor;
     private final double clearDepth;
+    private final int clearStencil;
 
-    public MinecraftFramebuffer(RenderTarget framebuffer, Color clearColor, double clearDepth) {
+    public MinecraftFramebuffer(RenderTarget framebuffer, Color clearColor, double clearDepth, int clearStencil) {
         this.framebuffer = framebuffer;
         this.clearColor = clearColor;
         this.clearDepth = clearDepth;
+        this.clearStencil = clearStencil;
     }
 
     @Override
@@ -45,9 +47,7 @@ public class MinecraftFramebuffer implements Framebuffer {
 
     @Override
     public void bind(boolean setViewport) {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, getId());
-        if (setViewport)
-            GL11.glViewport(0, 0, getWidth(), getHeight());
+        State.FRAMEBUFFER.bindFramebuffer(getId(), setViewport, getWidth(), getHeight());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
-    public int getDepthTextureId() {
+    public int getDepthAndStencilTextureId() {
         return this.framebuffer.useDepth ? ((GlTexture) this.framebuffer.getDepthTexture()).glId() : -1;
     }
 
@@ -67,12 +67,25 @@ public class MinecraftFramebuffer implements Framebuffer {
 
     @Override
     public void clearDepth() {
-        if (this.framebuffer.useDepth)
-            RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(this.framebuffer.getDepthTexture(), this.clearDepth);
+        if (this.framebuffer.useDepth) {
+            bind(false);
+            GL11.glClearDepth(this.clearDepth);
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+            State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
+        }
+    }
+
+    @Override
+    public void clearStencil() {
+        bind(false);
+        GL11.glClearStencil(this.clearStencil);
+        GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
     public void clearAll() {
+        clearStencil();
         RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(this.framebuffer.getColorTexture(), this.clearColor.getRGB(), this.framebuffer.getDepthTexture(), this.clearDepth);
     }
 

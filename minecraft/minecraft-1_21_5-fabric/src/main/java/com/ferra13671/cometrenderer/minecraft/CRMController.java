@@ -137,7 +137,7 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected Framebuffer createMainFramebuffer() {
-        return new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0);
+        return new MinecraftFramebuffer(Minecraft.getInstance().getMainRenderTarget(), new Color(0, 0, 0, 0), 0, 0);
     }
 
     @Override
