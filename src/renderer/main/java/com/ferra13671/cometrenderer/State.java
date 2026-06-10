@@ -103,6 +103,7 @@ public class State {
         public void disableMask() {
             if (this.maskState) {
                 GL11.glStencilMask(0x00);
+                this.maskState = false;
             }
         }
 
