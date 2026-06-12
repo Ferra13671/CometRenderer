@@ -40,10 +40,11 @@ import java.nio.ByteBuffer;
  */
 @API(status = API.Status.MAINTAINED, since = "1.4")
 public final class IndexBufferGenerator {
-
 	/** Количество вершин до триангуляции. **/
+	@Getter
 	private final int vertexCountInShape;
 	/** Количество вершин после триангуляции. **/
+	@Getter
 	private final int vertexCountInTriangulated;
 	/** Триангулятор. **/
 	private final Triangulator triangulator;
@@ -59,6 +60,16 @@ public final class IndexBufferGenerator {
 		this.vertexCountInShape = vertexCountInShape;
 		this.vertexCountInTriangulated = vertexCountInTriangulated;
 		this.triangulator = triangulator;
+	}
+
+	/**
+	 * Возвращает количество индексов для данного количества вершин.
+	 *
+	 * @param vertices количество вершин, для которых нужно подсчитать количество индексов.
+	 * @return количество индексов для данного количества вершин.
+	 */
+	public int getIndexCount(int vertices) {
+		return vertices / this.vertexCountInShape * this.vertexCountInTriangulated;
 	}
 
 	/**

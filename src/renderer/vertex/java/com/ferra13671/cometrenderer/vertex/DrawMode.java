@@ -3,50 +3,28 @@ package com.ferra13671.cometrenderer.vertex;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
-import java.util.function.Function;
-
 /**
  * Тип отрисовки вершин.
  *
  * @param glId айди типа отрисовки в OpenGL.
- * @param useIndexBuffer использует ли тип отрисовки буффер индексов или нет.
  * @param indexBufferGenerator генератор буффера индексов.
- * @param indexCountFunction функция, возвращающая количество индексов для данного количества вершин.
  */
 @API(status = API.Status.MAINTAINED, since = "1.4")
-public record DrawMode(int glId, boolean useIndexBuffer, IndexBufferGenerator indexBufferGenerator, Function<Integer, Integer> indexCountFunction) {
-	public static final DrawMode LINES = builder()
-			.glId(GL11.GL_LINES)
-			.build();
-	public static final DrawMode LINE_STRIP = builder()
-			.glId(GL11.GL_LINE_STRIP)
-			.build();
-	public static final DrawMode TRIANGLES = builder()
-			.glId(GL11.GL_TRIANGLES)
-			.build();
-	public static final DrawMode TRIANGLE_STRIP = builder()
-			.glId(GL11.GL_TRIANGLE_STRIP)
-			.build();
-	public static final DrawMode TRIANGLE_FAN = builder()
-			.glId(GL11.GL_TRIANGLE_FAN)
-			.build();
-	public static final DrawMode QUADS = builder()
-			.glId(GL11.GL_TRIANGLES)
-			.indexGeneration(
-					new IndexBufferGenerator(4, 6, (indexConsumer, firstVertexIndex) -> {
-						indexConsumer.accept(firstVertexIndex);
-						indexConsumer.accept(firstVertexIndex + 1);
-						indexConsumer.accept(firstVertexIndex + 2);
-						indexConsumer.accept(firstVertexIndex + 2);
-						indexConsumer.accept(firstVertexIndex + 3);
-						indexConsumer.accept(firstVertexIndex);
-					}),
-					vertices -> vertices / 4 * 6
-			)
-			.build();
-
-
-	public static DrawModeBuilder builder() {
-		return new DrawModeBuilder();
-	}
+public record DrawMode(int glId, IndexBufferGenerator indexBufferGenerator) {
+	public static final DrawMode LINES = new DrawMode(GL11.GL_LINES, null);
+	public static final DrawMode LINE_STRIP = new DrawMode(GL11.GL_LINE_STRIP, null);
+	public static final DrawMode TRIANGLES = new DrawMode(GL11.GL_TRIANGLES, null);
+	public static final DrawMode TRIANGLE_STRIP = new DrawMode(GL11.GL_TRIANGLE_STRIP, null);
+	public static final DrawMode TRIANGLE_FAN = new DrawMode(GL11.GL_TRIANGLE_FAN, null);
+	public static final DrawMode QUADS = new DrawMode(
+			GL11.GL_TRIANGLES,
+			new IndexBufferGenerator(4, 6, (indexConsumer, firstVertexIndex) -> {
+				indexConsumer.accept(firstVertexIndex);
+				indexConsumer.accept(firstVertexIndex + 1);
+				indexConsumer.accept(firstVertexIndex + 2);
+				indexConsumer.accept(firstVertexIndex + 2);
+				indexConsumer.accept(firstVertexIndex + 3);
+				indexConsumer.accept(firstVertexIndex);
+			})
+	);
 }

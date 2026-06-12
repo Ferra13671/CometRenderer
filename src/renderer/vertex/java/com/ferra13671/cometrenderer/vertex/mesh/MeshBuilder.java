@@ -129,7 +129,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
                             this.allocator,
                             this.vertexFormat,
                             this.vertexCount,
-                            this.drawMode.indexCountFunction().apply(this.vertexCount),
+                            this.drawMode.indexBufferGenerator().getIndexCount(this.vertexCount),
                             this.drawMode
                     );
     }

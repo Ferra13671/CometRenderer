@@ -106,7 +106,7 @@ public class CometRenderer {
             DrawMode drawMode = mesh.getDrawMode();
             vertexFormatManager.applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
-            if (drawMode.useIndexBuffer()) {
+            if (drawMode.indexBufferGenerator() != null) {
                 GpuBuffer indexBuffer = mesh.getIndexBuffer();
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
                     exceptionManager.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
