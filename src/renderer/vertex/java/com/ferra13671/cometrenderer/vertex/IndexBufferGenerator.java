@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.exceptions.impl.vertex.IndexOverflowException;
+import com.ferra13671.cometrenderer.utils.IndexList;
 import com.ferra13671.cometrenderer.utils.IndexType;
 import com.ferra13671.cometrenderer.utils.MathUtils;
 import com.ferra13671.cometrenderer.utils.Triangulator;
@@ -107,7 +108,18 @@ public final class IndexBufferGenerator {
 		try {
 			for (int i = 0; i < shapeCount; i++)
 				this.triangulator.accept(
-						index -> this.indexType.putConsumer.accept(buffer, index),
+						new IndexList() {
+							@Override
+							public void index(int index) {
+								indexType.putConsumer.accept(buffer, index);
+							}
+
+							@Override
+							public void indexes(int... indexes) {
+								for (int index : indexes)
+									index(index);
+							}
+						},
 						i * this.vertexCountInShape
 				);
 

@@ -12,107 +12,111 @@ public class CustomDrawMode {
 
     public final DrawMode CUBE = new DrawMode(
             GL11.GL_TRIANGLES,
-            new IndexBufferGenerator(8, 36, (indexConsumer, firstVertexIndex) -> {
-                //1
-                indexConsumer.accept(firstVertexIndex);
-                indexConsumer.accept(firstVertexIndex + 1);
-                indexConsumer.accept(firstVertexIndex + 2);
-                indexConsumer.accept(firstVertexIndex + 2);
-                indexConsumer.accept(firstVertexIndex + 3);
-                indexConsumer.accept(firstVertexIndex);
+            new IndexBufferGenerator(8, 36, (indexList, firstVertexIndex) ->
+                indexList.indexes(
+                        //1
+                        firstVertexIndex,
+                        firstVertexIndex + 1,
+                        firstVertexIndex + 2,
+                        firstVertexIndex + 2,
+                        firstVertexIndex + 3,
+                        firstVertexIndex,
 
-                //2
-                indexConsumer.accept(firstVertexIndex + 4);
-                indexConsumer.accept(firstVertexIndex + 5);
-                indexConsumer.accept(firstVertexIndex + 6);
-                indexConsumer.accept(firstVertexIndex + 6);
-                indexConsumer.accept(firstVertexIndex + 7);
-                indexConsumer.accept(firstVertexIndex + 4);
+                        //2
+                        firstVertexIndex + 4,
+                        firstVertexIndex + 5,
+                        firstVertexIndex + 6,
+                        firstVertexIndex + 6,
+                        firstVertexIndex + 7,
+                        firstVertexIndex + 4,
 
-                //3
-                indexConsumer.accept(firstVertexIndex);
-                indexConsumer.accept(firstVertexIndex + 3);
-                indexConsumer.accept(firstVertexIndex + 4);
-                indexConsumer.accept(firstVertexIndex + 4);
-                indexConsumer.accept(firstVertexIndex + 7);
-                indexConsumer.accept(firstVertexIndex);
+                        //3
+                        firstVertexIndex,
+                        firstVertexIndex + 3,
+                        firstVertexIndex + 4,
+                        firstVertexIndex + 4,
+                        firstVertexIndex + 7,
+                        firstVertexIndex,
 
-                //4
-                indexConsumer.accept(firstVertexIndex + 2);
-                indexConsumer.accept(firstVertexIndex + 1);
-                indexConsumer.accept(firstVertexIndex + 6);
-                indexConsumer.accept(firstVertexIndex + 6);
-                indexConsumer.accept(firstVertexIndex + 5);
-                indexConsumer.accept(firstVertexIndex + 2);
+                        //4
+                        firstVertexIndex + 2,
+                        firstVertexIndex + 1,
+                        firstVertexIndex + 6,
+                        firstVertexIndex + 6,
+                        firstVertexIndex + 5,
+                        firstVertexIndex + 2,
 
-                //5
-                indexConsumer.accept(firstVertexIndex + 3);
-                indexConsumer.accept(firstVertexIndex + 2);
-                indexConsumer.accept(firstVertexIndex + 5);
-                indexConsumer.accept(firstVertexIndex + 5);
-                indexConsumer.accept(firstVertexIndex + 4);
-                indexConsumer.accept(firstVertexIndex + 3);
+                        //5
+                        firstVertexIndex + 3,
+                        firstVertexIndex + 2,
+                        firstVertexIndex + 5,
+                        firstVertexIndex + 5,
+                        firstVertexIndex + 4,
+                        firstVertexIndex + 3,
 
-                //6
-                indexConsumer.accept(firstVertexIndex + 1);
-                indexConsumer.accept(firstVertexIndex);
-                indexConsumer.accept(firstVertexIndex + 7);
-                indexConsumer.accept(firstVertexIndex + 7);
-                indexConsumer.accept(firstVertexIndex + 6);
-                indexConsumer.accept(firstVertexIndex + 1);
-            })
-            );
+                        //6
+                        firstVertexIndex + 1,
+                        firstVertexIndex,
+                        firstVertexIndex + 7,
+                        firstVertexIndex + 7,
+                        firstVertexIndex + 6,
+                        firstVertexIndex + 1
+                )
+            )
+    );
 
     public final DrawMode CUBE_OUTLINE = new DrawMode(
             GL11.GL_LINES,
-            new IndexBufferGenerator(8, 24, (indexConsumer, firstVertexIndex) -> {
-                //1
-                indexConsumer.accept(firstVertexIndex);
-                indexConsumer.accept(firstVertexIndex + 1);
+            new IndexBufferGenerator(8, 24, (indexList, firstVertexIndex) ->
+                indexList.indexes(
+                        //1
+                        firstVertexIndex,
+                        firstVertexIndex + 1,
 
-                //2
-                indexConsumer.accept(firstVertexIndex + 1);
-                indexConsumer.accept(firstVertexIndex + 2);
+                        //2
+                        firstVertexIndex + 1,
+                        firstVertexIndex + 2,
 
-                //3
-                indexConsumer.accept(firstVertexIndex + 2);
-                indexConsumer.accept(firstVertexIndex + 3);
+                        //3
+                        firstVertexIndex + 2,
+                        firstVertexIndex + 3,
 
-                //4
-                indexConsumer.accept(firstVertexIndex + 3);
-                indexConsumer.accept(firstVertexIndex);
+                        //4
+                        firstVertexIndex + 3,
+                        firstVertexIndex,
 
-                //5
-                indexConsumer.accept(firstVertexIndex + 7);
-                indexConsumer.accept(firstVertexIndex + 6);
+                        //5
+                        firstVertexIndex + 7,
+                        firstVertexIndex + 6,
 
-                //6
-                indexConsumer.accept(firstVertexIndex + 6);
-                indexConsumer.accept(firstVertexIndex + 5);
+                        //6
+                        firstVertexIndex + 6,
+                        firstVertexIndex + 5,
 
-                //7
-                indexConsumer.accept(firstVertexIndex + 5);
-                indexConsumer.accept(firstVertexIndex + 4);
+                        //7
+                        firstVertexIndex + 5,
+                        firstVertexIndex + 4,
 
-                //8
-                indexConsumer.accept(firstVertexIndex + 4);
-                indexConsumer.accept(firstVertexIndex + 7);
+                        //8
+                        firstVertexIndex + 4,
+                        firstVertexIndex + 7,
 
-                //9
-                indexConsumer.accept(firstVertexIndex);
-                indexConsumer.accept(firstVertexIndex + 7);
+                        //9
+                        firstVertexIndex,
+                        firstVertexIndex + 7,
 
-                //10
-                indexConsumer.accept(firstVertexIndex + 3);
-                indexConsumer.accept(firstVertexIndex + 4);
+                        //10
+                        firstVertexIndex + 3,
+                        firstVertexIndex + 4,
 
-                //11
-                indexConsumer.accept(firstVertexIndex + 2);
-                indexConsumer.accept(firstVertexIndex + 5);
+                        //11
+                        firstVertexIndex + 2,
+                        firstVertexIndex + 5,
 
-                //12
-                indexConsumer.accept(firstVertexIndex + 1);
-                indexConsumer.accept(firstVertexIndex + 6);
-            })
+                        //12
+                        firstVertexIndex + 1,
+                        firstVertexIndex + 6
+                )
+            )
             );
 }

@@ -18,13 +18,15 @@ public record DrawMode(int glId, IndexBufferGenerator indexBufferGenerator) {
 	public static final DrawMode TRIANGLE_FAN = new DrawMode(GL11.GL_TRIANGLE_FAN, null);
 	public static final DrawMode QUADS = new DrawMode(
 			GL11.GL_TRIANGLES,
-			new IndexBufferGenerator(4, 6, (indexConsumer, firstVertexIndex) -> {
-				indexConsumer.accept(firstVertexIndex);
-				indexConsumer.accept(firstVertexIndex + 1);
-				indexConsumer.accept(firstVertexIndex + 2);
-				indexConsumer.accept(firstVertexIndex + 2);
-				indexConsumer.accept(firstVertexIndex + 3);
-				indexConsumer.accept(firstVertexIndex);
-			})
+			new IndexBufferGenerator(4, 6, (indexList, firstVertexIndex) ->
+				indexList.indexes(
+						firstVertexIndex,
+						firstVertexIndex + 1,
+						firstVertexIndex + 2,
+						firstVertexIndex + 2,
+						firstVertexIndex + 3,
+						firstVertexIndex
+				)
+			)
 	);
 }
