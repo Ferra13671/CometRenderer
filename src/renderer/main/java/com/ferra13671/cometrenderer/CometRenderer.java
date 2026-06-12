@@ -129,12 +129,12 @@ public class CometRenderer {
             throw new IllegalStateException("CometRenderer has already initialized.");
 
         initRegistry();
-        config.MAX_VERTICES.setValue(registry.get(CometTags.MAX_VERTICES).orElseThrow().getValue());
-        config.MAX_INDICES.setValue(registry.get(CometTags.MAX_INDICES).orElseThrow().getValue());
+        config.MAX_VERTICES.setValue(registry.get(CometTags.MAX_VERTICES).orElseThrow());
+        config.MAX_INDICES.setValue(registry.get(CometTags.MAX_INDICES).orElseThrow());
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             if (!GLCapabilities.supportsVersion(GLVersion.fromId(config.MINIMUM_OPENGL_VERSION.getValue())))
-                exceptionManager.manageException(new UnsupportedOpenGLVersionException(registry.get(CometTags.GL_VERSION).orElseThrow().getValue(), GLVersion.GL32));
+                exceptionManager.manageException(new UnsupportedOpenGLVersionException(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL32));
         }
 
         samplerManager = GLCapabilities.supportsSamplerObjects() ?

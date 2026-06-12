@@ -44,18 +44,18 @@ public class CometCompiler {
 
     @API(status = API.Status.INTERNAL)
     public GlProgram compileProgram(@NonNull Registry registry) {
-        String name = registry.get(CometTags.NAME).orElseThrow().getValue();
+        String name = registry.get(CometTags.NAME).orElseThrow();
 
         int programId = GL20.glCreateProgram();
 
-        Map<ShaderType, GlslFileEntry> shaders = registry.get(CometTags.SHADERS).orElseThrow().getValue();
-        Map<ShaderType, GlShader> compiledShaders = registry.contains(CometTags.COMPILED_SHADERS) ? registry.get(CometTags.COMPILED_SHADERS).orElseThrow().getValue() : null;
-        Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow().getValue();
+        Map<ShaderType, GlslFileEntry> shaders = registry.get(CometTags.SHADERS).orElseThrow();
+        Map<ShaderType, GlShader> compiledShaders = registry.contains(CometTags.COMPILED_SHADERS) ? registry.get(CometTags.COMPILED_SHADERS).orElseThrow() : null;
+        Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (compiledShaders != null)
             compiledShaders.forEach((type, shader) -> {
                 if (shader.getRegistry().contains(CometTags.UNIFORMS))
-                    uniforms.putAll(shader.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue());
+                    uniforms.putAll(shader.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
 
                 GL20.glAttachShader(programId, shader.getId());
             });
@@ -64,14 +64,14 @@ public class CometCompiler {
             GlShader shader = compileShader(entry, type, registry);
 
             if (entry.getRegistry().contains(CometTags.UNIFORMS))
-                uniforms.putAll(entry.getRegistry().get(CometTags.UNIFORMS).orElseThrow().getValue());
+                uniforms.putAll(entry.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
 
             GL20.glAttachShader(programId, shader.getId());
         });
 
         GL20.glLinkProgram(programId);
 
-        GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow().getValue())), uniforms);
+        GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())), uniforms);
 
         CompileResult compileResult = program.getCompileResult();
 
@@ -87,14 +87,14 @@ public class CometCompiler {
         //Experimental
         Registry shaderRegistry = new Registry();
         if (builderRegistry.contains(CometTags.TAGS_TO_COPY)) {
-            for (Tag<?> tag : builderRegistry.get(CometTags.TAGS_TO_COPY).orElseThrow().getValue())
+            for (Tag<?> tag : builderRegistry.get(CometTags.TAGS_TO_COPY).orElseThrow())
                 if (builderRegistry.contains(tag))
-                    shaderRegistry.set(builderRegistry.get(tag).orElseThrow());
+                    shaderRegistry.set(builderRegistry.getEntry(tag).orElseThrow());
         }
 
         GlslFileEntry processedShader = new GlslFileEntry(shaderEntry);
         processContent(processedShader.getRegistry(), builderRegistry);
-        GlslContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow().getValue();
+        GlslContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
 
         GlShader shader = new GlShader(
                 processedShader.getName(),
@@ -121,7 +121,7 @@ public class CometCompiler {
 
     @API(status = API.Status.INTERNAL)
     protected void removeComments(@NonNull Registry glslFileRegistry) {
-        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
+        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow();
 
         content.set(Pattern.compile("//.*", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));
         content.set(Pattern.compile("/\\*[\\s\\S]*\\*/", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));

@@ -45,12 +45,12 @@ public class CRM {
 
         CometRenderer.init();
 
-        CometRenderer.getLogger().log(String.format("Initialized CometRenderer %s", CometRenderer.getRegistry().get(CometTags.COMET_RENDERER_VERSION).orElseThrow().getValue()));
-        CometRenderer.getLogger().log(String.format("OpenGL version: %s", CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glVersion));
-        Mesa3DVersion mesa3DVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow().getValue();
+        CometRenderer.getLogger().log(String.format("Initialized CometRenderer %s", CometRenderer.getRegistry().get(CometTags.COMET_RENDERER_VERSION).orElseThrow()));
+        CometRenderer.getLogger().log(String.format("OpenGL version: %s", CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().glVersion));
+        Mesa3DVersion mesa3DVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow();
         CometRenderer.getLogger().log(String.format("Mesa3D version: %s", mesa3DVersion == Mesa3DVersion.NONE ? "not supported" : mesa3DVersion.version()));
-        CometRenderer.getLogger().log(String.format("GPU: %s", CometRenderer.getRegistry().get(CometTags.GPU).orElseThrow().getValue()));
-        CometRenderer.getLogger().log(String.format("OpenGL extensions: %s", Arrays.toString(CometRenderer.getRegistry().get(CometTags.GL_EXTENSIONS).orElseThrow().getValue())));
+        CometRenderer.getLogger().log(String.format("GPU: %s", CometRenderer.getRegistry().get(CometTags.GPU).orElseThrow()));
+        CometRenderer.getLogger().log(String.format("OpenGL extensions: %s", Arrays.toString(CometRenderer.getRegistry().get(CometTags.GL_EXTENSIONS).orElseThrow())));
 
         BetterCompilerPlugin.init();
         controller = new CRMController();

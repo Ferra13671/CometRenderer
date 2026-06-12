@@ -36,7 +36,7 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
         this.elementNames.add(position, name);
         this.elementsInfo.add(position, new Pair<>(type, count));
 
-        int maxElements = CometRenderer.getRegistry().get(CometTags.MAX_VERTEX_ELEMENTS).orElseThrow().getValue();
+        int maxElements = CometRenderer.getRegistry().get(CometTags.MAX_VERTEX_ELEMENTS).orElseThrow();
         if (this.elementsInfo.size() > maxElements)
             CometRenderer.getExceptionManager().manageException(new VertexFormatOverflowException(maxElements));
 

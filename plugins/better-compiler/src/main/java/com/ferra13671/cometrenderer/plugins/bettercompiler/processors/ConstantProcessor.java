@@ -23,14 +23,14 @@ public class ConstantProcessor {
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<fieldtype>\\w+)\\h+(?<fieldname>\\w+);\\h*#constant\\h*(<(?<setts>[^<]*)>)?", Pattern.MULTILINE)) {
         @Override
         public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            Optional<String> value = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getConstant(result.group("fieldname"));
+            Optional<String> value = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getConstant(result.group("fieldname"));
             String defaultValue = parseDefaultConstantValue(result.group("setts"));
 
             if (value.isEmpty() && defaultValue == null)
                 CometRenderer.getLogger().error(String.format(
                         "[better-compiler] Found #constant directive, but the value for constant with name '%s' is not specified. [%s]",
                         result.group("fieldname"),
-                        glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()
+                        glslFileRegistry.get(CometTags.NAME).orElseThrow()
                 ));
 
             if (defaultValue == null)

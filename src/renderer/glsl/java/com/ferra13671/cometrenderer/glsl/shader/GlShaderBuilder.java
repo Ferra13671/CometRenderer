@@ -50,7 +50,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     public GlShaderBuilder<T> info(GlslFileEntry entry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             if (!GLCapabilities.supportsShader(type))
-                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue(), type.glVersion));
+                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow(), type.glVersion));
         }
 
         this.entry = entry;
@@ -67,12 +67,12 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     }
 
     public <S> S getFromTag(Tag<S> tag) {
-        return this.registry.get(tag).orElseThrow().getValue();
+        return this.registry.get(tag).orElseThrow();
     }
 
     @NonNull
     public <S extends GlUniform> GlShaderBuilder<T> uniform(String name, UniformType<S> uniformType) {
-        Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow().getValue();
+        Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (uniforms.containsKey(name))
             CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(name));

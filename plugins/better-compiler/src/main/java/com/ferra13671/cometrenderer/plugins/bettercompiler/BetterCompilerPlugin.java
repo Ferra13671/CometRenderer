@@ -48,7 +48,7 @@ public class BetterCompilerPlugin {
             if (!fileEntry.getType().equals(SHADER_LIBRARY_GLSL_FILE_ENTRY))
                 throw new IllegalStateException(String.format("Encountered a GlslFileEntry of type '%s' when '%s' was expected.", fileEntry.getType(), SHADER_LIBRARY_GLSL_FILE_ENTRY));
 
-            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().put(fileEntry.getName(), fileEntry);
+            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().put(fileEntry.getName(), fileEntry);
         }
     }
 
@@ -57,16 +57,16 @@ public class BetterCompilerPlugin {
             if (!fileEntry.getType().equals(SHADER_LIBRARY_GLSL_FILE_ENTRY))
                 throw new IllegalStateException(String.format("Encountered a GlslFileEntry of type '%s' when '%s' was expected.", fileEntry.getType(), SHADER_LIBRARY_GLSL_FILE_ENTRY));
 
-            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().remove(fileEntry.getName());
+            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().remove(fileEntry.getName());
         }
     }
 
     public void unregisterShaderLibraries(@NonNull String... names) {
         for (String name : names)
-            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().remove(name);
+            CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().remove(name);
     }
 
     public Optional<GlslFileEntry> getShaderLibrary(@NonNull String name) {
-        return Optional.ofNullable(CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().getValue().get(name));
+        return Optional.ofNullable(CometRenderer.getRegistry().get(LIBRARIES_TAG).orElseThrow().get(name));
     }
 }

@@ -56,7 +56,7 @@ public class BetterExceptionsPlugin {
     }
 
     private void manageException(CometException exception, Consumer<CometException> prevLogConsumer) {
-        Map<Class<? extends CometException>, PrintInfoCreator<?>> map = CometRenderer.getRegistry().get(EXCEPTIONS_PRINT_INFO).orElseThrow().getValue();
+        Map<Class<? extends CometException>, PrintInfoCreator<?>> map = CometRenderer.getRegistry().get(EXCEPTIONS_PRINT_INFO).orElseThrow();
         if (map.containsKey(exception.getClass())) {
             printException(((PrintInfoCreator<CometException>) map.get(exception.getClass())).create(exception));
         } else {
@@ -71,10 +71,10 @@ public class BetterExceptionsPlugin {
         CometRenderer.getLogger().error(
                 String.format(
                         exceptionText,
-                        registry.get(DESCRIPTION).orElseThrow().getValue(),
-                        registry.get(DETAILS).orElseThrow().getValue(),
-                        createList(registry.get(REASONS).orElseThrow().getValue()),
-                        createList(registry.get(SOLUTIONS).orElseThrow().getValue())
+                        registry.get(DESCRIPTION).orElseThrow(),
+                        registry.get(DETAILS).orElseThrow(),
+                        createList(registry.get(REASONS).orElseThrow()),
+                        createList(registry.get(SOLUTIONS).orElseThrow())
                 )
         );
     }

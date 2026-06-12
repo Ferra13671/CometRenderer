@@ -17,7 +17,7 @@ public class ARBVertexFormatBufferManager extends VertexFormatManager {
     private final boolean applyMesaWorkaround;
 
     public ARBVertexFormatBufferManager() {
-        Mesa3DVersion mesaVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow().getValue();
+        Mesa3DVersion mesaVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow();
 
         if (mesaVersion != Mesa3DVersion.NONE)
             this.applyMesaWorkaround = mesaVersion.version().contains("25.0.0") || mesaVersion.version().contains("25.0.1") || mesaVersion.version().contains("25.0.2");

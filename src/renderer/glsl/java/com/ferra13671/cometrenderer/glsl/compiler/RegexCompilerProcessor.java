@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 public class RegexCompilerProcessor {
 
     public void processContent(Registry glslFileRegistry, Registry builderRegistry) {
-        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
+        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow();
 
         Set<RegexCompilerExtension> extensions = new HashSet<>();
         for (CompilerExtension e : CometCompiler.getExtensions())

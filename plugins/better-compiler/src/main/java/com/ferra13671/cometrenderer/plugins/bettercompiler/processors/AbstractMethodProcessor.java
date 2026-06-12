@@ -22,7 +22,7 @@ public class AbstractMethodProcessor {
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<methodtype>\\w+)\\h+(?<methodname>\\w+)\\h*\\((?<args>.+)?\\);\\h+#abstractMethod", Pattern.MULTILINE)) {
         @Override
         public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            Optional<String> methodContentOpt = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().getMethodContent(result.group("methodname"));
+            Optional<String> methodContentOpt = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getMethodContent(result.group("methodname"));
 
             String methodContent = "";
 
@@ -30,7 +30,7 @@ public class AbstractMethodProcessor {
                 CometRenderer.getLogger().error(String.format(
                         "[better-compiler] Founded #abstractMethod directive, but the content for method with name '%s' is not specified. [%s]",
                         result.group("methodname"),
-                        glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()
+                        glslFileRegistry.get(CometTags.NAME).orElseThrow()
                 ));
             } else
                 methodContent = methodContentOpt.get();

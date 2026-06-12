@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer.glsl;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
-import com.ferra13671.cometrenderer.utils.tag.TagEntry;
 import org.apiguardian.api.API;
 
 /**
@@ -32,17 +31,17 @@ public record GlProgramSnippet(Registry registry) {
     }
 
     private <S, T> void processTag(Tag<T> tag, GlProgramBuilder<S> builder) {
-        TagEntry<T> tagEntry = this.registry.get(tag).orElseThrow();
+        T tagValue = this.registry.get(tag).orElseThrow();
 
         if (tag == CometTags.NAME)
-            builder.name(CometTags.NAME.map(tagEntry.getValue()));
+            builder.name(CometTags.NAME.map(tagValue));
         else
         if (tag == CometTags.SHADERS)
-            CometTags.SHADERS.map(tagEntry.getValue()).forEach((type, glslFileEntry) -> builder.shader(glslFileEntry, type));
+            CometTags.SHADERS.map(tagValue).forEach((type, glslFileEntry) -> builder.shader(glslFileEntry, type));
         else
         if (tag == CometTags.UNIFORMS)
-            CometTags.UNIFORMS.map(tagEntry.getValue()).forEach(builder::uniform);
+            CometTags.UNIFORMS.map(tagValue).forEach(builder::uniform);
         else
-            builder.tag(tag, tagEntry.getValue());
+            builder.tag(tag, tagValue);
     }
 }

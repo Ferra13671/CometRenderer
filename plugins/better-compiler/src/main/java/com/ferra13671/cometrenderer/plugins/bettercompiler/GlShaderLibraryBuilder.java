@@ -30,7 +30,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
         super("shader library");
 
         for (GlProgramSnippet snippet : snippets)
-            snippet.registry().get(CometTags.UNIFORMS).orElseThrow().getValue().forEach(this::uniform);
+            snippet.registry().get(CometTags.UNIFORMS).orElseThrow().forEach(this::uniform);
 
         this.loader = loader;
     }

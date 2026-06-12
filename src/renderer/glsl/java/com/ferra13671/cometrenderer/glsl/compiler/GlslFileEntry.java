@@ -32,14 +32,14 @@ public class GlslFileEntry {
     }
 
     public String getName() {
-        return this.registry.get(CometTags.NAME).orElseThrow().getValue();
+        return this.registry.get(CometTags.NAME).orElseThrow();
     }
 
     public GlslContent getContent() {
-        return this.registry.get(CometTags.CONTENT).orElseThrow().getValue();
+        return this.registry.get(CometTags.CONTENT).orElseThrow();
     }
 
     public String getType() {
-        return this.registry.get(CometTags.TYPE).orElseThrow().getValue();
+        return this.registry.get(CometTags.TYPE).orElseThrow();
     }
 }

@@ -36,18 +36,23 @@ public class Registry {
         return this.tagMap.containsKey(tag);
     }
 
-    public <T> Optional<TagEntry<T>> get(Tag<T> tag) {
+    public <T> Optional<TagEntry<T>> getEntry(Tag<T> tag) {
         return Optional.ofNullable((TagEntry<T>) this.tagMap.get(tag));
     }
 
-    public <T> TagEntry<T> computeIfAbsent(Tag<T> tag, T value, boolean immutable) {
+    public <T> Optional<T> get(Tag<T> tag) {
+        TagEntry<T> entry = getEntry(tag).orElse(null);
+        return Optional.ofNullable(entry == null ? null : entry.getValue());
+    }
+
+    public <T> T computeIfAbsent(Tag<T> tag, T value, boolean immutable) {
         TagEntry<T> tagEntry = (TagEntry<T>) this.tagMap.get(tag);
         if (tagEntry == null) {
             tagEntry = immutable ? new ImmutableTagEntry<>(tag, value) : new DefaultTagEntry<>(tag, value);
             set(tagEntry);
         }
 
-        return tagEntry;
+        return tagEntry.getValue();
     }
 
     @API(status = API.Status.INTERNAL)

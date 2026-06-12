@@ -24,6 +24,6 @@ public class GLCapabilities {
     }
 
     public boolean supportsVersion(GLVersion glVersion) {
-        return CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().id >= glVersion.id;
+        return CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().id >= glVersion.id;
     }
 }

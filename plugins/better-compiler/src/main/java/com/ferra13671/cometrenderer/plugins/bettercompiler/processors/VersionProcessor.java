@@ -27,15 +27,15 @@ public class VersionProcessor {
 
             String version = result.group().replaceFirst("#version", "").strip();
             if (version.isBlank())
-                CometRenderer.getLogger().error(String.format("[better-compiler] Found #version directive without value. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow().getValue()));
+                CometRenderer.getLogger().error(String.format("[better-compiler] Found #version directive without value. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow()));
 
             if (builderRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
-                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)));
+                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().glslVersion)));
                 return false;
             }
 
             if (version.equals("auto")) {
-                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue().glslVersion)));
+                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().glslVersion)));
                 return false;
             }
 
@@ -53,11 +53,11 @@ public class VersionProcessor {
         @Override
         public void processCompile(Registry shaderRegistry, Registry programRegistry) {
             if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
-                GlslContent content = shaderRegistry.get(CometTags.CONTENT).orElseThrow().getValue();
+                GlslContent content = shaderRegistry.get(CometTags.CONTENT).orElseThrow();
 
                 content.set(
                         "#version "
-                                .concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().getValue().glslVersion)
+                                .concat(programRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().glslVersion)
                                 .concat("\n\n")
                                 .concat(content.concatLines())
                 );
