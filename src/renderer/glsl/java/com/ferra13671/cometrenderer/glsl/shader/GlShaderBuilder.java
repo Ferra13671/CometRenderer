@@ -11,7 +11,7 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.Builder;
-import com.ferra13671.cometrenderer.utils.GLVersion;
+import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.NonNull;
@@ -49,9 +49,8 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     @NonNull
     public GlShaderBuilder<T> info(GlslFileEntry entry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
-            GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
-            if (!type.isSupportedOn(glVersion))
-                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(glVersion, type.glVersion));
+            if (!GLCapabilities.supportsShader(type))
+                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue(), type.glVersion));
         }
 
         this.entry = entry;

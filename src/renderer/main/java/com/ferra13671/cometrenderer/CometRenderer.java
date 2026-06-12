@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.sampler.ISamplerManger;
 import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
 import com.ferra13671.cometrenderer.sampler.impl.SamplerManagerImpl;
 import com.ferra13671.cometrenderer.utils.*;
+import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
@@ -132,17 +133,16 @@ public class CometRenderer {
         config.MAX_INDICES.setValue(registry.get(CometTags.MAX_INDICES).orElseThrow().getValue());
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
-            GLVersion glVersion = registry.get(CometTags.GL_VERSION).orElseThrow().getValue();
-            if (glVersion.id < config.MINIMUM_OPENGL_VERSION.getValue())
-                exceptionManager.manageException(new UnsupportedOpenGLVersionException(glVersion, GLVersion.GL32));
+            if (!GLCapabilities.supportsVersion(GLVersion.fromId(config.MINIMUM_OPENGL_VERSION.getValue())))
+                exceptionManager.manageException(new UnsupportedOpenGLVersionException(registry.get(CometTags.GL_VERSION).orElseThrow().getValue(), GLVersion.GL32));
         }
 
-        samplerManager = registry.get(CometTags.SAMPLER_OBJECT_SUPPORT).orElseThrow().getValue() ?
+        samplerManager = GLCapabilities.supportsSamplerObjects() ?
                 new SamplerManagerImpl()
                 :
                 new EmptySamplerManager();
 
-        vertexFormatManager = GL.getCapabilities().GL_ARB_vertex_attrib_binding && CometRenderer.getConfig().USE_ARB_ATTRIB_BINDING_IF_SUPPORT.getValue() ?
+        vertexFormatManager = GLCapabilities.supportsVertexAttributeBindings() ?
                 new ARBVertexFormatBufferManager()
                 :
                 new DefaultVertexFormatBufferManager();
@@ -163,7 +163,6 @@ public class CometRenderer {
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
         registry.setImmutable(CometTags.MAX_VERTICES, GL11.glGetInteger(GL12.GL_MAX_ELEMENTS_VERTICES));
         registry.setImmutable(CometTags.MAX_INDICES, GL11.glGetInteger(GL12.GL_MAX_ELEMENTS_INDICES));
-        registry.setImmutable(CometTags.SAMPLER_OBJECT_SUPPORT, registry.get(CometTags.GL_VERSION).orElseThrow().getValue().id >= GLVersion.GL33.id);
 
         int numExtensions = GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS);
         String[] extensions = new String[numExtensions];

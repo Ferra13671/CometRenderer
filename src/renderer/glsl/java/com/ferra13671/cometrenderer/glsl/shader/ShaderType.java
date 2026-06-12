@@ -36,8 +36,4 @@ public enum ShaderType {
     /** Айди типа шейдера в OpenGL. **/
     public final int glId;
     public final GLVersion glVersion;
-
-    public boolean isSupportedOn(GLVersion glVersion) {
-        return glVersion.id >= this.glVersion.id;
-    }
 }

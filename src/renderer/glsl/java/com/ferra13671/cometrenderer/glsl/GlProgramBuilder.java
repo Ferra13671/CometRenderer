@@ -7,7 +7,7 @@ import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
 import com.ferra13671.cometrenderer.utils.Builder;
-import com.ferra13671.cometrenderer.utils.GLVersion;
+import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedShaderException;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
@@ -97,9 +97,8 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
     @NonNull
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
-            GLVersion glVersion = CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue();
-            if (!type.isSupportedOn(glVersion))
-                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(glVersion, type.glVersion));
+            if (!GLCapabilities.supportsShader(type))
+                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue(), type.glVersion));
         }
 
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow().getValue();

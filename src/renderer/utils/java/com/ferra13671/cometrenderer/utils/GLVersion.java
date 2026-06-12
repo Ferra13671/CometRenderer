@@ -27,14 +27,21 @@ public enum GLVersion {
     GL46("4.6", "460 core", 46);
 
     public final String glVersion;
-    @API(status = API.Status.MAINTAINED)
     public final String glslVersion;
-    @API(status = API.Status.MAINTAINED)
+    @API(status = API.Status.INTERNAL)
     public final int id;
 
     public static GLVersion fromString(String version) {
         for (GLVersion value : values())
             if (version.startsWith(value.glVersion))
+                return value;
+
+        return null;
+    }
+
+    public static GLVersion fromId(int id) {
+        for (GLVersion value : values())
+            if (value.id == id)
                 return value;
 
         return null;

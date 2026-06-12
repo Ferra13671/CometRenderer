@@ -37,5 +37,4 @@ public class CometTags {
     public final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
     public final Tag<Integer> MAX_VERTICES = new Tag<>("max-vertices");
     public final Tag<Integer> MAX_INDICES = new Tag<>("max-indices");
-    public final Tag<Boolean> SAMPLER_OBJECT_SUPPORT = new Tag<>("sampler-object-support");
 }
