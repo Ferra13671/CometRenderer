@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.vertex.format.manager;
+package com.ferra13671.cometrenderer.device.vertexformat;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
@@ -13,10 +13,10 @@ import org.lwjgl.opengl.ARBVertexAttribBinding;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-public class ARBVertexFormatBufferManager extends VertexFormatManager {
+public class ARBVertexFormatManager implements VertexFormatManager {
     private final boolean applyMesaWorkaround;
 
-    public ARBVertexFormatBufferManager() {
+    public ARBVertexFormatManager() {
         Mesa3DVersion mesaVersion = CometRenderer.getRegistry().get(CometTags.MESA_VERSION).orElseThrow();
 
         if (mesaVersion != Mesa3DVersion.NONE)
@@ -43,9 +43,8 @@ public class ARBVertexFormatBufferManager extends VertexFormatManager {
         }
     }
 
-    @Override
-    public VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
-        int vertBuffId = GL30.glGenVertexArrays();
+    private VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
+        int vertBuffId = CometRenderer.getDevice().getDirectStateManager().createVertexArray();
         GL30.glBindVertexArray(vertBuffId);
 
         VertexElement[] elements = vertexFormat.getVertexElements();

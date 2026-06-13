@@ -16,11 +16,15 @@ public class GLCapabilities {
     }
 
     public boolean supportsSamplerObjects() {
-        return supportsVersion(GLVersion.GL33) || GL.getCapabilities().GL_ARB_sampler_objects;
+        return GL.getCapabilities().GL_ARB_sampler_objects;
     }
 
     public boolean supportsVertexAttributeBindings() {
         return GL.getCapabilities().GL_ARB_vertex_attrib_binding;
+    }
+
+    public boolean supportsDirectStateAccess() {
+        return GL.getCapabilities().GL_ARB_direct_state_access;
     }
 
     public boolean supportsVersion(GLVersion glVersion) {

@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.buffer.framebuffer;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.State;
 import com.ferra13671.gltextureutils.ColorMode;
 import com.ferra13671.gltextureutils.GLTexture;
@@ -29,7 +30,7 @@ public class FramebufferImpl implements Framebuffer {
     protected GLTexture depthAndStencilTexture;
 
     public FramebufferImpl(FramebufferInfo framebufferInfo) {
-        this.id = GL30.glGenFramebuffers();
+        this.id = CometRenderer.getDevice().getDirectStateManager().createFramebuffer();
 
         this.name = framebufferInfo.getName();
         this.useDepth = framebufferInfo.isUseDepth();
@@ -68,18 +69,16 @@ public class FramebufferImpl implements Framebuffer {
     public void setColorTexture(GLTexture colorTexture) {
         deleteColor();
         this.colorTexture = colorTexture;
-        bind(false);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture != null ? colorTexture.getTexId() : 0, 0);
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
+
+        CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, GL30.GL_COLOR_ATTACHMENT0, colorTexture);
     }
 
     public void setDepthAndStencilTexture(GLTexture depthAndStencilTexture) {
         if (isUseDepth()) {
             deleteDepthAndStencil();
             this.depthAndStencilTexture = depthAndStencilTexture;
-            bind(false);
-            GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthAndStencilTexture != null ? depthAndStencilTexture.getTexId() : 0, 0);
-            State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
+
+            CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, GL30.GL_DEPTH_STENCIL_ATTACHMENT, depthAndStencilTexture);
         }
     }
 

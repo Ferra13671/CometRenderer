@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.exceptions.ExceptionManager;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.sampler.ISamplerManger;
@@ -20,9 +21,6 @@ import com.ferra13671.cometrenderer.utils.stencil.StencilFunction;
 import com.ferra13671.cometrenderer.utils.stencil.StencilOp;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.format.manager.ARBVertexFormatBufferManager;
-import com.ferra13671.cometrenderer.vertex.format.manager.DefaultVertexFormatBufferManager;
-import com.ferra13671.cometrenderer.vertex.format.manager.VertexFormatManager;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.IMeshBuilder;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -73,8 +71,8 @@ public class CometRenderer {
     @API(status = API.Status.MAINTAINED, since = "2.1")
     private ISamplerManger samplerManager;
     @Getter
-    @API(status = API.Status.INTERNAL, since = "2.5")
-    private VertexFormatManager vertexFormatManager;
+    @API(status = API.Status.MAINTAINED, since = "2.9")
+    private GLDevice device;
     @Getter
     @API(status = API.Status.MAINTAINED, since = "2.5")
     private final ExceptionManager exceptionManager = new ExceptionManager();
@@ -104,7 +102,7 @@ public class CometRenderer {
 
         if (vertexCount > 0) {
             DrawMode drawMode = mesh.getDrawMode();
-            vertexFormatManager.applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
+            device.getVertexFormatManager().applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             if (drawMode.indexBufferGenerator() != null) {
                 GpuBuffer indexBuffer = mesh.getIndexBuffer();
@@ -142,10 +140,7 @@ public class CometRenderer {
                 :
                 new EmptySamplerManager();
 
-        vertexFormatManager = GLCapabilities.supportsVertexAttributeBindings() ?
-                new ARBVertexFormatBufferManager()
-                :
-                new DefaultVertexFormatBufferManager();
+        device = new GLDevice();
 
         registry.setImmutable(CometTags.INITIALIZED, true);
     }

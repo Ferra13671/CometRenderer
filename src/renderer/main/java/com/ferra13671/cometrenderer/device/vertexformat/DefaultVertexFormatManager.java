@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.vertex.format.manager;
+package com.ferra13671.cometrenderer.device.vertexformat;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
@@ -10,7 +10,7 @@ import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-public class DefaultVertexFormatBufferManager extends VertexFormatManager {
+public class DefaultVertexFormatManager implements VertexFormatManager {
 
     @Override
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
@@ -27,9 +27,8 @@ public class DefaultVertexFormatBufferManager extends VertexFormatManager {
         }
     }
 
-    @Override
-    public VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
-        int i = GL30.glGenVertexArrays();
+    private VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
+        int i = CometRenderer.getDevice().getDirectStateManager().createVertexArray();
         GL30.glBindVertexArray(i);
         setupBuffer(vertexFormat, true);
         return new VertexFormatBuffer(i, vertexFormat);

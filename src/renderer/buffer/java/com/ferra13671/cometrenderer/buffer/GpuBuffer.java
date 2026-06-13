@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.buffer;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.utils.Bindable;
 import lombok.Getter;
 import org.apiguardian.api.API;
@@ -32,9 +33,7 @@ public class GpuBuffer implements Bindable, AutoCloseable {
     public GpuBuffer(ByteBuffer data, BufferUsage usage, BufferTarget target) {
         this(usage, target);
 
-        bind();
-        GL15.glBufferData(target.glId, data, usage.glId);
-        unbind();
+        CometRenderer.getDevice().getDirectStateManager().bufferData(this, data);
     }
 
     /**
@@ -45,13 +44,11 @@ public class GpuBuffer implements Bindable, AutoCloseable {
     public GpuBuffer(int capacity, BufferUsage usage, BufferTarget target) {
         this(usage, target);
 
-        bind();
-        GL15.glBufferData(target.glId, capacity, usage.glId);
-        unbind();
+        CometRenderer.getDevice().getDirectStateManager().bufferData(this, capacity);
     }
 
     private GpuBuffer(BufferUsage usage, BufferTarget target) {
-        this.id = GL15.glGenBuffers();
+        this.id = CometRenderer.getDevice().getDirectStateManager().createBuffer();
         this.usage = usage;
         this.target = target;
     }
