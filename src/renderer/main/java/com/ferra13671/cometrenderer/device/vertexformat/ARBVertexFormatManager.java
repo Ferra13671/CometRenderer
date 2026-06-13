@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
+import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
@@ -45,25 +46,26 @@ public class ARBVertexFormatManager implements VertexFormatManager {
 
     private VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
         int vertBuffId = CometRenderer.getDevice().getDirectStateManager().createVertexArray();
-        GL30.glBindVertexArray(vertBuffId);
+        if (!GLCapabilities.supportsDirectStateAccess())
+            GL30.glBindVertexArray(vertBuffId);
 
         VertexElement[] elements = vertexFormat.getVertexElements();
 
         for (int i = 0; i < elements.length; i++) {
             VertexElement vertexElement = elements[i];
-            GL30.glEnableVertexAttribArray(i);
+            CometRenderer.getDevice().getDirectStateManager().enableVertexAttributeArray(vertBuffId, i);
 
             if (vertexElement.getType().glId() == GL11.GL_FLOAT) {
-                ARBVertexAttribBinding.glVertexAttribFormat(
-                        i, vertexElement.getTypeCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
+                CometRenderer.getDevice().getDirectStateManager().vertexAttributeFormat(
+                        vertBuffId, i, vertexElement.getTypeCount(), vertexElement.getType().glId(), false, vertexFormat.getElementOffset(vertexElement)
                 );
             } else {
-                ARBVertexAttribBinding.glVertexAttribIFormat(
-                        i, vertexElement.getTypeCount(), vertexElement.getType().glId(), vertexFormat.getElementOffset(vertexElement)
+                CometRenderer.getDevice().getDirectStateManager().vertexAttributeIntFormat(
+                        vertBuffId, i, vertexElement.getTypeCount(), vertexElement.getType().glId(), vertexFormat.getElementOffset(vertexElement)
                 );
             }
 
-            ARBVertexAttribBinding.glVertexAttribBinding(i, 0);
+            CometRenderer.getDevice().getDirectStateManager().vertexAttributeBinding(vertBuffId, i, 0);
         }
 
         return new VertexFormatBuffer(vertBuffId, vertexFormat);

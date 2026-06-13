@@ -19,4 +19,12 @@ public interface DirectStateManager {
     void bufferData(GpuBuffer buffer, long size);
 
     void bufferData(GpuBuffer buffer, ByteBuffer data);
+
+    void enableVertexAttributeArray(int vertBufId, int index);
+
+    void vertexAttributeFormat(int vertBufId, int attribIndex, int size, int type, boolean normalized, int relativeOffset);
+
+    void vertexAttributeIntFormat(int vertBufId, int attribIndex, int size, int type, int relativeOffset);
+
+    void vertexAttributeBinding(int vertBufId, int attribIndex, int bindingIndex);
 }
