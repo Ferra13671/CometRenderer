@@ -14,6 +14,8 @@ public interface DirectStateManager {
 
     int createVertexArray();
 
+    int createSampler();
+
     void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture);
 
     void bufferData(GpuBuffer buffer, long size);

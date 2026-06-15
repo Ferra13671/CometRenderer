@@ -29,7 +29,6 @@ sourceSets {
             "exceptions",
             "glsl",
             "vertex",
-            "sampler",
             "utils"
     )
 }

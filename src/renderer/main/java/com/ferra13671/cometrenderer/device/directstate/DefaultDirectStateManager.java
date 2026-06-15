@@ -4,10 +4,7 @@ import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.gltextureutils.GlTex;
-import org.lwjgl.opengl.ARBVertexAttribBinding;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 
@@ -26,6 +23,18 @@ public class DefaultDirectStateManager implements DirectStateManager {
     @Override
     public int createVertexArray() {
         return GL30.glGenVertexArrays();
+    }
+
+    @Override
+    public int createSampler() {
+        int sampler = GL33.glGenSamplers();
+        State.TEXTURE.activeTexture(GL13.GL_TEXTURE0);
+        int prevSampler = GL11.glGetInteger(GL33.GL_SAMPLER_BINDING);
+
+        GL33.glBindSampler(0, sampler);
+        GL33.glBindSampler(0, prevSampler);
+
+        return sampler;
     }
 
     @Override

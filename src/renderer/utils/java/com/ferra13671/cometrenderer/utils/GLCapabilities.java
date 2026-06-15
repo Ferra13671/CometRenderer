@@ -23,10 +23,6 @@ public class GLCapabilities {
         return supportsVersion(GLVersion.GL43) || GL.getCapabilities().GL_ARB_compute_shader;
     }
 
-    public boolean supportsSamplerObjects() {
-        return GL.getCapabilities().GL_ARB_sampler_objects;
-    }
-
     public boolean supportsVertexAttributeBindings() {
         return GL.getCapabilities().GL_ARB_vertex_attrib_binding;
     }

@@ -10,7 +10,8 @@
     "GlConstMixin",
     "GlTextureMixin",
     "IGlBuffer",
-    "RenderSystemMixin"
+    "RenderSystemMixin",
+    "WindowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -30,6 +30,7 @@ public class GameRendererMixin {
         GlStateManager._disableDepthTest();
         CometRenderer.setDefaultBlend();
         CRM.getMainFramebuffer().bind(true);
+        CRM.clearSamplers();
 
         RenderHudCallback.EVENT.invoker().onRenderHud();
     }
@@ -41,6 +42,7 @@ public class GameRendererMixin {
 
         CometRenderer.setDefaultBlend();
         CRM.getMainFramebuffer().bind(true);
+        CRM.clearSamplers();
         RenderSystem.getModelViewStack().pushMatrix().mul(rotationMatrix);
 
         RenderWorldCallback.EVENT.invoker().onRenderWorld();

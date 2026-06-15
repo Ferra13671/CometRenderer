@@ -75,6 +75,11 @@ public class CRM {
         return mainFramebuffer;
     }
 
+    public void clearSamplers() {
+        for (int i = 0; i < 12; i++)
+            CometRenderer.setSampler(i, null);
+    }
+
     @API(status = API.Status.INTERNAL)
     ScissorRect fixScissorRect(ScissorRect scissorRect, int scale) {
         return new ScissorRect(

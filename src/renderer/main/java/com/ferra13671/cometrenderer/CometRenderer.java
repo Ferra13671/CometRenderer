@@ -3,11 +3,9 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
+import com.ferra13671.cometrenderer.device.SamplerObject;
 import com.ferra13671.cometrenderer.exceptions.ExceptionManager;
 import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
-import com.ferra13671.cometrenderer.sampler.ISamplerManger;
-import com.ferra13671.cometrenderer.sampler.empty.EmptySamplerManager;
-import com.ferra13671.cometrenderer.sampler.impl.SamplerManagerImpl;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
@@ -67,9 +65,6 @@ public class CometRenderer {
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
     private final ScissorStack scissorStack = new ScissorStack();
-    @Getter
-    @API(status = API.Status.MAINTAINED, since = "2.1")
-    private ISamplerManger samplerManager;
     @Getter
     @API(status = API.Status.MAINTAINED, since = "2.9")
     private GLDevice device;
@@ -132,13 +127,8 @@ public class CometRenderer {
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             if (!GLCapabilities.supportsVersion(GLVersion.fromId(config.MINIMUM_OPENGL_VERSION.getValue())))
-                exceptionManager.manageException(new UnsupportedOpenGLVersionException(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL32));
+                exceptionManager.manageException(new UnsupportedOpenGLVersionException(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33));
         }
-
-        samplerManager = GLCapabilities.supportsSamplerObjects() ?
-                new SamplerManagerImpl()
-                :
-                new EmptySamplerManager();
 
         device = new GLDevice();
 
@@ -272,6 +262,11 @@ public class CometRenderer {
         State.STENCIL.enableMask();
         GL11.glClearStencil(clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "2.9")
+    public void setSampler(int unit, SamplerObject sampler) {
+        GL33.glBindSampler(unit, sampler == null ? 0 : sampler.getId());
     }
 
     /**

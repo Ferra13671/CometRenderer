@@ -25,6 +25,11 @@ public class ARBDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public int createSampler() {
+        return ARBDirectStateAccess.glCreateSamplers();
+    }
+
+    @Override
     public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture) {
         ARBDirectStateAccess.glNamedFramebufferTexture(framebuffer.getId(), attachment, texture == null ? 0 : texture.getTexId(), 0);
     }
