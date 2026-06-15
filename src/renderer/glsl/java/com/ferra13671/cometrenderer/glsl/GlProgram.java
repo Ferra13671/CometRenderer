@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.glsl;
 
+import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.CometRenderer;
@@ -110,7 +111,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      */
     @Override
     public void bind() {
-        GL20.glUseProgram(getId());
+        State.PROGRAM.bind(getId());
 
         if (!this.updatedUniforms.isEmpty()) {
             for (GlUniform glUniform : this.updatedUniforms)
@@ -124,7 +125,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      */
     @Override
     public void unbind() {
-        GL20.glUseProgram(0);
+        State.PROGRAM.bind(0);
     }
 
     /**

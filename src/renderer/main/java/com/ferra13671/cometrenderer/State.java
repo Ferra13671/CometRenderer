@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 @API(status = API.Status.MAINTAINED, since = "2.0")
@@ -193,6 +194,7 @@ public class State {
             }
         }
     };
+    public ProgramState PROGRAM = GL20::glUseProgram;
 
     public interface BooleanState {
 
@@ -230,5 +232,10 @@ public class State {
         void enableMask();
 
         void disableMask();
+    }
+
+    public interface ProgramState {
+
+        void bind(int id);
     }
 }
