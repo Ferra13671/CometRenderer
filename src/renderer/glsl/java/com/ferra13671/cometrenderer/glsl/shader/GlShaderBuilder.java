@@ -50,7 +50,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     public GlShaderBuilder<T> info(GlslFileEntry entry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             if (!GLCapabilities.supportsShader(type))
-                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow(), type.glVersion));
+                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(type));
         }
 
         this.entry = entry;

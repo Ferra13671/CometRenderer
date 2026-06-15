@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.exceptions.impl;
 
-import com.ferra13671.cometrenderer.utils.GLVersion;
+import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.exceptions.CometException;
 
 /**
@@ -8,7 +8,7 @@ import com.ferra13671.cometrenderer.exceptions.CometException;
  */
 public class UnsupportedShaderException extends CometException {
 
-    public UnsupportedShaderException(GLVersion currentVersion, GLVersion requiredVersion) {
-        super(String.format("Current OpenGL version ('%s') does not match the minimum OpenGL version for the shader ('%s').", currentVersion.glVersion, requiredVersion.glVersion));
+    public UnsupportedShaderException(ShaderType shaderType) {
+        super(String.format("Your OpenGL context does not support shader type '%s'.", shaderType.name));
     }
 }

@@ -12,7 +12,15 @@ import org.lwjgl.opengl.GL;
 public class GLCapabilities {
 
     public boolean supportsShader(ShaderType shaderType) {
-        return supportsVersion(shaderType.glVersion);
+        return shaderType.supportConsumer.get();
+    }
+
+    public boolean supportsTesselationShader() {
+        return supportsVersion(GLVersion.GL40) || GL.getCapabilities().GL_ARB_tessellation_shader;
+    }
+
+    public boolean supportsComputeShader() {
+        return supportsVersion(GLVersion.GL43) || GL.getCapabilities().GL_ARB_compute_shader;
     }
 
     public boolean supportsSamplerObjects() {

@@ -1,12 +1,14 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
-import com.ferra13671.cometrenderer.utils.GLVersion;
+import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import lombok.AllArgsConstructor;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL43;
+
+import java.util.function.Supplier;
 
 /**
  * Тип шейдера. Отвечает за то, для какой части графической обработки предназначен шейдер при использовании.
@@ -26,14 +28,14 @@ import org.lwjgl.opengl.GL43;
 @AllArgsConstructor
 @API(status = API.Status.STABLE, since = "1.1")
 public enum ShaderType {
-    Vertex(GL20.GL_VERTEX_SHADER, GLVersion.GL20),
-    Fragment(GL20.GL_FRAGMENT_SHADER, GLVersion.GL20),
-    Geometry(GL32.GL_GEOMETRY_SHADER, GLVersion.GL32),
-    TessellateEvaluation(GL40.GL_TESS_EVALUATION_SHADER, GLVersion.GL40),
-    TessellateControl(GL40.GL_TESS_CONTROL_SHADER, GLVersion.GL40),
-    Compute(GL43.GL_COMPUTE_SHADER, GLVersion.GL43);
+    Vertex("vertex", GL20.GL_VERTEX_SHADER, () -> true),
+    Fragment("fragment", GL20.GL_FRAGMENT_SHADER, () -> true),
+    Geometry("geometry", GL32.GL_GEOMETRY_SHADER, () -> true),
+    TessellateEvaluation("tesselation", GL40.GL_TESS_EVALUATION_SHADER, GLCapabilities::supportsTesselationShader),
+    TessellateControl("tesselation", GL40.GL_TESS_CONTROL_SHADER, GLCapabilities::supportsTesselationShader),
+    Compute("compute", GL43.GL_COMPUTE_SHADER, GLCapabilities::supportsComputeShader);
 
-    /** Айди типа шейдера в OpenGL. **/
+    public final String name;
     public final int glId;
-    public final GLVersion glVersion;
+    public final Supplier<Boolean> supportConsumer;
 }

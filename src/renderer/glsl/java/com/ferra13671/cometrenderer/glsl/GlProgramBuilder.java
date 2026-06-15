@@ -98,7 +98,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
     public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             if (!GLCapabilities.supportsShader(type))
-                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow(), type.glVersion));
+                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(type));
         }
 
         Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
