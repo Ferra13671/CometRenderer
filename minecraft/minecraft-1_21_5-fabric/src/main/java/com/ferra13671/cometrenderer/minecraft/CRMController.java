@@ -7,14 +7,18 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
+import com.ferra13671.cometrenderer.minecraft.mixins.IGlCommandEncoder;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
 import com.mojang.blaze3d.ProjectionType;
+import com.mojang.blaze3d.opengl.GlCommandEncoder;
 import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import java.awt.*;
@@ -61,6 +65,12 @@ public class CRMController extends AbstractCRMController {
             GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, id);
             if (viewport)
                 GlStateManager._viewport(0,0, width, height);
+        };
+        State.PROGRAM = id -> {
+            CommandEncoder enc = RenderSystem.getDevice().createCommandEncoder();
+            if (enc instanceof GlCommandEncoder)
+                ((IGlCommandEncoder) enc).crm$$$setLastProgram(null);
+            GL20.glUseProgram(id);
         };
     }
 

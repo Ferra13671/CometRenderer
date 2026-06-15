@@ -7,21 +7,22 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
+import com.ferra13671.cometrenderer.minecraft.mixins.ICommandEncoder;
+import com.ferra13671.cometrenderer.minecraft.mixins.IGlCommandEncoder;
 import com.ferra13671.cometrenderer.minecraft.mixins.IGpuDevice;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.opengl.DirectStateAccess;
-import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.opengl.VertexArrayCache;
+import com.mojang.blaze3d.opengl.*;
+import com.mojang.blaze3d.systems.CommandEncoderBackend;
 import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
-import com.mojang.blaze3d.opengl.GlDevice;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import java.awt.*;
@@ -76,6 +77,12 @@ public class CRMController extends AbstractCRMController {
             GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, id);
             if (viewport)
                 GlStateManager._viewport(0,0, width, height);
+        };
+        State.PROGRAM = id -> {
+            CommandEncoderBackend enc = ((ICommandEncoder) RenderSystem.getDevice().createCommandEncoder()).crm$$$getBackend();
+            if (enc instanceof GlCommandEncoder)
+                ((IGlCommandEncoder) enc).crm$$$setLastProgram(null);
+            GL20.glUseProgram(id);
         };
 
         this.uiMatrix = new ProjectionMatrixBuffer("ui-matrix");

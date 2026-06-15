@@ -10,6 +10,7 @@
     "GlConstMixin",
     "GlTextureMixin",
     "IGlBuffer",
+    "IGlCommandEncoder",
     "RenderSystemMixin",
     "WindowMixin"
   ],

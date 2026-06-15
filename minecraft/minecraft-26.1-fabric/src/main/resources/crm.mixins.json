@@ -9,7 +9,9 @@
     "GameRendererMixin",
     "GlConstMixin",
     "GlTextureMixin",
+    "ICommandEncoder",
     "IGlBuffer",
+    "IGlCommandEncoder",
     "IGpuDevice",
     "RenderSystemMixin"
   ],
