@@ -161,18 +161,24 @@ public final class UIRenderTest {
 
     private static void drawWithStencilTest() {
         CometRenderer.setStencil(StencilInfo.WRITE);
-        BasicRectBatch b = new BasicRectBatch();
-        if (new Random().nextFloat() > 0.5f)
-            b.rectSized(775, 520, 50, 160);
-        if (new Random().nextFloat() > 0.5f)
-            b.rectSized(730, 635, 45, 45);
-        if (new Random().nextFloat() > 0.5f)
-            b.rectSized(825, 635, 45, 45);
-        b.build().tryDraw().close();
-        CometRenderer.setStencil(StencilInfo.READ);
+
+        int x = 200;
+        int y = 520;
+        int s = 25;
+
+        new BasicRectBatch()
+                .rectSized(x, y, s * 2, s * 2)
+                .rectSized(x + (s * 4), y, s * 2, s * 2)
+                .rectSized(x + (s * 2), y + (s * 2), s * 2, s)
+                .rectSized(x + s, y + (s * 3), s * 4, s * 2)
+                .rectSized(x + s, y + (s * 5), s, s)
+                .rectSized(x + (s * 4), y + (s * 5), s, s)
+                .build().tryDraw().close();
+
+        CometRenderer.setStencil(StencilInfo.INVERTED_READ);
 
         new BasicRectBatch(() -> CometRenderer.getShaderColor().setColor(new Vector4f(1, 0, 0, 1)))
-                .rectSized(680, 480, 240, 240)
+                .rectSized(x - s, y - s, s * 8, s * 8)
                 .build()
                 .tryDraw()
                 .close();
