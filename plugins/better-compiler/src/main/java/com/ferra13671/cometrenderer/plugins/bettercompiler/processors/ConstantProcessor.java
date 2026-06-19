@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class ConstantProcessor {
 
-    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<fieldtype>\\w+)\\h+(?<fieldname>\\w+);\\h*#constant\\h*(<(?<setts>[^<]*)>)?", Pattern.MULTILINE)) {
+    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<fieldtype>\\w+)\\h+(?<fieldname>\\w+);\\h*#constant\\h*(<(?<setts>[^<>]*)>)?", Pattern.MULTILINE)) {
         @Override
         public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
             Optional<String> value = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getConstant(result.group("fieldname"));

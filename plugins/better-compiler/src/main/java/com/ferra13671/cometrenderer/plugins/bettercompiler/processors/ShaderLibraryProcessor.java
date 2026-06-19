@@ -25,7 +25,7 @@ public class ShaderLibraryProcessor {
     public static final Tag<List<String>> INCLUDED_LIBRARIES = new Tag<>("included-libraries");
     public static final Tag<Boolean> SINGLE_INCLUDE_ONLY = new Tag<>("single-include-only");
 
-    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<]*)>", Pattern.MULTILINE)) {
+    final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<>]*)>", Pattern.MULTILINE)) {
         @Override
         public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
             List<String> includedLibraries = glslFileRegistry.computeIfAbsent(INCLUDED_LIBRARIES, new ArrayList<>(), true);
