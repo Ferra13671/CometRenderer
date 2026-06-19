@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.StencilInfo;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
+import com.ferra13671.cometrenderer.minecraft.blur.BlurPass;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurProvider;
 import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
@@ -16,7 +17,10 @@ import com.ferra13671.cometrenderer.minecraft.batch.impl.text.TextBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedBlurBatch;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurConfig;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
+import com.ferra13671.cometrenderer.minecraft.FramebufferCapturer;
+import com.ferra13671.cometrenderer.minecraft.CRM;
 import org.joml.Random;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.awt.*;
@@ -25,6 +29,11 @@ public final class UIRenderTest {
     private static GLTexture texture;
     private static TTFFont font;
     private static final BlurProvider blurProvider = new BlurProvider(BlurConfig.DEFAULT);
+    private static final BlurProvider liquidGlassBlurProvider = new BlurProvider(new BlurConfig(new BlurPass[]{
+            new BlurPass(new Vector2f(1, 0), 2),
+            new BlurPass(new Vector2f(0, 1), 2)
+    }));
+    private static final FramebufferCapturer framebufferCapturer = new FramebufferCapturer();
     public static IPrimitiveBatch standaloneDrawer;
 
     public static void init() {
@@ -51,6 +60,9 @@ public final class UIRenderTest {
 
     public static void draw() {
         blurProvider.blurFrame();
+        liquidGlassBlurProvider.blurFrame();
+        framebufferCapturer.capture(CRM.getMainFramebuffer());
+        CRM.getMainFramebuffer().bind(true);
 
         drawOneColorRect();
         drawMultiColorRect();
@@ -59,6 +71,7 @@ public final class UIRenderTest {
         drawText();
         drawBlur();
         drawWithStencilTest();
+        drawLiquidGlass();
     }
 
     private static void drawOneColorRect() {
@@ -157,5 +170,20 @@ public final class UIRenderTest {
 
         CometRenderer.clearStencil(0);
         CometRenderer.disableStencil();
+    }
+
+    private static void drawLiquidGlass() {
+        new LiquidGlassBatch(framebufferCapturer)
+                .rectSized(720, 100, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE))
+                .rectSized(720, 210, 100, 100, 50, RectColors.oneColor(RenderColor.WHITE))
+                .build()
+                .tryDraw()
+                .close();
+
+        new LiquidGlassBatch(liquidGlassBlurProvider)
+                .rectSized(850, 100, 210, 210, 35, RectColors.oneColor(RenderColor.WHITE))
+                .build()
+                .tryDraw()
+                .close();
     }
 }

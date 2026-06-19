@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.FramebufferUtils;
+import com.ferra13671.cometrenderer.minecraft.HasFramebuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -16,12 +17,11 @@ import org.joml.Vector2f;
 
 import java.awt.*;
 
-public class BlurProvider {
+public class BlurProvider implements HasFramebuffer {
     @Getter
     @Setter
     private BlurConfig blurConfig;
 
-    @Getter
     private final FramebufferImpl blurFrameBuffer = new FramebufferImpl(
             FramebufferInfo.builder()
                     .name("Blur framebuffer")
@@ -52,6 +52,11 @@ public class BlurProvider {
 
     public BlurProvider(BlurConfig blurConfig) {
         this.blurConfig = blurConfig;
+    }
+
+    @Override
+    public Framebuffer getFramebuffer() {
+        return this.blurFrameBuffer;
     }
 
     public void blurFrame() {

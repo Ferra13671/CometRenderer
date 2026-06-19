@@ -147,4 +147,14 @@ public class DefaultShaders {
             )
             .sampler("u_Texture")
             .build();
+
+    public final GlShader LIQUID_GLASS_FRAGMENT = CometLoaders.IN_JAR.createShaderBuilder()
+            .info(
+                    "shader.liquid-glass.fragment",
+                    "assets/crm/shaders/liquid-glass.frag",
+                    ShaderType.Fragment
+            )
+            .sampler("u_Texture")
+            .uniform("texelFetch", UniformType.VEC2)
+            .build();
 }

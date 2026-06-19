@@ -34,6 +34,10 @@ public class RoundedRectBatch extends AbstractPrimitiveBatch {
         super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.ROUNDED_RECT));
     }
 
+    protected RoundedRectBatch(MeshBuilder meshBuilder) {
+        super(meshBuilder);
+    }
+
     public RoundedRectBatch rectSized(float x, float y, float width, float height, float radius, RectColors rectColors) {
         return rectPositioned(x, y, x + width, y + height, radius, rectColors, null);
     }

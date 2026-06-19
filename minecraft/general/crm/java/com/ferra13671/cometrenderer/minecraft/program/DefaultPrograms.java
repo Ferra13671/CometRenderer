@@ -59,4 +59,10 @@ public class DefaultPrograms {
             .shader(DefaultShaders.POSITION_VERTEX)
             .shader(DefaultShaders.BLIT_FRAGMENT)
             .build();
+
+    public final GlProgram LIQUID_GLASS = CometLoaders.STRING.createProgramBuilder()
+            .name("liquid-glass")
+            .shader(DefaultShaders.ROUNDED_RECT_VERTEX)
+            .shader(DefaultShaders.LIQUID_GLASS_FRAGMENT)
+            .build();
 }

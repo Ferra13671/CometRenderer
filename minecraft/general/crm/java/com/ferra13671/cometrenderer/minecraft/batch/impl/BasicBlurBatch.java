@@ -67,7 +67,7 @@ public class BasicBlurBatch extends AbstractPrimitiveBatch {
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
 
-        CometRenderer.getCurrentProgram().getSampler(0).set(this.blurProvider.getBlurFrameBuffer().getColorTexture());
+        CometRenderer.getCurrentProgram().getSampler(0).set(this.blurProvider.getFramebuffer().getColorTextureId());
 
         CometRenderer.draw(this.mesh, false);
     }
