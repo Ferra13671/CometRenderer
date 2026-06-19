@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurPass;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurProvider;
+import com.ferra13671.cometrenderer.minecraft.font.FontType;
 import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.FileEntry;
@@ -19,6 +20,7 @@ import com.ferra13671.cometrenderer.minecraft.blur.BlurConfig;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
 import com.ferra13671.cometrenderer.minecraft.FramebufferCapturer;
 import com.ferra13671.cometrenderer.minecraft.CRM;
+import com.ferra13671.cometrenderer.minecraft.font.FontInfo;
 import org.joml.Random;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -46,7 +48,14 @@ public final class UIRenderTest {
                         .build();
 
         try {
-            font = new TTFFont(Font.createFont(Font.TRUETYPE_FONT, UIRenderTest.class.getClassLoader().getResourceAsStream("test-font.otf")).deriveFont(26f));
+            font = new TTFFont(
+                    FontInfo.builder()
+                            .font(Font.createFont(Font.TRUETYPE_FONT, UIRenderTest.class.getClassLoader().getResourceAsStream("test-font.otf")))
+                            .fontSize(26)
+                            .fontType(FontType.Plain)
+                            .smoothFiltering(false)
+                            .build()
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }

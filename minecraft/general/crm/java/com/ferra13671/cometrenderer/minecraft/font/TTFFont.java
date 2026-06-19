@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.minecraft.font;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.gltextureutils.Pair;
 import io.netty.util.collection.IntObjectHashMap;
+import lombok.Getter;
 import org.apiguardian.api.API;
 
 import java.awt.*;
@@ -10,29 +11,31 @@ import java.util.function.Supplier;
 
 @API(status = API.Status.MAINTAINED, since = "2.8")
 public class TTFFont {
-    public static final int DEFAULT_GLYPHS_IN_MAP = 500;
-
+    @Getter
     private final Font font;
+    @Getter
     private final int glyphsInMap;
+    @Getter
+    private final boolean antiAliasing;
+    @Getter
+    private final boolean smoothFiltering;
     private final IntObjectHashMap<GlyphMap> glyphMaps = new IntObjectHashMap<>();
 
-    public TTFFont(Font font) {
-        this(font, DEFAULT_GLYPHS_IN_MAP);
-    }
-
-    public TTFFont(Font font, int glyphsInMap) {
-        this.font = font;
-        this.glyphsInMap = glyphsInMap;
+    public TTFFont(FontInfo fontInfo) {
+        this.font = fontInfo.getFont().deriveFont(fontInfo.getFontType().id, fontInfo.getFontSize());
+        this.glyphsInMap = fontInfo.getGlyphsInMap();
+        this.antiAliasing = fontInfo.isAntiAliasing();
+        this.smoothFiltering = fontInfo.isSmoothFiltering();
     }
 
     public Glyph getGlyph(char _char) {
-        GlyphMap glyphMap = this.glyphMaps.computeIfAbsent(_char - (_char % this.glyphsInMap), index -> new GlyphMap(this.font, index, this.glyphsInMap));
+        GlyphMap glyphMap = this.glyphMaps.computeIfAbsent(_char - (_char % this.glyphsInMap), index -> new GlyphMap(this, index));
 
         return glyphMap.getGlyph(_char);
     }
 
     public float getTextHeight() {
-        return getGlyph('a').height();
+        return getGlyph('|').height();
     }
 
     public float getTextHeight(String s) {

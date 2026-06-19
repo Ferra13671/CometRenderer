@@ -15,22 +15,19 @@ import java.io.Closeable;
 
 @API(status = API.Status.MAINTAINED, since = "2.8")
 public class GlyphMap implements Closeable {
-    private static final int CHARS_STEP = 1;
+    private static final int CHARS_STEP = 2;
 
     @Getter
-    private final Font font;
+    private final TTFFont font;
     @Getter
     private final int index;
-    @Getter
-    private final int glyphsInMap;
     private IntObjectHashMap<Glyph> glyphs;
     @Getter
     private GLTexture texture;
 
-    public GlyphMap(Font font, int index, int glyphsInMap) {
+    public GlyphMap(TTFFont font, int index) {
         this.font = font;
         this.index = index;
-        this.glyphsInMap = glyphsInMap;
 
         generate(1024, 1024);
     }
@@ -40,9 +37,10 @@ public class GlyphMap implements Closeable {
 
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = bufferedImage.createGraphics();
-        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        if (this.font.isAntiAliasing())
+            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        graphics.setFont(this.font);
+        graphics.setFont(this.font.getFont());
         FontMetrics fontMetrics = graphics.getFontMetrics();
 
         float xStep = 0;
@@ -50,7 +48,7 @@ public class GlyphMap implements Closeable {
 
         float charsHeight = fontMetrics.getAscent() + fontMetrics.getDescent();
 
-        for (int i = 0; i < this.glyphsInMap; i++) {
+        for (int i = 0; i < this.font.getGlyphsInMap(); i++) {
             char _char = (char) (this.index + i);
             String s = Character.toString(_char);
 
@@ -89,9 +87,9 @@ public class GlyphMap implements Closeable {
         this.glyphs = glyphs;
 
         this.texture = TextureLoader.BUFFERED_IMAGE.createTextureBuilder()
-                .name(String.format("GlyphMap[%s, %s]", this.font.getName(), this.index))
+                .name(String.format("GlyphMap[%s, %s]", this.font.getFont().getName(), this.index))
                 .info(bufferedImage)
-                .filtering(TextureFiltering.SMOOTH)
+                .filtering(this.font.isSmoothFiltering() ? TextureFiltering.SMOOTH : TextureFiltering.DEFAULT)
                 .wrapping(TextureWrapping.DEFAULT)
                 .build();
     }
