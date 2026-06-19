@@ -8,11 +8,13 @@ import com.ferra13671.cometrenderer.minecraft.font.Glyph;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
 import com.ferra13671.gltextureutils.GLTexture;
 import com.ferra13671.gltextureutils.Pair;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class TextBatch implements IPrimitiveBatch {
     private final Map<GLTexture, ColoredTextureBatch> batches = new HashMap<>();
     private final TTFFont font;

@@ -8,8 +8,10 @@ import com.ferra13671.cometrenderer.minecraft.CustomVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.HasFramebuffer;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
+import org.apiguardian.api.API;
 import org.joml.Vector2f;
 
+@API(status = API.Status.MAINTAINED, since = "2.9")
 public class LiquidGlassBatch extends RoundedRectBatch {
     private final HasFramebuffer hasFramebuffer;
 

@@ -4,11 +4,13 @@ import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.gltextureutils.Pair;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class FormattedText {
     @Getter
     private final List<Pair<Supplier<RenderColor>, Character[]>> components = new ArrayList<>();

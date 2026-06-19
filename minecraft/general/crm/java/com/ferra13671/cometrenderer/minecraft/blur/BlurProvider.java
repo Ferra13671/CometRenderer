@@ -13,10 +13,12 @@ import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import lombok.Getter;
 import lombok.Setter;
+import org.apiguardian.api.API;
 import org.joml.Vector2f;
 
 import java.awt.*;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class BlurProvider implements HasFramebuffer {
     @Getter
     @Setter

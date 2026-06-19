@@ -3,10 +3,12 @@ package com.ferra13671.cometrenderer.minecraft.font;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.gltextureutils.Pair;
 import io.netty.util.collection.IntObjectHashMap;
+import org.apiguardian.api.API;
 
 import java.awt.*;
 import java.util.function.Supplier;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class TTFFont {
     public static final int DEFAULT_GLYPHS_IN_MAP = 500;
 

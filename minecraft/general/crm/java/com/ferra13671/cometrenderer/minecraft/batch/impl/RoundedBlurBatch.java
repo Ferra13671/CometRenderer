@@ -8,7 +8,9 @@ import com.ferra13671.cometrenderer.minecraft.blur.BlurProvider;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
+import org.apiguardian.api.API;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class RoundedBlurBatch extends AbstractPrimitiveBatch {
     private final BlurProvider blurProvider;
 

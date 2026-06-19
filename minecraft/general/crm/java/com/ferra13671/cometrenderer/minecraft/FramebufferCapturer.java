@@ -6,9 +6,11 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import org.apiguardian.api.API;
 
 import java.awt.*;
 
+@API(status = API.Status.MAINTAINED, since = "2.9")
 public class FramebufferCapturer implements HasFramebuffer {
     private final FramebufferImpl capturedFramebuffer = new FramebufferImpl(
             FramebufferInfo.builder()

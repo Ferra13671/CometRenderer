@@ -4,8 +4,10 @@ import com.ferra13671.cometrenderer.minecraft.RenderColor;
 import com.ferra13671.cometrenderer.minecraft.font.FormattedText;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 @Getter
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class RenderText {
     private FormattedText text;
     private float x;

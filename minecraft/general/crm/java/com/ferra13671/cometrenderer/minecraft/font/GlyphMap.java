@@ -7,11 +7,13 @@ import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
 import io.netty.util.collection.IntObjectHashMap;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Closeable;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class GlyphMap implements Closeable {
     private static final int CHARS_STEP = 1;
 

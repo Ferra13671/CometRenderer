@@ -6,8 +6,10 @@ import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.joml.Vector2f;
 
+@API(status = API.Status.MAINTAINED, since = "2.8")
 public class BlurPass {
     @Getter
     private final Vector2f offset;
