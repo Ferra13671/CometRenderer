@@ -69,11 +69,9 @@ public class CometCompiler {
             GL20.glAttachShader(programId, shader.getId());
         });
 
-        GL20.glLinkProgram(programId);
+        GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())));
 
-        GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())), uniforms);
-
-        CompileResult compileResult = program.getCompileResult();
+        CompileResult compileResult = program.compile(uniforms);
 
         if (compileResult.isFailure())
             CometRenderer.getExceptionManager().manageException(new CompileProgramException(name, compileResult.message()));

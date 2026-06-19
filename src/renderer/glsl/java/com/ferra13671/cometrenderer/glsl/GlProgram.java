@@ -65,29 +65,38 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     /**
      * @param name имя программы.
      * @param id айди программы в OpenGL.
-     * @param uniforms список всех униформ программы.
      */
     @API(status = API.Status.INTERNAL)
-    public GlProgram(@NonNull String name, int id, @NonNull HashSet<GlProgramSnippet> snippets, @NonNull Map<String, UniformType<?>> uniforms) {
+    public GlProgram(@NonNull String name, int id, @NonNull HashSet<GlProgramSnippet> snippets) {
         this.name = name;
         this.id = id;
         this.snippets = snippets;
+    }
+    
+    public CompileResult compile(@NonNull Map<String, UniformType<?>> requiredUniforms) {
+        GL20.glLinkProgram(this.id);
 
-        for (Map.Entry<String, UniformType<?>> uniformEntry : uniforms.entrySet()) {
-            GlUniform uniform = uniformEntry.getValue().uniformCreator().apply(
-                    uniformEntry.getKey(),
-                    GL20.glGetUniformLocation(this.id, uniformEntry.getKey()),
-                    this
-            );
+        CompileResult compileResult = getCompileResult();
 
-            if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
-                CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(uniform.getName(), this.name));
+        if (!compileResult.isFailure()) {
+            for (Map.Entry<String, UniformType<?>> uniformEntry : requiredUniforms.entrySet()) {
+                GlUniform uniform = uniformEntry.getValue().uniformCreator().apply(
+                        uniformEntry.getKey(),
+                        GL20.glGetUniformLocation(this.id, uniformEntry.getKey()),
+                        this
+                );
 
-            this.uniformsByName.put(uniformEntry.getKey(), uniform);
+                if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
+                    CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(uniform.getName(), this.name));
 
-            if (uniform instanceof SamplerUniform sampler)
-                samplers.add(sampler);
+                this.uniformsByName.put(uniformEntry.getKey(), uniform);
+
+                if (uniform instanceof SamplerUniform sampler)
+                    samplers.add(sampler);
+            }
         }
+
+        return compileResult;
     }
 
     @Override
@@ -95,7 +104,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(getId(), GL20.GL_LINK_STATUS));
         return new CompileResult(
                 status,
-                status == CompileStatus.FAILURE ? GL20.glGetProgramInfoLog(getBuffersIndexAmount()).trim() : ""
+                status == CompileStatus.FAILURE ? GL20.glGetProgramInfoLog(getId()).trim() : ""
         );
     }
 
