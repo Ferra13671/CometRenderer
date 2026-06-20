@@ -6,7 +6,7 @@ import com.ferra13671.gltextureutils.ColorMode;
 import com.ferra13671.gltextureutils.GLTexture;
 import com.ferra13671.gltextureutils.TextureFiltering;
 import com.ferra13671.gltextureutils.TextureWrapping;
-import com.ferra13671.gltextureutils.loader.TextureLoader;
+import com.ferra13671.gltextureutils.builder.GLTextureBuilder;
 import lombok.Getter;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -47,7 +47,7 @@ public class FramebufferImpl implements Framebuffer {
         deleteTextures();
 
         setColorTexture(
-                TextureLoader.INPUT_STREAM.createTextureBuilder()
+                GLTextureBuilder.empty()
                         .name(this.name + "[Color]")
                         .info(width, height)
                         .filtering(TextureFiltering.DEFAULT)
@@ -56,7 +56,7 @@ public class FramebufferImpl implements Framebuffer {
         );
         if (isUseDepth()) {
             setDepthAndStencilTexture(
-                    TextureLoader.INPUT_STREAM.createTextureBuilder()
+                    GLTextureBuilder.empty()
                             .name(this.name + "[Depth]")
                             .info(width, height, isUseStencil() ? ColorMode.DEPTH_AND_STENCIL : ColorMode.DEPTH)
                             .filtering(TextureFiltering.DEFAULT)
