@@ -31,6 +31,10 @@ public class GLCapabilities {
         return GL.getCapabilities().GL_ARB_direct_state_access;
     }
 
+    public boolean supportsBufferStorage() {
+        return GL.getCapabilities().GL_ARB_buffer_storage;
+    }
+
     public boolean supportsVersion(GLVersion glVersion) {
         return CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().id >= glVersion.id;
     }

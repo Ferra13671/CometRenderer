@@ -21,7 +21,6 @@ import com.ferra13671.gltextureutils.loader.TextureLoader;
 import com.ferra13671.cometrenderer.minecraft.FramebufferCapturer;
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.font.FontInfo;
-import org.joml.Random;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

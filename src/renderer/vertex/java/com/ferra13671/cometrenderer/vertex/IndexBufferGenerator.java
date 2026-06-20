@@ -125,7 +125,7 @@ public final class IndexBufferGenerator {
 
 			buffer.flip();
 
-			return new GpuBuffer(buffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER);
+			return new GpuBuffer(buffer, BufferUsage.STATIC_DRAW, BufferTarget.ELEMENT_ARRAY_BUFFER, true);
 		} finally {
 			MemoryUtil.memFree(buffer);
 		}

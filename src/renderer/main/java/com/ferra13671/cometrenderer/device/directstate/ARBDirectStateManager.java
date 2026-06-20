@@ -45,6 +45,11 @@ public class ARBDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public void bufferStorage(GpuBuffer buffer, ByteBuffer data, int flags) {
+        ARBDirectStateAccess.glNamedBufferStorage(buffer.getId(), data, flags);
+    }
+
+    @Override
     public void enableVertexAttributeArray(int vertBufId, int index) {
         ARBDirectStateAccess.glEnableVertexArrayAttrib(vertBufId, index);
     }

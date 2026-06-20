@@ -48,7 +48,7 @@ public class Mesh implements IMesh {
         this.indexCount = indexCount;
         this.drawMode = drawMode;
 
-        this.vertexBuffer = new GpuBuffer(allocator.getBuffer(), BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER);
+        this.vertexBuffer = new GpuBuffer(allocator.getBuffer(), BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER, true);
     }
 
     /**

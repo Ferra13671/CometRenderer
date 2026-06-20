@@ -59,6 +59,13 @@ public class DefaultDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public void bufferStorage(GpuBuffer buffer, ByteBuffer data, int flags) {
+        buffer.bind();
+        ARBBufferStorage.glBufferStorage(buffer.getTarget().glId, data, flags);
+        buffer.unbind();
+    }
+
+    @Override
     public void enableVertexAttributeArray(int vertBufId, int index) {
         GL30.glEnableVertexAttribArray(index);
     }

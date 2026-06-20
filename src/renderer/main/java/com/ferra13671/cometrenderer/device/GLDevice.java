@@ -15,6 +15,7 @@ import org.apiguardian.api.API;
 public class GLDevice {
     private final DirectStateManager directStateManager;
     private final VertexFormatManager vertexFormatManager;
+    private final MeshBufferManager meshBufferManager;
 
     public GLDevice() {
         this.directStateManager = GLCapabilities.supportsDirectStateAccess() ?
@@ -26,5 +27,10 @@ public class GLDevice {
                 new ARBVertexFormatManager()
                 :
                 new DefaultVertexFormatManager();
+
+        this.meshBufferManager = GLCapabilities.supportsBufferStorage() ?
+                MeshBufferManager.ARB
+                :
+                MeshBufferManager.DEFAULT;
     }
 }

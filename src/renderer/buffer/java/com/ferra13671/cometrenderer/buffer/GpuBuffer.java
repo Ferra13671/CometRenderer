@@ -30,10 +30,13 @@ public class GpuBuffer implements Bindable, AutoCloseable {
      * @param usage тип использования буффера.
      * @param target тип цели использования буффера.
      */
-    public GpuBuffer(ByteBuffer data, BufferUsage usage, BufferTarget target) {
+    public GpuBuffer(ByteBuffer data, BufferUsage usage, BufferTarget target, boolean meshBuffer) {
         this(usage, target);
 
-        CometRenderer.getDevice().getDirectStateManager().bufferData(this, data);
+        if (meshBuffer)
+            CometRenderer.getDevice().getMeshBufferManager().allocateMeshBuffer(this, data);
+        else
+            CometRenderer.getDevice().getDirectStateManager().bufferData(this, data);
     }
 
     /**

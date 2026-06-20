@@ -22,6 +22,8 @@ public interface DirectStateManager {
 
     void bufferData(GpuBuffer buffer, ByteBuffer data);
 
+    void bufferStorage(GpuBuffer buffer, ByteBuffer data, int flags);
+
     void enableVertexAttributeArray(int vertBufId, int index);
 
     void vertexAttributeFormat(int vertBufId, int attribIndex, int size, int type, boolean normalized, int relativeOffset);
