@@ -13,8 +13,6 @@ public interface IPrimitiveBatch extends Closeable {
 
     IPrimitiveBatch build();
 
-    IPrimitiveBatch makeStandalone();
-
     @Override
     void close();
 }

@@ -33,13 +33,6 @@ public interface IMesh extends AutoCloseable {
     GpuBuffer getVertexBuffer();
 
     /**
-     * Возвращает буффер индексов.
-     *
-     * @return буффер индексов.
-     */
-    GpuBuffer getIndexBuffer();
-
-    /**
      * Возвращает тип отрисовки вершин.
      *
      * @return тип отрисовки вершин.

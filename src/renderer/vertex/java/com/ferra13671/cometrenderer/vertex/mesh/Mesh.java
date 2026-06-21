@@ -7,7 +7,6 @@ import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.allocator.Allocator;
 import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 
 /**
@@ -27,50 +26,20 @@ public class Mesh implements IMesh {
     private DrawMode drawMode;
     /** Буффер вершин, находящийся на GPU. **/
     private final GpuBuffer vertexBuffer;
-    /**
-     *  Автономный буффер вершин, созданный для данного меша.
-     *  Данный буффер вершин будет создан только в том случае, когда сам меш становится автономным.
-     */
-    private GpuBuffer indexBuffer;
-    /** Состояние автономности меша. **/
-    private boolean standalone = false;
 
     /**
      * @param allocator аллокатор, в котором хранится буффер вершин, находящийся на CPU.
      * @param vertexFormat формат вершин.
      * @param vertexCount количество вершин.
-     * @param indexCount количество индексов.
      * @param drawMode тип отрисовки вершин.
      */
-    public Mesh(IAllocator allocator, VertexFormat vertexFormat, int vertexCount, int indexCount, DrawMode drawMode) {
+    public Mesh(IAllocator allocator, VertexFormat vertexFormat, int vertexCount, DrawMode drawMode) {
         this.vertexFormat = vertexFormat;
         this.vertexCount = vertexCount;
-        this.indexCount = indexCount;
+        this.indexCount = drawMode.getIndexCount(vertexCount);
         this.drawMode = drawMode;
 
         this.vertexBuffer = new GpuBuffer(allocator.getBuffer(), BufferUsage.STATIC_DRAW, BufferTarget.ARRAY_BUFFER, true);
-    }
-
-    /**
-     * Делает меш автономным, создавая для него собственный буффер индексов.
-     * Хотя обычные меши тоже могут использоваться как автономные, но автономная версия меша будет более оптимизированной в долгосрочной перспективе, чем обычная.
-     */
-    public Mesh makeStandalone() {
-        if (!this.standalone) {
-            this.standalone = true;
-            recreateIndexBuffer();
-        }
-
-        return this;
-    }
-
-    private void recreateIndexBuffer() {
-        if (this.indexBuffer != null)
-            this.indexBuffer.close();
-
-        IndexBufferGenerator indexBufferGenerator = this.drawMode.indexBufferGenerator();
-        if (indexBufferGenerator != null)
-            this.indexBuffer = indexBufferGenerator.getIndexBuffer(this.indexCount, true);
     }
 
     /**
@@ -81,8 +50,6 @@ public class Mesh implements IMesh {
      */
     public void changeDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
-        if (this.standalone)
-            recreateIndexBuffer();
     }
 
     @Override
@@ -101,11 +68,6 @@ public class Mesh implements IMesh {
     }
 
     @Override
-    public GpuBuffer getIndexBuffer() {
-        return this.standalone ? this.indexBuffer : this.drawMode.indexBufferGenerator().getIndexBuffer(this.indexCount, false);
-    }
-
-    @Override
     public DrawMode getDrawMode() {
         return this.drawMode;
     }
@@ -118,8 +80,6 @@ public class Mesh implements IMesh {
     @Override
     public void close() {
         this.vertexBuffer.close();
-        if (this.indexBuffer != null)
-            this.indexBuffer.close();
     }
 
     /**

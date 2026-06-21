@@ -29,4 +29,9 @@ public record DrawMode(int glId, IndexBufferGenerator indexBufferGenerator) {
 				)
 			)
 	);
+
+	@API(status = API.Status.MAINTAINED, since = "2.9.1")
+	public int getIndexCount(int vertexCount) {
+		return this.indexBufferGenerator == null ? vertexCount : this.indexBufferGenerator.getIndexCount(vertexCount);
+	}
 }

@@ -93,12 +93,6 @@ public class TextBatch implements IPrimitiveBatch {
     }
 
     @Override
-    public TextBatch makeStandalone() {
-        this.batches.forEach((texture, batch) -> batch.makeStandalone());
-        return this;
-    }
-
-    @Override
     public TextBatch tryDraw() {
         if (this.preDrawRunnable != null)
             this.preDrawRunnable.run();

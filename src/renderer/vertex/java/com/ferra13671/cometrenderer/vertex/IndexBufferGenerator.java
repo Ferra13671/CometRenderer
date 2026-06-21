@@ -77,22 +77,17 @@ public final class IndexBufferGenerator {
 	 * Возвращает буффер вершин с требуемым количеством индексов.
 	 *
 	 * @param requiredSize требуемый размер.
-	 * @param standalone должен ли быть буффер вершин автономным или нет. Если буффер индексов будет являться автономным, то он будет храниться в памяти до того времени, пока вы сами его не удалите.
 	 * @return буффер вершин с требуемым количеством индексов.
 	 */
-	public GpuBuffer getIndexBuffer(int requiredSize, boolean standalone) {
-		if (standalone)
-			return generateIndexBuffer(requiredSize);
-		else {
-			if (requiredSize > this.size) {
-				if (this.indexBuffer != null)
-					this.indexBuffer.close();
+	public GpuBuffer getIndexBuffer(int requiredSize) {
+		if (requiredSize > this.size) {
+			if (this.indexBuffer != null)
+				this.indexBuffer.close();
 
-				this.indexBuffer = generateIndexBuffer(requiredSize);
-				this.size = requiredSize;
-			}
-			return this.indexBuffer;
+			this.indexBuffer = generateIndexBuffer(requiredSize);
+			this.size = requiredSize;
 		}
+		return this.indexBuffer;
 	}
 
 	private GpuBuffer generateIndexBuffer(int requiredSize) {

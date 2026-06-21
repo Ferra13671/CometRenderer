@@ -35,7 +35,7 @@ public final class UIRenderTest {
             new BlurPass(new Vector2f(0, 1), 2)
     }));
     private static final FramebufferCapturer framebufferCapturer = new FramebufferCapturer();
-    public static IPrimitiveBatch standaloneDrawer;
+    public static IPrimitiveBatch staticDrawer;
 
     public static void init() {
         texture =
@@ -59,11 +59,10 @@ public final class UIRenderTest {
             e.printStackTrace();
         }
 
-        standaloneDrawer = new BasicTextureBatch()
+        staticDrawer = new BasicTextureBatch()
                 .setTexture(texture)
                 .rectSized(460, 100, 100, 100, new TextureBorder(0, 0, 1, 1))
-                .build()
-                .makeStandalone();
+                .build();
     }
 
     public static void draw() {
@@ -104,7 +103,7 @@ public final class UIRenderTest {
     }
 
     private static void drawTextures() {
-        standaloneDrawer.tryDraw();
+        staticDrawer.tryDraw();
 
         new RoundedTextureBatch()
                 .setTexture(texture)

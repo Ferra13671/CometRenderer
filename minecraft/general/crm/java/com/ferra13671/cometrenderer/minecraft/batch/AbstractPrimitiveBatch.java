@@ -52,17 +52,6 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
         return this;
     }
 
-    @Override
-    public IPrimitiveBatch makeStandalone() {
-        assertBuilt();
-        assertNotClosed();
-
-        if (this.mesh != null)
-            this.mesh.makeStandalone();
-
-        return this;
-    }
-
     protected void assertBuilt() {
         if (!this.built)
             throw new IllegalStateException("Drawer not built");

@@ -100,9 +100,10 @@ public class CometRenderer {
             device.getVertexFormatManager().applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             if (drawMode.indexBufferGenerator() != null) {
-                GpuBuffer indexBuffer = mesh.getIndexBuffer();
+                GpuBuffer indexBuffer = mesh.getDrawMode().indexBufferGenerator().getIndexBuffer(mesh.getIndexCount());
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
                     exceptionManager.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
+
                 indexBuffer.bind();
 
                 GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), mesh.getDrawMode().indexBufferGenerator().getIndexType().glId, 0);
