@@ -77,6 +77,8 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
         Mesh mesh = buildInternal();
         if (this.closeAllocatorAfterBuild)
             this.allocator.close();
+        else
+            this.allocator.clear();
         this.built = true;
         this.vertexPointer = -1L;
         return mesh;

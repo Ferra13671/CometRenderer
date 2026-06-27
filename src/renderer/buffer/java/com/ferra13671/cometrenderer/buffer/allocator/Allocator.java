@@ -10,10 +10,12 @@ public class Allocator implements IAllocator {
     private long pointer;
     private long offset;
     private final int size;
+    private final ByteBuffer cachedBuffer;
 
     public Allocator(int size) {
         this.pointer = ALLOCATOR.malloc(size);
         this.size = size;
+        this.cachedBuffer = MemoryUtil.memByteBuffer(this.pointer, this.size);
     }
 
     public long allocate(int size) {
@@ -22,7 +24,7 @@ public class Allocator implements IAllocator {
 
         long address = this.offset;
         this.offset += size;
-        return Math.addExact(this.pointer, address);
+        return this.pointer + address;
     }
 
     @Override
@@ -31,8 +33,14 @@ public class Allocator implements IAllocator {
     }
 
     @Override
+    public void clear() {
+        this.offset = 0L;
+    }
+
+    @Override
     public ByteBuffer getBuffer() {
-        return MemoryUtil.memByteBuffer(this.pointer, (int) this.offset);
+        this.cachedBuffer.limit((int) this.offset);
+        return this.cachedBuffer;
     }
 
     @Override

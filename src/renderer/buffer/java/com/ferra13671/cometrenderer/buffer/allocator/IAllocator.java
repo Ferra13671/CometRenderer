@@ -11,6 +11,8 @@ public interface IAllocator {
 
     boolean isEmpty();
 
+    void clear();
+
     ByteBuffer getBuffer();
 
     void close();
