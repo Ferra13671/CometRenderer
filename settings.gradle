@@ -9,9 +9,9 @@ pluginManagement {
     }
 }
 
-include "plugins:post-effects"
-include "plugins:better-exceptions"
-include "plugins:better-compiler"
+for (File dir : file("plugins").listFiles()) {
+    include "plugins:${dir.getName()}"
+}
 
 for (File dir : file("minecraft").listFiles()) {
     if (dir.getName().startsWith("minecraft-"))
