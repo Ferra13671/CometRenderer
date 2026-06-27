@@ -36,8 +36,8 @@ public record GLProgramSnippet(Registry registry) {
         if (tag == CometTags.NAME)
             builder.name(CometTags.NAME.map(tagValue));
         else
-        if (tag == CometTags.SHADERS)
-            CometTags.SHADERS.map(tagValue).forEach((type, glslFileEntry) -> builder.shader(glslFileEntry, type));
+        if (tag == CometTags.COMPILED_SHADERS)
+            CometTags.COMPILED_SHADERS.map(tagValue).forEach((type, shader) -> builder.shader(shader));
         else
         if (tag == CometTags.UNIFORMS)
             CometTags.UNIFORMS.map(tagValue).forEach(builder::uniform);

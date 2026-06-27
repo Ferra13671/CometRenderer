@@ -5,17 +5,10 @@ import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.shader.GLShaderBuilder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
-import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.MAINTAINED, since = "1.1")
 public abstract class CometLoader<T> {
-
-    @API(status = API.Status.MAINTAINED, since = "1.3")
-    public GLProgramBuilder<T> createProgramBuilder(GLProgramSnippet... snippets) {
-        return new GLProgramBuilder<>(this, snippets);
-    }
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.7")
     public GLShaderBuilder<T> createShaderBuilder() {

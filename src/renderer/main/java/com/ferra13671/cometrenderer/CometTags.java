@@ -1,6 +1,5 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
@@ -23,7 +22,6 @@ public class CometTags {
     public final Tag<String> TYPE = new Tag<>("type");
     public final Tag<Map<String, UniformType<?>>> UNIFORMS = new Tag<>("uniforms");
     public final Tag<GLProgramSnippet[]> SNIPPETS = new Tag<>("snippets");
-    public final Tag<Map<ShaderType, GLSLFileEntry>> SHADERS = new Tag<>("shaders");
     public final Tag<Map<ShaderType, GLShader>> COMPILED_SHADERS = new Tag<>("compiled-shaders");
     public final Tag<List<Tag<?>>> TAGS_TO_COPY = new Tag<>("tags-to-copy");
 

@@ -46,23 +46,12 @@ public class CometCompiler {
 
         int programId = GL20.glCreateProgram();
 
-        Map<ShaderType, GLSLFileEntry> shaders = registry.get(CometTags.SHADERS).orElseThrow();
-        Map<ShaderType, GLShader> compiledShaders = registry.contains(CometTags.COMPILED_SHADERS) ? registry.get(CometTags.COMPILED_SHADERS).orElseThrow() : null;
+        Map<ShaderType, GLShader> compiledShaders = registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
         Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow();
 
-        if (compiledShaders != null)
-            compiledShaders.forEach((type, shader) -> {
-                if (shader.getRegistry().contains(CometTags.UNIFORMS))
-                    uniforms.putAll(shader.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
-
-                GL20.glAttachShader(programId, shader.getId());
-            });
-
-        shaders.forEach((type, entry) -> {
-            GLShader shader = compileShader(entry, type, registry);
-
-            if (entry.getRegistry().contains(CometTags.UNIFORMS))
-                uniforms.putAll(entry.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
+        compiledShaders.forEach((type, shader) -> {
+            if (shader.getRegistry().contains(CometTags.UNIFORMS))
+                uniforms.putAll(shader.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
 
             GL20.glAttachShader(programId, shader.getId());
         });

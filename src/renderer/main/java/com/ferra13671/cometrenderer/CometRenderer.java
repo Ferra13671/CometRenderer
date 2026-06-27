@@ -51,7 +51,7 @@ public class CometRenderer {
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
-    private final GLProgramSnippet colorSnippet = GLProgramBuilder.empty()
+    private final GLProgramSnippet colorSnippet = new GLProgramBuilder<>()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
     /** Текущая активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/

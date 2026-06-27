@@ -66,7 +66,7 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected GLProgramSnippet loadMatrixSnippet() {
-        return GLProgramBuilder.empty()
+        return new GLProgramBuilder<>()
                 .uniform("projMat", UniformType.MATRIX4)
                 .uniform("modelViewMat", UniformType.MATRIX4)
                 .buildSnippet();

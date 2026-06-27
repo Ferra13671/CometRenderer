@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.vertex.element;
 
 import com.ferra13671.cometrenderer.ErrorHandlers;
+import lombok.Builder;
 import org.apiguardian.api.API;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
@@ -29,9 +30,11 @@ import java.util.function.Function;
  * @see VertexFormat
  */
 @API(status = API.Status.MAINTAINED, since = "1.4")
+@Builder
 public record VertexElementType<T>(String name, int size, int offset, int glId, Class<T> clazz, BiConsumer<Long, T[]> uploadConsumer) {
     public static final VertexElementType<Float> FLOAT = builder(Float.class)
             .name("Float")
+            .size(4)
             .offset(4)
             .glId(GL11.GL_FLOAT)
             .uploadConsumer(
@@ -43,6 +46,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     public static final VertexElementType<Integer> INT = builder(Integer.class)
             .name("Int")
+            .size(4)
             .offset(4)
             .glId(GL11.GL_INT)
             .uploadConsumer(
@@ -54,6 +58,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     public static final VertexElementType<Short> SHORT = builder(Short.class)
             .name("Short")
+            .size(2)
             .offset(2)
             .glId(GL11.GL_SHORT)
             .uploadConsumer(
@@ -65,6 +70,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     public static final VertexElementType<Byte> BYTE = builder(Byte.class)
             .name("Byte")
+            .size(1)
             .offset(1)
             .glId(GL11.GL_BYTE)
             .uploadConsumer(
@@ -76,6 +82,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     public static final VertexElementType<Integer> UNSIGNED_INT = builder(Integer.class)
             .name("Unsigned int")
+            .size(4)
             .offset(4)
             .glId(GL11.GL_UNSIGNED_INT)
             .uploadConsumer(
@@ -87,6 +94,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     public static final VertexElementType<Short> UNSIGNED_SHORT = builder(Short.class)
             .name("Unsigned short")
+            .size(2)
             .offset(2)
             .glId(GL11.GL_UNSIGNED_SHORT)
             .uploadConsumer(
@@ -98,6 +106,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     public static final VertexElementType<Byte> UNSIGNED_BYTE = builder(Byte.class)
             .name("Unsigned byte")
+            .size(1)
             .offset(1)
             .glId(GL11.GL_UNSIGNED_BYTE)
             .uploadConsumer(

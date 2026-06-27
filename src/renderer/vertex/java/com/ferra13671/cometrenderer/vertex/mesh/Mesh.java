@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.buffer.allocator.Allocator;
 import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import lombok.Getter;
 
 /**
  * Основная реализация меша.
@@ -17,14 +18,19 @@ import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
  */
 public class Mesh implements IMesh {
     /** Формат вершин. **/
+    @Getter
     private final VertexFormat vertexFormat;
     /** Количество вершин. **/
+    @Getter
     private final int vertexCount;
     /** Количество индексов. **/
+    @Getter
     private final int indexCount;
     /** Тип отрисовки вершин. **/
+    @Getter
     private DrawMode drawMode;
     /** Буффер вершин, находящийся на GPU. **/
+    @Getter
     private final GpuBuffer vertexBuffer;
 
     /**
@@ -50,31 +56,6 @@ public class Mesh implements IMesh {
      */
     public void changeDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
-    }
-
-    @Override
-    public int getVertexCount() {
-        return this.vertexCount;
-    }
-
-    @Override
-    public int getIndexCount() {
-        return this.indexCount;
-    }
-
-    @Override
-    public GpuBuffer getVertexBuffer() {
-        return this.vertexBuffer;
-    }
-
-    @Override
-    public DrawMode getDrawMode() {
-        return this.drawMode;
-    }
-
-    @Override
-    public VertexFormat getVertexFormat() {
-        return this.vertexFormat;
     }
 
     @Override
