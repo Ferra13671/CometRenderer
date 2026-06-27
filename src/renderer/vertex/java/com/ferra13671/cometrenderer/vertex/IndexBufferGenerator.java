@@ -1,10 +1,10 @@
 package com.ferra13671.cometrenderer.vertex;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.IndexOverflowException;
 import com.ferra13671.cometrenderer.utils.IndexList;
 import com.ferra13671.cometrenderer.utils.IndexType;
 import com.ferra13671.cometrenderer.utils.MathUtils;
@@ -18,22 +18,6 @@ import java.nio.ByteBuffer;
 /**
  * Объект, представляющий собой сборщик буффера индексов для определенного буффера вершин.
  * Данный сборщик позволяет разбивать при помощи индексов объекты на множество составляющих.
- * <p>
- * Примером может поступить сборщик индексов разбивающий вершины четырёхугольника на индексы двух треугольников:
- * <pre><code>
- *     //4 — количество вершин в 1 объекта(в данном случае у нас четырёхугольник, поэтому вершин у нас 4)
- *     //6 — количество индексов для 1 объекта(в данном случае мы разбиваем четырёхугольник на 2 треугольника, поэтому количество индексов будет 2 x 3 = 6)
- *     new ShapeIndexBuffer(4, 6, (indexConsumer, firstVertexIndex) -> {
- *      //Добавляем индексы для первого треугольника
- * 		indexConsumer.accept(firstVertexIndex);
- * 		indexConsumer.accept(firstVertexIndex + 1);
- * 		indexConsumer.accept(firstVertexIndex + 2);
- * 		//Добавляем индексы для второго треугольника
- * 		indexConsumer.accept(firstVertexIndex + 2);
- * 		indexConsumer.accept(firstVertexIndex + 3);
- * 		indexConsumer.accept(firstVertexIndex);
- * 	    })
- * </code></pre>
  *
  * @see Triangulator
  * @see IndexType
@@ -93,8 +77,9 @@ public final class IndexBufferGenerator {
 	private GpuBuffer generateIndexBuffer(int requiredSize) {
 		requiredSize = MathUtils.roundUpToMultiple(requiredSize, this.vertexCountInTriangulated);
 
-		if (requiredSize > CometRenderer.getConfig().MAX_INDICES.getValue())
-			CometRenderer.getExceptionManager().manageException(new IndexOverflowException());
+		int maxIndices = CometRenderer.getConfig().MAX_INDICES.getValue();
+		if (requiredSize > maxIndices)
+			ErrorHandlers.onIndexOverflow(maxIndices);
 
 		this.indexType = IndexType.best(requiredSize);
 		ByteBuffer buffer = MemoryUtil.memAlloc(requiredSize * indexType.bytes);

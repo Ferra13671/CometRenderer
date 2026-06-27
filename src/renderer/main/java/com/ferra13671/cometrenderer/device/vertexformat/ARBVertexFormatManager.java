@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.device.vertexformat;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
-import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
@@ -29,7 +29,7 @@ public class ARBVertexFormatManager implements VertexFormatManager {
     @Override
     public void applyFormatToBuffer(GpuBuffer vertexBuffer, VertexFormat vertexFormat) {
         if (vertexBuffer.getTarget() != BufferTarget.ARRAY_BUFFER)
-            CometRenderer.getExceptionManager().manageException(new WrongGpuBufferTargetException(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId));
+            ErrorHandlers.onWrongBufferTarget(vertexBuffer.getTarget().glId, BufferTarget.ARRAY_BUFFER.glId);
 
         VertexFormatBuffer vertexFormatBuffer = vertexFormat.getOrCreateBuffer(() -> createVertexFormatBuffer(vertexFormat));
 

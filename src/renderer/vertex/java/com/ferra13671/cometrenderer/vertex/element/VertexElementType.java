@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.vertex.element;
 
-import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalVertexElementStructureException;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import org.apiguardian.api.API;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
@@ -279,7 +278,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
     public void verify() {
         for (ElementTypeVerifier verifier : ElementTypeVerifier.verifiers)
             if (!verifier.verifyFunction.apply(this))
-                CometRenderer.getExceptionManager().manageException(new IllegalVertexElementStructureException(this, verifier.messageFunction.apply(this.size, this.offset)));
+                ErrorHandlers.onIllegalVertexElementStructure(this, verifier.messageFunction.apply(this.size, this.offset));
     }
 
     public static <T> VertexElementTypeBuilder<T> builder(Class<T> clazz) {

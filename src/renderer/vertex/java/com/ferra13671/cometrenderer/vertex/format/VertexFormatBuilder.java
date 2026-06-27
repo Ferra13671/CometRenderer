@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.vertex.format;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexFormatOverflowException;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
@@ -38,11 +38,12 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
 
         int maxElements = CometRenderer.getRegistry().get(CometTags.MAX_VERTEX_ELEMENTS).orElseThrow();
         if (this.elementsInfo.size() > maxElements)
-            CometRenderer.getExceptionManager().manageException(new VertexFormatOverflowException(maxElements));
+            ErrorHandlers.onVertexFormatOverflow(maxElements);
 
         return this;
     }
 
+    //TODO change
     public VertexFormatBuilder removeElement(String name) {
         for (int i = 0; i < this.elementNames.size(); i++) {
             if (this.elementNames.get(i).equals(name)) {

@@ -1,11 +1,10 @@
 package com.ferra13671.cometrenderer.glsl;
 
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.utils.Bindable;
-import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.utils.Compilable;
-import com.ferra13671.cometrenderer.exceptions.impl.NoSuchUniformException;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
@@ -87,7 +86,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
                 );
 
                 if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
-                    CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(uniform.getName(), this.name));
+                    ErrorHandlers.onNoSuchUniform(uniform.getName(), this.name);
 
                 this.uniformsByName.put(uniformEntry.getKey(), uniform);
 
@@ -167,7 +166,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
         if (uniform == null)
-            CometRenderer.getExceptionManager().manageException(new NoSuchUniformException(name, this.name));
+            ErrorHandlers.onNoSuchUniform(name, this.name);
         return uniform;
     }
 
@@ -219,7 +218,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     public SamplerUniform getSampler(int samplerId) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler == null)
-            CometRenderer.getExceptionManager().manageException(new NoSuchUniformException("Sampler[" + samplerId + "]", this.name));
+            ErrorHandlers.onNoSuchUniform("Sampler[" + samplerId + "]", this.name);
         return sampler;
     }
 

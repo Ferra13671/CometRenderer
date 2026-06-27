@@ -4,13 +4,10 @@ import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.device.SamplerObject;
-import com.ferra13671.cometrenderer.exceptions.ExceptionManager;
-import com.ferra13671.cometrenderer.exceptions.impl.WrongGpuBufferTargetException;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
-import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedOpenGLVersionException;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -68,9 +65,6 @@ public class CometRenderer {
     @Getter
     @API(status = API.Status.MAINTAINED, since = "2.9")
     private GLDevice device;
-    @Getter
-    @API(status = API.Status.MAINTAINED, since = "2.5")
-    private final ExceptionManager exceptionManager = new ExceptionManager();
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     @Getter
     @Setter
@@ -102,9 +96,9 @@ public class CometRenderer {
             if (drawMode.indexBufferGenerator() != null) {
                 GpuBuffer indexBuffer = mesh.getDrawMode().indexBufferGenerator().getIndexBuffer(mesh.getIndexCount());
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
-                    exceptionManager.manageException(new WrongGpuBufferTargetException(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId));
-
-                indexBuffer.bind();
+                    ErrorHandlers.onWrongBufferTarget(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId);
+                else
+                    indexBuffer.bind();
 
                 GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), mesh.getDrawMode().indexBufferGenerator().getIndexType().glId, 0);
             } else
@@ -128,7 +122,7 @@ public class CometRenderer {
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             if (!GLCapabilities.supportsVersion(GLVersion.fromId(config.MINIMUM_OPENGL_VERSION.getValue())))
-                exceptionManager.manageException(new UnsupportedOpenGLVersionException(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33));
+                ErrorHandlers.onUnsupportedOpenGLVersion(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33);
         }
 
         device = new GLDevice();

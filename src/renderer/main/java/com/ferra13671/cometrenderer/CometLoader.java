@@ -5,7 +5,6 @@ import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
 import com.ferra13671.cometrenderer.glsl.shader.GlShaderBuilder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.exceptions.impl.LoadGlslContentException;
 import com.ferra13671.cometrenderer.glsl.GlProgramBuilder;
 import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
 import org.apiguardian.api.API;
@@ -34,7 +33,7 @@ public abstract class CometLoader<T> {
         try {
             content = load(path);
         } catch (Exception e) {
-            CometRenderer.getExceptionManager().manageException(new LoadGlslContentException(e));
+            ErrorHandlers.onLoadGLSLContentException(e);
         }
         return content;
     }

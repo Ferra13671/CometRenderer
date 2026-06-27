@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.utils;
 
-import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.exceptions.impl.IllegalBuilderArgumentException;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,6 @@ public abstract class Builder<T> {
     }
 
     protected void manageIllegalArgument(String message) {
-        CometRenderer.getExceptionManager().manageException(new IllegalBuilderArgumentException(this.builderName, message));
+        ErrorHandlers.onIllegalBuilderArgument(message);
     }
 }

@@ -1,10 +1,8 @@
 package com.ferra13671.cometrenderer.glsl.compiler;
 
-import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileProgramException;
-import com.ferra13671.cometrenderer.exceptions.impl.compile.CompileShaderException;
 import com.ferra13671.cometrenderer.glsl.GlProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.glsl.shader.GlShader;
@@ -28,7 +26,7 @@ public class CometCompiler {
     public void addExtensions(@NonNull CompilerExtension... extensions) {
         for (CompilerExtension extension : extensions) {
             if (CometCompiler.extensions.containsKey(extension.getName()))
-                CometRenderer.getLogger().warn(String.format("Found 2 compiler extensions named %s, overwriting prev compiler extension.", extension.getName()));
+                ErrorHandlers.onDoubleCompilerExtensionAddition(extension.getName());
 
             CometCompiler.extensions.put(extension.getName(), extension);
         }
@@ -74,7 +72,7 @@ public class CometCompiler {
         CompileResult compileResult = program.compile(uniforms);
 
         if (compileResult.isFailure())
-            CometRenderer.getExceptionManager().manageException(new CompileProgramException(name, compileResult.message()));
+            ErrorHandlers.onCompileProgramError(name, compileResult.message());
 
         return program;
     }
@@ -103,7 +101,7 @@ public class CometCompiler {
         shader.compile();
 
         if (shader.getCompileResult().isFailure())
-            CometRenderer.getExceptionManager().manageException(new CompileShaderException(processedShader.getName(), shader.getCompileResult().message()));
+            ErrorHandlers.onCompileShaderError(processedShader.getName(), shader.getCompileResult().message());
 
         return shader;
     }

@@ -1,10 +1,8 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.BadVertexStructureException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.IllegalMeshBuilderStateException;
-import com.ferra13671.cometrenderer.exceptions.impl.vertex.VertexOverflowException;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
@@ -68,17 +66,8 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
      * Если нет, то вызывается ошибка.
      */
     private void assertNotBuilt() {
-        if (this.built) {
-            CometRenderer.getExceptionManager().manageException(new IllegalMeshBuilderStateException(
-                    "MeshBuilder has been already built.",
-                    new String[]{
-                            "You are trying to use MeshBuilder after it has been built."
-                    },
-                    new String[]{
-                            "Check your build or usage MeshBuilder method and fix it."
-                    }
-            ));
-        }
+        if (this.built)
+            ErrorHandlers.onMeshBuilderAlreadyBuilt();
     }
 
     @Override
@@ -97,15 +86,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     public Mesh build() {
         Mesh mesh = buildNullable();
         if (mesh == null) {
-            CometRenderer.getExceptionManager().manageException(new IllegalMeshBuilderStateException(
-                    "MeshBuilder was empty.",
-                    new String[]{
-                            "You haven't built any vertices in MeshBuilder and called MeshBuilder build via the 'buildThrowable' method, which throw an exception about the MeshBuilder being empty."
-                    },
-                    new String[]{
-                            "If your rendering method assumes an empty MeshBuilder, call the builder via the 'buildNullable' method. If not, check your MeshBuilder method and fix it."
-                    }
-            ));
+            ErrorHandlers.onEmptyMeshBuilder();
             return null;
         } else {
             return mesh;
@@ -143,8 +124,9 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
         assertVertexStructure();
 
         this.vertexCount++;
-        if (this.vertexCount >= CometRenderer.getConfig().MAX_VERTICES.getValue())
-            CometRenderer.getExceptionManager().manageException(new VertexOverflowException());
+        int maxVertices = CometRenderer.getConfig().MAX_VERTICES.getValue();
+        if (this.vertexCount >= maxVertices)
+            ErrorHandlers.onVertexOverflow(maxVertices);
 
         long l = this.allocator.allocate(this.vertexSize);
         this.vertexPointer = l;
@@ -154,7 +136,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     private void assertVertexStructure() {
         if (this.vertexCount != 0 && this.currentMask != 0) {
             String string = this.vertexFormat.getElementsFromMask(this.currentMask).map(this.vertexFormat::getElementName).collect(Collectors.joining(", "));
-            CometRenderer.getExceptionManager().manageException(new BadVertexStructureException(string));
+            ErrorHandlers.onBadVertexStructure(string);
         }
     }
 
@@ -175,15 +157,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
             long l = this.vertexPointer;
 
             if (l == -1L) {
-                CometRenderer.getExceptionManager().manageException(new IllegalMeshBuilderStateException(
-                        "Not currently building vertex.",
-                        new String[]{
-                                "You are trying to add data to vertex that has already been built."
-                        },
-                        new String[]{
-                                "Check your vertex building method and fix it."
-                        }
-                ));
+                ErrorHandlers.onMeshBuilderNotBuildingVertex();
                 return -1L;
             } else {
                 return l + this.elementOffsets[element.getId()];

@@ -3,8 +3,7 @@ package com.ferra13671.cometrenderer.glsl.shader;
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
-import com.ferra13671.cometrenderer.exceptions.impl.UnsupportedShaderException;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
@@ -50,7 +49,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     public GlShaderBuilder<T> info(GlslFileEntry entry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             if (!GLCapabilities.supportsShader(type))
-                CometRenderer.getExceptionManager().manageException(new UnsupportedShaderException(type));
+                ErrorHandlers.onUnsupportedShader(type);
         }
 
         this.entry = entry;
@@ -75,7 +74,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (uniforms.containsKey(name))
-            CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(name));
+            ErrorHandlers.onDoubleUniformAddition(name);
 
         uniforms.put(name, uniformType);
         return this;

@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 @API(status = API.Status.EXPERIMENTAL, since = "2.5")
+//TODO rename to ...GLSL...
 public class GlslContent {
     @Getter
     @Setter

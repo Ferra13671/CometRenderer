@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.buffer.allocator;
 
-import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.exceptions.impl.AllocatorOverflowException;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -19,7 +18,7 @@ public class Allocator implements IAllocator {
 
     public long allocate(int size) {
         if (this.offset + size > this.size)
-            CometRenderer.getExceptionManager().manageException(new AllocatorOverflowException(size, this.size, this.size - this.offset));
+            ErrorHandlers.onAllocatorOverflow(size, this.size, this.size - this.offset);
 
         long address = this.offset;
         this.offset += size;

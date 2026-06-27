@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.processors;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
-import com.ferra13671.cometrenderer.exceptions.impl.DoubleUniformAdditionException;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
@@ -60,7 +60,7 @@ public class ShaderLibraryProcessor {
 
                     shaderLib.getRegistry().get(CometTags.UNIFORMS).orElseThrow().forEach((s1, uniformType) -> {
                         if (uniforms.containsKey(s1))
-                            CometRenderer.getExceptionManager().manageException(new DoubleUniformAdditionException(s1));
+                            ErrorHandlers.onDoubleUniformAddition(s1);
 
                         uniforms.put(s1, uniformType);
                     });
