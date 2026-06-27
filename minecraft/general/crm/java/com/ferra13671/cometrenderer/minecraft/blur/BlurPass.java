@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.minecraft.blur;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class BlurPass {
     }
 
     public void draw(Framebuffer input, Framebuffer output, Mesh mesh) {
-        GlProgram program = CometRenderer.getCurrentProgram();
+        GLProgram program = CometRenderer.getCurrentProgram();
 
         program.getUniform("offsets", UniformType.VEC2).set(this.offset);
         program.getUniform("radius", UniformType.INT).set(this.radius);

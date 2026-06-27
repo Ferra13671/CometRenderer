@@ -4,8 +4,8 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
@@ -27,7 +27,7 @@ public class ShaderLibraryProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<>]*)>", Pattern.MULTILINE)) {
         @Override
-        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             List<String> includedLibraries = glslFileRegistry.computeIfAbsent(INCLUDED_LIBRARIES, new ArrayList<>(), true);
             Map<String, UniformType<?>> uniforms = builderRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true);
             String libsLine = result.group("libs").strip();
@@ -44,12 +44,12 @@ public class ShaderLibraryProcessor {
             for (String l : libs) {
                 String lib = l.strip();
 
-                Optional<GlslFileEntry> shaderLibOpt = BetterCompilerPlugin.getShaderLibrary(lib);
+                Optional<GLSLFileEntry> shaderLibOpt = BetterCompilerPlugin.getShaderLibrary(lib);
 
                 if (shaderLibOpt.isEmpty()) {
                     CometRenderer.getLogger().error(String.format("[better-compiler] Found #include directive with unknown library '%s'. [%s]", lib, glslFileRegistry.get(CometTags.NAME).orElseThrow()));
                 } else {
-                    GlslFileEntry shaderLib = shaderLibOpt.get();
+                    GLSLFileEntry shaderLib = shaderLibOpt.get();
 
                     if (shaderLib.getRegistry().get(SINGLE_INCLUDE_ONLY).orElseThrow() && includedLibraries.contains(shaderLib.getName())) {
                         CometRenderer.getLogger().warn(String.format("[better-compiler] Shader library '%s' cannot be re-included because it is prohibited by the library itself. [%s]", lib, glslFileRegistry.get(CometTags.NAME).orElseThrow()));

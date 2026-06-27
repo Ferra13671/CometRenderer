@@ -11,11 +11,11 @@ import org.apiguardian.api.API;
  *
  * @param registry реестр данных, которые были созданы в сборщике программы.
  *
- * @see GlProgram
- * @see GlProgramSnippet
+ * @see GLProgram
+ * @see GLProgramSnippet
  */
 @API(status = API.Status.EXPERIMENTAL, since = "1.1")
-public record GlProgramSnippet(Registry registry) {
+public record GLProgramSnippet(Registry registry) {
 
     /**
      * Применяет фрагмент программы к сборщику программы.
@@ -24,13 +24,13 @@ public record GlProgramSnippet(Registry registry) {
      * @param <T> тип объекта, используемого как путь к контенту шейдеров.
      */
     @API(status = API.Status.INTERNAL)
-    public <T> void applyTo(GlProgramBuilder<T> builder) {
+    public <T> void applyTo(GLProgramBuilder<T> builder) {
         this.registry.forEachTags(tag ->
             processTag(tag, builder)
         );
     }
 
-    private <S, T> void processTag(Tag<T> tag, GlProgramBuilder<S> builder) {
+    private <S, T> void processTag(Tag<T> tag, GLProgramBuilder<S> builder) {
         T tagValue = this.registry.get(tag).orElseThrow();
 
         if (tag == CometTags.NAME)

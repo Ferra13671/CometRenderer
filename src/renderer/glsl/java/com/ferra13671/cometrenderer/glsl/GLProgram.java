@@ -7,12 +7,12 @@ import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.utils.Compilable;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
-import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
-import com.ferra13671.cometrenderer.glsl.uniform.uniforms.OneTypeGlUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.OneTypeGLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
-import com.ferra13671.cometrenderer.glsl.shader.GlShader;
+import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -24,17 +24,17 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Объект, хранящий в себе скомпилированный набор шейдеров ({@link GlShader}), готовых к использованию для отрисовки вершин в GPU.
+ * Объект, хранящий в себе скомпилированный набор шейдеров ({@link GLShader}), готовых к использованию для отрисовки вершин в GPU.
  * <p>
  * Основной набор шейдеров в программе: вершинный(Vertex) и фрагментный(Fragment).
  * Есть также дополнительные шейдеры, которые могут входить в программу: геометрический, тесселяционные и compute.
  * <p>
- * Программа также может иметь в себе униформы ({@link GlUniform}), предназначенные для передачи различных параметров для настройки обработки пикселей программой.
+ * Программа также может иметь в себе униформы ({@link GLUniform}), предназначенные для передачи различных параметров для настройки обработки пикселей программой.
  *
  * @see CometCompiler
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
-public class GlProgram implements Bindable, Compilable, Closeable {
+public class GLProgram implements Bindable, Compilable, Closeable {
     /** Имя программы. **/
     @Getter
     private final String name;
@@ -43,9 +43,9 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     private final int id;
     /** Фрагменты программы, добавленные в программу. **/
     @Getter
-    private final HashSet<GlProgramSnippet> snippets;
+    private final HashSet<GLProgramSnippet> snippets;
     /** Карта всех униформ программы, расположенных по их именам. **/
-    private final HashMap<String, GlUniform> uniformsByName = new HashMap<>();
+    private final HashMap<String, GLUniform> uniformsByName = new HashMap<>();
     /** Список всех семплеров программы. **/
     private final List<SamplerUniform> samplers = new ArrayList<>();
     /** Количество всех семплеров программы. **/
@@ -59,14 +59,14 @@ public class GlProgram implements Bindable, Compilable, Closeable {
     @API(status = API.Status.INTERNAL)
     private int buffersIndexAmount = 0;
     /** Список униформ, которые были обновлены. Данный список нужен для того, что бы повторно загружать в GPU только те униформы, которые были обновлены. **/
-    private final List<GlUniform> updatedUniforms = new ArrayList<>();
+    private final List<GLUniform> updatedUniforms = new ArrayList<>();
 
     /**
      * @param name имя программы.
      * @param id айди программы в OpenGL.
      */
     @API(status = API.Status.INTERNAL)
-    public GlProgram(@NonNull String name, int id, @NonNull HashSet<GlProgramSnippet> snippets) {
+    public GLProgram(@NonNull String name, int id, @NonNull HashSet<GLProgramSnippet> snippets) {
         this.name = name;
         this.id = id;
         this.snippets = snippets;
@@ -79,7 +79,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
 
         if (!compileResult.isFailure()) {
             for (Map.Entry<String, UniformType<?>> uniformEntry : requiredUniforms.entrySet()) {
-                GlUniform uniform = uniformEntry.getValue().uniformCreator().apply(
+                GLUniform uniform = uniformEntry.getValue().uniformCreator().apply(
                         uniformEntry.getKey(),
                         GL20.glGetUniformLocation(this.id, uniformEntry.getKey()),
                         this
@@ -122,7 +122,7 @@ public class GlProgram implements Bindable, Compilable, Closeable {
         State.PROGRAM.bind(getId());
 
         if (!this.updatedUniforms.isEmpty()) {
-            for (GlUniform glUniform : this.updatedUniforms)
+            for (GLUniform glUniform : this.updatedUniforms)
                 glUniform.upload();
             this.updatedUniforms.clear();
         }
@@ -142,11 +142,11 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      *
      * @param uniform униформа, которая была обновлена.
      *
-     * @see GlUniform
-     * @see OneTypeGlUniform
+     * @see GLUniform
+     * @see OneTypeGLUniform
      */
     @API(status = API.Status.INTERNAL)
-    public void addUpdatedUniform(GlUniform uniform) {
+    public void addUpdatedUniform(GLUniform uniform) {
         this.updatedUniforms.add(uniform);
     }
 
@@ -159,11 +159,11 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param <T> униформа.
      * @return требуемая униформа.
      *
-     * @see GlUniform
+     * @see GLUniform
      * @see UniformType
      */
     @API(status = API.Status.STABLE, since = "1.6")
-    public <T extends GlUniform> T getUniform(String name, UniformType<T> type) {
+    public <T extends GLUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
         if (uniform == null)
             ErrorHandlers.onNoSuchUniform(name, this.name);
@@ -178,11 +178,11 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param consumer метод, который выполнится в том случае, если требуемая униформа существует в программе.
      * @param <T> униформа.
      *
-     * @see GlUniform
+     * @see GLUniform
      * @see UniformType
      */
     @API(status = API.Status.MAINTAINED, since = "1.8.3")
-    public <T extends GlUniform> void consumeIfUniformPresent(String name, UniformType<T> type, Consumer<T> consumer) {
+    public <T extends GLUniform> void consumeIfUniformPresent(String name, UniformType<T> type, Consumer<T> consumer) {
         T uniform = getUniformNullable(name, type);
         if (uniform != null)
             consumer.accept(uniform);
@@ -197,11 +197,11 @@ public class GlProgram implements Bindable, Compilable, Closeable {
      * @param <T> униформа.
      * @return требуемая униформа либо null, если таковая не была найдена.
      *
-     * @see GlUniform
+     * @see GLUniform
      * @see UniformType
      */
     @API(status = API.Status.STABLE, since = "1.6")
-    public <T extends GlUniform> T getUniformNullable(String name, UniformType<T> type) {
+    public <T extends GLUniform> T getUniformNullable(String name, UniformType<T> type) {
         return (T) uniformsByName.get(name);
     }
 

@@ -39,14 +39,14 @@ public class Main {
                         .build()
         );
 
-        testGlslVersionDirective();
+        testGLSLVersionDirective();
         testConstantDirective();
         testMethodFeatures();
         testShaderLibraryDirective();
         testInterfaceBlocksDirectives();
     }
 
-    public void testGlslVersionDirective() {
+    public void testGLSLVersionDirective() {
         startGroup(new TestGroup(
                 "Glsl version directive",
                 new Test(
@@ -67,7 +67,7 @@ public class Main {
                         "pasteGlslVersionTest.vsh",
                         shaderRegistry -> {},
                         programRegistry ->
-                                programRegistry.set(BetterCompilerTags.GLSL_VERSION, CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().getValue())
+                                programRegistry.set(BetterCompilerTags.GLSL_VERSION, CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow())
                 )
         ));
     }
@@ -80,7 +80,7 @@ public class Main {
                         "constantTest.vsh",
                         shaderRegistry -> {},
                         programRegistry ->
-                                programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineConstant("value", "1f")
+                                programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().defineConstant("value", "1f")
                 ),
                 new Test(
                         "Constant with default value",
@@ -99,7 +99,7 @@ public class Main {
                         "abstractMethodTest.vsh",
                         shaderRegistry -> {},
                         programRegistry ->
-                                programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getValue().defineMethod(
+                                programRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().defineMethod(
                                         "main",
                                         """
                                                 gl_Position = projMat * modelViewMat * position;

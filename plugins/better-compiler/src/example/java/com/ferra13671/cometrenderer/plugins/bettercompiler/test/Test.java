@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.test;
 
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerProgramInfo;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public record Test(String name, String shaderName, Consumer<Registry> shaderRegistryConsumer, Consumer<Registry> programRegistryConsumer) {
 
     public void startAndLog(PrintWriter printWriter) {
-        GlslFileEntry fileEntry = CometLoaders.IN_JAR.createGlslFileEntry(shaderName, shaderName);
+        GLSLFileEntry fileEntry = CometLoaders.IN_JAR.createGLSLFileEntry(shaderName, shaderName);
         String beforeProcessContent = fileEntry.getContent().concatLines();
 
         Registry registry = new Registry();

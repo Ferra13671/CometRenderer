@@ -14,5 +14,5 @@ public abstract class RegexCompilerExtension {
     @Getter
     private final Pattern pattern;
 
-    public abstract boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry);
+    public abstract boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry);
 }

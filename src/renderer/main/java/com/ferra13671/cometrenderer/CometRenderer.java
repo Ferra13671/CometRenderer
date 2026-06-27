@@ -4,12 +4,13 @@ import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.device.SamplerObject;
+import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
-import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
+import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.scissor.ScissorStack;
 import com.ferra13671.cometrenderer.utils.stencil.StencilFunction;
@@ -50,14 +51,14 @@ public class CometRenderer {
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
-    private final GlProgramSnippet colorSnippet = CometLoaders.IN_JAR.createProgramBuilder()
+    private final GLProgramSnippet colorSnippet = GLProgramBuilder.empty()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
     /** Текущая активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
     @Getter
     @Setter
     @API(status = API.Status.STABLE, since = "2.6")
-    private GlProgram currentProgram;
+    private GLProgram currentProgram;
     /** Стек для областей, используемых ножницами. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")

@@ -3,13 +3,13 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler;
 import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.processors.ShaderLibraryProcessor;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
-import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
+import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.NonNull;
 import org.apiguardian.api.API;
@@ -18,17 +18,17 @@ import java.util.Collections;
 import java.util.HashMap;
 
 @API(status = API.Status.MAINTAINED, since = "2.5")
-public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
+public class GlShaderLibraryBuilder<T> extends Builder<GLSLFileEntry> {
     private String name;
     private T libraryPath;
     private boolean singleIncludeOnly = false;
     private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
     private final CometLoader<T> loader;
 
-    public GlShaderLibraryBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
+    public GlShaderLibraryBuilder(CometLoader<T> loader, GLProgramSnippet... snippets) {
         super("shader library");
 
-        for (GlProgramSnippet snippet : snippets)
+        for (GLProgramSnippet snippet : snippets)
             snippet.registry().get(CometTags.UNIFORMS).orElseThrow().forEach(this::uniform);
 
         this.loader = loader;
@@ -51,7 +51,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     }
 
     @NonNull
-    public <S extends GlUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
+    public <S extends GLUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
         if (this.uniforms.containsKey(name))
             ErrorHandlers.onDoubleUniformAddition(name);
 
@@ -66,7 +66,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
     }
 
     @Override
-    public GlslFileEntry build() {
+    public GLSLFileEntry build() {
         assertNotNull(this.name, "name");
         assertNotNull(this.libraryPath, "library path");
 
@@ -74,9 +74,9 @@ public class GlShaderLibraryBuilder<T> extends Builder<GlslFileEntry> {
         registry.setImmutable(CometTags.UNIFORMS, Collections.unmodifiableMap(this.uniforms));
         registry.setImmutable(ShaderLibraryProcessor.SINGLE_INCLUDE_ONLY, this.singleIncludeOnly);
 
-        return new GlslFileEntry(
+        return new GLSLFileEntry(
                 this.name,
-                GlslContent.fromString(this.loader.getContent(this.libraryPath)),
+                GLSLContent.fromString(this.loader.getContent(this.libraryPath)),
                 BetterCompilerPlugin.SHADER_LIBRARY_GLSL_FILE_ENTRY,
                 registry
         );

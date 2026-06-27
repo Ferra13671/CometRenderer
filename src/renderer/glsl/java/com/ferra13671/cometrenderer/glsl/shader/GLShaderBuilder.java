@@ -6,8 +6,8 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @API(status = API.Status.EXPERIMENTAL, since = "2.7")
-public class GlShaderBuilder<T> extends Builder<GlShader> {
+public class GLShaderBuilder<T> extends Builder<GLShader> {
     private final Registry registry = new Registry();
     private final CometLoader<T> loader;
-    private GlslFileEntry entry;
+    private GLSLFileEntry entry;
     private ShaderType type;
 
-    public GlShaderBuilder(CometLoader<T> loader) {
+    public GLShaderBuilder(CometLoader<T> loader) {
         super("shader");
 
         this.loader = loader;
@@ -37,16 +37,16 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
         }});
 
         for (CompilerExtension extension : CometCompiler.getExtensions())
-            extension.onCreateGlslBuilder(this.registry);
+            extension.onCreateGLSLBuilder(this.registry);
     }
 
     @NonNull
-    public GlShaderBuilder<T> info(String name, T shaderPath, ShaderType type) {
-        return info(this.loader.createGlslFileEntry(name, shaderPath), type);
+    public GLShaderBuilder<T> info(String name, T shaderPath, ShaderType type) {
+        return info(this.loader.createGLSLFileEntry(name, shaderPath), type);
     }
 
     @NonNull
-    public GlShaderBuilder<T> info(GlslFileEntry entry, ShaderType type) {
+    public GLShaderBuilder<T> info(GLSLFileEntry entry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             if (!GLCapabilities.supportsShader(type))
                 ErrorHandlers.onUnsupportedShader(type);
@@ -59,7 +59,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     }
 
     @NonNull
-    public <S> GlShaderBuilder<T> tag(@NonNull Tag<S> tag, S value) {
+    public <S> GLShaderBuilder<T> tag(@NonNull Tag<S> tag, S value) {
         this.registry.set(tag, value);
 
         return this;
@@ -70,7 +70,7 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     }
 
     @NonNull
-    public <S extends GlUniform> GlShaderBuilder<T> uniform(String name, UniformType<S> uniformType) {
+    public <S extends GLUniform> GLShaderBuilder<T> uniform(String name, UniformType<S> uniformType) {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (uniforms.containsKey(name))
@@ -81,13 +81,13 @@ public class GlShaderBuilder<T> extends Builder<GlShader> {
     }
 
     @NonNull
-    public GlShaderBuilder<T> sampler(String name) {
+    public GLShaderBuilder<T> sampler(String name) {
         uniform(name, UniformType.SAMPLER);
         return this;
     }
 
     @Override
-    public GlShader build() {
+    public GLShader build() {
         return CometCompiler.compileShader(this.entry, this.type, this.registry);
     }
 }

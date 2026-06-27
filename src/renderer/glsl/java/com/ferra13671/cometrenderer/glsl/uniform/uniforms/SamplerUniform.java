@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.State;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
-import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.gltextureutils.GlTex;
 import lombok.Getter;
@@ -15,10 +15,10 @@ import java.util.function.BiConsumer;
 /**
  * Униформа, хранящая в себе параметр в виде текстуры.
  *
- * @see GlUniform
+ * @see GLUniform
  * @see UniformType
  */
-public class SamplerUniform extends GlUniform {
+public class SamplerUniform extends GLUniform {
     /** Айди семплера. **/
     @Getter
     private final int samplerId;
@@ -28,9 +28,9 @@ public class SamplerUniform extends GlUniform {
     /**
      * @param name имя униформы.
      * @param location локация униформы в OpenGL.
-     * @param glProgram программа ({@link GlProgram}), к которой привязана униформа.
+     * @param glProgram программа ({@link GLProgram}), к которой привязана униформа.
      */
-    public SamplerUniform(String name, int location, GlProgram glProgram) {
+    public SamplerUniform(String name, int location, GLProgram glProgram) {
         super(name, location, glProgram);
 
         this.samplerId = glProgram.getSamplersAmount() + 1;

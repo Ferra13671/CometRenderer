@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.gltextureutils.Pair;
 import org.apiguardian.api.API;
 
@@ -12,12 +12,12 @@ import java.util.function.Function;
 
 @API(status = API.Status.MAINTAINED)
 public class ProgramPass {
-    private final GlProgram program;
+    private final GLProgram program;
     private final List<Pair<Integer, Function<PostEffectContext, Framebuffer>>> inputs;
     private final Function<PostEffectContext, Framebuffer> output;
-    private final Consumer<GlProgram> preRenderConsumer;
+    private final Consumer<GLProgram> preRenderConsumer;
 
-    public ProgramPass(GlProgram program, List<Pair<Integer, Function<PostEffectContext, Framebuffer>>> inputs, Function<PostEffectContext, Framebuffer> output, Consumer<GlProgram> preRenderConsumer) {
+    public ProgramPass(GLProgram program, List<Pair<Integer, Function<PostEffectContext, Framebuffer>>> inputs, Function<PostEffectContext, Framebuffer> output, Consumer<GLProgram> preRenderConsumer) {
         this.program = program;
         this.inputs = inputs;
         this.output = output;

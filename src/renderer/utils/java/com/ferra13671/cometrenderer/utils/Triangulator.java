@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.utils;
 
+import com.ferra13671.cometrenderer.utils.index.IndexList;
 import org.apiguardian.api.API;
 
 /**

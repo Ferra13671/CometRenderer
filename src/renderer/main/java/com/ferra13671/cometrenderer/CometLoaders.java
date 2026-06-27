@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 /**
- * Самые основные загрузчики glsl контента.
+ * Самые основные загрузчики GLSL контента.
  *
  * @see CometLoader
  */

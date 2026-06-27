@@ -3,9 +3,9 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
-import com.ferra13671.cometrenderer.glsl.shader.GlShader;
+import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
@@ -41,13 +41,13 @@ public class CometCompiler {
     }
 
     @API(status = API.Status.INTERNAL)
-    public GlProgram compileProgram(@NonNull Registry registry) {
+    public GLProgram compileProgram(@NonNull Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow();
 
         int programId = GL20.glCreateProgram();
 
-        Map<ShaderType, GlslFileEntry> shaders = registry.get(CometTags.SHADERS).orElseThrow();
-        Map<ShaderType, GlShader> compiledShaders = registry.contains(CometTags.COMPILED_SHADERS) ? registry.get(CometTags.COMPILED_SHADERS).orElseThrow() : null;
+        Map<ShaderType, GLSLFileEntry> shaders = registry.get(CometTags.SHADERS).orElseThrow();
+        Map<ShaderType, GLShader> compiledShaders = registry.contains(CometTags.COMPILED_SHADERS) ? registry.get(CometTags.COMPILED_SHADERS).orElseThrow() : null;
         Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (compiledShaders != null)
@@ -59,7 +59,7 @@ public class CometCompiler {
             });
 
         shaders.forEach((type, entry) -> {
-            GlShader shader = compileShader(entry, type, registry);
+            GLShader shader = compileShader(entry, type, registry);
 
             if (entry.getRegistry().contains(CometTags.UNIFORMS))
                 uniforms.putAll(entry.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
@@ -67,7 +67,7 @@ public class CometCompiler {
             GL20.glAttachShader(programId, shader.getId());
         });
 
-        GlProgram program = new GlProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())));
+        GLProgram program = new GLProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())));
 
         CompileResult compileResult = program.compile(uniforms);
 
@@ -79,7 +79,7 @@ public class CometCompiler {
 
     @NonNull
     @API(status = API.Status.INTERNAL)
-    public GlShader compileShader(GlslFileEntry shaderEntry, ShaderType shaderType, Registry builderRegistry) {
+    public GLShader compileShader(GLSLFileEntry shaderEntry, ShaderType shaderType, Registry builderRegistry) {
         //Experimental
         Registry shaderRegistry = new Registry();
         if (builderRegistry.contains(CometTags.TAGS_TO_COPY)) {
@@ -88,11 +88,11 @@ public class CometCompiler {
                     shaderRegistry.set(builderRegistry.getEntry(tag).orElseThrow());
         }
 
-        GlslFileEntry processedShader = new GlslFileEntry(shaderEntry);
+        GLSLFileEntry processedShader = new GLSLFileEntry(shaderEntry);
         processContent(processedShader.getRegistry(), builderRegistry);
-        GlslContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
+        GLSLContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
 
-        GlShader shader = new GlShader(
+        GLShader shader = new GLShader(
                 processedShader.getName(),
                 shaderType,
                 shaderRegistry
@@ -117,7 +117,7 @@ public class CometCompiler {
 
     @API(status = API.Status.INTERNAL)
     protected void removeComments(@NonNull Registry glslFileRegistry) {
-        GlslContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow();
+        GLSLContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow();
 
         content.set(Pattern.compile("//.*", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));
         content.set(Pattern.compile("/\\*[\\s\\S]*\\*/", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));

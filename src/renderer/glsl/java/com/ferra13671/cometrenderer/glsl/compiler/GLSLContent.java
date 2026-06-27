@@ -9,13 +9,12 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 @API(status = API.Status.EXPERIMENTAL, since = "2.5")
-//TODO rename to ...GLSL...
-public class GlslContent {
+public class GLSLContent {
     @Getter
     @Setter
     private String[] lines;
 
-    public GlslContent(GlslContent content) {
+    public GLSLContent(GLSLContent content) {
         this(Arrays.copyOf(content.lines, content.lines.length));
     }
 
@@ -27,8 +26,8 @@ public class GlslContent {
         setLines(content.split("\n"));
     }
 
-    public static GlslContent fromString(String string) {
-        return new GlslContent(
+    public static GLSLContent fromString(String string) {
+        return new GLSLContent(
                 string.split("\n")
         );
     }

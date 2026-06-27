@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils;
+package com.ferra13671.cometrenderer.utils.stencil;
 
 import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;

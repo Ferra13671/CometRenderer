@@ -43,12 +43,13 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
         return this;
     }
 
-    //TODO change
     public VertexFormatBuilder removeElement(String name) {
         for (int i = 0; i < this.elementNames.size(); i++) {
             if (this.elementNames.get(i).equals(name)) {
                 this.elementNames.remove(i);
                 this.elementsInfo.remove(i);
+
+                i--;
             }
         }
 

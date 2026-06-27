@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.plugins.bettercompiler.processors;
 
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class BlocksConvertProcessor {
 
     final RegexCompilerExtension inputsExtension = new RegexCompilerExtension(compileExtPattern("inputs")) {
         @Override
-        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             content.set(content.concatLines().replace(result.group(), parseFields("in", result, name -> name)));
             return true;
         }
@@ -26,7 +26,7 @@ public class BlocksConvertProcessor {
 
     final RegexCompilerExtension outputsExtension = new RegexCompilerExtension(compileExtPattern("outputs")) {
         @Override
-        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             content.set(content.concatLines().replace(result.group(), parseFields("out", result, name -> name)));
             return true;
         }
@@ -34,7 +34,7 @@ public class BlocksConvertProcessor {
 
     final RegexCompilerExtension uniformsExtension = new RegexCompilerExtension(compileExtPattern("uniforms")) {
         @Override
-        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             content.set(content.concatLines().replace(result.group(), parseFields("uniform", result, name -> name)));
             return true;
         }
@@ -42,7 +42,7 @@ public class BlocksConvertProcessor {
 
     final RegexCompilerExtension inoutsExtension = new RegexCompilerExtension(compileExtPattern("inouts")) {
         @Override
-        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             content.set(content.concatLines().replace(result.group(),
                     parseFields("in", result, name -> name.concat("_in")) + "\n"
                     + parseFields("out", result, name -> name)

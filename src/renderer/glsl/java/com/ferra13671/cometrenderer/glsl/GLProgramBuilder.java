@@ -6,14 +6,14 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.shader.GlShader;
+import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
-import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.NonNull;
 import org.apiguardian.api.API;
@@ -26,10 +26,10 @@ import java.util.Map;
  *
  * @param <T> тип объекта, используемого как путь к контенту шейдеров.
  *
- * @see GlProgram
+ * @see GLProgram
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
-public class GlProgramBuilder<T> extends Builder<GlProgram> {
+public class GLProgramBuilder<T> extends Builder<GLProgram> {
     private final Registry registry = new Registry();
     /** Загрузчик контента шейдеров. **/
     private final CometLoader<T> loader;
@@ -38,16 +38,16 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @param loader загрузчик контента шейдеров.
      * @param snippets фрагменты программы.
      *
-     * @see GlProgramSnippet
+     * @see GLProgramSnippet
      */
-    public GlProgramBuilder(CometLoader<T> loader, GlProgramSnippet... snippets) {
+    public GLProgramBuilder(CometLoader<T> loader, GLProgramSnippet... snippets) {
         super("program");
 
         this.registry.setImmutable(CometTags.SHADERS, new HashMap<>());
         this.registry.setImmutable(CometTags.COMPILED_SHADERS, new HashMap<>());
         this.registry.setImmutable(CometTags.UNIFORMS, new HashMap<>());
 
-        for (GlProgramSnippet snippet : snippets)
+        for (GLProgramSnippet snippet : snippets)
             snippet.applyTo(this);
 
         this.loader = loader;
@@ -55,7 +55,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
         this.registry.setImmutable(CometTags.SNIPPETS, snippets);
 
         for (CompilerExtension extension : CometCompiler.getExtensions())
-            extension.onCreateGlslBuilder(this.registry);
+            extension.onCreateGLSLBuilder(this.registry);
     }
 
     /**
@@ -64,7 +64,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @param name имя программы.
      * @return сборщик программы.
      */
-    public GlProgramBuilder<T> name(String name) {
+    public GLProgramBuilder<T> name(String name) {
         if (name != null)
             this.registry.set(CometTags.NAME, name);
 
@@ -80,8 +80,10 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @return сборщик программы.
      */
     @NonNull
-    public GlProgramBuilder<T> shader(String name, T shaderPath, ShaderType type) {
-        return shader(this.loader.createGlslFileEntry(name, shaderPath), type);
+    public GLProgramBuilder<T> shader(String name, T shaderPath, ShaderType type) {
+        ErrorHandlers.onLoadShaderWithEmptyBuilder();
+
+        return shader(this.loader.createGLSLFileEntry(name, shaderPath), type);
     }
 
     /**
@@ -92,14 +94,14 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @return сборщик программы.
      */
     @NonNull
-    public GlProgramBuilder<T> shader(GlslFileEntry shaderEntry, ShaderType type) {
+    public GLProgramBuilder<T> shader(GLSLFileEntry shaderEntry, ShaderType type) {
         if (CometRenderer.getConfig().COMPARE_CURRENT_AND_SHADER_OPENGL_VERSIONS.getValue()) {
             if (!GLCapabilities.supportsShader(type))
                 ErrorHandlers.onUnsupportedShader(type);
         }
 
-        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
-        Map<ShaderType, GlShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
+        Map<ShaderType, GLSLFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
+        Map<ShaderType, GLShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
 
         String containsShaderName = shaders.containsKey(type) ? shaders.get(type).getName() : compiledShaders.containsKey(type) ? compiledShaders.get(type).getName() : null;
         if (containsShaderName != null)
@@ -111,9 +113,9 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
 
     @NonNull
     @API(status = API.Status.EXPERIMENTAL, since = "2.7")
-    public GlProgramBuilder<T> shader(GlShader shader) {
-        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
-        Map<ShaderType, GlShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
+    public GLProgramBuilder<T> shader(GLShader shader) {
+        Map<ShaderType, GLSLFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
+        Map<ShaderType, GLShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
         ShaderType shaderType = shader.getShaderType();
 
         String containsShaderName = shaders.containsKey(shaderType) ? shaders.get(shaderType).getName() : compiledShaders.containsKey(shaderType) ? compiledShaders.get(shaderType).getName() : null;
@@ -124,7 +126,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
         return this;
     }
 
-    public <S> GlProgramBuilder<T> tag(@NonNull Tag<S> tag, S value) {
+    public <S> GLProgramBuilder<T> tag(@NonNull Tag<S> tag, S value) {
         this.registry.set(tag, value);
 
         return this;
@@ -142,10 +144,10 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @return сборщик программы.
      * @param <S> униформа.
      *
-     * @see GlUniform
+     * @see GLUniform
      */
     @NonNull
-    public <S extends GlUniform> GlProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
+    public <S extends GLUniform> GLProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (uniforms.containsKey(name))
@@ -162,7 +164,7 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @return сборщик программы.
      */
     @NonNull
-    public GlProgramBuilder<T> sampler(String name) {
+    public GLProgramBuilder<T> sampler(String name) {
         uniform(name, UniformType.SAMPLER);
         return this;
     }
@@ -173,11 +175,11 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      * @return программа, скомпилированная сборщиком.
      */
     @Override
-    public GlProgram build() {
+    public GLProgram build() {
         assertNotNull(this.registry, CometTags.NAME);
 
-        Map<ShaderType, GlslFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
-        Map<ShaderType, GlShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
+        Map<ShaderType, GLSLFileEntry> shaders = this.registry.get(CometTags.SHADERS).orElseThrow();
+        Map<ShaderType, GLShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
 
         if (!shaders.containsKey(ShaderType.Compute) && !compiledShaders.containsKey(ShaderType.Compute)) {
             if (!shaders.containsKey(ShaderType.Vertex) && !compiledShaders.containsKey(ShaderType.Vertex))
@@ -195,7 +197,12 @@ public class GlProgramBuilder<T> extends Builder<GlProgram> {
      *
      * @return новый фрагмент программы.
      */
-    public GlProgramSnippet buildSnippet() {
-        return new GlProgramSnippet(this.registry);
+    public GLProgramSnippet buildSnippet() {
+        return new GLProgramSnippet(this.registry);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public static GLProgramBuilder<?> empty(GLProgramSnippet... snippets) {
+        return new GLProgramBuilder<>(null, snippets);
     }
 }

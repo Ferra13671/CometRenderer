@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
-import com.ferra13671.cometrenderer.utils.StencilOpAction;
+import com.ferra13671.cometrenderer.utils.stencil.StencilOpAction;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;

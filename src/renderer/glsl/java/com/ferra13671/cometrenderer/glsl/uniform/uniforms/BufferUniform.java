@@ -3,8 +3,8 @@ package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
-import com.ferra13671.cometrenderer.glsl.uniform.GlUniform;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.Getter;
 import org.lwjgl.opengl.GL31;
@@ -15,10 +15,10 @@ import java.util.function.BiConsumer;
 /**
  * Униформа, хранящая в себе параметр в виде буффера, который может быть разложен в программе на несколько данных.
  *
- * @see GlUniform
+ * @see GLUniform
  * @see UniformType
  */
-public class BufferUniform extends GlUniform {
+public class BufferUniform extends GLUniform {
     /** Индекс буффера униформы. **/
     @Getter
     private final int bufferIndex;
@@ -28,9 +28,9 @@ public class BufferUniform extends GlUniform {
     /**
      * @param name имя униформы.
      * @param location локация униформы в OpenGL.
-     * @param glProgram программа ({@link GlProgram}), к которой привязана униформа.
+     * @param glProgram программа ({@link GLProgram}), к которой привязана униформа.
      */
-    public BufferUniform(String name, int location, GlProgram glProgram) {
+    public BufferUniform(String name, int location, GLProgram glProgram) {
         super(name, location, glProgram);
 
         int index = GL31.glGetUniformBlockIndex(glProgram.getId(), name);

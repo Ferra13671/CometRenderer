@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  * </table>
  *
  * @see <a href="https://wikis.khronos.org/opengl/Shader">OpenGL shader wiki</a>
- * @see GlShader
+ * @see GLShader
  */
 @AllArgsConstructor
 @API(status = API.Status.STABLE, since = "1.1")

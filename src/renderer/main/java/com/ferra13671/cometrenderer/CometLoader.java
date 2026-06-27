@@ -1,30 +1,30 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.glsl.shader.GlShaderBuilder;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
+import com.ferra13671.cometrenderer.glsl.shader.GLShaderBuilder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
-import com.ferra13671.cometrenderer.glsl.GlProgramBuilder;
-import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
+import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.MAINTAINED, since = "1.1")
 public abstract class CometLoader<T> {
 
     @API(status = API.Status.MAINTAINED, since = "1.3")
-    public GlProgramBuilder<T> createProgramBuilder(GlProgramSnippet... snippets) {
-        return new GlProgramBuilder<>(this, snippets);
+    public GLProgramBuilder<T> createProgramBuilder(GLProgramSnippet... snippets) {
+        return new GLProgramBuilder<>(this, snippets);
     }
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.7")
-    public GlShaderBuilder<T> createShaderBuilder() {
-        return new GlShaderBuilder<>(this);
+    public GLShaderBuilder<T> createShaderBuilder() {
+        return new GLShaderBuilder<>(this);
     }
 
     @API(status = API.Status.MAINTAINED, since = "1.8.2")
-    public GlslFileEntry createGlslFileEntry(String name, T path) {
-        return new GlslFileEntry(name, GlslContent.fromString(getContent(path)), CometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
+    public GLSLFileEntry createGLSLFileEntry(String name, T path) {
+        return new GLSLFileEntry(name, GLSLContent.fromString(getContent(path)), CometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
     }
 
     @API(status = API.Status.MAINTAINED, since = "1.9")

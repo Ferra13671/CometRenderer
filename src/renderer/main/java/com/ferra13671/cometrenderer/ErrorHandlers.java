@@ -98,8 +98,12 @@ public class ErrorHandlers {
         ));
     }
 
+    public void onLoadShaderWithEmptyBuilder() {
+        throw new IllegalStateException("Cannot load an uncompiled shader in builder without a loader.");
+    }
+
     public void onLoadGLSLContentException(Exception e) {
-        throw new LoadGlslContentException(e);
+        throw new LoadGLSLContentException(e);
     }
 
     public void onNoSuchUniform(String uniformName, String programName) {

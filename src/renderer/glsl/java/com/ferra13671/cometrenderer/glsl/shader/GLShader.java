@@ -1,9 +1,9 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import com.ferra13671.cometrenderer.utils.Compilable;
-import com.ferra13671.cometrenderer.glsl.GlProgram;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -17,22 +17,22 @@ import java.io.Closeable;
  * Часть программы, исполняемая на GPU, которая отвечает за часть графической обработки программой: обработка вершин, растеризация, вычисление цвета пикселя и другие этапы рендеринга.
  *
  * @see <a href="https://wikis.khronos.org/opengl/Shader">OpenGL shader wiki</a>
- * @see GlProgram
+ * @see GLProgram
  * @see ShaderType
  * @see CometCompiler
  */
 @Getter
 @API(status = API.Status.MAINTAINED, since = "2.7")
-public class GlShader implements Compilable, Closeable {
+public class GLShader implements Compilable, Closeable {
     private final String name;
     private final ShaderType shaderType;
     private final Registry registry;
     private int id;
-    private GlslContent content = null;
+    private GLSLContent content = null;
     private CompileResult compileResult = null;
 
     @API(status = API.Status.INTERNAL)
-    public GlShader(String name, ShaderType shaderType, Registry registry) {
+    public GLShader(String name, ShaderType shaderType, Registry registry) {
         this.name = name;
         this.shaderType = shaderType;
         this.registry = registry;
@@ -41,7 +41,7 @@ public class GlShader implements Compilable, Closeable {
     }
 
     @API(status = API.Status.INTERNAL)
-    public void setContent(GlslContent content) {
+    public void setContent(GLSLContent content) {
         this.content = content;
         this.compileResult = null;
     }

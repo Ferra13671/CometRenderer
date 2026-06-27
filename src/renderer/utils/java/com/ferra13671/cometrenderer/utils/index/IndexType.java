@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils;
+package com.ferra13671.cometrenderer.utils.index;
 
 import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import lombok.AllArgsConstructor;

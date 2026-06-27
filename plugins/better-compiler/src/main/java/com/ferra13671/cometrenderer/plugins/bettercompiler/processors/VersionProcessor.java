@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.processors;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.compiler.CompilerExtension;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import com.ferra13671.cometrenderer.glsl.compiler.RegexCompilerExtension;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -22,7 +22,7 @@ public class VersionProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#version\\h+.*", Pattern.MULTILINE)) {
         @Override
-        public boolean processMatch(MatchResult result, GlslContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             glslFileRegistry.set(FOUNDED_GLSL_VERSION, true);
 
             String version = result.group().replaceFirst("#version", "").strip();
@@ -53,7 +53,7 @@ public class VersionProcessor {
         @Override
         public void processCompile(Registry shaderRegistry, Registry programRegistry) {
             if (!shaderRegistry.contains(FOUNDED_GLSL_VERSION) && programRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
-                GlslContent content = shaderRegistry.get(CometTags.CONTENT).orElseThrow();
+                GLSLContent content = shaderRegistry.get(CometTags.CONTENT).orElseThrow();
 
                 content.set(
                         "#version "

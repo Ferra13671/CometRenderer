@@ -4,8 +4,9 @@ import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
+import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
+import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -64,15 +65,15 @@ public class CRMController extends AbstractCRMController {
     }
 
     @Override
-    protected GlProgramSnippet loadMatrixSnippet() {
-        return CometLoaders.IN_JAR.createProgramBuilder()
+    protected GLProgramSnippet loadMatrixSnippet() {
+        return GLProgramBuilder.empty()
                 .uniform("projMat", UniformType.MATRIX4)
                 .uniform("modelViewMat", UniformType.MATRIX4)
                 .buildSnippet();
     }
 
     @Override
-    protected GlslFileEntry getMatricesShaderLib() {
+    protected GLSLFileEntry getMatricesShaderLib() {
         return new GlShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
                 .name("matrices")
                 .library(

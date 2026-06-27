@@ -1,14 +1,14 @@
 package com.ferra13671.cometrenderer;
 
-import com.ferra13671.cometrenderer.glsl.compiler.GlslFileEntry;
-import com.ferra13671.cometrenderer.glsl.shader.GlShader;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
+import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.utils.tag.Tag;
-import com.ferra13671.cometrenderer.glsl.GlProgramSnippet;
+import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.utils.Mesa3DVersion;
-import com.ferra13671.cometrenderer.glsl.compiler.GlslContent;
+import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
@@ -19,12 +19,12 @@ import java.util.Map;
 @UtilityClass
 public class CometTags {
     public final Tag<String> NAME = new Tag<>("name");
-    public final Tag<GlslContent> CONTENT = new Tag<>("content");
+    public final Tag<GLSLContent> CONTENT = new Tag<>("content");
     public final Tag<String> TYPE = new Tag<>("type");
     public final Tag<Map<String, UniformType<?>>> UNIFORMS = new Tag<>("uniforms");
-    public final Tag<GlProgramSnippet[]> SNIPPETS = new Tag<>("snippets");
-    public final Tag<Map<ShaderType, GlslFileEntry>> SHADERS = new Tag<>("shaders");
-    public final Tag<Map<ShaderType, GlShader>> COMPILED_SHADERS = new Tag<>("compiled-shaders");
+    public final Tag<GLProgramSnippet[]> SNIPPETS = new Tag<>("snippets");
+    public final Tag<Map<ShaderType, GLSLFileEntry>> SHADERS = new Tag<>("shaders");
+    public final Tag<Map<ShaderType, GLShader>> COMPILED_SHADERS = new Tag<>("compiled-shaders");
     public final Tag<List<Tag<?>>> TAGS_TO_COPY = new Tag<>("tags-to-copy");
 
     public final Tag<Boolean> INITIALIZED = new Tag<>("initialized");

@@ -19,7 +19,7 @@ public class CompilerExtension {
 
     public void processCompile(Registry shaderRegistry, Registry programRegistry) {}
 
-    public void onCreateGlslBuilder(Registry builderRegistry) {}
+    public void onCreateGLSLBuilder(Registry builderRegistry) {}
 
     protected void registerRegexExtensions(RegexCompilerExtension... extensions) {
         this.regexExtensions.addAll(List.of(extensions));
