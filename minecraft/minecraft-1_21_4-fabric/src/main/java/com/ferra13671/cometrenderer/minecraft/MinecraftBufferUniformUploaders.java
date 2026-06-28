@@ -12,7 +12,7 @@ public class MinecraftBufferUniformUploaders {
     public static final BiConsumer<BufferUniform, GpuBuffer> GPU_BUFFER = (bufferUniform, gpuBuffer) ->
             GL32.glBindBufferBase(
                     BufferTarget.UNIFORM_BUFFER.glId,
-                    bufferUniform.getBufferIndex(),
+                    bufferUniform.getBufferBinding(),
                     gpuBuffer.handle
             );
 }

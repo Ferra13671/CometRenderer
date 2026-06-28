@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import lombok.Getter;
+import lombok.Setter;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GL32;
 
@@ -21,27 +22,25 @@ import java.util.function.BiConsumer;
 public class BufferUniform extends GLUniform {
     /** Индекс буффера униформы. **/
     @Getter
-    private final int bufferIndex;
+    private int bufferIndex;
+    /** Номер биндинга буффера униформы. **/
+    @Getter
+    @Setter
+    private int bufferBinding;
     /** Runnable, загружающий параметр в униформу. **/
     private Runnable uploadRunnable = null;
 
-    /**
-     * @param name имя униформы.
-     * @param location локация униформы в OpenGL.
-     * @param glProgram программа ({@link GLProgram}), к которой привязана униформа.
-     */
-    public BufferUniform(String name, int location, GLProgram glProgram) {
-        super(name, location, glProgram);
+    public BufferUniform(String name, int location) {
+        super(name, location);
+    }
 
-        int index = GL31.glGetUniformBlockIndex(glProgram.getId(), name);
-        if (index == -1) {
-            ErrorHandlers.onNoSuchUniform(name, glProgram.getName());
-            this.bufferIndex = -1;
-        } else {
-            this.bufferIndex = glProgram.getBuffersIndexAmount() + 1;
-            glProgram.setBuffersIndexAmount(bufferIndex);
-            GL31.glUniformBlockBinding(glProgram.getId(), index, bufferIndex);
-        }
+    @Override
+    public void setProgram(GLProgram program) {
+        super.setProgram(program);
+
+        this.bufferIndex = GL31.glGetUniformBlockIndex(program.getId(), name);
+        if (this.bufferIndex == -1)
+            ErrorHandlers.onNoSuchUniform(name, program.getName());
     }
 
     /**
@@ -54,7 +53,7 @@ public class BufferUniform extends GLUniform {
     public void set(GpuBuffer gpuBuffer) {
         this.uploadRunnable = () -> GL32.glBindBufferBase(
                 BufferTarget.UNIFORM_BUFFER.glId,
-                this.bufferIndex,
+                this.bufferBinding,
                 gpuBuffer.getId()
         );
         this.program.addUpdatedUniform(this);

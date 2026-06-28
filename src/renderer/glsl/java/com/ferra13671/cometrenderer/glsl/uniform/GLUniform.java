@@ -2,9 +2,7 @@ package com.ferra13671.cometrenderer.glsl.uniform;
 
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.apiguardian.api.API;
 
 /**
@@ -17,7 +15,7 @@ import org.apiguardian.api.API;
  * @see <a href="https://wikis.khronos.org/opengl/Uniform_(GLSL)">OpenGL uniform wiki</a>
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @API(status = API.Status.STABLE, since = "1.1")
 public abstract class GLUniform {
     /** Имя униформы. **/
@@ -27,9 +25,9 @@ public abstract class GLUniform {
     @API(status = API.Status.INTERNAL)
     protected final int location;
     /** Программа ({@link GLProgram}), к которой привязана униформа. **/
-    @NonNull
     @API(status = API.Status.INTERNAL)
-    protected final GLProgram program;
+    @Setter
+    protected GLProgram program = null;
 
     /**
      * Загружает данные в униформу.

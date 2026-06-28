@@ -4,8 +4,9 @@ import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.*;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
-import com.ferra13671.cometrenderer.utils.TriFunction;
 import org.apiguardian.api.API;
+
+import java.util.function.BiFunction;
 
 /**
  * Объект, представляющий собой тип униформы.
@@ -18,7 +19,7 @@ import org.apiguardian.api.API;
  * @see GLUniform
  */
 @API(status = API.Status.STABLE, since = "1.1")
-public record UniformType<T extends GLUniform>(Class<T> clazz, TriFunction<String, Integer, GLProgram, GLUniform> uniformCreator) {
+public record UniformType<T extends GLUniform>(Class<T> clazz, BiFunction<String, Integer, GLUniform> uniformCreator) {
     public static final UniformType<IntUniform> INT = new UniformType<>(IntUniform.class, IntUniform::new);
     public static final UniformType<FloatUniform> FLOAT = new UniformType<>(FloatUniform.class, FloatUniform::new);
     public static final UniformType<IntArrayUniform> INT_ARRAY = new UniformType<>(IntArrayUniform.class, IntArrayUniform::new);

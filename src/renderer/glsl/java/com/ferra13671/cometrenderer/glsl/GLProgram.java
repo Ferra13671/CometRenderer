@@ -4,18 +4,13 @@ import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.utils.Bindable;
-import com.ferra13671.cometrenderer.utils.Compilable;
-import com.ferra13671.cometrenderer.utils.compile.CompileResult;
-import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.OneTypeGLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
-import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
@@ -34,7 +29,8 @@ import java.util.function.Consumer;
  * @see CometCompiler
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
-public class GLProgram implements Bindable, Compilable, Closeable {
+@RequiredArgsConstructor
+public class GLProgram implements Bindable, Closeable {
     /** Имя программы. **/
     @Getter
     private final String name;
@@ -43,73 +39,18 @@ public class GLProgram implements Bindable, Compilable, Closeable {
     private final int id;
     /** Фрагменты программы, добавленные в программу. **/
     @Getter
-    private final HashSet<GLProgramSnippet> snippets;
+    private final Set<GLProgramSnippet> snippets;
     /** Карта всех униформ программы, расположенных по их именам. **/
-    private final HashMap<String, GLUniform> uniformsByName = new HashMap<>();
+    private final Map<String, GLUniform> uniformsByName;
     /** Список всех семплеров программы. **/
-    private final List<SamplerUniform> samplers = new ArrayList<>();
-    /** Количество всех семплеров программы. **/
-    @Getter
-    @Setter
-    @API(status = API.Status.INTERNAL)
-    private int samplersAmount = 0;
-    /** Количество привязанных индексов буфферов для униформ с типом BUFFER. **/
-    @Getter
-    @Setter
-    @API(status = API.Status.INTERNAL)
-    private int buffersIndexAmount = 0;
+    private final List<SamplerUniform> samplers;
     /** Список униформ, которые были обновлены. Данный список нужен для того, что бы повторно загружать в GPU только те униформы, которые были обновлены. **/
     private final List<GLUniform> updatedUniforms = new ArrayList<>();
-
-    /**
-     * @param name имя программы.
-     * @param id айди программы в OpenGL.
-     */
-    @API(status = API.Status.INTERNAL)
-    public GLProgram(@NonNull String name, int id, @NonNull HashSet<GLProgramSnippet> snippets) {
-        this.name = name;
-        this.id = id;
-        this.snippets = snippets;
-    }
-    
-    public CompileResult compile(@NonNull Map<String, UniformType<?>> requiredUniforms) {
-        GL20.glLinkProgram(this.id);
-
-        CompileResult compileResult = getCompileResult();
-
-        if (!compileResult.isFailure()) {
-            for (Map.Entry<String, UniformType<?>> uniformEntry : requiredUniforms.entrySet()) {
-                GLUniform uniform = uniformEntry.getValue().uniformCreator().apply(
-                        uniformEntry.getKey(),
-                        GL20.glGetUniformLocation(this.id, uniformEntry.getKey()),
-                        this
-                );
-
-                if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
-                    ErrorHandlers.onNoSuchUniform(uniform.getName(), this.name);
-
-                this.uniformsByName.put(uniformEntry.getKey(), uniform);
-
-                if (uniform instanceof SamplerUniform sampler)
-                    samplers.add(sampler);
-            }
-        }
-
-        return compileResult;
-    }
-
-    @Override
-    public CompileResult getCompileResult() {
-        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(getId(), GL20.GL_LINK_STATUS));
-        return new CompileResult(
-                status,
-                status == CompileStatus.FAILURE ? GL20.glGetProgramInfoLog(getId()).trim() : ""
-        );
-    }
 
     @Override
     public void close() {
         GL20.glDeleteProgram(getId());
+
         this.uniformsByName.clear();
         this.samplers.clear();
     }
@@ -171,6 +112,23 @@ public class GLProgram implements Bindable, Compilable, Closeable {
     }
 
     /**
+     * Возвращает униформу программы с данным именем и типом.
+     * Если униформа с данной конфигурацией не существует в программе, то метод вернет null.
+     *
+     * @param name имя требуемой униформы.
+     * @param type тип требуемой униформы.
+     * @param <T> униформа.
+     * @return требуемая униформа либо null, если таковая не была найдена.
+     *
+     * @see GLUniform
+     * @see UniformType
+     */
+    @API(status = API.Status.STABLE, since = "1.6")
+    public <T extends GLUniform> T getUniformNullable(String name, UniformType<T> type) {
+        return (T) this.uniformsByName.get(name);
+    }
+
+    /**
      * Если требуемая униформа существует в программе, то будет выполнен данный метод с ней.
      *
      * @param name имя требуемой униформы.
@@ -186,23 +144,6 @@ public class GLProgram implements Bindable, Compilable, Closeable {
         T uniform = getUniformNullable(name, type);
         if (uniform != null)
             consumer.accept(uniform);
-    }
-
-    /**
-     * Возвращает униформу программы с данным именем и типом.
-     * Если униформа с данной конфигурацией не существует в программе, то метод вернет null.
-     *
-     * @param name имя требуемой униформы.
-     * @param type тип требуемой униформы.
-     * @param <T> униформа.
-     * @return требуемая униформа либо null, если таковая не была найдена.
-     *
-     * @see GLUniform
-     * @see UniformType
-     */
-    @API(status = API.Status.STABLE, since = "1.6")
-    public <T extends GLUniform> T getUniformNullable(String name, UniformType<T> type) {
-        return (T) uniformsByName.get(name);
     }
 
     /**
@@ -223,6 +164,20 @@ public class GLProgram implements Bindable, Compilable, Closeable {
     }
 
     /**
+     * Возвращает семплер программы с данным айди.
+     * Если семплер с данным айди не существует в программе, то метод вернет null.
+     *
+     * @param samplerId айди требуемого семплера.
+     * @return требуемый семплер либо null, если такового не было найдено.
+     *
+     * @see SamplerUniform
+     */
+    @API(status = API.Status.MAINTAINED, since = "1.8.3")
+    public SamplerUniform getSamplerNullable(int samplerId) {
+        return samplerId < 0 || samplerId > this.samplers.size() - 1 ? null : this.samplers.get(samplerId);
+    }
+
+    /**
      * Если требуемый семплер существует в программе, то будет выполнен данный метод с ним.
      *
      * @param samplerId айди требуемого семплера.
@@ -235,19 +190,5 @@ public class GLProgram implements Bindable, Compilable, Closeable {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler != null)
             consumer.accept(sampler);
-    }
-
-    /**
-     * Возвращает семплер программы с данным айди.
-     * Если семплер с данным айди не существует в программе, то метод вернет null.
-     *
-     * @param samplerId айди требуемого семплера.
-     * @return требуемый семплер либо null, если такового не было найдено.
-     *
-     * @see SamplerUniform
-     */
-    @API(status = API.Status.MAINTAINED, since = "1.8.3")
-    public SamplerUniform getSamplerNullable(int samplerId) {
-        return this.samplers.get(samplerId);
     }
 }

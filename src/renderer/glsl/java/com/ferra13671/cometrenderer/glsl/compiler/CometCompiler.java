@@ -2,9 +2,12 @@ package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
+import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
+import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.utils.compile.CompileResult;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -13,6 +16,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL31;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -56,12 +60,52 @@ public class CometCompiler {
             GL20.glAttachShader(programId, shader.getId());
         });
 
-        GLProgram program = new GLProgram(name, programId, new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())));
+        Map<String, GLUniform> uniformsByName = new HashMap<>();
+        List<SamplerUniform> samplers = new ArrayList<>();
 
-        CompileResult compileResult = program.compile(uniforms);
+        GL20.glLinkProgram(programId);
+        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS));
 
-        if (compileResult.isFailure())
-            ErrorHandlers.onCompileProgramError(name, compileResult.message());
+        if (status != CompileStatus.FAILURE) {
+            int samplersCount = 0;
+            int bufferUniformsCount = 0;
+
+            for (Map.Entry<String, UniformType<?>> uniformEntry : uniforms.entrySet()) {
+                GLUniform uniform = uniformEntry.getValue().uniformCreator().apply(
+                        uniformEntry.getKey(),
+                        GL20.glGetUniformLocation(programId, uniformEntry.getKey())
+                );
+
+                if (uniform.getLocation() == -1 && !(uniform instanceof BufferUniform))
+                    ErrorHandlers.onNoSuchUniform(uniform.getName(), name);
+
+                uniformsByName.put(uniformEntry.getKey(), uniform);
+
+                if (uniform instanceof SamplerUniform sampler) {
+                    samplers.add(sampler);
+                    sampler.setSamplerId(samplersCount);
+                    samplersCount++;
+                }
+
+                if (uniform instanceof BufferUniform bufferUniform) {
+                    bufferUniform.setBufferBinding(bufferUniformsCount);
+                    GL31.glUniformBlockBinding(programId, bufferUniform.getBufferIndex(), bufferUniformsCount);
+                    bufferUniformsCount++;
+                }
+            }
+        } else {
+            ErrorHandlers.onCompileProgramError(name, GL20.glGetProgramInfoLog(programId).trim());
+        }
+
+        GLProgram program = new GLProgram(
+                name,
+                programId,
+                new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())),
+                uniformsByName,
+                samplers
+        );
+
+        uniformsByName.forEach((s, uniform) -> uniform.setProgram(program));
 
         return program;
     }
