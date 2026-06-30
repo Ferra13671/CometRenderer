@@ -65,13 +65,13 @@ public class GLProgramBuilder<T> extends Builder<GLProgram> {
     @API(status = API.Status.MAINTAINED, since = "3.0")
     public GLProgramBuilder<T> shader(GLShader shader) {
         Map<ShaderType, GLShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
-        ShaderType shaderType = shader.getShaderType();
+        ShaderType shaderType = shader.shaderType();
 
-        String containsShaderName = compiledShaders.containsKey(shaderType) ? compiledShaders.get(shaderType).getName() : null;
+        String containsShaderName = compiledShaders.containsKey(shaderType) ? compiledShaders.get(shaderType).name() : null;
         if (containsShaderName != null)
-            ErrorHandlers.onDoubleShaderAddition(shader.getName(), shaderType, containsShaderName);
+            ErrorHandlers.onDoubleShaderAddition(shader.name(), shaderType, containsShaderName);
 
-        compiledShaders.put(shader.getShaderType(), shader);
+        compiledShaders.put(shader.shaderType(), shader);
         return this;
     }
 

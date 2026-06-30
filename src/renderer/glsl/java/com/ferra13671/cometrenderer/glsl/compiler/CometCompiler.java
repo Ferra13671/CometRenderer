@@ -54,10 +54,10 @@ public class CometCompiler {
         Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow();
 
         compiledShaders.forEach((type, shader) -> {
-            if (shader.getRegistry().contains(CometTags.UNIFORMS))
-                uniforms.putAll(shader.getRegistry().get(CometTags.UNIFORMS).orElseThrow());
+            if (shader.registry().contains(CometTags.UNIFORMS))
+                uniforms.putAll(shader.registry().get(CometTags.UNIFORMS).orElseThrow());
 
-            GL20.glAttachShader(programId, shader.getId());
+            GL20.glAttachShader(programId, shader.id());
         });
 
         Map<String, GLUniform> uniformsByName = new HashMap<>();
@@ -125,18 +125,20 @@ public class CometCompiler {
         processContent(processedShader.getRegistry(), builderRegistry);
         GLSLContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
 
-        GLShader shader = new GLShader(
+        int shaderId = GL20.glCreateShader(shaderType.glId);
+        GL20.glShaderSource(shaderId, content.concatLines());
+        GL20.glCompileShader(shaderId);
+
+        CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS));
+        if (status == CompileStatus.FAILURE)
+            ErrorHandlers.onCompileShaderError(processedShader.getName(), GL20.glGetShaderInfoLog(shaderId).trim());
+
+        return new GLShader(
                 processedShader.getName(),
+                shaderId,
                 shaderType,
                 shaderRegistry
         );
-        shader.setContent(content);
-        shader.compile();
-
-        if (shader.getCompileResult().isFailure())
-            ErrorHandlers.onCompileShaderError(processedShader.getName(), shader.getCompileResult().message());
-
-        return shader;
     }
 
     @API(status = API.Status.INTERNAL)
