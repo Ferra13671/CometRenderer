@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
-import com.ferra13671.cometrenderer.device.SamplerObject;
+import com.ferra13671.cometrenderer.device.GLSampler;
 import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
@@ -261,7 +261,7 @@ public class CometRenderer {
     }
 
     @API(status = API.Status.MAINTAINED, since = "2.9")
-    public void setSampler(int unit, SamplerObject sampler) {
+    public void setSampler(int unit, GLSampler sampler) {
         GL33.glBindSampler(unit, sampler == null ? 0 : sampler.getId());
     }
 

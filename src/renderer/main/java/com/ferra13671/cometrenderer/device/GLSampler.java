@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL33;
 
 @Getter
-public class SamplerObject {
+public class GLSampler {
     private final int id;
 
-    public SamplerObject() {
+    public GLSampler() {
         this.id = CometRenderer.getDevice().getDirectStateManager().createSampler();
     }
 
