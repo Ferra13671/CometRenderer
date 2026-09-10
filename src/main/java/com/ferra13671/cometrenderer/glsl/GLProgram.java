@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.glsl;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
@@ -49,8 +50,8 @@ public class GLProgram implements Bindable, Closeable {
 
     @Override
     public void close() {
-        //TODO move to GLDevice
         GL20.glDeleteProgram(getId());
+        CometRenderer.getDevice().unregisterProgram(this);
 
         this.uniformsByName.clear();
         this.samplers.clear();

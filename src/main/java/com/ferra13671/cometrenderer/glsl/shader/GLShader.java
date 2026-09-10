@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -22,7 +23,7 @@ public record GLShader(String name, int id, ShaderType shaderType, Registry regi
     @Override
     @API(status = API.Status.INTERNAL)
     public void close() {
-        //TODO move to GLDevice
         GL20.glDeleteShader(this.id);
+        CometRenderer.getDevice().unregisterShader(this);
     }
 }
