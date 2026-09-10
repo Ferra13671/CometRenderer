@@ -54,12 +54,6 @@ public class CometRenderer {
     private final GLProgramSnippet colorSnippet = new GLProgramBuilder<>()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
-    /** Текущая активная программа для CometRenderer'а, которая будет использоваться для отрисовки. **/
-    @Getter
-    @Setter
-    @API(status = API.Status.STABLE, since = "2.6")
-    //TODO move to GLDevice
-    private GLProgram currentProgram;
     /** Стек для областей, используемых ножницами. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
@@ -153,6 +147,16 @@ public class CometRenderer {
         registry.setImmutable(CometTags.GL_EXTENSIONS, extensions);
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public static GLProgram getCurrentProgram() {
+        return device.getCurrentProgram();
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public static void setCurrentProgram(GLProgram program) {
+        device.setCurrentProgram(program);
+    }
+
     /**
      * Устанавливает глобальный шейдерный цвет в униформу, если программа использует фрагмент программы для глобального шейдерного цвета.
      *
@@ -160,7 +164,7 @@ public class CometRenderer {
      */
     @API(status = API.Status.STABLE, since = "2.6")
     public void applyShaderColorUniform() {
-        currentProgram.consumeIfUniformPresent(
+        getCurrentProgram().consumeIfUniformPresent(
                 "shaderColor",
                 UniformType.VEC4,
                 colorUniform ->
@@ -327,7 +331,7 @@ public class CometRenderer {
         } else
             State.SCISSOR.disable();
 
-        currentProgram.bind();
+        getCurrentProgram().bind();
         bufferRenderer.draw(buffer, close);
     }
 }
