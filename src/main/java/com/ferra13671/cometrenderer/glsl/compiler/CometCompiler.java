@@ -107,7 +107,7 @@ public class CometCompiler {
         );
         uniformsByName.forEach((s, uniform) -> uniform.setProgram(program));
 
-        CometRenderer.getDevice().registerProgram(program);
+        CometRenderer.getDevice().getResourceTracker().registerProgram(program);
 
         return program;
     }
@@ -142,7 +142,7 @@ public class CometCompiler {
                 shaderType,
                 shaderRegistry
         );
-        CometRenderer.getDevice().registerShader(shader);
+        CometRenderer.getDevice().getResourceTracker().registerShader(shader);
 
         return shader;
     }

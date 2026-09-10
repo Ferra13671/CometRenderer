@@ -51,7 +51,7 @@ public class GLProgram implements Bindable, Closeable {
     @Override
     public void close() {
         GL20.glDeleteProgram(getId());
-        CometRenderer.getDevice().unregisterProgram(this);
+        CometRenderer.getDevice().getResourceTracker().unregisterProgram(this);
 
         this.uniformsByName.clear();
         this.samplers.clear();

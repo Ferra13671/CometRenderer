@@ -24,6 +24,6 @@ public record GLShader(String name, int id, ShaderType shaderType, Registry regi
     @API(status = API.Status.INTERNAL)
     public void close() {
         GL20.glDeleteShader(this.id);
-        CometRenderer.getDevice().unregisterShader(this);
+        CometRenderer.getDevice().getResourceTracker().unregisterShader(this);
     }
 }
