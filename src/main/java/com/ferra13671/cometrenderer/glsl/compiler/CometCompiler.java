@@ -48,6 +48,7 @@ public class CometCompiler {
     public GLProgram compileProgram(@NonNull Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow();
 
+        //TODO move to GLDevice
         int programId = GL20.glCreateProgram();
 
         Map<ShaderType, GLShader> compiledShaders = registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
@@ -125,7 +126,9 @@ public class CometCompiler {
         processContent(processedShader.getRegistry(), builderRegistry);
         GLSLContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
 
+        //TODO move to GLDevice
         int shaderId = GL20.glCreateShader(shaderType.glId);
+
         GL20.glShaderSource(shaderId, content.concatLines());
         GL20.glCompileShader(shaderId);
 

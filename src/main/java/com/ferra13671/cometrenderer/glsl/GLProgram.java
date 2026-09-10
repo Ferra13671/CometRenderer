@@ -49,6 +49,7 @@ public class GLProgram implements Bindable, Closeable {
 
     @Override
     public void close() {
+        //TODO move to GLDevice
         GL20.glDeleteProgram(getId());
 
         this.uniformsByName.clear();
@@ -63,18 +64,10 @@ public class GLProgram implements Bindable, Closeable {
         State.PROGRAM.bind(getId());
 
         if (!this.updatedUniforms.isEmpty()) {
-            for (GLUniform glUniform : this.updatedUniforms)
-                glUniform.upload();
+            for (GLUniform uniform : this.updatedUniforms)
+                uniform.upload();
             this.updatedUniforms.clear();
         }
-    }
-
-    /**
-     * Устанавливает активную программу в OpenGL как 0 (т.е. без активной программы)
-     */
-    @Override
-    public void unbind() {
-        State.PROGRAM.bind(0);
     }
 
     /**

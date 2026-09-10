@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+//TODO move to GLDevice
 @API(status = API.Status.MAINTAINED, since = "2.0")
 @UtilityClass
 public class State {

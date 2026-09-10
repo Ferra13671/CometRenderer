@@ -58,6 +58,7 @@ public class CometRenderer {
     @Getter
     @Setter
     @API(status = API.Status.STABLE, since = "2.6")
+    //TODO move to GLDevice
     private GLProgram currentProgram;
     /** Стек для областей, используемых ножницами. **/
     @Getter
@@ -250,11 +251,13 @@ public class CometRenderer {
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.9")
     public void disableStencil() {
+        //TODO move to GLDevice
         State.STENCIL.disable();
     }
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.9")
     public void clearStencil(int clearStencil) {
+        //TODO move to GLDevice
         State.STENCIL.enableMask();
         GL11.glClearStencil(clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
@@ -262,6 +265,7 @@ public class CometRenderer {
 
     @API(status = API.Status.MAINTAINED, since = "2.9")
     public void setSampler(int unit, GLSampler sampler) {
+        //TODO move to GLDevice
         GL33.glBindSampler(unit, sampler == null ? 0 : sampler.getId());
     }
 
@@ -324,9 +328,6 @@ public class CometRenderer {
             State.SCISSOR.disable();
 
         currentProgram.bind();
-
         bufferRenderer.draw(buffer, close);
-
-        currentProgram.unbind();
     }
 }

@@ -41,6 +41,7 @@ public class DefaultDirectStateManager implements DirectStateManager {
     public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture) {
         framebuffer.bind(false);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture == null ? 0 : texture.getTexId(), 0);
+        //TODO remove
         State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
@@ -48,21 +49,18 @@ public class DefaultDirectStateManager implements DirectStateManager {
     public void bufferData(GpuBuffer buffer, long size) {
         buffer.bind();
         GL15.glBufferData(buffer.getTarget().glId, size, buffer.getUsage().glId);
-        buffer.unbind();
     }
 
     @Override
     public void bufferData(GpuBuffer buffer, ByteBuffer data) {
         buffer.bind();
         GL15.glBufferData(buffer.getTarget().glId, data, buffer.getUsage().glId);
-        buffer.unbind();
     }
 
     @Override
     public void bufferStorage(GpuBuffer buffer, ByteBuffer data, int flags) {
         buffer.bind();
         ARBBufferStorage.glBufferStorage(buffer.getTarget().glId, data, flags);
-        buffer.unbind();
     }
 
     @Override

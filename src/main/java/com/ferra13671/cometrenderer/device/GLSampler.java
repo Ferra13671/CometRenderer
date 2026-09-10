@@ -4,9 +4,11 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.gltextureutils.TextureFiltering;
 import com.ferra13671.gltextureutils.TextureWrapping;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL33;
 
+@API(status = API.Status.MAINTAINED, since = "3.0")
 @Getter
 public class GLSampler {
     private final int id;

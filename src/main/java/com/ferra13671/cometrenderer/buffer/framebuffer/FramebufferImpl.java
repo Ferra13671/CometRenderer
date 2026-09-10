@@ -112,6 +112,7 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        //TODO remove
         State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
@@ -120,6 +121,7 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearDepth(this.clearDepth);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        //TODO remove
         State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
@@ -128,6 +130,7 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearStencil(this.clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+        //TODO remove
         State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
@@ -138,6 +141,7 @@ public class FramebufferImpl implements Framebuffer {
         GL11.glClearDepth(this.clearDepth);
         GL11.glClearStencil(this.clearStencil);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
+        //TODO remove
         State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
@@ -164,6 +168,7 @@ public class FramebufferImpl implements Framebuffer {
     public void delete() {
         deleteTextures();
 
+        //TODO move to GLDevice
         GL30.glDeleteFramebuffers(this.id);
     }
 }

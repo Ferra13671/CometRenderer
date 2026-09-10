@@ -6,6 +6,4 @@ import org.apiguardian.api.API;
 public interface Bindable {
 
     void bind();
-
-    void unbind();
 }

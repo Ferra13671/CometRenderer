@@ -22,6 +22,7 @@ public record GLShader(String name, int id, ShaderType shaderType, Registry regi
     @Override
     @API(status = API.Status.INTERNAL)
     public void close() {
+        //TODO move to GLDevice
         GL20.glDeleteShader(this.id);
     }
 }
