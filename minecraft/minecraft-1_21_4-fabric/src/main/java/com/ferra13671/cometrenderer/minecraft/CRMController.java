@@ -8,7 +8,7 @@ import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.GLShaderLibraryBuilder;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -75,7 +75,7 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected GLSLFileEntry getMatricesShaderLib() {
-        return new GlShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
+        return new GLShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
                 .name("matrices")
                 .library(
                         """

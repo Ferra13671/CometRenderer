@@ -18,14 +18,14 @@ import java.util.Collections;
 import java.util.HashMap;
 
 @API(status = API.Status.MAINTAINED, since = "2.5")
-public class GlShaderLibraryBuilder<T> extends Builder<GLSLFileEntry> {
+public class GLShaderLibraryBuilder<T> extends Builder<GLSLFileEntry> {
     private String name;
     private T libraryPath;
     private boolean singleIncludeOnly = false;
     private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
     private final CometLoader<T> loader;
 
-    public GlShaderLibraryBuilder(CometLoader<T> loader, GLProgramSnippet... snippets) {
+    public GLShaderLibraryBuilder(CometLoader<T> loader, GLProgramSnippet... snippets) {
         super("shader library");
 
         for (GLProgramSnippet snippet : snippets)
@@ -34,24 +34,24 @@ public class GlShaderLibraryBuilder<T> extends Builder<GLSLFileEntry> {
         this.loader = loader;
     }
 
-    public GlShaderLibraryBuilder<T> name(String name) {
+    public GLShaderLibraryBuilder<T> name(String name) {
         this.name = name;
         return this;
     }
 
     @NonNull
-    public GlShaderLibraryBuilder<T> library(T libraryPath) {
+    public GLShaderLibraryBuilder<T> library(T libraryPath) {
         this.libraryPath = libraryPath;
         return this;
     }
 
-    public GlShaderLibraryBuilder<T> singleIncludeOnly() {
+    public GLShaderLibraryBuilder<T> singleIncludeOnly() {
         this.singleIncludeOnly = true;
         return this;
     }
 
     @NonNull
-    public <S extends GLUniform> GlShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
+    public <S extends GLUniform> GLShaderLibraryBuilder<T> uniform(String name, UniformType<S> uniformType) {
         if (this.uniforms.containsKey(name))
             ErrorHandlers.onDoubleUniformAddition(name);
 
@@ -60,7 +60,7 @@ public class GlShaderLibraryBuilder<T> extends Builder<GLSLFileEntry> {
     }
 
     @NonNull
-    public GlShaderLibraryBuilder<T> sampler(String name) {
+    public GLShaderLibraryBuilder<T> sampler(String name) {
         uniform(name, UniformType.SAMPLER);
         return this;
     }

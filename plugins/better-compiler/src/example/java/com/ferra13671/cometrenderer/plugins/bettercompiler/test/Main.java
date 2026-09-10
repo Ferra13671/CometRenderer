@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.GLShaderLibraryBuilder;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import lombok.experimental.UtilityClass;
 
@@ -22,18 +22,18 @@ public class Main {
         BetterCompilerPlugin.init();
 
         BetterCompilerPlugin.registerShaderLibraries(
-                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                new GLShaderLibraryBuilder<>(CometLoaders.IN_JAR)
                         .name("exampleLib1")
                         .library("exampleLibrary1.glsl")
                         .uniform("shaderColor", UniformType.VEC4)
                         .build(),
-                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                new GLShaderLibraryBuilder<>(CometLoaders.IN_JAR)
                         .name("exampleLib2")
                         .library("exampleLibrary2.glsl")
                         .uniform("Projection", UniformType.BUFFER)
                         .uniform("modelViewMat", UniformType.MATRIX4)
                         .build(),
-                new GlShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                new GLShaderLibraryBuilder<>(CometLoaders.IN_JAR)
                         .name("exampleLib3")
                         .library("exampleLibrary3.glsl")
                         .build()

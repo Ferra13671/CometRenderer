@@ -11,7 +11,7 @@ import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.minecraft.mixins.ICommandEncoder;
 import com.ferra13671.cometrenderer.minecraft.mixins.IGlCommandEncoder;
 import com.ferra13671.cometrenderer.minecraft.mixins.IGpuDevice;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.GlShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.GLShaderLibraryBuilder;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.*;
@@ -99,7 +99,7 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected GLSLFileEntry getMatricesShaderLib() {
-        return new GlShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
+        return new GLShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
                 .name("matrices")
                 .library(
                         """
