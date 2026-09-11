@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.glsl;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
-import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
@@ -62,7 +61,7 @@ public class GLProgram implements Bindable, Closeable {
      */
     @Override
     public void bind() {
-        State.PROGRAM.bind(getId());
+        CometRenderer.getDevice().getPipelineStateManager().setProgram(getId());
 
         if (!this.updatedUniforms.isEmpty()) {
             for (GLUniform uniform : this.updatedUniforms)

@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.device.directstate;
 
-import com.ferra13671.cometrenderer.State;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.gltextureutils.GlTex;
@@ -28,7 +28,7 @@ public class DefaultDirectStateManager implements DirectStateManager {
     @Override
     public int createSampler() {
         int sampler = GL33.glGenSamplers();
-        State.TEXTURE.activeTexture(GL13.GL_TEXTURE0);
+        CometRenderer.getDevice().getPipelineStateManager().ensureTextureUnit(0);
         int prevSampler = GL11.glGetInteger(GL33.GL_SAMPLER_BINDING);
 
         GL33.glBindSampler(0, sampler);
@@ -41,8 +41,6 @@ public class DefaultDirectStateManager implements DirectStateManager {
     public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture) {
         framebuffer.bind(false);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture == null ? 0 : texture.getTexId(), 0);
-        //TODO remove
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override

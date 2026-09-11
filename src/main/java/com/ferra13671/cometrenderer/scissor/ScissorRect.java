@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.scissor;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
@@ -18,7 +19,7 @@ public record ScissorRect(int x, int y, int width, int height) {
      * Устанавливает данную область активной для ножниц.
      */
     public void bind() {
-        GL20.glScissor(this.x, this.y, this.width, this.height);
+        CometRenderer.getDevice().getPipelineStateManager().scissorBox(this.x, this.y, this.width, this.height);
     }
 
     /**

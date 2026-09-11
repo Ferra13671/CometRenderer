@@ -3,6 +3,8 @@ package com.ferra13671.cometrenderer.device;
 import com.ferra13671.cometrenderer.device.directstate.ARBDirectStateManager;
 import com.ferra13671.cometrenderer.device.directstate.DefaultDirectStateManager;
 import com.ferra13671.cometrenderer.device.directstate.DirectStateManager;
+import com.ferra13671.cometrenderer.device.state.PipelineStateManager;
+import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.device.vertexformat.ARBVertexFormatManager;
@@ -21,6 +23,8 @@ public class GLDevice {
     private final MeshBufferManager meshBufferManager;
 
     private final ResourceTracker resourceTracker = new ResourceTracker();
+
+    private PipelineStateManager pipelineStateManager = new PipelineStateManagerImpl();
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
     private GLProgram currentProgram;

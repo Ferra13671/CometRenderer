@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.buffer.framebuffer;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.State;
 import com.ferra13671.gltextureutils.ColorMode;
 import com.ferra13671.gltextureutils.GLTexture;
 import com.ferra13671.gltextureutils.TextureFiltering;
@@ -104,7 +103,10 @@ public class FramebufferImpl implements Framebuffer {
 
     @Override
     public void bind(boolean setViewport) {
-        State.FRAMEBUFFER.bindFramebuffer(this.id, setViewport, getWidth(), getHeight());
+        CometRenderer.getDevice().getPipelineStateManager().setFramebuffer(this.id);
+
+        if (setViewport)
+            CometRenderer.getDevice().getPipelineStateManager().setViewport(0, 0, getWidth(), getHeight());
     }
 
     @Override
@@ -112,8 +114,6 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        //TODO remove
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
@@ -121,8 +121,6 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearDepth(this.clearDepth);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        //TODO remove
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
@@ -130,8 +128,6 @@ public class FramebufferImpl implements Framebuffer {
         bind(false);
         GL11.glClearStencil(this.clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-        //TODO remove
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
@@ -141,8 +137,6 @@ public class FramebufferImpl implements Framebuffer {
         GL11.glClearDepth(this.clearDepth);
         GL11.glClearStencil(this.clearStencil);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-        //TODO remove
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     private void deleteTextures() {

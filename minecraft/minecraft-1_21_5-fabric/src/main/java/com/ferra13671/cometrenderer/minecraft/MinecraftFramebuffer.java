@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.minecraft;
 
-import com.ferra13671.cometrenderer.State;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.mojang.blaze3d.opengl.GlDevice;
 import com.mojang.blaze3d.opengl.GlTexture;
@@ -48,7 +48,9 @@ public class MinecraftFramebuffer implements Framebuffer {
 
     @Override
     public void bind(boolean setViewport) {
-        State.FRAMEBUFFER.bindFramebuffer(getId(), setViewport, getWidth(), getHeight());
+        CometRenderer.getDevice().getPipelineStateManager().setFramebuffer(getId());
+        if (setViewport)
+            CometRenderer.getDevice().getPipelineStateManager().setViewport(0, 0, getWidth(), getHeight());
     }
 
     @Override
@@ -72,7 +74,6 @@ public class MinecraftFramebuffer implements Framebuffer {
             bind(false);
             GL11.glClearDepth(this.clearDepth);
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-            State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
         }
     }
 
@@ -81,7 +82,6 @@ public class MinecraftFramebuffer implements Framebuffer {
         bind(false);
         GL11.glClearStencil(this.clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override

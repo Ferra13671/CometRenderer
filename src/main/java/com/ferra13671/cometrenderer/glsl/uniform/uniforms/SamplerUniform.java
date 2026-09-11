@@ -1,14 +1,12 @@
 package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
 
-import com.ferra13671.cometrenderer.State;
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.gltextureutils.GlTex;
 import lombok.Getter;
 import lombok.Setter;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 
 import java.util.function.BiConsumer;
 
@@ -42,10 +40,7 @@ public class SamplerUniform extends GLUniform {
      * @see GlTex
      */
     public void set(GlTex texture) {
-        this.uploadRunnable = () -> {
-            State.TEXTURE.activeTexture(GL13.GL_TEXTURE0 + this.samplerId);
-            State.TEXTURE.bindTexture(texture.getTexId());
-        };
+        this.uploadRunnable = () -> CometRenderer.getDevice().getPipelineStateManager().bindTexture(this.samplerId, texture.getTexId());
         this.program.addUpdatedUniform(this);
     }
 
@@ -55,10 +50,7 @@ public class SamplerUniform extends GLUniform {
      * @param textureId айди текстуры в OpenGL.
      */
     public void set(int textureId) {
-        this.uploadRunnable = () -> {
-            State.TEXTURE.activeTexture(GL30.GL_TEXTURE0 + this.samplerId);
-            State.TEXTURE.bindTexture(textureId);
-        };
+        this.uploadRunnable = () -> CometRenderer.getDevice().getPipelineStateManager().bindTexture(this.samplerId, textureId);
         this.program.addUpdatedUniform(this);
     }
 

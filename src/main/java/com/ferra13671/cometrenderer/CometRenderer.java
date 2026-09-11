@@ -180,8 +180,8 @@ public class CometRenderer {
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
     public void setDefaultBlend() {
-        State.BLEND.enable();
-        GL11.glBlendFunc(SrcFactor.SRC_ALPHA.glId, DstFactor.ONE_MINUS_SRC_ALPHA.glId);
+        device.getPipelineStateManager().setBlend(true);
+        device.getPipelineStateManager().setBlendFunc(SrcFactor.SRC_ALPHA, DstFactor.ONE_MINUS_SRC_ALPHA, SrcFactor.SRC_ALPHA, DstFactor.ONE_MINUS_SRC_ALPHA);
     }
 
     /**
@@ -195,8 +195,8 @@ public class CometRenderer {
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
     public void setBlend(SrcFactor srcFactor, DstFactor dstFactor) {
-        State.BLEND.enable();
-        GL11.glBlendFunc(srcFactor.glId, dstFactor.glId);
+        device.getPipelineStateManager().setBlend(true);
+        device.getPipelineStateManager().setBlendFunc(srcFactor, dstFactor, srcFactor, dstFactor);
     }
 
     /**
@@ -212,8 +212,8 @@ public class CometRenderer {
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
     public void setBlend(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {
-        State.BLEND.enable();
-        GL14.glBlendFuncSeparate(srcColor.glId, dstColor.glId, srcAlpha.glId, dstAlpha.glId);
+        device.getPipelineStateManager().setBlend(true);
+        device.getPipelineStateManager().setBlendFunc(srcColor, dstColor, srcAlpha, dstAlpha);
     }
 
     /**
@@ -223,54 +223,47 @@ public class CometRenderer {
      */
     @API(status = API.Status.MAINTAINED, since = "2.6")
     public void disableBlend() {
-        State.BLEND.disable();
+        device.getPipelineStateManager().setBlend(false);
     }
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.9")
     public void setStencil(StencilInfo stencil) {
-        State.STENCIL.enable();
+        device.getPipelineStateManager().setStencil(true);
 
-        if (stencil.stencilMask() != null) {
-            if (stencil.stencilMask())
-                State.STENCIL.enableMask();
-            else
-                State.STENCIL.disableMask();
-        }
-        if (stencil.depthMask() != null) {
-            if (stencil.depthMask())
-                State.DEPTH_TEST.enableMask();
-            else
-                State.DEPTH_TEST.disableMask();
-        }
+        if (stencil.stencilMask() != null)
+            device.getPipelineStateManager().setStencilMask(stencil.stencilMask());
+
+        if (stencil.depthMask() != null)
+            device.getPipelineStateManager().setDepthMask(stencil.depthMask());
+
         ColorMask colorMask = stencil.colorMask();
         if (colorMask != null)
-            State.COLOR_MASK.colorMask(colorMask.red(), colorMask.green(), colorMask.blue(), colorMask.alpha());
+            device.getPipelineStateManager().setColorMask(colorMask.red(), colorMask.green(), colorMask.blue(), colorMask.alpha());
+
         StencilFunction function = stencil.func();
         if (function != null)
-            State.STENCIL.function(function.function(), function.ref(), function.mask());
+            device.getPipelineStateManager().setStencilFunc(function.function(), function.ref(), function.mask());
+
         StencilOp op = stencil.op();
         if (op != null)
-            State.STENCIL.op(op.stencilFailed(), op.stencilPassedDepthFailed(), op.allPassed());
+            device.getPipelineStateManager().setStencilOp(op.stencilFailed(), op.stencilPassedDepthFailed(), op.allPassed());
     }
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.9")
     public void disableStencil() {
-        //TODO move to GLDevice
-        State.STENCIL.disable();
+        device.getPipelineStateManager().setStencil(false);
     }
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.9")
     public void clearStencil(int clearStencil) {
-        //TODO move to GLDevice
-        State.STENCIL.enableMask();
+        device.getPipelineStateManager().setStencilMask(true);
         GL11.glClearStencil(clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
     }
 
     @API(status = API.Status.MAINTAINED, since = "2.9")
     public void setSampler(int unit, GLSampler sampler) {
-        //TODO move to GLDevice
-        GL33.glBindSampler(unit, sampler == null ? 0 : sampler.getId());
+        device.getPipelineStateManager().bindSampler(unit, sampler == null ? 0 : sampler.getId());
     }
 
     /**
@@ -326,10 +319,10 @@ public class CometRenderer {
     @API(status = API.Status.MAINTAINED, since = "1.7")
     public <T> void draw(BufferRenderer<T> bufferRenderer, T buffer, boolean close) {
         if (!scissorStack.isEmpty()) {
-            State.SCISSOR.enable();
+            device.getPipelineStateManager().setScissor(true);
             scissorStack.peek().bind();
         } else
-            State.SCISSOR.disable();
+            device.getPipelineStateManager().setScissor(false);
 
         getCurrentProgram().bind();
         bufferRenderer.draw(buffer, close);

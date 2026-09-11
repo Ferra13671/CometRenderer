@@ -1,6 +1,5 @@
 package com.ferra13671.cometrenderer.minecraft;
 
-import com.ferra13671.cometrenderer.State;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import org.lwjgl.opengl.GL11;
@@ -82,7 +81,6 @@ public class MinecraftFramebuffer implements Framebuffer {
         bind(false);
         GL11.glClearStencil(this.clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-        State.FRAMEBUFFER.bindFramebuffer(0, false, 0, 0);
     }
 
     @Override
