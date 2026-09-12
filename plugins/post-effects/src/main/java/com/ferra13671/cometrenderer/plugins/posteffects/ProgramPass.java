@@ -30,7 +30,7 @@ public class ProgramPass {
 
         CometRenderer.setCurrentProgram(program);
         for (Pair<Integer, Function<PostEffectContext, Framebuffer>> input : inputs)
-            program.getSampler(input.getLeft()).set(input.getRight().apply(context).getColorTextureId());
+            program.getSampler(input.getLeft()).setTextureSampler(input.getRight().apply(context).getColorTextureId(), 0);
         preRenderConsumer.accept(program);
 
         CometRenderer.draw(context.mesh(), false);

@@ -74,7 +74,7 @@ public class RoundedBlurBatch extends AbstractPrimitiveBatch {
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
 
-        CometRenderer.getCurrentProgram().getSampler(0).set(this.blurProvider.getFramebuffer().getColorTextureId());
+        CometRenderer.getCurrentProgram().getSampler(0).setTextureSampler(this.blurProvider.getFramebuffer().getColorTextureId(), 0);
 
         CometRenderer.draw(this.mesh, false);
     }

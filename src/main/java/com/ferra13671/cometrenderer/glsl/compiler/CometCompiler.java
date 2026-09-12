@@ -68,6 +68,8 @@ public class CometCompiler {
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS));
 
         if (status != CompileStatus.FAILURE) {
+            CometRenderer.getDevice().getPipelineStateManager().setProgram(programId);
+
             int samplersCount = 0;
             int bufferUniformsCount = 0;
 
@@ -84,7 +86,7 @@ public class CometCompiler {
 
                 if (uniform instanceof SamplerUniform sampler) {
                     samplers.add(sampler);
-                    sampler.setSamplerId(samplersCount);
+                    sampler.setUnit(samplersCount);
                     samplersCount++;
                 }
 
@@ -157,7 +159,7 @@ public class CometCompiler {
     }
 
     @API(status = API.Status.INTERNAL)
-    protected void removeComments(@NonNull Registry glslFileRegistry) {
+    void removeComments(@NonNull Registry glslFileRegistry) {
         GLSLContent content = glslFileRegistry.get(CometTags.CONTENT).orElseThrow();
 
         content.set(Pattern.compile("//.*", Pattern.MULTILINE).matcher(content.concatLines()).replaceAll(""));

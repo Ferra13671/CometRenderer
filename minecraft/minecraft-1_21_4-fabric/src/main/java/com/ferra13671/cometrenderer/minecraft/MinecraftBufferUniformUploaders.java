@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL32;
 
 import java.util.function.BiConsumer;
 
+//TODO move to MinecraftEXT
 public class MinecraftBufferUniformUploaders {
 
     public static final BiConsumer<BufferUniform, GpuBuffer> GPU_BUFFER = (bufferUniform, gpuBuffer) ->

@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.scissor;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL20;
 
 /**
  * Объект, представляющий собой область, используемая ножницами в OpenGL для установки границы, за пределами которой при отрисовке пиксели будут проигнорированы.

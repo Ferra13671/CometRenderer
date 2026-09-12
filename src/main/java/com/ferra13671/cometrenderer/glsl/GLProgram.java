@@ -66,8 +66,13 @@ public class GLProgram implements Bindable, Closeable {
         if (!this.updatedUniforms.isEmpty()) {
             for (GLUniform uniform : this.updatedUniforms)
                 uniform.upload();
+
             this.updatedUniforms.clear();
         }
+
+        if (!this.samplers.isEmpty())
+            for (GLUniform sampler : this.samplers)
+                sampler.upload();
     }
 
     /**

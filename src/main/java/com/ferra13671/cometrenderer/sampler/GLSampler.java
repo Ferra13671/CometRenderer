@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.device;
+package com.ferra13671.cometrenderer.sampler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.gltextureutils.TextureFiltering;

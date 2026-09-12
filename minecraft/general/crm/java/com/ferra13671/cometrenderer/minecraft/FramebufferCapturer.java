@@ -32,7 +32,7 @@ public class FramebufferCapturer implements HasFramebuffer {
 
         this.capturedFramebuffer.bind(true);
         CometRenderer.setCurrentProgram(CRM.getPrograms().BLIT);
-        CometRenderer.getCurrentProgram().getSampler(0).set(framebuffer.getColorTextureId());
+        CometRenderer.getCurrentProgram().getSampler(0).setTextureSampler(framebuffer.getColorTextureId(), 0);
 
         int width = framebuffer.getWidth();
         int height = framebuffer.getHeight();

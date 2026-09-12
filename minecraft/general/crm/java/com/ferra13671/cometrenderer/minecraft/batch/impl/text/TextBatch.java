@@ -53,7 +53,7 @@ public class TextBatch implements IPrimitiveBatch {
                     y += glyph.height();
                 }
 
-                ColoredTextureBatch batch = this.batches.computeIfAbsent(glyph.instance().getTexture(), texture -> new ColoredTextureBatch().setTexture(texture));
+                ColoredTextureBatch batch = this.batches.computeIfAbsent(glyph.instance().getTexture(), texture -> new ColoredTextureBatch().texture(texture));
 
                 if (text.isShadow())
                     batch.rectSized(

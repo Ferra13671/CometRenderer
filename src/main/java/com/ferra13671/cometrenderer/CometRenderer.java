@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
-import com.ferra13671.cometrenderer.device.GLSampler;
 import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
@@ -259,11 +258,6 @@ public class CometRenderer {
         device.getPipelineStateManager().setStencilMask(true);
         GL11.glClearStencil(clearStencil);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-    }
-
-    @API(status = API.Status.MAINTAINED, since = "2.9")
-    public void setSampler(int unit, GLSampler sampler) {
-        device.getPipelineStateManager().bindSampler(unit, sampler == null ? 0 : sampler.getId());
     }
 
     /**

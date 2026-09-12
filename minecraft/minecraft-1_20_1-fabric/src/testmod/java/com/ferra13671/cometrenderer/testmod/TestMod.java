@@ -1,7 +1,10 @@
 package com.ferra13671.cometrenderer.testmod;
 
+import com.ferra13671.cometrenderer.minecraft.MinecraftEXT;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import com.ferra13671.cometrenderer.minecraft.CRMInstance;
@@ -24,7 +27,9 @@ public class TestMod implements PreLaunchEntrypoint, Mc {
 
         RenderHudCallback.EVENT.register(() -> {
             instance.setupUIMatrix();
-            UIRenderTest.draw();
+            UIRenderTest.draw(MinecraftEXT.getTextureSampler(Minecraft.getInstance().getTextureManager().getTexture(
+                    new ResourceLocation("minecraft", "textures/block/cobblestone.png")
+            )));
             instance.restoreUIMatrix();
         });
         RenderWorldCallback.EVENT.register(this::renderBoxes);

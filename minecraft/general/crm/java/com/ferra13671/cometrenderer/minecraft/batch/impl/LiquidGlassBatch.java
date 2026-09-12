@@ -46,7 +46,7 @@ public class LiquidGlassBatch extends RoundedRectBatch {
 
         Framebuffer framebuffer = this.hasFramebuffer.getFramebuffer();
 
-        CometRenderer.getCurrentProgram().getSampler(0).set(framebuffer.getColorTextureId());
+        CometRenderer.getCurrentProgram().getSampler(0).setTextureSampler(framebuffer.getColorTextureId(), 0);
         CometRenderer.getCurrentProgram().getUniform("texelFetch", UniformType.VEC2).set(new Vector2f(1f / framebuffer.getWidth(), 1f / framebuffer.getHeight()));
 
         CometRenderer.draw(this.mesh, false);

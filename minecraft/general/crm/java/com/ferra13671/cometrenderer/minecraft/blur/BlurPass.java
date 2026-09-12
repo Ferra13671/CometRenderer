@@ -29,7 +29,7 @@ public class BlurPass {
         program.getUniform("offsets", UniformType.VEC2).set(this.offset);
         program.getUniform("radius", UniformType.INT).set(this.radius);
         program.getUniform("weights", UniformType.FLOAT_ARRAY).set(this.weights);
-        program.getSampler(0).set(input.getColorTextureId());
+        program.getSampler(0).setTextureSampler(input.getColorTextureId(), 0);
 
         output.bind(false);
         CometRenderer.draw(mesh, false);

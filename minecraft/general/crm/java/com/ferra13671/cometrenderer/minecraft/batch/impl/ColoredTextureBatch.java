@@ -6,7 +6,10 @@ import com.ferra13671.cometrenderer.minecraft.CustomVertexElementTypes;
 import com.ferra13671.cometrenderer.minecraft.CustomVertexFormats;
 import com.ferra13671.cometrenderer.minecraft.RectColors;
 import com.ferra13671.cometrenderer.minecraft.batch.AbstractPrimitiveBatch;
-import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
+import com.ferra13671.cometrenderer.sampler.GLSampler;
+import com.ferra13671.cometrenderer.sampler.unit.SamplerUnitBindable;
+import com.ferra13671.cometrenderer.sampler.unit.TextureUnitBindable;
+import com.ferra13671.cometrenderer.sampler.unit.UnitBindable;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -16,11 +19,10 @@ import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 
-import java.util.function.BiConsumer;
-
 @API(status = API.Status.MAINTAINED, since = "2.2")
 public class ColoredTextureBatch extends AbstractPrimitiveBatch {
-    private Runnable uploadRunnable = null;
+    private UnitBindable textureBindable = TextureUnitBindable.EMPTY;
+    private UnitBindable samplerBindable = SamplerUnitBindable.EMPTY;
 
     public ColoredTextureBatch(Runnable preDrawRunnable) {
         this();
@@ -40,25 +42,63 @@ public class ColoredTextureBatch extends AbstractPrimitiveBatch {
         super(Mesh.builder(allocatorSize, DrawMode.QUADS, CustomVertexFormats.POSITION_TEXTURE_COLOR));
     }
 
-    public ColoredTextureBatch setTexture(int textureId) {
-        SamplerUniform uniform = CRM.getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
-        this.uploadRunnable = () -> uniform.set(textureId);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch texture(GlTex texture) {
+        return texture(texture == null ? 0 : texture.getTexId());
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch texture(int textureId) {
+        return texture(textureId == 0 ? TextureUnitBindable.EMPTY : new TextureUnitBindable(textureId));
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch texture(UnitBindable bindable) {
+        this.textureBindable = bindable;
 
         return this;
     }
 
-    public ColoredTextureBatch setTexture(GlTex texture) {
-        SamplerUniform uniform = CRM.getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
-        this.uploadRunnable = () -> uniform.set(texture);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch sampler(GLSampler sampler) {
+        return sampler(sampler == null ? 0 : sampler.getId());
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch sampler(int samplerId) {
+        return sampler(samplerId == 0 ? SamplerUnitBindable.EMPTY : new SamplerUnitBindable(samplerId));
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch sampler(UnitBindable bindable) {
+        this.samplerBindable = bindable;
 
         return this;
     }
 
-    public <T> ColoredTextureBatch setTexture(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
-        SamplerUniform uniform = CRM.getPrograms().POSITION_TEXTURE_COLOR.getSampler(0);
-        this.uploadRunnable = () -> uniform.set(uploadConsumer, texture);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch textureSampler(GlTex texture, GLSampler sampler) {
+        return texture(texture).sampler(sampler);
+    }
 
-        return this;
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch textureSampler(int[] ids) {
+        return textureSampler(ids[0], ids[1]);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch textureSampler(UnitBindable[] bindables) {
+        return textureSampler(bindables[0], bindables[1]);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch textureSampler(int textureId, int samplerId) {
+        return texture(textureId).sampler(samplerId);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public ColoredTextureBatch textureSampler(UnitBindable textureBindable, UnitBindable samplerBindable) {
+        return texture(textureBindable).sampler(samplerBindable);
     }
 
     public ColoredTextureBatch rectSized(float x, float y, float width, float height, RectColors rectColors, TextureBorder textureBorder) {
@@ -103,8 +143,7 @@ public class ColoredTextureBatch extends AbstractPrimitiveBatch {
         CometRenderer.applyShaderColorUniform();
         CRM.applyMatrixUniform();
 
-        if (this.uploadRunnable != null)
-            this.uploadRunnable.run();
+        CometRenderer.getCurrentProgram().getSampler(0).setTextureSampler(this.textureBindable, this.samplerBindable);
 
         CometRenderer.draw(this.mesh, false);
     }

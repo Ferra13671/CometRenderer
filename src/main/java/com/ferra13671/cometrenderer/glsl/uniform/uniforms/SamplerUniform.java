@@ -1,14 +1,16 @@
 package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
 
-import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.sampler.GLSampler;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
+import com.ferra13671.cometrenderer.sampler.unit.SamplerUnitBindable;
+import com.ferra13671.cometrenderer.sampler.unit.TextureUnitBindable;
+import com.ferra13671.cometrenderer.sampler.unit.UnitBindable;
 import com.ferra13671.gltextureutils.GlTex;
 import lombok.Getter;
 import lombok.Setter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
-
-import java.util.function.BiConsumer;
 
 /**
  * Униформа, хранящая в себе параметр в виде текстуры.
@@ -16,13 +18,14 @@ import java.util.function.BiConsumer;
  * @see GLUniform
  * @see UniformType
  */
+@API(status = API.Status.STABLE, since = "1.1")
 public class SamplerUniform extends GLUniform {
     /** Айди семплера. **/
     @Getter
     @Setter
-    private int samplerId;
-    /** Runnable, загружающий параметр в униформу. **/
-    private Runnable uploadRunnable = null;
+    private int unit;
+    private UnitBindable textureBindable = TextureUnitBindable.EMPTY;
+    private UnitBindable samplerBindable = SamplerUnitBindable.EMPTY;
 
     /**
      * @param name имя униформы.
@@ -30,48 +33,71 @@ public class SamplerUniform extends GLUniform {
      */
     public SamplerUniform(String name, int location) {
         super(name, location);
+
+        GL20.glUniform1i(this.location, getUnit());
     }
 
-    /**
-     * Устанавливает текстуру из GlTex.
-     *
-     * @param texture GlTex.
-     *
-     * @see GlTex
-     */
-    public void set(GlTex texture) {
-        this.uploadRunnable = () -> CometRenderer.getDevice().getPipelineStateManager().bindTexture(this.samplerId, texture.getTexId());
-        this.program.addUpdatedUniform(this);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTexture(GlTex texture) {
+        setTexture(texture == null ? 0 : texture.getTexId());
     }
 
-    /**
-     * Устанавливает текстуру при помощи её айди в OpenGL.
-     *
-     * @param textureId айди текстуры в OpenGL.
-     */
-    public void set(int textureId) {
-        this.uploadRunnable = () -> CometRenderer.getDevice().getPipelineStateManager().bindTexture(this.samplerId, textureId);
-        this.program.addUpdatedUniform(this);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTexture(int textureId) {
+        setTexture(textureId == 0 ? TextureUnitBindable.EMPTY : new TextureUnitBindable(textureId));
     }
 
-    /**
-     * Устанавливает текстуру при помощи пользовательского установщика и объекта.
-     *
-     * @param uploadConsumer установщик текстуры.
-     * @param texture объект текстуры.
-     * @param <T> текстура.
-     */
-    public <T> void set(BiConsumer<SamplerUniform, T> uploadConsumer, T texture) {
-        this.uploadRunnable = () -> uploadConsumer.accept(this, texture);
-        this.program.addUpdatedUniform(this);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTexture(UnitBindable bindable) {
+        this.textureBindable = bindable;
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setSampler(GLSampler sampler) {
+        setSampler(sampler == null ? 0 : sampler.getId());
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setSampler(int samplerId) {
+        setSampler(samplerId == 0 ? SamplerUnitBindable.EMPTY : new SamplerUnitBindable(samplerId));
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setSampler(UnitBindable bindable) {
+        this.samplerBindable = bindable;
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTextureSampler(GlTex texture, GLSampler sampler) {
+        setTexture(texture);
+        setSampler(sampler);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTextureSampler(int[] ids) {
+        setTextureSampler(ids[0], ids[1]);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTextureSampler(UnitBindable[] bindables) {
+        setTextureSampler(bindables[0], bindables[1]);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTextureSampler(int textureId, int samplerId) {
+        setTexture(textureId);
+        setSampler(samplerId);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void setTextureSampler(UnitBindable textureBindable, UnitBindable samplerBindable) {
+        setTexture(textureBindable);
+        setSampler(samplerBindable);
     }
 
     @Override
     public void upload() {
-        if (this.uploadRunnable != null) {
-            GL20.glUniform1i(this.location, getSamplerId());
-
-            this.uploadRunnable.run();
-        }
+        this.textureBindable.bind(getUnit());
+        this.samplerBindable.bind(getUnit());
     }
 }

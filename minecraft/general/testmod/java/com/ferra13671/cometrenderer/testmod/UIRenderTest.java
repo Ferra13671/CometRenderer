@@ -2,13 +2,12 @@ package com.ferra13671.cometrenderer.testmod;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.StencilInfo;
-import com.ferra13671.cometrenderer.minecraft.RectColors;
-import com.ferra13671.cometrenderer.minecraft.RenderColor;
+import com.ferra13671.cometrenderer.minecraft.*;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurPass;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurProvider;
 import com.ferra13671.cometrenderer.minecraft.font.FontType;
-import com.ferra13671.gltextureutils.*;
+import com.ferra13671.cometrenderer.sampler.unit.UnitBindable;import com.ferra13671.gltextureutils.*;
 import com.ferra13671.gltextureutils.atlas.TextureBorder;
 import com.ferra13671.gltextureutils.loader.FileEntry;
 import com.ferra13671.cometrenderer.minecraft.batch.IPrimitiveBatch;
@@ -18,8 +17,6 @@ import com.ferra13671.cometrenderer.minecraft.batch.impl.text.TextBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.RoundedBlurBatch;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurConfig;
 import com.ferra13671.gltextureutils.loader.TextureLoader;
-import com.ferra13671.cometrenderer.minecraft.FramebufferCapturer;
-import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.font.FontInfo;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -42,7 +39,7 @@ public final class UIRenderTest {
                 TextureLoader.FILE_ENTRY.createTextureBuilder()
                         .name("Test-texture")
                         .info(new FileEntry("texture.jpg", PathMode.INSIDE_JAR))
-                        .filtering(TextureFiltering.SMOOTH)
+                        .filtering(TextureFiltering.DEFAULT)
                         .wrapping(TextureWrapping.DEFAULT)
                         .build();
 
@@ -60,12 +57,12 @@ public final class UIRenderTest {
         }
 
         staticDrawer = new BasicTextureBatch()
-                .setTexture(texture)
+                .texture(texture)
                 .rectSized(460, 100, 100, 100, new TextureBorder(0, 0, 1, 1))
                 .build();
     }
 
-    public static void draw() {
+    public static void draw(UnitBindable[] cobblestoneBindable) {
         blurProvider.blurFrame();
         liquidGlassBlurProvider.blurFrame();
         framebufferCapturer.capture(CRM.getMainFramebuffer());
@@ -73,7 +70,7 @@ public final class UIRenderTest {
 
         drawOneColorRect();
         drawMultiColorRect();
-        drawTextures();
+        drawTextures(cobblestoneBindable);
         drawRoundedRects();
         drawText();
         drawBlur();
@@ -102,11 +99,11 @@ public final class UIRenderTest {
                 .close();
     }
 
-    private static void drawTextures() {
+    private static void drawTextures(UnitBindable[] cobblestoneBindable) {
         staticDrawer.tryDraw();
 
         new RoundedTextureBatch()
-                .setTexture(texture)
+                .textureSampler(cobblestoneBindable)
                 .rectSized(460, 210, 100, 100, 20, RectColors.oneColor(RenderColor.WHITE), new TextureBorder(0, 0, 1, 1))
                 .build()
                 .tryDraw()
