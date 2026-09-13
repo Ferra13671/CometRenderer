@@ -12,7 +12,8 @@
     "IGlBuffer",
     "IGlCommandEncoder",
     "RenderSystemMixin",
-    "WindowMixin"
+    "WindowMixin",
+    "IrisRenderTargetsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

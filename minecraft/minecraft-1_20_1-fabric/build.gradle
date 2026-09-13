@@ -8,3 +8,12 @@ plugins {
 apply from: rootProject.file("minecraft/scripts/minecraft.gradle")
 apply from: rootProject.file("minecraft/scripts/old-fabric-loader.gradle")
 apply from: rootProject.file("minecraft/scripts/mappings.gradle")
+
+//peace of shit
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.lwjgl') {
+            details.useVersion '3.3.1'
+        }
+    }
+}

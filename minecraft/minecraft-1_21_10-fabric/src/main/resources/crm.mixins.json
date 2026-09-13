@@ -11,7 +11,8 @@
     "GlTextureMixin",
     "IGlBuffer",
     "IGlCommandEncoder",
-    "RenderSystemMixin"
+    "RenderSystemMixin",
+    "IrisRenderTargetsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

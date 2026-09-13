@@ -23,6 +23,13 @@ sourceSets {
     sourceSets.main.resources.srcDirs += rootProject.file("minecraft/general/crm/resources")
 }
 
+repositories {
+    maven {
+        name = "modrinth"
+        url = 'https://api.modrinth.com/maven'
+    }
+}
+
 loom {
     accessWidenerPath = file("src/main/resources/crm.accesswidener")
 
@@ -45,6 +52,9 @@ configurations {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.ext.minecraft_version}"
+
+    if (project.hasProperty('iris_version'))
+        compileOnly "maven.modrinth:iris:${project.iris_version}"
 
     library "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
     library(rootProject.project("plugins:better-compiler")) {
