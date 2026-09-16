@@ -15,6 +15,12 @@ public interface Framebuffer {
 
     void bind(boolean setViewport);
 
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    void bindRead();
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    void bindDraw(boolean setViewport);
+
     int getColorTextureId();
 
     int getDepthAndStencilTextureId();

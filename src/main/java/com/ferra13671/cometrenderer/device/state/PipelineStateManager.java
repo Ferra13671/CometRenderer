@@ -35,6 +35,10 @@ public interface PipelineStateManager {
 
     void setFramebuffer(int framebufferId);
 
+    void setReadFramebuffer(int framebufferId);
+
+    void setDrawFramebuffer(int framebufferId);
+
     void setViewport(int x, int y, int width, int height);
 
     void ensureTextureUnit(int unit);

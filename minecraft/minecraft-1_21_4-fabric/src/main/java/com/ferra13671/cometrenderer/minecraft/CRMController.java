@@ -86,6 +86,16 @@ public class CRMController extends AbstractCRMController {
             }
 
             @Override
+            public void setReadFramebuffer(int framebufferId) {
+                GlStateManager._glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebufferId);
+            }
+
+            @Override
+            public void setDrawFramebuffer(int framebufferId) {
+                GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, framebufferId);
+            }
+
+            @Override
             public void setViewport(int x, int y, int width, int height) {
                 GlStateManager._viewport(x, y, width, height);
             }

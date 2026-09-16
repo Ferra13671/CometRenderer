@@ -48,7 +48,22 @@ public class MinecraftFramebuffer implements Framebuffer {
     @Override
     public void bind(boolean setViewport) {
         CometRenderer.getDevice().getPipelineStateManager().setFramebuffer(getId());
-        if (setViewport)
+        setViewport(setViewport);
+    }
+
+    @Override
+    public void bindRead() {
+        CometRenderer.getDevice().getPipelineStateManager().setReadFramebuffer(getId());
+    }
+
+    @Override
+    public void bindDraw(boolean setViewport) {
+        CometRenderer.getDevice().getPipelineStateManager().setDrawFramebuffer(getId());
+        setViewport(setViewport);
+    }
+
+    void setViewport(boolean viewport) {
+        if (viewport)
             CometRenderer.getDevice().getPipelineStateManager().setViewport(0, 0, getWidth(), getHeight());
     }
 

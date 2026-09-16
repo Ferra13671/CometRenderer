@@ -39,7 +39,8 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     StencilOpAction allPassed = StencilOpAction.KEEP;
 
     int programId = 0;
-    int framebufferId = 0;
+    int readFramebufferId = 0;
+    int drawFramebufferId = 0;
 
     int activeTextureUnit = 0;
     final int[] boundTextures = IntStream.generate(() -> -1).limit(32).toArray();
@@ -206,10 +207,29 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
 
     @Override
     public void setFramebuffer(int framebufferId) {
-        if (this.framebufferId != framebufferId) {
+        if (this.readFramebufferId != framebufferId || this.drawFramebufferId != framebufferId) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebufferId);
 
-            this.framebufferId = framebufferId;
+            this.readFramebufferId = framebufferId;
+            this.drawFramebufferId = framebufferId;
+        }
+    }
+
+    @Override
+    public void setReadFramebuffer(int framebufferId) {
+        if (this.readFramebufferId != framebufferId) {
+            GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebufferId);
+
+            this.readFramebufferId = framebufferId;
+        }
+    }
+
+    @Override
+    public void setDrawFramebuffer(int framebufferId) {
+        if (this.drawFramebufferId != framebufferId) {
+            GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, framebufferId);
+
+            this.drawFramebufferId = framebufferId;
         }
     }
 
