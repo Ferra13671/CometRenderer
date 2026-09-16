@@ -79,6 +79,24 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
+    public void blit(Framebuffer target, boolean copyDepth, boolean copyStencil) {
+        CometRenderer.getDevice().blitFramebuffer(
+                getId(), getWidth(), getHeight(),
+                target.getId(), target.getWidth(), target.getHeight(),
+                copyDepth, copyStencil
+        );
+    }
+
+    @Override
+    public void blit(int targetFramebufferId, int width, int height, boolean copyDepth, boolean copyStencil) {
+        CometRenderer.getDevice().blitFramebuffer(
+                getId(), getWidth(), getHeight(),
+                targetFramebufferId, width, height,
+                copyDepth, copyStencil
+        );
+    }
+
+    @Override
     public void clearColor() {
         RenderSystem.getDevice().createCommandEncoder().clearColorTexture(this.framebuffer.getColorTexture(), this.clearColor.getRGB());
     }

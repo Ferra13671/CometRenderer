@@ -1,11 +1,8 @@
 package com.ferra13671.cometrenderer.minecraft;
 
-import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
-import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import org.apiguardian.api.API;
 
 import java.awt.*;
@@ -30,18 +27,7 @@ public class FramebufferCapturer implements HasFramebuffer {
     public void capture(Framebuffer framebuffer) {
         FramebufferUtils.resizeToParent(this.capturedFramebuffer, framebuffer);
 
-        this.capturedFramebuffer.bind(true);
-        CometRenderer.setCurrentProgram(CRM.getPrograms().BLIT);
-        CometRenderer.getCurrentProgram().getSampler(0).setTextureSampler(framebuffer.getColorTextureId(), 0);
-
-        int width = framebuffer.getWidth();
-        int height = framebuffer.getHeight();
-        CometRenderer.draw(CometRenderer.createMesh(DrawMode.QUADS, VertexFormat.POSITION, mesh ->
-            mesh
-                    .vertex(0, 0, 0)
-                    .vertex(0, height, 0)
-                    .vertex(width, height, 0)
-                    .vertex(width, 0, 0)
-        ));
+        CRM.getMainFramebuffer().blit(this.capturedFramebuffer, true, true);
+        CRM.getMainFramebuffer().bind(true);
     }
 }

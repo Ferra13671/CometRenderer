@@ -35,6 +35,16 @@ public class ARBDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public void blitFramebuffer(int srcFramebufferId, int dstFramebufferId, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, int mask, int filter) {
+        ARBDirectStateAccess.glBlitNamedFramebuffer(
+                srcFramebufferId, dstFramebufferId,
+                srcX, srcY, srcWidth, srcHeight,
+                dstX, dstY, dstWidth, dstHeight,
+                mask, filter
+        );
+    }
+
+    @Override
     public void bufferData(GpuBuffer buffer, long size) {
         ARBDirectStateAccess.glNamedBufferData(buffer.getId(), size, buffer.getUsage().glId);
     }

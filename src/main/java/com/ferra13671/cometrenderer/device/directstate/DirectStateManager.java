@@ -18,6 +18,13 @@ public interface DirectStateManager {
 
     void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture);
 
+    void blitFramebuffer(
+            int srcFramebufferId, int dstFramebufferId,
+            int srcX, int srcY, int srcWidth, int srcHeight,
+            int dstX, int dstY, int dstWidth, int dstHeight,
+            int mask, int filter
+    );
+
     void bufferData(GpuBuffer buffer, long size);
 
     void bufferData(GpuBuffer buffer, ByteBuffer data);

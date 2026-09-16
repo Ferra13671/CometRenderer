@@ -126,6 +126,24 @@ public class FramebufferImpl implements Framebuffer {
     }
 
     @Override
+    public void blit(Framebuffer target, boolean copyDepth, boolean copyStencil) {
+        CometRenderer.getDevice().blitFramebuffer(
+                getId(), getWidth(), getHeight(),
+                target.getId(), target.getWidth(), target.getHeight(),
+                copyDepth, copyStencil
+        );
+    }
+
+    @Override
+    public void blit(int targetFramebufferId, int width, int height, boolean copyDepth, boolean copyStencil) {
+        CometRenderer.getDevice().blitFramebuffer(
+                getId(), getWidth(), getHeight(),
+                targetFramebufferId, width, height,
+                copyDepth, copyStencil
+        );
+    }
+
+    @Override
     public void clearColor() {
         bind(false);
         GL11.glClearColor(this.clearColor.getRed() / 255f, this.clearColor.getGreen() / 255f, this.clearColor.getBlue() / 255f, this.clearColor.getAlpha() / 255f);

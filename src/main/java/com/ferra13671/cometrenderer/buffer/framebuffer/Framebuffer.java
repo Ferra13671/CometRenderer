@@ -25,6 +25,10 @@ public interface Framebuffer {
 
     int getDepthAndStencilTextureId();
 
+    void blit(Framebuffer target, boolean copyDepth, boolean copyStencil);
+
+    void blit(int framebufferId, int width, int height, boolean copyDepth, boolean copyStencil);
+
     void clearColor();
 
     void clearDepth();

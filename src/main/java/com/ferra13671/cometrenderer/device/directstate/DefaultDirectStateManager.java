@@ -44,6 +44,18 @@ public class DefaultDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public void blitFramebuffer(int srcFramebufferId, int dstFramebufferId, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, int mask, int filter) {
+        CometRenderer.getDevice().getPipelineStateManager().setReadFramebuffer(srcFramebufferId);
+        CometRenderer.getDevice().getPipelineStateManager().setDrawFramebuffer(dstFramebufferId);
+
+        GL30.glBlitFramebuffer(
+                srcX, srcY, srcWidth, srcHeight,
+                dstX, dstY, dstWidth, dstHeight,
+                mask, filter
+        );
+    }
+
+    @Override
     public void bufferData(GpuBuffer buffer, long size) {
         buffer.bind();
         GL15.glBufferData(buffer.getTarget().glId, size, buffer.getUsage().glId);
