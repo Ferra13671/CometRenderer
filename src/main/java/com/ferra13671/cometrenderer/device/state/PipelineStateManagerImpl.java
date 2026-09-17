@@ -260,6 +260,16 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     }
 
     @Override
+    public void bindTexture(int textureId) {
+        bindTexture(this.activeTextureUnit, textureId);
+    }
+
+    @Override
+    public void bindSampler(int samplerId) {
+        bindSampler(this.activeTextureUnit, samplerId);
+    }
+
+    @Override
     public void bindTexture(int unit, int textureId) {
         if (this.boundTextures[unit] != textureId) {
             ensureTextureUnit(unit);

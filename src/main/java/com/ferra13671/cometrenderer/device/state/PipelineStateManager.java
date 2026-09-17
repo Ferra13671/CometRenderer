@@ -43,6 +43,10 @@ public interface PipelineStateManager {
 
     void ensureTextureUnit(int unit);
 
+    void bindTexture(int textureId);
+
+    void bindSampler(int samplerId);
+
     void bindTexture(int unit, int textureId);
 
     void bindSampler(int unit, int samplerId);
