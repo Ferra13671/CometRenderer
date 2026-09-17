@@ -60,6 +60,8 @@ public interface Window extends Closeable {
 
     void setIcon(GLFWImage icon);
 
+    void setCursorGrabbed(boolean grabbed);
+
     void setLoopCallback(LoopCallback loopCallback);
 
     void setKeyboardCallback(KeyCallback callback);

@@ -245,6 +245,11 @@ final class WindowImpl implements Window {
     }
 
     @Override
+    public void setCursorGrabbed(boolean grabbed) {
+        glfwSetInputMode(getId(), GLFW_CURSOR, grabbed ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+    }
+
+    @Override
     public void setKeyboardCallback(KeyCallback callback) {
         this.keyboardHandler.setCallback(callback);
     }
