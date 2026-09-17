@@ -1,0 +1,33 @@
+def osName = providers.systemProperty("os.name").get().toLowerCase()
+def osArch = providers.systemProperty("os.arch").get().toLowerCase()
+
+if (osName.startsWith("linux")) {
+    project.ext.lwjglNatives = "natives-linux"
+    if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+        project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
+    } else if  (osArch.startsWith("ppc")) {
+        project.ext.lwjglNatives += "-ppc64le"
+    } else if  (osArch.startsWith("riscv")) {
+        project.ext.lwjglNatives += "-riscv64"
+    }
+}
+if (osName.startsWith("mac") || osName.startsWith("darwin")) {
+    project.ext.lwjglNatives = "natives-macos"
+    if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+        project.ext.lwjglNatives += "-arm64"
+    }
+}
+if (osName.startsWith("windows")) {
+    project.ext.lwjglNatives = "natives-windows"
+    if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+        project.ext.lwjglNatives += "-arm64"
+    }
+}
+
+dependencies {
+    runtimeOnly "org.lwjgl:lwjgl::${project.ext.lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::${project.ext.lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::${project.ext.lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-opengles::${project.ext.lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-stb::${project.ext.lwjglNatives}"
+}

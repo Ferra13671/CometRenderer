@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+project.ext.projectName = "comet-renderer-better-compiler"
+apply from: rootProject.file("scripts/plugin.gradle")
+apply from: rootProject.file("scripts/opengl.gradle")
+apply from: rootProject.file("scripts/lwjgl-runtime.gradle")
+
+sourceSets {
+    example {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+dependencies {
+    exampleImplementation sourceSets.main.output
+
+    implementation "org.lwjgl:lwjgl-glfw"
+}
