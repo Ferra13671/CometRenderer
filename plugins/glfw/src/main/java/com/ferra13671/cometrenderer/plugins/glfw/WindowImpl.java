@@ -87,6 +87,11 @@ final class WindowImpl implements Window {
     }
 
     @Override
+    public void focus() {
+        glfwFocusWindow(getId());
+    }
+
+    @Override
     public void loop() {
         if (!isShouldCloseWindow()) {
 

@@ -84,6 +84,8 @@ public interface Window extends Closeable {
 
     void attentionRequest();
 
+    void focus();
+
     void loop();
 
     Framebuffer getFramebuffer();
