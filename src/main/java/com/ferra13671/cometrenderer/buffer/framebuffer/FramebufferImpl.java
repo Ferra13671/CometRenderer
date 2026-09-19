@@ -77,7 +77,7 @@ public class FramebufferImpl implements Framebuffer {
             deleteDepthAndStencil();
             this.depthAndStencilTexture = depthAndStencilTexture;
 
-            CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, GL30.GL_DEPTH_STENCIL_ATTACHMENT, depthAndStencilTexture);
+            CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, isUseStencil() ? GL30.GL_DEPTH_STENCIL_ATTACHMENT : GL30.GL_DEPTH_ATTACHMENT, depthAndStencilTexture);
         }
     }
 
