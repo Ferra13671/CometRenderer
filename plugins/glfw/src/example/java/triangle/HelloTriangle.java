@@ -1,3 +1,5 @@
+package triangle;
+
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
@@ -15,8 +17,6 @@ import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import lombok.experimental.UtilityClass;
 import org.joml.Matrix4f;
-
-import java.awt.*;
 
 @UtilityClass
 public class HelloTriangle {

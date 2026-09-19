@@ -19,4 +19,8 @@ dependencies {
     exampleImplementation sourceSets.main.output
 
     implementation "org.lwjgl:lwjgl-glfw"
+    implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
+
+    exampleCompileOnly("org.projectlombok:lombok:${project.lombok_version}")
+    exampleAnnotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
 }
