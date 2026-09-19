@@ -22,7 +22,6 @@ import org.lwjgl.opengl.GL20;
 public class SamplerUniform extends GLUniform {
     /** Айди семплера. **/
     @Getter
-    @Setter
     private int unit;
     private UnitBindable textureBindable = TextureUnitBindable.EMPTY;
     private UnitBindable samplerBindable = SamplerUnitBindable.EMPTY;
@@ -33,6 +32,11 @@ public class SamplerUniform extends GLUniform {
      */
     public SamplerUniform(String name, int location) {
         super(name, location);
+    }
+
+    @API(status = API.Status.INTERNAL, since = "3.0")
+    public void setUnit(int unit) {
+        this.unit = unit;
 
         GL20.glUniform1i(this.location, getUnit());
     }
