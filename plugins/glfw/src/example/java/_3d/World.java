@@ -109,7 +109,7 @@ public class World {
 
     public void render() {
         shadowFramebuffer.clearAll();
-        CometRenderer.getDevice().getPipelineStateManager().setDepthTest(true);
+        CometRenderer.enableDepthTest();
 
         Matrix4f projectionMatrix = Hello3D.getProjectionMatrix(
                 CometGLFW.getWindow().getFramebufferWidth(),

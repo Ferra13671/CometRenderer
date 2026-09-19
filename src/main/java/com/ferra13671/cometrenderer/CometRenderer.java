@@ -83,7 +83,7 @@ public class CometRenderer {
         }
     };
     @API(status = API.Status.INTERNAL, since = "2.0")
-    private final BufferRenderer<IMesh> COMET_BUFFER_RENDERER = (mesh, close) -> {
+    private final BufferRenderer<IMesh> cometBufferRenderer = (mesh, close) -> {
         int vertexCount = mesh.getVertexCount();
 
         if (vertexCount > 0) {
@@ -156,12 +156,12 @@ public class CometRenderer {
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public static GLProgram getCurrentProgram() {
+    public GLProgram getCurrentProgram() {
         return device.getCurrentProgram();
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public static void setCurrentProgram(GLProgram program) {
+    public void setCurrentProgram(GLProgram program) {
         device.setCurrentProgram(program);
     }
 
@@ -269,6 +269,16 @@ public class CometRenderer {
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void enableDepthTest() {
+        device.getPipelineStateManager().setDepthTest(true);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void disableDepthTest() {
+        device.getPipelineStateManager().setDepthTest(false);
+    }
+
     /**
      * Создаёт готовый меш с вершинами. Перед сборкой меша вызывается данный вами метод, что бы добавить в сборщика данные о вершинах.
      * Метод ввернет null, если в сборщике нет вершин.
@@ -294,7 +304,7 @@ public class CometRenderer {
      */
     @API(status = API.Status.STABLE, since = "1.7")
     public void draw(IMesh mesh) {
-        draw(COMET_BUFFER_RENDERER, mesh, true);
+        draw(cometBufferRenderer, mesh, true);
     }
 
     /**
@@ -307,7 +317,7 @@ public class CometRenderer {
      */
     @API(status = API.Status.STABLE, since = "1.7")
     public void draw(IMesh mesh, boolean close) {
-        draw(COMET_BUFFER_RENDERER, mesh, close);
+        draw(cometBufferRenderer, mesh, close);
     }
 
     /**
