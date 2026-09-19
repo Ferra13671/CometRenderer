@@ -226,10 +226,11 @@ final class WindowImpl implements Window {
             long monitor = glfwGetPrimaryMonitor();
             GLFWVidMode vidMode = glfwGetVideoMode(monitor);
 
-            glfwSetWindowMonitor(getId(), monitor, 0, 0, vidMode.width(), vidMode.height(), GLFW_DONT_CARE);
             setSize(vidMode.width(), vidMode.height());
+            glfwSetWindowMonitor(getId(), monitor, 0, 0, vidMode.width(), vidMode.height(), GLFW_DONT_CARE);
         } else {
             glfwSetWindowMonitor(getId(), MemoryUtil.NULL, getX(), getY(), getWidth(), getHeight(), GLFW_DONT_CARE);
+            setMonitorCenterPosition();
         }
     }
 
@@ -325,7 +326,8 @@ final class WindowImpl implements Window {
             if (window == getId()) {
                 this.keyboardHandler.onKey(key, action);
 
-                this.fullScreenSwitchCombination.isCombinationPressed.apply(this.keyboardHandler);
+                if (action == GLFW_PRESS && this.fullScreenSwitchCombination.isCombinationPressed.apply(this.keyboardHandler))
+                    setFullScreen(!isFullScreen());
             }
         });
         glfwSetMouseButtonCallback(getId(), (window, button, action, mods) -> {
@@ -365,7 +367,8 @@ final class WindowImpl implements Window {
         });
         glfwSetFramebufferSizeCallback(getId(), (window, width, height) -> {
             if (window == getId()) {
-                getFramebuffer().resize(width, height);
+                if (getFramebuffer() != null)
+                    getFramebuffer().resize(width, height);
 
                 if (this.framebufferSizeCallback != null)
                     this.framebufferSizeCallback.onSize(width, height);
