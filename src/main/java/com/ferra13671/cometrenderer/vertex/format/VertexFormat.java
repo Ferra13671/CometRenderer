@@ -92,6 +92,8 @@ public class VertexFormat implements Closeable {
                 buffer.close();
 
             CometRenderer.getDevice().deleteVertexArray(this.buffer.getGlId());
+
+            this.buffer = null;
         }
     }
 

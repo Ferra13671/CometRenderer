@@ -20,13 +20,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@API(status = API.Status.EXPERIMENTAL, since = "2.7")
+@API(status = API.Status.MAINTAINED, since = "3.0")
 public class GLShaderBuilder<T> extends Builder<GLShader> {
     private final Registry registry = new Registry();
     private final CometLoader<T> loader;
     private GLSLFileEntry entry;
     private ShaderType type;
 
+    @API(status = API.Status.INTERNAL)
     public GLShaderBuilder(CometLoader<T> loader) {
         super("shader");
 

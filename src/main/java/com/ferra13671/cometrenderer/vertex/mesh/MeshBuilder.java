@@ -184,7 +184,8 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     }
 
     @Override
-    public <T> MeshBuilder element(String name, VertexElementType<T> elementType, T... values) {
+    @SafeVarargs
+    public final <T> MeshBuilder element(String name, VertexElementType<T> elementType, T... values) {
         long pointer = beginElement(this.vertexFormat.getElement(name));
         if (pointer != -1L)
             elementType.uploadConsumer().accept(pointer, values);

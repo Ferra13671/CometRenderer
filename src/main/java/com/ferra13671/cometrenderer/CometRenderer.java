@@ -16,6 +16,7 @@ import com.ferra13671.cometrenderer.utils.stencil.StencilFunction;
 import com.ferra13671.cometrenderer.utils.stencil.StencilOp;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
+import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.IMeshBuilder;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
@@ -90,14 +91,17 @@ public class CometRenderer {
             DrawMode drawMode = mesh.getDrawMode();
             device.getVertexFormatManager().applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
-            if (drawMode.indexBufferGenerator() != null) {
-                GpuBuffer indexBuffer = mesh.getDrawMode().indexBufferGenerator().getIndexBuffer(mesh.getIndexCount());
+            IndexBufferGenerator ibg = drawMode.indexBufferGenerator();
+
+            if (ibg != null) {
+                GpuBuffer indexBuffer = ibg.getIndexBuffer(mesh.getIndexCount());
+
                 if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
                     ErrorHandlers.onWrongBufferTarget(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId);
                 else
                     indexBuffer.bind();
 
-                GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), mesh.getDrawMode().indexBufferGenerator().getIndexType().glId, 0);
+                GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), ibg.getIndexType().glId, 0);
             } else
                 GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
         }
@@ -234,7 +238,7 @@ public class CometRenderer {
         device.getPipelineStateManager().setBlend(false);
     }
 
-    @API(status = API.Status.EXPERIMENTAL, since = "2.9")
+    @API(status = API.Status.MAINTAINED, since = "3.0")
     public void setStencil(StencilInfo stencil) {
         device.getPipelineStateManager().setStencil(true);
 
@@ -257,12 +261,12 @@ public class CometRenderer {
             device.getPipelineStateManager().setStencilOp(op.stencilFailed(), op.stencilPassedDepthFailed(), op.allPassed());
     }
 
-    @API(status = API.Status.EXPERIMENTAL, since = "2.9")
+    @API(status = API.Status.MAINTAINED, since = "3.0")
     public void disableStencil() {
         device.getPipelineStateManager().setStencil(false);
     }
 
-    @API(status = API.Status.EXPERIMENTAL, since = "2.9")
+    @API(status = API.Status.MAINTAINED, since = "3.0")
     public void clearStencil(int clearStencil) {
         device.getPipelineStateManager().setStencilMask(true);
         GL11.glClearStencil(clearStencil);

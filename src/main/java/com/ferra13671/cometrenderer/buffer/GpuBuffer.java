@@ -33,7 +33,6 @@ public class GpuBuffer implements Bindable, AutoCloseable {
     public GpuBuffer(ByteBuffer data, BufferUsage usage, BufferTarget target, boolean meshBuffer) {
         this(usage, target);
 
-        //TODO move to GLDevice
         if (meshBuffer)
             CometRenderer.getDevice().getMeshBufferManager().allocateMeshBuffer(this, data);
         else
@@ -59,7 +58,6 @@ public class GpuBuffer implements Bindable, AutoCloseable {
 
     @Override
     public void bind() {
-        //TODO use PipelineStateManager
         GL15.glBindBuffer(this.target.glId, this.id);
     }
 
