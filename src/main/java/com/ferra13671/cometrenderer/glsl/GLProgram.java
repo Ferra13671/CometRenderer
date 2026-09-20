@@ -12,7 +12,6 @@ import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
 import java.util.*;
@@ -49,8 +48,7 @@ public class GLProgram implements Bindable, Closeable {
 
     @Override
     public void close() {
-        GL20.glDeleteProgram(getId());
-        CometRenderer.getDevice().getResourceTracker().unregisterProgram(this);
+        CometRenderer.getDevice().deleteProgram(getId());
 
         this.uniformsByName.clear();
         this.samplers.clear();

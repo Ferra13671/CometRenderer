@@ -60,7 +60,7 @@ public class CometRenderer {
     @API(status = API.Status.STABLE, since = "1.1")
     private final ScissorStack scissorStack = new ScissorStack();
     @Getter
-    @API(status = API.Status.MAINTAINED, since = "2.9")
+    @API(status = API.Status.INTERNAL, since = "2.9")
     private GLDevice device;
     /** Логгер CometRender'a, используемый для отправки ошибок. **/
     @Getter
@@ -339,5 +339,30 @@ public class CometRenderer {
 
         getCurrentProgram().bind();
         bufferRenderer.draw(buffer, close);
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public int getProgramsCount() {
+        return device.getProgramsCount();
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public int getShadersCount() {
+        return device.getShadersCount();
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public int getFramebuffersCount() {
+        return device.getFramebuffersCount();
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public int getSamplersCount() {
+        return device.getSamplersCount();
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public int getVertexArraysCount() {
+        return device.getVertexArraysCount();
     }
 }

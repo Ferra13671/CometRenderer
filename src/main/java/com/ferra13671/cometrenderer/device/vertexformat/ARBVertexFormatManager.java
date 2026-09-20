@@ -45,7 +45,7 @@ public class ARBVertexFormatManager implements VertexFormatManager {
     }
 
     private VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
-        int vertBuffId = CometRenderer.getDevice().getDirectStateManager().createVertexArray();
+        int vertBuffId = CometRenderer.getDevice().createVertexArray();
         if (!GLCapabilities.supportsDirectStateAccess())
             GL30.glBindVertexArray(vertBuffId);
 

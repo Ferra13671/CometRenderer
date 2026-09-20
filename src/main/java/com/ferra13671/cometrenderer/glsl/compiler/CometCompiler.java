@@ -49,7 +49,7 @@ public class CometCompiler {
     public GLProgram compileProgram(@NonNull Registry registry) {
         String name = registry.get(CometTags.NAME).orElseThrow();
 
-        int programId = GL20.glCreateProgram();
+        int programId = CometRenderer.getDevice().createProgram();
 
         Map<ShaderType, GLShader> compiledShaders = registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
         Map<String, UniformType<?>> uniforms = registry.get(CometTags.UNIFORMS).orElseThrow();
@@ -109,8 +109,6 @@ public class CometCompiler {
         );
         uniformsByName.forEach((s, uniform) -> uniform.setProgram(program));
 
-        CometRenderer.getDevice().getResourceTracker().registerProgram(program);
-
         return program;
     }
 
@@ -129,7 +127,7 @@ public class CometCompiler {
         processContent(processedShader.getRegistry(), builderRegistry);
         GLSLContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
 
-        int shaderId = GL20.glCreateShader(shaderType.glId);
+        int shaderId = CometRenderer.getDevice().createShader(shaderType);
 
         GL20.glShaderSource(shaderId, content.concatLines());
         GL20.glCompileShader(shaderId);
@@ -138,15 +136,12 @@ public class CometCompiler {
         if (status == CompileStatus.FAILURE)
             ErrorHandlers.onCompileShaderError(processedShader.getName(), GL20.glGetShaderInfoLog(shaderId).trim());
 
-        GLShader shader = new GLShader(
+        return new GLShader(
                 processedShader.getName(),
                 shaderId,
                 shaderType,
                 shaderRegistry
         );
-        CometRenderer.getDevice().getResourceTracker().registerShader(shader);
-
-        return shader;
     }
 
     @API(status = API.Status.INTERNAL)

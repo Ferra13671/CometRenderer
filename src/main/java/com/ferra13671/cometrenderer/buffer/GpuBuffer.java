@@ -52,21 +52,21 @@ public class GpuBuffer implements Bindable, AutoCloseable {
     }
 
     private GpuBuffer(BufferUsage usage, BufferTarget target) {
-        this.id = CometRenderer.getDevice().getDirectStateManager().createBuffer();
+        this.id = CometRenderer.getDevice().createBuffer();
         this.usage = usage;
         this.target = target;
     }
 
     @Override
     public void bind() {
+        //TODO use PipelineStateManager
         GL15.glBindBuffer(this.target.glId, this.id);
     }
 
     @Override
     public void close() {
         if (!this.closed)
-            //TODO move to GLDevice
-            GL15.glDeleteBuffers(this.id);
+            CometRenderer.getDevice().deleteBuffer(getId());
         this.closed = true;
     }
 }

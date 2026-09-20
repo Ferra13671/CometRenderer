@@ -5,7 +5,6 @@ import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL20;
 
 import java.io.Closeable;
 
@@ -23,7 +22,6 @@ public record GLShader(String name, int id, ShaderType shaderType, Registry regi
     @Override
     @API(status = API.Status.INTERNAL)
     public void close() {
-        GL20.glDeleteShader(this.id);
-        CometRenderer.getDevice().getResourceTracker().unregisterShader(this);
+        CometRenderer.getDevice().deleteShader(id());
     }
 }

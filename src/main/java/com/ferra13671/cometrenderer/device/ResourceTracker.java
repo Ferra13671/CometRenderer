@@ -1,43 +1,76 @@
 package com.ferra13671.cometrenderer.device;
 
-import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import org.apiguardian.api.API;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@API(status = API.Status.MAINTAINED, since = "3.0")
-public class ResourceTracker {
-    private final Set<GLProgram> programs = new HashSet<>();
-    private final Set<GLShader> shaders = new HashSet<>();
+@API(status = API.Status.INTERNAL, since = "3.0")
+class ResourceTracker {
+    private final Set<Integer> programs = new HashSet<>();
+    private final Set<Integer> shaders = new HashSet<>();
+    private final Set<Integer> framebuffers = new HashSet<>();
+    private final Set<Integer> samplers = new HashSet<>();
+    private final Set<Integer> vertexArrays = new HashSet<>();
 
-    public Set<GLProgram> getPrograms() {
+    Set<Integer> getPrograms() {
         return Collections.unmodifiableSet(this.programs);
     }
 
-    public Set<GLShader> getShaders() {
+    Set<Integer> getShaders() {
         return Collections.unmodifiableSet(this.shaders);
     }
 
-    @API(status = API.Status.INTERNAL)
-    public void registerProgram(GLProgram program) {
+    Set<Integer> getFramebuffers() {
+        return Collections.unmodifiableSet(this.framebuffers);
+    }
+
+    Set<Integer> getSamplers() {
+        return Collections.unmodifiableSet(this.samplers);
+    }
+
+    Set<Integer> getVertexArrays() {
+        return Collections.unmodifiableSet(this.vertexArrays);
+    }
+
+    void registerProgram(Integer program) {
         this.programs.add(program);
     }
 
-    @API(status = API.Status.INTERNAL)
-    public void unregisterProgram(GLProgram program) {
+    void unregisterProgram(Integer program) {
         this.programs.remove(program);
     }
 
-    @API(status = API.Status.INTERNAL)
-    public void registerShader(GLShader shader) {
+    void registerShader(Integer shader) {
         this.shaders.add(shader);
     }
 
-    @API(status = API.Status.INTERNAL)
-    public void unregisterShader(GLShader shader) {
+    void unregisterShader(Integer shader) {
         this.shaders.remove(shader);
+    }
+
+    void registerFramebuffer(Integer framebuffer) {
+        this.framebuffers.add(framebuffer);
+    }
+
+    void unregisterFramebuffer(Integer framebuffer) {
+        this.framebuffers.remove(framebuffer);
+    }
+
+    void registerSampler(Integer sampler) {
+        this.samplers.add(sampler);
+    }
+
+    void unregisterSampler(Integer sampler) {
+        this.samplers.remove(sampler);
+    }
+
+    void registerVertexArray(Integer vertexArray) {
+        this.vertexArrays.add(vertexArray);
+    }
+
+    void unregisterVertexArray(Integer vertexArray) {
+        this.vertexArrays.remove(vertexArray);
     }
 }

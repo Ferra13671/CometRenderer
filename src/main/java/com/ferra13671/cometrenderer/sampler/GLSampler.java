@@ -8,13 +8,15 @@ import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL33;
 
+import java.io.Closeable;
+
 @API(status = API.Status.MAINTAINED, since = "3.0")
 @Getter
-public class GLSampler {
+public class GLSampler implements Closeable {
     private final int id;
 
     public GLSampler() {
-        this.id = CometRenderer.getDevice().getDirectStateManager().createSampler();
+        this.id = CometRenderer.getDevice().createSampler();
     }
 
     public void setFiltering(TextureFiltering filtering) {
@@ -25,5 +27,10 @@ public class GLSampler {
     public void setWrapping(TextureWrapping wrapping) {
         GL33.glSamplerParameteri(this.id, GL11.GL_TEXTURE_WRAP_S, wrapping.id);
         GL33.glSamplerParameteri(this.id, GL11.GL_TEXTURE_WRAP_T, wrapping.id);
+    }
+
+    @Override
+    public void close() {
+        CometRenderer.getDevice().deleteSampler(getId());
     }
 }

@@ -29,7 +29,7 @@ public class FramebufferImpl implements Framebuffer {
     protected GLTexture depthAndStencilTexture;
 
     public FramebufferImpl(FramebufferInfo framebufferInfo) {
-        this.id = CometRenderer.getDevice().getDirectStateManager().createFramebuffer();
+        this.id = CometRenderer.getDevice().createFramebuffer();
 
         this.name = framebufferInfo.getName();
         this.useDepth = framebufferInfo.isUseDepth();
@@ -195,8 +195,6 @@ public class FramebufferImpl implements Framebuffer {
     @Override
     public void delete() {
         deleteTextures();
-
-        //TODO move to GLDevice
-        GL30.glDeleteFramebuffers(this.id);
+        CometRenderer.getDevice().deleteFramebuffer(getId());
     }
 }

@@ -65,7 +65,9 @@ public class HelloTriangle {
 
         Window window = CometGLFW.getWindow();
         window.setTitle("Hello triangle");
+        window.setSize(800, 800);
         window.setVisible(true);
+        window.setMonitorCenterPosition();
 
         Matrix4f rotateMatrix = new Matrix4f();
         window.setLoopCallback(() -> {

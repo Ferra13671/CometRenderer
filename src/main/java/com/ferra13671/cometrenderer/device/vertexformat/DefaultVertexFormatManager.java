@@ -28,7 +28,7 @@ public class DefaultVertexFormatManager implements VertexFormatManager {
     }
 
     private VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
-        int i = CometRenderer.getDevice().getDirectStateManager().createVertexArray();
+        int i = CometRenderer.getDevice().createVertexArray();
         GL30.glBindVertexArray(i);
         setupBuffer(vertexFormat, true);
         return new VertexFormatBuffer(i, vertexFormat);

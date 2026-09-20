@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex.format;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
@@ -85,9 +86,13 @@ public class VertexFormat implements Closeable {
 
     @Override
     public void close() {
-        GpuBuffer buffer = this.buffer.getBuffer();
-        if (buffer != null)
-            buffer.close();
+        if (this.buffer != null) {
+            GpuBuffer buffer = this.buffer.getBuffer();
+            if (buffer != null)
+                buffer.close();
+
+            CometRenderer.getDevice().deleteVertexArray(this.buffer.getGlId());
+        }
     }
 
     /**
