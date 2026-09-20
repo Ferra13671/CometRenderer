@@ -20,20 +20,14 @@ import java.util.Map;
 /**
  * Сборщик программы.
  *
- * @param <T> тип объекта, используемого как путь к контенту шейдеров.
- *
  * @see GLProgram
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
-public class GLProgramBuilder<T> extends Builder<GLProgram> {
+public class GLProgramBuilder extends Builder<GLProgram> {
     private final Registry registry = new Registry();
 
-    /**
-     * @param snippets фрагменты программы.
-     *
-     * @see GLProgramSnippet
-     */
-    public GLProgramBuilder(GLProgramSnippet... snippets) {
+    @API(status = API.Status.INTERNAL)
+    GLProgramBuilder(GLProgramSnippet... snippets) {
         super("program");
 
         this.registry.setImmutable(CometTags.COMPILED_SHADERS, new HashMap<>());
@@ -54,7 +48,7 @@ public class GLProgramBuilder<T> extends Builder<GLProgram> {
      * @param name имя программы.
      * @return сборщик программы.
      */
-    public GLProgramBuilder<T> name(String name) {
+    public GLProgramBuilder name(String name) {
         if (name != null)
             this.registry.set(CometTags.NAME, name);
 
@@ -63,7 +57,7 @@ public class GLProgramBuilder<T> extends Builder<GLProgram> {
 
     @NonNull
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public GLProgramBuilder<T> shader(GLShader shader) {
+    public GLProgramBuilder shader(GLShader shader) {
         Map<ShaderType, GLShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();
         ShaderType shaderType = shader.shaderType();
 
@@ -75,7 +69,7 @@ public class GLProgramBuilder<T> extends Builder<GLProgram> {
         return this;
     }
 
-    public <S> GLProgramBuilder<T> tag(@NonNull Tag<S> tag, S value) {
+    public <S> GLProgramBuilder tag(@NonNull Tag<S> tag, S value) {
         this.registry.set(tag, value);
 
         return this;
@@ -96,7 +90,7 @@ public class GLProgramBuilder<T> extends Builder<GLProgram> {
      * @see GLUniform
      */
     @NonNull
-    public <S extends GLUniform> GLProgramBuilder<T> uniform(String name, UniformType<S> uniformType) {
+    public <S extends GLUniform> GLProgramBuilder uniform(String name, UniformType<S> uniformType) {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow();
 
         if (uniforms.containsKey(name))
@@ -113,7 +107,7 @@ public class GLProgramBuilder<T> extends Builder<GLProgram> {
      * @return сборщик программы.
      */
     @NonNull
-    public GLProgramBuilder<T> sampler(String name) {
+    public GLProgramBuilder sampler(String name) {
         uniform(name, UniformType.SAMPLER);
         return this;
     }

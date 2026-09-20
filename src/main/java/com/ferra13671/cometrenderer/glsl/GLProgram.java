@@ -187,4 +187,8 @@ public class GLProgram implements Bindable, Closeable {
         if (sampler != null)
             consumer.accept(sampler);
     }
+
+    public static GLProgramBuilder builder(GLProgramSnippet... snippets) {
+        return new GLProgramBuilder(snippets);
+    }
 }

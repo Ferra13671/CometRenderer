@@ -4,7 +4,7 @@ import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
-import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
+import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -149,7 +149,7 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected GLProgramSnippet loadMatrixSnippet() {
-        return new GLProgramBuilder<>()
+        return GLProgram.builder()
                 .uniform("Projection", UniformType.BUFFER)
                 .uniform("modelViewMat", UniformType.MATRIX4)
                 .buildSnippet();

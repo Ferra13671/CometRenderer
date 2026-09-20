@@ -24,7 +24,8 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
     /** Список имен элементов вершин. **/
     private final List<String> elementNames = new ArrayList<>();
 
-    public VertexFormatBuilder() {
+    @API(status = API.Status.INTERNAL)
+    VertexFormatBuilder() {
         super("vertex format");
     }
 

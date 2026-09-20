@@ -21,16 +21,15 @@ public record GLProgramSnippet(Registry registry) {
      * Применяет фрагмент программы к сборщику программы.
      *
      * @param builder сборщик программы.
-     * @param <T> тип объекта, используемого как путь к контенту шейдеров.
      */
     @API(status = API.Status.INTERNAL)
-    public <T> void applyTo(GLProgramBuilder<T> builder) {
+    public void applyTo(GLProgramBuilder builder) {
         this.registry.forEachTags(tag ->
             processTag(tag, builder)
         );
     }
 
-    private <S, T> void processTag(Tag<T> tag, GLProgramBuilder<S> builder) {
+    private <T> void processTag(Tag<T> tag, GLProgramBuilder builder) {
         T tagValue = this.registry.get(tag).orElseThrow();
 
         if (tag == CometTags.NAME)

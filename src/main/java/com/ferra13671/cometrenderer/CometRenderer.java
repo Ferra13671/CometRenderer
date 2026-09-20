@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
-import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
@@ -53,7 +52,7 @@ public class CometRenderer {
     /** Фрагмент программы, необходимый для программ, которые хотят реализовать использование глобального шейдерного цвета. **/
     @Getter
     @API(status = API.Status.STABLE, since = "1.1")
-    private final GLProgramSnippet colorSnippet = new GLProgramBuilder<>()
+    private final GLProgramSnippet colorSnippet = GLProgram.builder()
             .uniform("shaderColor", UniformType.VEC4)
             .buildSnippet();
     /** Стек для областей, используемых ножницами. **/
