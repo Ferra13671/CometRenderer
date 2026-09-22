@@ -1,6 +1,5 @@
-package com.ferra13671.cometrenderer.utils;
+package com.ferra13671.cometrenderer.vertex.index;
 
-import com.ferra13671.cometrenderer.utils.index.IndexList;
 import org.apiguardian.api.API;
 
 /**

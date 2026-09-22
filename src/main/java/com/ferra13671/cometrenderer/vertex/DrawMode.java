@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.vertex;
 
+import com.ferra13671.cometrenderer.vertex.index.IndexBufferGenerator;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 

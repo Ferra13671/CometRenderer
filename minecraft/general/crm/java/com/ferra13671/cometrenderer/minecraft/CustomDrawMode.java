@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
+import com.ferra13671.cometrenderer.vertex.index.IndexBufferGenerator;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;

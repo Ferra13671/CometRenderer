@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils.index;
+package com.ferra13671.cometrenderer.vertex.index;
 
 import org.apiguardian.api.API;
 

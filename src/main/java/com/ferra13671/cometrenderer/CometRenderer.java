@@ -16,7 +16,7 @@ import com.ferra13671.cometrenderer.stencil.StencilFunction;
 import com.ferra13671.cometrenderer.stencil.StencilOp;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
-import com.ferra13671.cometrenderer.vertex.IndexBufferGenerator;
+import com.ferra13671.cometrenderer.vertex.index.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.IMeshBuilder;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;

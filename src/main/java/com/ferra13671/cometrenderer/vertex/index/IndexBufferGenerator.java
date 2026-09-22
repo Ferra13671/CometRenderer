@@ -1,14 +1,11 @@
-package com.ferra13671.cometrenderer.vertex;
+package com.ferra13671.cometrenderer.vertex.index;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import com.ferra13671.cometrenderer.utils.index.IndexList;
-import com.ferra13671.cometrenderer.utils.index.IndexType;
 import com.ferra13671.cometrenderer.utils.MathUtils;
-import com.ferra13671.cometrenderer.utils.Triangulator;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.lwjgl.system.MemoryUtil;

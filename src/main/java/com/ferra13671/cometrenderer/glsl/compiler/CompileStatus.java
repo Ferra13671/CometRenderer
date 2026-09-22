@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils.compile;
+package com.ferra13671.cometrenderer.glsl.compiler;
 
 import lombok.AllArgsConstructor;
 import org.apiguardian.api.API;

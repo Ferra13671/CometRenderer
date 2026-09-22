@@ -6,7 +6,6 @@ import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
-import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
