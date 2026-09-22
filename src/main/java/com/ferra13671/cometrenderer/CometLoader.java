@@ -3,7 +3,6 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
-import com.ferra13671.cometrenderer.glsl.shader.GLShaderBuilder;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import org.apiguardian.api.API;
 
@@ -48,11 +47,6 @@ public abstract class CometLoader<T> {
             return path;
         }
     };
-
-    @API(status = API.Status.EXPERIMENTAL, since = "2.7")
-    public GLShaderBuilder<T> createShaderBuilder() {
-        return new GLShaderBuilder<>(this);
-    }
 
     @API(status = API.Status.MAINTAINED, since = "1.8.2")
     public GLSLFileEntry createGLSLFileEntry(String name, T path) {

@@ -27,8 +27,8 @@ public class GLShaderBuilder<T> extends Builder<GLShader> {
     private GLSLFileEntry entry;
     private ShaderType type;
 
-    @API(status = API.Status.INTERNAL)
-    public GLShaderBuilder(CometLoader<T> loader) {
+
+    GLShaderBuilder(CometLoader<T> loader) {
         super("shader");
 
         this.loader = loader;

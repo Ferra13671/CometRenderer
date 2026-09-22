@@ -92,7 +92,7 @@ public class HelloTriangle {
     }
 
     void createProgram() {
-        GLShader vertexShader = CometLoader.STRING.createShaderBuilder()
+        GLShader vertexShader = GLShader.builder(CometLoader.STRING)
                 .info(
                         "vertex-shader",
                         vertexShaderSrc,
@@ -101,7 +101,7 @@ public class HelloTriangle {
                 .uniform("matrix", UniformType.MATRIX4)
                 .build();
 
-        GLShader fragmentShader = CometLoader.STRING.createShaderBuilder()
+        GLShader fragmentShader = GLShader.builder(CometLoader.STRING)
                 .info(
                         "fragment-shader",
                         fragmentShaderSrc,

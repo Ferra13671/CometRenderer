@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
+import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
@@ -19,9 +20,14 @@ import java.io.Closeable;
 @API(status = API.Status.MAINTAINED, since = "2.7")
 public record GLShader(String name, int id, ShaderType shaderType, Registry registry) implements Closeable {
 
+    @API(status = API.Status.MAINTAINED, since = "3.0")
     @Override
-    @API(status = API.Status.INTERNAL)
     public void close() {
         CometRenderer.getDevice().deleteShader(id());
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public static <T> GLShaderBuilder<T> builder(CometLoader<T> loader) {
+        return new GLShaderBuilder<>(loader);
     }
 }

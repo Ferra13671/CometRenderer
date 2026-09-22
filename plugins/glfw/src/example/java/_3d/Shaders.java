@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 
 public class Shaders {
-    public final GLShader positionVertex = CometLoader.STRING.createShaderBuilder()
+    public final GLShader positionVertex = GLShader.builder(CometLoader.STRING)
             .info(
                     "position_vertex",
                     """
@@ -26,7 +26,7 @@ public class Shaders {
             .uniform("projection", UniformType.MATRIX4)
             .uniform("view", UniformType.MATRIX4)
             .build();
-    public final GLShader positionFragment = CometLoader.STRING.createShaderBuilder()
+    public final GLShader positionFragment = GLShader.builder(CometLoader.STRING)
             .info(
                     "position_fragment",
                     """
@@ -45,7 +45,7 @@ public class Shaders {
                     ShaderType.Fragment
             )
             .build();
-    public final GLShader defaultMaterialVertex = CometLoader.STRING.createShaderBuilder()
+    public final GLShader defaultMaterialVertex = GLShader.builder(CometLoader.STRING)
             .info(
                     "default_material_vertex",
                     """
@@ -78,7 +78,7 @@ public class Shaders {
             .uniform("projection", UniformType.MATRIX4)
             .uniform("view", UniformType.MATRIX4)
             .build();
-    public final GLShader defaultMaterialFragment = CometLoader.STRING.createShaderBuilder()
+    public final GLShader defaultMaterialFragment = GLShader.builder(CometLoader.STRING)
             .info(
                     "default_material_fragment",
                           """
@@ -147,7 +147,7 @@ public class Shaders {
             .uniform("ambientLight", UniformType.FLOAT)
             .uniform("sunVector", UniformType.VEC3)
             .build();
-    public final GLShader shadowTextureFragment = CometLoader.STRING.createShaderBuilder()
+    public final GLShader shadowTextureFragment = GLShader.builder(CometLoader.STRING)
             .info(
                     "shadow_texture_fragment",
                     """
