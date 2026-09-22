@@ -4,7 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
-import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import com.ferra13671.cometrenderer.utils.compile.CompileStatus;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
@@ -63,6 +63,7 @@ public class CometCompiler {
 
         Map<String, GLUniform> uniformsByName = new HashMap<>();
         List<SamplerUniform> samplers = new ArrayList<>();
+        List<BufferUniform> bufferUniforms = new ArrayList<>();
 
         GL20.glLinkProgram(programId);
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS));
@@ -91,6 +92,7 @@ public class CometCompiler {
                 }
 
                 if (uniform instanceof BufferUniform bufferUniform) {
+                    bufferUniforms.add(bufferUniform);
                     bufferUniform.setBufferBinding(bufferUniformsCount);
                     GL31.glUniformBlockBinding(programId, bufferUniform.getBufferIndex(), bufferUniformsCount);
                     bufferUniformsCount++;
@@ -105,7 +107,8 @@ public class CometCompiler {
                 programId,
                 new HashSet<>(Arrays.asList(registry.get(CometTags.SNIPPETS).orElseThrow())),
                 uniformsByName,
-                samplers
+                samplers,
+                bufferUniforms
         );
         uniformsByName.forEach((s, uniform) -> uniform.setProgram(program));
 

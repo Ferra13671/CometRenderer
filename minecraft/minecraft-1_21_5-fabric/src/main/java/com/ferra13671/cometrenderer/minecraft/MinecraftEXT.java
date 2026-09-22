@@ -1,12 +1,16 @@
 package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.bindable.UBOBindable;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.bindable.UBOBindableBase;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.bindable.UBOBindableRange;
 import com.ferra13671.cometrenderer.minecraft.mixins.IGlBuffer;
 import com.ferra13671.cometrenderer.sampler.unit.SamplerUnitBindable;
 import com.ferra13671.cometrenderer.sampler.unit.TextureUnitBindable;
 import com.ferra13671.cometrenderer.sampler.unit.UnitBindable;
 import com.ferra13671.cometrenderer.utils.BufferRenderer;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.opengl.GlBuffer;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -73,6 +77,14 @@ public class MinecraftEXT {
                         ,
                 SamplerUnitBindable.EMPTY
         };
+    }
+
+    public @Nullable UBOBindable getUBOBindable(@Nullable GlBuffer buffer) {
+        return buffer == null ? null : new UBOBindableBase(((IGlBuffer) buffer)._getHandle());
+    }
+
+    public @Nullable UBOBindable getUBOBindable(@Nullable GlBuffer buffer, long offset, long size) {
+        return buffer == null ? null : new UBOBindableRange(((IGlBuffer) buffer)._getHandle(), offset, size);
     }
 
     private record MinecraftTextureUnitBindable(GlTexture texture) implements UnitBindable {

@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.glsl;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.OneTypeGLUniform;
@@ -43,6 +44,7 @@ public class GLProgram implements Bindable, Closeable {
     private final Map<String, GLUniform> uniformsByName;
     /** Список всех семплеров программы. **/
     private final List<SamplerUniform> samplers;
+    private final List<BufferUniform> bufferUniforms;
     /** Список униформ, которые были обновлены. Данный список нужен для того, что бы повторно загружать в GPU только те униформы, которые были обновлены. **/
     private final List<GLUniform> updatedUniforms = new ArrayList<>();
 
@@ -71,6 +73,9 @@ public class GLProgram implements Bindable, Closeable {
         if (!this.samplers.isEmpty())
             for (GLUniform sampler : this.samplers)
                 sampler.upload();
+        if (!this.bufferUniforms.isEmpty())
+            for (GLUniform bufferUniform : this.bufferUniforms)
+                bufferUniform.upload();
     }
 
     /**

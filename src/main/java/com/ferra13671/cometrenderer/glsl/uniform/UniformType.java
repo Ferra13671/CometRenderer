@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.glsl.uniform;
 
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.*;
-import com.ferra13671.cometrenderer.glsl.uniform.uniforms.BufferUniform;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.BufferUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.SamplerUniform;
 import org.apiguardian.api.API;
 

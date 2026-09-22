@@ -1,17 +1,17 @@
-package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
+package com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer;
 
 import com.ferra13671.cometrenderer.ErrorHandlers;
-import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.bindable.UBOBindable;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.bindable.UBOBindableBase;
+import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.bindable.UBOBindableRange;
 import lombok.Getter;
 import lombok.Setter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL31;
-import org.lwjgl.opengl.GL32;
-
-import java.util.function.BiConsumer;
 
 /**
  * Униформа, хранящая в себе параметр в виде буффера, который может быть разложен в программе на несколько данных.
@@ -27,8 +27,7 @@ public class BufferUniform extends GLUniform {
     @Getter
     @Setter
     private int bufferBinding;
-    /** Runnable, загружающий параметр в униформу. **/
-    private Runnable uploadRunnable = null;
+    private UBOBindable bindable;
 
     public BufferUniform(String name, int location) {
         super(name, location);
@@ -43,37 +42,23 @@ public class BufferUniform extends GLUniform {
             ErrorHandlers.onNoSuchUniform(name, program.getName());
     }
 
-    /**
-     * Устанавливает буффер из GpuBuffer.
-     *
-     * @param gpuBuffer GpuBuffer.
-     *
-     * @see GpuBuffer
-     */
-    public void set(GpuBuffer gpuBuffer) {
-        this.uploadRunnable = () -> GL32.glBindBufferBase(
-                BufferTarget.UNIFORM_BUFFER.glId,
-                this.bufferBinding,
-                gpuBuffer.getId()
-        );
-        this.program.addUpdatedUniform(this);
+    public void set(GpuBuffer buffer) {
+        set(new UBOBindableBase(buffer.getId()));
     }
 
-    /**
-     * Устанавливает буффер при помощи пользовательского установщика.
-     *
-     * @param uploadConsumer установщик буффера.
-     * @param buffer объект буффера.
-     * @param <T> буффер.
-     */
-    public <T> void set(BiConsumer<BufferUniform, T> uploadConsumer, T buffer) {
-        this.uploadRunnable = () -> uploadConsumer.accept(this, buffer);
-        this.program.addUpdatedUniform(this);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void set(GpuBuffer buffer, long offset, long size) {
+        set(new UBOBindableRange(buffer.getId(), offset, size));
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void set(UBOBindable bindable) {
+        this.bindable = bindable;
     }
 
     @Override
     public void upload() {
-        if (this.uploadRunnable != null)
-            this.uploadRunnable.run();
+        if (this.bindable != null)
+            this.bindable.bind(getBufferBinding());
     }
 }

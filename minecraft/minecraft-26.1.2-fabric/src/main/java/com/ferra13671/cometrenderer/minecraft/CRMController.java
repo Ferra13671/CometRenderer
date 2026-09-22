@@ -15,7 +15,6 @@ import com.ferra13671.cometrenderer.plugins.bettercompiler.GLShaderLibraryBuilde
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.*;
 import com.mojang.blaze3d.systems.CommandEncoderBackend;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -204,10 +203,7 @@ public class CRMController extends AbstractCRMController {
         CometRenderer.getCurrentProgram().consumeIfUniformPresent(
                 "Projection",
                 UniformType.BUFFER,
-                projectionUniform -> {
-                    GpuBufferSlice slice = RenderSystem.getProjectionMatrixBuffer();
-                    projectionUniform.set(MinecraftBufferUniformUploaders.GPU_BUFFER_SLICE, slice);
-                }
+                projectionUniform -> projectionUniform.set(MinecraftEXT.getUBOBindable(RenderSystem.getProjectionMatrixBuffer()))
         );
 
         CometRenderer.getCurrentProgram().consumeIfUniformPresent(
