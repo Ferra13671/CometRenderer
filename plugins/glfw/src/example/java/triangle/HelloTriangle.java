@@ -3,7 +3,6 @@ package triangle;
 import com.ferra13671.cometrenderer.CometLoaders;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -110,7 +109,7 @@ public class HelloTriangle {
                 )
                 .build();
 
-        program = new GLProgramBuilder<>()
+        program = GLProgram.builder()
                 .name("example-program")
                 .shader(vertexShader)
                 .shader(fragmentShader)

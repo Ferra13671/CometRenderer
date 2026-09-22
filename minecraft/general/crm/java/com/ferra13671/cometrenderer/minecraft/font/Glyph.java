@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.minecraft.font;
 
-import com.ferra13671.gltextureutils.atlas.TextureBorder;
+import com.ferra13671.cometrenderer.texture.atlas.TextureBorder;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.MAINTAINED, since = "2.8")

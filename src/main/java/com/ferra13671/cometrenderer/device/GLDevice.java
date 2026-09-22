@@ -14,10 +14,7 @@ import com.ferra13671.cometrenderer.device.vertexformat.VertexFormatManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
@@ -80,6 +77,18 @@ public class GLDevice {
     public void deleteShader(int id) {
         GL20.glDeleteShader(id);
         this.resourceTracker.unregisterShader(id);
+    }
+
+    public int createTexture() {
+        int id = getDirectStateManager().createTexture();
+        this.resourceTracker.registerTexture(id);
+
+        return id;
+    }
+
+    public void deleteTexture(int id) {
+        GL11.glDeleteTextures(id);
+        this.resourceTracker.unregisterTexture(id);
     }
 
     public int createFramebuffer() {

@@ -2,13 +2,12 @@ package _3d;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.glsl.GLProgramBuilder;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.glfw.*;
-import com.ferra13671.gltextureutils.GLTexture;
-import com.ferra13671.gltextureutils.PathMode;
-import com.ferra13671.gltextureutils.loader.FileEntry;
-import com.ferra13671.gltextureutils.loader.TextureLoader;
+import com.ferra13671.cometrenderer.texture.GLTexture;
+import com.ferra13671.cometrenderer.texture.PathMode;
+import com.ferra13671.cometrenderer.texture.loader.FileEntry;
+import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
 import lombok.experimental.UtilityClass;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -116,7 +115,7 @@ public class Hello3D {
     void createPrograms() {
         Shaders shaders = new Shaders();
 
-        positionProgram = new GLProgramBuilder<>(
+        positionProgram = GLProgram.builder(
                 CometRenderer.getColorSnippet()
         )
                 .name("position")
@@ -124,7 +123,7 @@ public class Hello3D {
                 .shader(shaders.positionFragment)
                 .build();
 
-        defaultMaterialProgram = new GLProgramBuilder<>(
+        defaultMaterialProgram = GLProgram.builder(
                 CometRenderer.getColorSnippet()
         )
                 .name("default_material")
@@ -133,7 +132,7 @@ public class Hello3D {
                 .uniform("lightSpaceMatrix", UniformType.MATRIX4)
                 .build();
 
-        defaultMaterialShadowProgram = new GLProgramBuilder<>()
+        defaultMaterialShadowProgram = GLProgram.builder()
                 .name("default_material_shadow")
                 .shader(shaders.defaultMaterialVertex)
                 .shader(shaders.shadowTextureFragment)

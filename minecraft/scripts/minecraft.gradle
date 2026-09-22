@@ -56,7 +56,6 @@ dependencies {
     if (project.hasProperty('iris_version'))
         compileOnly "maven.modrinth:iris:${project.iris_version}"
 
-    library "com.ferra13671:gl-texture-utils:${project.ext.gl_texture_utils_version}"
     library(rootProject.project("plugins:better-compiler")) {
         transitive = false
     }

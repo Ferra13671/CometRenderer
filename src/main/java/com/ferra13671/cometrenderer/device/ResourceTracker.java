@@ -10,6 +10,7 @@ import java.util.Set;
 class ResourceTracker {
     private final Set<Integer> programs = new HashSet<>();
     private final Set<Integer> shaders = new HashSet<>();
+    private final Set<Integer> textures = new HashSet<>();
     private final Set<Integer> framebuffers = new HashSet<>();
     private final Set<Integer> samplers = new HashSet<>();
     private final Set<Integer> vertexArrays = new HashSet<>();
@@ -20,6 +21,10 @@ class ResourceTracker {
 
     Set<Integer> getShaders() {
         return Collections.unmodifiableSet(this.shaders);
+    }
+
+    Set<Integer> getTextures() {
+        return Collections.unmodifiableSet(this.textures);
     }
 
     Set<Integer> getFramebuffers() {
@@ -48,6 +53,14 @@ class ResourceTracker {
 
     void unregisterShader(Integer shader) {
         this.shaders.remove(shader);
+    }
+
+    void registerTexture(Integer texture) {
+        this.textures.add(texture);
+    }
+
+    void unregisterTexture(Integer texture) {
+        this.textures.remove(texture);
     }
 
     void registerFramebuffer(Integer framebuffer) {

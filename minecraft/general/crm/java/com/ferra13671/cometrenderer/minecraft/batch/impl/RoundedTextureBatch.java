@@ -14,8 +14,8 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.mesh.MeshBuilder;
-import com.ferra13671.gltextureutils.GlTex;
-import com.ferra13671.gltextureutils.atlas.TextureBorder;
+import com.ferra13671.cometrenderer.texture.GLTex;
+import com.ferra13671.cometrenderer.texture.atlas.TextureBorder;
 import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 
@@ -43,8 +43,8 @@ public class RoundedTextureBatch extends AbstractPrimitiveBatch {
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public RoundedTextureBatch texture(GlTex texture) {
-        return texture(texture == null ? 0 : texture.getTexId());
+    public RoundedTextureBatch texture(GLTex texture) {
+        return texture(texture == null ? 0 : texture.getId());
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
@@ -77,7 +77,7 @@ public class RoundedTextureBatch extends AbstractPrimitiveBatch {
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public RoundedTextureBatch textureSampler(GlTex texture, GLSampler sampler) {
+    public RoundedTextureBatch textureSampler(GLTex texture, GLSampler sampler) {
         return texture(texture).sampler(sampler);
     }
 

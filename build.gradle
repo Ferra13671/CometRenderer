@@ -9,7 +9,3 @@ version = project.main_version
 apply from: file("scripts/opengl.gradle")
 apply from: file("scripts/utils.gradle")
 apply from: file("scripts/publishing.gradle")
-
-dependencies {
-    implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
-}

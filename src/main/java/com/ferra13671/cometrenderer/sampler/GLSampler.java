@@ -1,8 +1,8 @@
 package com.ferra13671.cometrenderer.sampler;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.gltextureutils.TextureFiltering;
-import com.ferra13671.gltextureutils.TextureWrapping;
+import com.ferra13671.cometrenderer.texture.TextureFiltering;
+import com.ferra13671.cometrenderer.texture.TextureWrapping;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;

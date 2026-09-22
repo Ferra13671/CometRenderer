@@ -5,7 +5,3 @@ plugins {
 
 project.ext.projectName = "comet-renderer-post-effects"
 apply from: rootProject.file("scripts/plugin.gradle")
-
-dependencies {
-    implementation "com.ferra13671:gl-texture-utils:${gl_texture_utils_version}"
-}

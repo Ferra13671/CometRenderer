@@ -3,12 +3,17 @@ package com.ferra13671.cometrenderer.device.directstate;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.gltextureutils.GlTex;
+import com.ferra13671.cometrenderer.texture.GLTex;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 
 public class DefaultDirectStateManager implements DirectStateManager {
+
+    @Override
+    public int createTexture() {
+        return GL11.glGenTextures();
+    }
 
     @Override
     public int createFramebuffer() {
@@ -38,9 +43,9 @@ public class DefaultDirectStateManager implements DirectStateManager {
     }
 
     @Override
-    public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture) {
+    public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GLTex texture) {
         framebuffer.bind(false);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture == null ? 0 : texture.getTexId(), 0);
+        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture == null ? 0 : texture.getId(), 0);
     }
 
     @Override

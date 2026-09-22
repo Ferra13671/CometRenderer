@@ -2,12 +2,18 @@ package com.ferra13671.cometrenderer.device.directstate;
 
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.gltextureutils.GlTex;
+import com.ferra13671.cometrenderer.texture.GLTex;
 import org.lwjgl.opengl.ARBDirectStateAccess;
+import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
 
 public class ARBDirectStateManager implements DirectStateManager {
+
+    @Override
+    public int createTexture() {
+        return ARBDirectStateAccess.glCreateTextures(GL11.GL_TEXTURE_2D);
+    }
 
     @Override
     public int createFramebuffer() {
@@ -30,8 +36,8 @@ public class ARBDirectStateManager implements DirectStateManager {
     }
 
     @Override
-    public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture) {
-        ARBDirectStateAccess.glNamedFramebufferTexture(framebuffer.getId(), attachment, texture == null ? 0 : texture.getTexId(), 0);
+    public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GLTex texture) {
+        ARBDirectStateAccess.glNamedFramebufferTexture(framebuffer.getId(), attachment, texture == null ? 0 : texture.getId(), 0);
     }
 
     @Override

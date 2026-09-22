@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.minecraft.font;
 
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
-import com.ferra13671.gltextureutils.Pair;
+import com.ferra13671.cometrenderer.texture.Pair;
 import io.netty.util.collection.IntObjectHashMap;
 import lombok.Getter;
 import org.apiguardian.api.API;

@@ -2,11 +2,13 @@ package com.ferra13671.cometrenderer.device.directstate;
 
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.gltextureutils.GlTex;
+import com.ferra13671.cometrenderer.texture.GLTex;
 
 import java.nio.ByteBuffer;
 
 public interface DirectStateManager {
+
+    int createTexture();
 
     int createFramebuffer();
 
@@ -16,7 +18,7 @@ public interface DirectStateManager {
 
     int createSampler();
 
-    void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GlTex texture);
+    void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GLTex texture);
 
     void blitFramebuffer(
             int srcFramebufferId, int dstFramebufferId,

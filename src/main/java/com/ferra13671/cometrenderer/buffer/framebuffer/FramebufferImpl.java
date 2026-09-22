@@ -1,11 +1,11 @@
 package com.ferra13671.cometrenderer.buffer.framebuffer;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.gltextureutils.ColorMode;
-import com.ferra13671.gltextureutils.GLTexture;
-import com.ferra13671.gltextureutils.TextureFiltering;
-import com.ferra13671.gltextureutils.TextureWrapping;
-import com.ferra13671.gltextureutils.builder.GLTextureBuilder;
+import com.ferra13671.cometrenderer.texture.ColorMode;
+import com.ferra13671.cometrenderer.texture.GLTexture;
+import com.ferra13671.cometrenderer.texture.TextureFiltering;
+import com.ferra13671.cometrenderer.texture.TextureWrapping;
+import com.ferra13671.cometrenderer.texture.GLTextureBuilder;
 import lombok.Getter;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -83,12 +83,12 @@ public class FramebufferImpl implements Framebuffer {
 
     @Override
     public int getColorTextureId() {
-        return this.colorTexture != null ? this.colorTexture.getTexId() : -1;
+        return this.colorTexture != null ? this.colorTexture.getId() : -1;
     }
 
     @Override
     public int getDepthAndStencilTextureId() {
-        return this.depthAndStencilTexture != null ? this.depthAndStencilTexture.getTexId() : -1;
+        return this.depthAndStencilTexture != null ? this.depthAndStencilTexture.getId() : -1;
     }
 
     @Override

@@ -6,8 +6,8 @@ import com.ferra13671.cometrenderer.minecraft.batch.IPrimitiveBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.ColoredTextureBatch;
 import com.ferra13671.cometrenderer.minecraft.font.Glyph;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
-import com.ferra13671.gltextureutils.GLTexture;
-import com.ferra13671.gltextureutils.Pair;
+import com.ferra13671.cometrenderer.texture.GLTexture;
+import com.ferra13671.cometrenderer.texture.Pair;
 import org.apiguardian.api.API;
 
 import java.util.HashMap;

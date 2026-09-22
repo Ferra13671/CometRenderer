@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
-import com.ferra13671.gltextureutils.Pair;
+import com.ferra13671.cometrenderer.texture.Pair;
 import org.apiguardian.api.API;
 
 import java.util.ArrayList;

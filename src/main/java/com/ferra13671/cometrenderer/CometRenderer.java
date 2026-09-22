@@ -20,8 +20,6 @@ import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.IMeshBuilder;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import com.ferra13671.gltextureutils.GLTextureSystem;
-import com.ferra13671.gltextureutils.controller.DefaultGLController;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
@@ -126,13 +124,6 @@ public class CometRenderer {
         }
 
         device = new GLDevice();
-
-        GLTextureSystem.setGlController(new DefaultGLController() {
-            @Override
-            public void bindTexture(int id) {
-                CometRenderer.getDevice().getPipelineStateManager().bindTexture(id);
-            }
-        });
 
         registry.setImmutable(CometTags.INITIALIZED, true);
     }

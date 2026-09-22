@@ -6,9 +6,8 @@ import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.sampler.unit.SamplerUnitBindable;
 import com.ferra13671.cometrenderer.sampler.unit.TextureUnitBindable;
 import com.ferra13671.cometrenderer.sampler.unit.UnitBindable;
-import com.ferra13671.gltextureutils.GlTex;
+import com.ferra13671.cometrenderer.texture.GLTex;
 import lombok.Getter;
-import lombok.Setter;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL20;
 
@@ -42,8 +41,8 @@ public class SamplerUniform extends GLUniform {
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public void setTexture(GlTex texture) {
-        setTexture(texture == null ? 0 : texture.getTexId());
+    public void setTexture(GLTex texture) {
+        setTexture(texture == null ? 0 : texture.getId());
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
@@ -72,7 +71,7 @@ public class SamplerUniform extends GLUniform {
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public void setTextureSampler(GlTex texture, GLSampler sampler) {
+    public void setTextureSampler(GLTex texture, GLSampler sampler) {
         setTexture(texture);
         setSampler(sampler);
     }
