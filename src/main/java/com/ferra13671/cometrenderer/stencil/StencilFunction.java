@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils.stencil;
+package com.ferra13671.cometrenderer.stencil;
 
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
 import lombok.NonNull;

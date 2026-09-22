@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.device.state;
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
-import com.ferra13671.cometrenderer.utils.stencil.StencilOpAction;
+import com.ferra13671.cometrenderer.stencil.StencilOpAction;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.INTERNAL, since = "3.0")

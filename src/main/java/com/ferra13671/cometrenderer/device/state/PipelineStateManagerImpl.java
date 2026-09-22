@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.device.state;
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
-import com.ferra13671.cometrenderer.utils.stencil.StencilOpAction;
+import com.ferra13671.cometrenderer.stencil.StencilOpAction;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apiguardian.api.API;

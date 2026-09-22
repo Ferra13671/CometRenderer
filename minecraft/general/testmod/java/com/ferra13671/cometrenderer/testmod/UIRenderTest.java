@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.testmod;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.StencilInfo;
+import com.ferra13671.cometrenderer.stencil.StencilInfo;
 import com.ferra13671.cometrenderer.minecraft.*;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.text.RenderText;
 import com.ferra13671.cometrenderer.minecraft.blur.BlurPass;

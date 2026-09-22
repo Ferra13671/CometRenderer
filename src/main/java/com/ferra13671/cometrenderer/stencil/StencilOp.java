@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.utils.stencil;
+package com.ferra13671.cometrenderer.stencil;
 
 import lombok.NonNull;
 import org.apiguardian.api.API;

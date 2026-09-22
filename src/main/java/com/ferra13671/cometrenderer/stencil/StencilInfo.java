@@ -1,10 +1,7 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.stencil;
 
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
 import com.ferra13671.cometrenderer.utils.ColorMask;
-import com.ferra13671.cometrenderer.utils.stencil.StencilOpAction;
-import com.ferra13671.cometrenderer.utils.stencil.StencilFunction;
-import com.ferra13671.cometrenderer.utils.stencil.StencilOp;
 import lombok.Builder;
 import org.apiguardian.api.API;
 
