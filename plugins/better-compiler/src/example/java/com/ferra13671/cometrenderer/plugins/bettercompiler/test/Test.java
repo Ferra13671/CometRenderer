@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public record Test(String name, String shaderName, Consumer<Registry> shaderRegistryConsumer, Consumer<Registry> programRegistryConsumer) {
 
     public void startAndLog(PrintWriter printWriter) {
-        GLSLFileEntry fileEntry = GLSLLoader.IN_JAR.createGLSLFileEntry(shaderName, shaderName);
+        GLSLFileEntry fileEntry = GLSLFileEntry.load(shaderName(), GLSLLoader.IN_JAR, shaderName());
         String beforeProcessContent = fileEntry.getContent().concatLines();
 
         Registry registry = new Registry();

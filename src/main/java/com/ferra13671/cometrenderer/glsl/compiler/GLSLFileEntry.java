@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.glsl.compiler;
 
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 import lombok.Getter;
 import lombok.NonNull;
@@ -41,5 +42,9 @@ public class GLSLFileEntry {
 
     public String getType() {
         return this.registry.get(CometTags.TYPE).orElseThrow();
+    }
+
+    public static <T> GLSLFileEntry load(String name, GLSLLoader<T> loader, T path) {
+        return new GLSLFileEntry(name, GLSLContent.fromString(loader.getContent(path)), CometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
     }
 }

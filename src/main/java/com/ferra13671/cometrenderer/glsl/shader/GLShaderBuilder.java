@@ -43,7 +43,7 @@ public class GLShaderBuilder<T> extends Builder<GLShader> {
 
     @NonNull
     public GLShaderBuilder<T> info(String name, T shaderPath, ShaderType type) {
-        return info(this.loader.createGLSLFileEntry(name, shaderPath), type);
+        return info(GLSLFileEntry.load(name, this.loader, shaderPath), type);
     }
 
     @NonNull

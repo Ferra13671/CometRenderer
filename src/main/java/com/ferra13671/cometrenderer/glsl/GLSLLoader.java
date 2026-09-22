@@ -1,10 +1,6 @@
 package com.ferra13671.cometrenderer.glsl;
 
 import com.ferra13671.cometrenderer.ErrorHandlers;
-import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
-import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
-import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
-import com.ferra13671.cometrenderer.utils.tag.Registry;
 import org.apiguardian.api.API;
 
 import java.io.BufferedReader;
@@ -48,11 +44,6 @@ public abstract class GLSLLoader<T> {
             return path;
         }
     };
-
-    @API(status = API.Status.MAINTAINED, since = "1.8.2")
-    public GLSLFileEntry createGLSLFileEntry(String name, T path) {
-        return new GLSLFileEntry(name, GLSLContent.fromString(getContent(path)), CometCompiler.DEFAULT_GLSL_FILE_ENTRY, new Registry());
-    }
 
     @API(status = API.Status.MAINTAINED, since = "1.9")
     public String getContent(T path) {
