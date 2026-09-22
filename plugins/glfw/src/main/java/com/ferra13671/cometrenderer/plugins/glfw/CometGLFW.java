@@ -27,6 +27,7 @@ public class CometGLFW {
 
         glfwMakeContextCurrent(getWindow().getId());
         GL.createCapabilities();
+        setVSync(VsyncMode.Disabled);
     }
 
     public void setVSync(VsyncMode mode) {
