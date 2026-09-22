@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.minecraft;
 
-import com.ferra13671.cometrenderer.CometLoaders;
+import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
@@ -136,7 +136,7 @@ public class CRMController extends AbstractCRMController {
 
     @Override
     protected GLSLFileEntry getMatricesShaderLib() {
-        return new GLShaderLibraryBuilder<>(CometLoaders.STRING, getMatrixSnippet())
+        return new GLShaderLibraryBuilder<>(CometLoader.STRING, getMatrixSnippet())
                 .name("matrices")
                 .library(
                         """

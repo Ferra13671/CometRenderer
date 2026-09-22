@@ -1,12 +1,12 @@
 package _3d;
 
-import com.ferra13671.cometrenderer.CometLoaders;
+import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 
 public class Shaders {
-    public final GLShader positionVertex = CometLoaders.STRING.createShaderBuilder()
+    public final GLShader positionVertex = CometLoader.STRING.createShaderBuilder()
             .info(
                     "position_vertex",
                     """
@@ -26,7 +26,7 @@ public class Shaders {
             .uniform("projection", UniformType.MATRIX4)
             .uniform("view", UniformType.MATRIX4)
             .build();
-    public final GLShader positionFragment = CometLoaders.STRING.createShaderBuilder()
+    public final GLShader positionFragment = CometLoader.STRING.createShaderBuilder()
             .info(
                     "position_fragment",
                     """
@@ -45,7 +45,7 @@ public class Shaders {
                     ShaderType.Fragment
             )
             .build();
-    public final GLShader defaultMaterialVertex = CometLoaders.STRING.createShaderBuilder()
+    public final GLShader defaultMaterialVertex = CometLoader.STRING.createShaderBuilder()
             .info(
                     "default_material_vertex",
                     """
@@ -78,7 +78,7 @@ public class Shaders {
             .uniform("projection", UniformType.MATRIX4)
             .uniform("view", UniformType.MATRIX4)
             .build();
-    public final GLShader defaultMaterialFragment = CometLoaders.STRING.createShaderBuilder()
+    public final GLShader defaultMaterialFragment = CometLoader.STRING.createShaderBuilder()
             .info(
                     "default_material_fragment",
                           """
@@ -147,7 +147,7 @@ public class Shaders {
             .uniform("ambientLight", UniformType.FLOAT)
             .uniform("sunVector", UniformType.VEC3)
             .build();
-    public final GLShader shadowTextureFragment = CometLoaders.STRING.createShaderBuilder()
+    public final GLShader shadowTextureFragment = CometLoader.STRING.createShaderBuilder()
             .info(
                     "shadow_texture_fragment",
                     """

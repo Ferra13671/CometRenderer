@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.plugins.bettercompiler.test;
 
-import com.ferra13671.cometrenderer.CometLoaders;
+import com.ferra13671.cometrenderer.CometLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -22,18 +22,18 @@ public class Main {
         BetterCompilerPlugin.init();
 
         BetterCompilerPlugin.registerShaderLibraries(
-                new GLShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                new GLShaderLibraryBuilder<>(CometLoader.IN_JAR)
                         .name("exampleLib1")
                         .library("exampleLibrary1.glsl")
                         .uniform("shaderColor", UniformType.VEC4)
                         .build(),
-                new GLShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                new GLShaderLibraryBuilder<>(CometLoader.IN_JAR)
                         .name("exampleLib2")
                         .library("exampleLibrary2.glsl")
                         .uniform("Projection", UniformType.BUFFER)
                         .uniform("modelViewMat", UniformType.MATRIX4)
                         .build(),
-                new GLShaderLibraryBuilder<>(CometLoaders.IN_JAR)
+                new GLShaderLibraryBuilder<>(CometLoader.IN_JAR)
                         .name("exampleLib3")
                         .library("exampleLibrary3.glsl")
                         .build()
