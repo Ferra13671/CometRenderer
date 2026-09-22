@@ -10,7 +10,6 @@ import com.ferra13671.cometrenderer.minecraft.font.FontType;
 import com.ferra13671.cometrenderer.sampler.unit.UnitBindable;
 import com.ferra13671.cometrenderer.texture.*;
 import com.ferra13671.cometrenderer.texture.atlas.TextureBorder;
-import com.ferra13671.cometrenderer.texture.loader.FileEntry;
 import com.ferra13671.cometrenderer.minecraft.batch.IPrimitiveBatch;
 import com.ferra13671.cometrenderer.minecraft.batch.impl.*;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
@@ -37,9 +36,9 @@ public final class UIRenderTest {
 
     public static void init() {
         texture =
-                TextureLoader.FILE_ENTRY.createTextureBuilder()
+                GLTexture.builder(TextureLoader.IN_JAR)
                         .name("Test-texture")
-                        .info(new FileEntry("texture.jpg", PathMode.INSIDE_JAR))
+                        .info("texture.jpg")
                         .filtering(TextureFiltering.DEFAULT)
                         .wrapping(TextureWrapping.DEFAULT)
                         .build();

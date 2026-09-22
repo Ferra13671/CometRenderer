@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.utils;
 
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -19,7 +18,7 @@ import java.util.function.Consumer;
 @UtilityClass
 public class TextureUtils {
 
-    public void checkNode(Node node, Consumer<Node> consumer) {
+    public void visitNodeAndDirectChildren(Node node, Consumer<Node> consumer) {
         consumer.accept(node);
 
         NodeList list = node.getChildNodes();
@@ -49,29 +48,6 @@ public class TextureUtils {
         } catch (IOException var4) {
             MemoryUtil.memFree(byteBuffer);
             throw var4;
-        }
-    }
-
-    public void tryGenerate(ByteBuffer buffer, InputStream stream, Consumer<MemoryStack> consumer) throws IOException {
-        try {
-            MemoryStack memoryStack = MemoryStack.stackPush();
-            try {
-                consumer.accept(memoryStack);
-            } catch (Throwable var9) {
-                try {
-                    memoryStack.close();
-                } catch (Throwable var8) {
-                    var9.addSuppressed(var8);
-                }
-
-                throw var9;
-            }
-
-            memoryStack.close();
-        } finally {
-            MemoryUtil.memFree(buffer);
-            if (stream != null)
-                stream.close();
         }
     }
 

@@ -1,6 +1,5 @@
 package com.ferra13671.cometrenderer.texture.loader;
 
-import com.ferra13671.cometrenderer.texture.gif.GLGifBuilder;
 import org.apiguardian.api.API;
 
 import java.io.InputStream;
@@ -10,11 +9,7 @@ import java.net.URI;
 public interface GifLoader<T> {
     GifLoader<InputStream> INPUT_STREAM = path -> path;
     GifLoader<URI> URI = path -> path.toURL().openStream();
-    GifLoader<FileEntry> FILE_ENTRY = path -> path.pathMode().streamCreateFunction.apply(path.path());
+    GifLoader<String> IN_JAR = path -> GifLoader.class.getClassLoader().getResourceAsStream(path);
 
     InputStream load(T path) throws Exception;
-
-    default GLGifBuilder<T> createGifBuilder() {
-        return new GLGifBuilder<>(this);
-    }
 }

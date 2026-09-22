@@ -3,17 +3,19 @@ package com.ferra13671.cometrenderer.texture.gif;
 import com.ferra13671.cometrenderer.texture.TextureFiltering;
 import com.ferra13671.cometrenderer.texture.TextureWrapping;
 import com.ferra13671.cometrenderer.texture.loader.GifLoader;
+import com.ferra13671.cometrenderer.utils.Builder;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.EXPERIMENTAL, since = "3.0")
-public class GLGifBuilder<T> {
+public class GLGifBuilder<T> extends Builder<GLGif> {
     private String name = null;
     private T path = null;
     private final GifLoader<T> loader;
     private TextureFiltering filtering = null;
     private TextureWrapping wrapping = null;
 
-    public GLGifBuilder(GifLoader<T> loader) {
+    GLGifBuilder(GifLoader<T> loader) {
+        super("gif");
         this.loader = loader;
     }
 
@@ -39,7 +41,9 @@ public class GLGifBuilder<T> {
 
     public GLGif build() {
         try {
-            checkArguments();
+            assertNotNull(this.name, "name");
+            assertNotNull(this.loader, "loader");
+            assertNotNull(this.path, "path");
 
             GLGif glGif = new GLGif(this.name, this.loader.load(this.path));
 
@@ -50,14 +54,5 @@ public class GLGifBuilder<T> {
         } catch (Exception e) {
             throw new UnsupportedOperationException(e);
         }
-    }
-
-    private void checkArguments() {
-        if (this.name == null)
-            throw new IllegalArgumentException("Name cannot be null.");
-        if (this.loader == null)
-            throw new IllegalArgumentException(String.format("Loader in texture '%s' cannot be null.", this.name));
-        if (this.path == null)
-            throw new IllegalArgumentException(String.format("Path in texture '%s' cannot be null.", this.name));
     }
 }

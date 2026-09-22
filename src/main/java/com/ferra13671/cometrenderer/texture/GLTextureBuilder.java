@@ -1,10 +1,11 @@
 package com.ferra13671.cometrenderer.texture;
 
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
+import com.ferra13671.cometrenderer.utils.Builder;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.EXPERIMENTAL, since = "3.0")
-public class GLTextureBuilder<T> {
+public class GLTextureBuilder<T> extends Builder<GLTexture> {
     private String name = null;
     private GLTextureInfo info = null;
     private final TextureLoader<T> loader;
@@ -12,7 +13,8 @@ public class GLTextureBuilder<T> {
     private TextureFiltering filtering = null;
     private TextureWrapping wrapping = null;
 
-    public GLTextureBuilder(TextureLoader<T> loader) {
+    GLTextureBuilder(TextureLoader<T> loader) {
+        super("texture");
         this.loader = loader;
     }
 
@@ -22,26 +24,22 @@ public class GLTextureBuilder<T> {
     }
 
     public GLTextureBuilder<T> info(T path) {
-        return info(path, this.colorMode);
-    }
+        if (path != null) {
+            if (this.loader == null)
+                throw new UnsupportedOperationException("Cannot load texture info from path without loader.");
 
-    public GLTextureBuilder<T> info(T path, ColorMode colorMode) {
-        try {
-            this.info = this.loader.load(path, colorMode);
-            this.colorMode = colorMode;
-        } catch (Exception e) {
-            throw new UnsupportedOperationException(e);
+            try {
+                this.info = this.loader.load(path, colorMode);
+            } catch (Exception e) {
+                throw new UnsupportedOperationException(e);
+            }
         }
+
         return this;
     }
 
     public GLTextureBuilder<T> info(int width, int height) {
-        return info(width, height, this.colorMode);
-    }
-
-    public GLTextureBuilder<T> info(int width, int height, ColorMode colorMode) {
         this.info = new GLTextureInfo(null, width, height, false);
-        this.colorMode = colorMode;
         return this;
     }
 
@@ -60,11 +58,14 @@ public class GLTextureBuilder<T> {
         return this;
     }
 
+    @Override
     public GLTexture build() {
         try {
-            checkArguments();
+            assertNotNull(this.name, "name");
+            assertNotNull(this.info, "info");
+            assertNotNull(this.colorMode, "color mode");
 
-            GLTexture texture = GLTexture.of(this.name, this.colorMode, this.info);
+            GLTexture texture = new GLTexture(this.name, this.colorMode, this.info);
 
             texture.setFiltering(this.filtering);
             texture.setWrapping(this.wrapping);
@@ -73,18 +74,5 @@ public class GLTextureBuilder<T> {
         } catch (Exception e) {
             throw new UnsupportedOperationException(e);
         }
-    }
-
-    private void checkArguments() {
-        if (this.name == null)
-            throw new IllegalArgumentException("Name cannot be null.");
-        if (this.info == null)
-            throw new IllegalArgumentException(String.format("Texture information in texture '%s' cannot be null", this.name));
-        if (this.colorMode == null)
-            throw new IllegalArgumentException(String.format("ColorMode in texture '%s' cannot be null.", this.name));
-    }
-
-    public static GLTextureBuilder<?> empty() {
-        return new GLTextureBuilder<>(null);
     }
 }

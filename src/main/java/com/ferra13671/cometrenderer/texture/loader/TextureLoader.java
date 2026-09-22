@@ -2,10 +2,10 @@ package com.ferra13671.cometrenderer.texture.loader;
 
 import com.ferra13671.cometrenderer.texture.ColorMode;
 import com.ferra13671.cometrenderer.utils.TextureUtils;
-import com.ferra13671.cometrenderer.texture.GLTextureBuilder;
 import com.ferra13671.cometrenderer.texture.GLTextureInfo;
 import org.apiguardian.api.API;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.awt.image.BufferedImage;
@@ -22,7 +22,8 @@ public interface TextureLoader<T> {
         buffer.rewind();
 
         AtomicReference<GLTextureInfo> glTextureInfo = new AtomicReference<>(null);
-        TextureUtils.tryGenerate(buffer, path, memoryStack -> {
+
+        try(MemoryStack memoryStack = MemoryStack.stackPush()) {
             IntBuffer xBuffer = memoryStack.mallocInt(1);
             IntBuffer yBuffer = memoryStack.mallocInt(1);
             IntBuffer channelsBuffer = memoryStack.mallocInt(1);
@@ -30,10 +31,15 @@ public interface TextureLoader<T> {
 
             if (byteBuffer != null)
                 glTextureInfo.set(new GLTextureInfo(byteBuffer, xBuffer.get(0), yBuffer.get(0), true));
-        });
+        } finally {
+            MemoryUtil.memFree(buffer);
+            if (path != null)
+                path.close();
+        }
+
         return glTextureInfo.get();
     };
-    TextureLoader<FileEntry> FILE_ENTRY = (path, colorMode) -> INPUT_STREAM.load(path.pathMode().streamCreateFunction.apply(path.path()), colorMode);
+    TextureLoader<String> IN_JAR = (path, colorMode) -> INPUT_STREAM.load(TextureLoader.class.getClassLoader().getResourceAsStream(path), colorMode);
     TextureLoader<URL> URL = (path, colorMode) -> INPUT_STREAM.load(path.openStream(), colorMode);
     TextureLoader<BufferedImage> BUFFERED_IMAGE = (path, colorMode) -> {
         GLTextureInfo glTextureInfo;
@@ -60,8 +66,4 @@ public interface TextureLoader<T> {
     };
 
     GLTextureInfo load(T path, ColorMode colorMode) throws Exception;
-
-    default GLTextureBuilder<T> createTextureBuilder() {
-        return new GLTextureBuilder<>(this);
-    }
 }

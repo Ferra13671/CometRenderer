@@ -87,7 +87,7 @@ public class GlyphMap implements Closeable {
 
         this.glyphs = glyphs;
 
-        this.texture = TextureLoader.BUFFERED_IMAGE.createTextureBuilder()
+        this.texture = GLTexture.builder(TextureLoader.BUFFERED_IMAGE)
                 .name(String.format("GlyphMap[%s, %s]", this.font.getFont().getName(), this.index))
                 .info(bufferedImage)
                 .filtering(this.font.isSmoothFiltering() ? TextureFiltering.SMOOTH : TextureFiltering.DEFAULT)

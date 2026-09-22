@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.texture.atlas;
 
 import com.ferra13671.cometrenderer.texture.*;
-import com.ferra13671.cometrenderer.texture.GLTextureBuilder;
 import org.apiguardian.api.API;
 
 import java.util.Collections;
@@ -20,7 +19,7 @@ public class TextureAtlas implements GLTex {
 
         TextureAtlasScheme scheme = calculateAtlasScheme(textures);
 
-        this.texture = GLTextureBuilder.empty()
+        this.texture = GLTexture.builder()
                 .name(name)
                 .info(scheme.textureWidth(), scheme.textureHeight())
                 .build();

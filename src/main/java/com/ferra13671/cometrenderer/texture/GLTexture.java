@@ -5,6 +5,7 @@ import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.device.directstate.DirectStateManager;
+import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
@@ -29,12 +30,14 @@ public class GLTexture implements GLTex {
     protected TextureWrapping wrapping = null;
     protected ColorMode colorMode;
 
-    protected GLTexture(String name, ColorMode colorMode) {
+    GLTexture(String name, ColorMode colorMode, GLTextureInfo glTextureInfo) {
         this.name = name;
         this.colorMode = colorMode;
+
+        create(glTextureInfo);
     }
 
-    private GLTexture create(GLTextureInfo glTextureInfo) {
+    void create(GLTextureInfo glTextureInfo) {
         GLDevice device = CometRenderer.getDevice();
 
         this.id = CometRenderer.getDevice().createTexture();
@@ -57,8 +60,6 @@ public class GLTexture implements GLTex {
             else
                 MemoryUtil.memFree(pixels);
         }
-
-        return this;
     }
 
     /**
@@ -68,7 +69,7 @@ public class GLTexture implements GLTex {
         int cutWidth = (int) ((u2 - u1) * this.width);
         int cutHeight = (int) ((v2 - v1) * this.height);
 
-        GLTexture texture = GLTextureBuilder.empty()
+        GLTexture texture = builder()
                 .name(this.name.concat(String.format("_cut_%s_%s", cutWidth, cutHeight)))
                 .info(cutWidth, cutHeight)
                 .colorMode(this.colorMode)
@@ -176,7 +177,11 @@ public class GLTexture implements GLTex {
         this.wrapping = wrapping;
     }
 
-    public static GLTexture of(String name, ColorMode colorMode, GLTextureInfo glTextureInfo) {
-        return new GLTexture(name, colorMode).create(glTextureInfo);
+    public static <T> GLTextureBuilder<T> builder(TextureLoader<T> loader) {
+        return new GLTextureBuilder<>(loader);
+    }
+
+    public static GLTextureBuilder<?> builder() {
+        return builder(null);
     }
 }

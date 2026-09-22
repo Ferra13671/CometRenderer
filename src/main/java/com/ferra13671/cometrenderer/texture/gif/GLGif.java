@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.texture.gif;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.texture.*;
+import com.ferra13671.cometrenderer.texture.loader.GifLoader;
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
 import com.ferra13671.cometrenderer.utils.TextureUtils;
 import org.apiguardian.api.API;
@@ -30,8 +31,7 @@ public class GLGif implements GLTex {
     protected long lastUpdateTime = System.currentTimeMillis();
 
     public GLGif(String name, InputStream inputStream) {
-        try {
-            ImageInputStream stream = ImageIO.createImageInputStream(inputStream);
+        try (inputStream; ImageInputStream stream = ImageIO.createImageInputStream(inputStream)) {
             Iterator<ImageReader> readers = ImageIO.getImageReaders(stream);
 
             if (readers.hasNext()) {
@@ -47,11 +47,11 @@ public class GLGif implements GLTex {
                             metadata.getNativeMetadataFormatName()
                     );
 
-                    AtomicInteger delay = new AtomicInteger(-1);
+                    AtomicInteger delay = new AtomicInteger(100);
                     AtomicReference<int[]> offsets = new AtomicReference<>(new int[]{0, 0});
                     AtomicReference<Disposal> disposal = new AtomicReference<>(null);
 
-                    TextureUtils.checkNode(
+                    TextureUtils.visitNodeAndDirectChildren(
                             nodeMetadata,
                             node -> {
                                 if (node.getNodeName().equals("GraphicControlExtension")) {
@@ -69,7 +69,8 @@ public class GLGif implements GLTex {
                                                     : d.equalsIgnoreCase("restoreToBackgroundColor") ?
                                                     Disposal.ToBackground
                                                     : d.equalsIgnoreCase("restoreToPrevious") ?
-                                                    Disposal.ToPrevious : null
+                                                    Disposal.ToPrevious
+                                                    : Disposal.None
                                     );
                                 }
 
@@ -91,8 +92,8 @@ public class GLGif implements GLTex {
 
                     this.frames.add(
                             new GLGifFrame(
-                                    TextureLoader.BUFFERED_IMAGE.createTextureBuilder()
-                                        .name(name.concat("-frame" + numFrames))
+                                    GLTexture.builder(TextureLoader.BUFFERED_IMAGE)
+                                        .name(name.concat("-frame-" + i))
                                         .info(image)
                                         .build(),
                                     image,
@@ -103,6 +104,8 @@ public class GLGif implements GLTex {
 
                     prevImage = image;
                 }
+
+                reader.dispose();
             }
 
             this.currentFrame = this.frames.getFirst();
@@ -173,5 +176,9 @@ public class GLGif implements GLTex {
     private void setCurrentFrame(int frameId) {
         this.lastUpdateTime = this.lastUpdateTime + this.currentFrame.delay();
         this.currentFrame = this.frames.get(frameId);
+    }
+
+    public static <T> GLGifBuilder<T> builder(GifLoader<T> loader) {
+        return new GLGifBuilder<>(loader);
     }
 }

@@ -5,8 +5,6 @@ import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.glfw.*;
 import com.ferra13671.cometrenderer.texture.GLTexture;
-import com.ferra13671.cometrenderer.texture.PathMode;
-import com.ferra13671.cometrenderer.texture.loader.FileEntry;
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
 import lombok.experimental.UtilityClass;
 import org.joml.Matrix4f;
@@ -102,13 +100,13 @@ public class Hello3D {
     }
 
     void createTextures() {
-        woodTexture = TextureLoader.FILE_ENTRY.createTextureBuilder()
+        woodTexture = GLTexture.builder(TextureLoader.IN_JAR)
                 .name("wood")
-                .info(new FileEntry("wood.png", PathMode.INSIDE_JAR))
+                .info("wood.png")
                 .build();
-        stoneTexture = TextureLoader.FILE_ENTRY.createTextureBuilder()
+        stoneTexture = GLTexture.builder(TextureLoader.IN_JAR)
                 .name("stone")
-                .info(new FileEntry("stone.png", PathMode.INSIDE_JAR))
+                .info("stone.png")
                 .build();
     }
 

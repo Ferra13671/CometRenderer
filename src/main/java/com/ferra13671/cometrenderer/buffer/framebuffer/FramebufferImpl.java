@@ -5,7 +5,6 @@ import com.ferra13671.cometrenderer.texture.ColorMode;
 import com.ferra13671.cometrenderer.texture.GLTexture;
 import com.ferra13671.cometrenderer.texture.TextureFiltering;
 import com.ferra13671.cometrenderer.texture.TextureWrapping;
-import com.ferra13671.cometrenderer.texture.GLTextureBuilder;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
@@ -47,7 +46,7 @@ public class FramebufferImpl implements Framebuffer {
         deleteTextures();
 
         setColorTexture(
-                GLTextureBuilder.empty()
+                GLTexture.builder()
                         .name(this.name + "[Color]")
                         .info(width, height)
                         .filtering(TextureFiltering.DEFAULT)
@@ -56,9 +55,10 @@ public class FramebufferImpl implements Framebuffer {
         );
         if (isUseDepth()) {
             setDepthAndStencilTexture(
-                    GLTextureBuilder.empty()
+                    GLTexture.builder()
                             .name(this.name + "[Depth]")
-                            .info(width, height, isUseStencil() ? ColorMode.DEPTH_AND_STENCIL : ColorMode.DEPTH)
+                            .info(width, height)
+                            .colorMode(isUseStencil() ? ColorMode.DEPTH_AND_STENCIL : ColorMode.DEPTH)
                             .filtering(TextureFiltering.DEFAULT)
                             .wrapping(TextureWrapping.DEFAULT)
                             .build()
