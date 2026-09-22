@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
-import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
@@ -27,7 +27,7 @@ public record GLShader(String name, int id, ShaderType shaderType, Registry regi
     }
 
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public static <T> GLShaderBuilder<T> builder(CometLoader<T> loader) {
+    public static <T> GLShaderBuilder<T> builder(GLSLLoader<T> loader) {
         return new GLShaderBuilder<>(loader);
     }
 }

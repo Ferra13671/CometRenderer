@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.plugins.bettercompiler;
 
-import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
@@ -23,9 +23,9 @@ public class GLShaderLibraryBuilder<T> extends Builder<GLSLFileEntry> {
     private T libraryPath;
     private boolean singleIncludeOnly = false;
     private final HashMap<String, UniformType<?>> uniforms = new HashMap<>();
-    private final CometLoader<T> loader;
+    private final GLSLLoader<T> loader;
 
-    public GLShaderLibraryBuilder(CometLoader<T> loader, GLProgramSnippet... snippets) {
+    public GLShaderLibraryBuilder(GLSLLoader<T> loader, GLProgramSnippet... snippets) {
         super("shader library");
 
         for (GLProgramSnippet snippet : snippets)

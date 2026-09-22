@@ -1,6 +1,6 @@
 package triangle;
 
-import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.shader.GLShader;
@@ -92,7 +92,7 @@ public class HelloTriangle {
     }
 
     void createProgram() {
-        GLShader vertexShader = GLShader.builder(CometLoader.STRING)
+        GLShader vertexShader = GLShader.builder(GLSLLoader.STRING)
                 .info(
                         "vertex-shader",
                         vertexShaderSrc,
@@ -101,7 +101,7 @@ public class HelloTriangle {
                 .uniform("matrix", UniformType.MATRIX4)
                 .build();
 
-        GLShader fragmentShader = GLShader.builder(CometLoader.STRING)
+        GLShader fragmentShader = GLShader.builder(GLSLLoader.STRING)
                 .info(
                         "fragment-shader",
                         fragmentShaderSrc,

@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
-import com.ferra13671.cometrenderer.CometLoader;
+import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
@@ -23,12 +23,12 @@ import java.util.Map;
 @API(status = API.Status.MAINTAINED, since = "3.0")
 public class GLShaderBuilder<T> extends Builder<GLShader> {
     private final Registry registry = new Registry();
-    private final CometLoader<T> loader;
+    private final GLSLLoader<T> loader;
     private GLSLFileEntry entry;
     private ShaderType type;
 
 
-    GLShaderBuilder(CometLoader<T> loader) {
+    GLShaderBuilder(GLSLLoader<T> loader) {
         super("shader");
 
         this.loader = loader;

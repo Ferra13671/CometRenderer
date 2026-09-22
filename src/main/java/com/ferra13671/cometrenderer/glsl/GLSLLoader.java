@@ -1,5 +1,6 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.glsl;
 
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLContent;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
@@ -14,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 @API(status = API.Status.MAINTAINED, since = "1.1")
-public abstract class CometLoader<T> {
-    public static final CometLoader<String> IN_JAR = new CometLoader<>() {
+public abstract class GLSLLoader<T> {
+    public static final GLSLLoader<String> IN_JAR = new GLSLLoader<>() {
         @Override
         public String load(String path) throws Exception {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
@@ -24,7 +25,7 @@ public abstract class CometLoader<T> {
             return content;
         }
     };
-    public static final CometLoader<InputStream> INPUT_STREAM = new CometLoader<>() {
+    public static final GLSLLoader<InputStream> INPUT_STREAM = new GLSLLoader<>() {
         @Override
         public String load(InputStream path) throws Exception {
             String content = new BufferedReader(new InputStreamReader(path, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
@@ -32,7 +33,7 @@ public abstract class CometLoader<T> {
             return content;
         }
     };
-    public static final CometLoader<URI> URI = new CometLoader<>() {
+    public static final GLSLLoader<URI> URI = new GLSLLoader<>() {
         @Override
         public String load(URI path) throws Exception {
             InputStream inputStream = path.toURL().openStream();
@@ -41,7 +42,7 @@ public abstract class CometLoader<T> {
             return content;
         }
     };
-    public static final CometLoader<String> STRING = new CometLoader<>() {
+    public static final GLSLLoader<String> STRING = new GLSLLoader<>() {
         @Override
         public String load(String path) {
             return path;
