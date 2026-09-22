@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.device.directstate;
 
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.texture.ColorMode;
 import com.ferra13671.cometrenderer.texture.GLTex;
 import org.lwjgl.opengl.ARBDirectStateAccess;
 import org.lwjgl.opengl.GL11;
@@ -33,6 +34,17 @@ public class ARBDirectStateManager implements DirectStateManager {
     @Override
     public int createSampler() {
         return ARBDirectStateAccess.glCreateSamplers();
+    }
+
+    @Override
+    public void blitFramebuffer(Framebuffer srcFramebuffer, Framebuffer dstFramebuffer, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, int mask, int filter) {
+        blitFramebuffer(
+                srcFramebuffer == null ? 0 : srcFramebuffer.getId(),
+                dstFramebuffer == null ? 0 : dstFramebuffer.getId(),
+                srcX, srcY, srcWidth, srcHeight,
+                dstX, dstY, dstWidth, dstHeight,
+                mask, filter
+        );
     }
 
     @Override
@@ -83,5 +95,37 @@ public class ARBDirectStateManager implements DirectStateManager {
     @Override
     public void vertexAttributeBinding(int vertBufId, int attribIndex, int bindingIndex) {
         ARBDirectStateAccess.glVertexArrayAttribBinding(vertBufId, attribIndex, bindingIndex);
+    }
+
+    @Override
+    public void textureStorage(GLTex texture) {
+        ColorMode colorMode = texture.getColorMode();
+        ARBDirectStateAccess.glTextureStorage2D(texture.getId(), 1, colorMode.internalFormatId(), texture.getWidth(), texture.getHeight());
+    }
+
+    @Override
+    public void textureImage(GLTex texture, int x, int y, ByteBuffer pixels) {
+        ColorMode colorMode = texture.getColorMode();
+        ARBDirectStateAccess.glTextureSubImage2D(texture.getId(), 0, x, y, texture.getWidth(), texture.getHeight(), colorMode.externalFormatId(), colorMode.dataType(), pixels);
+    }
+
+    @Override
+    public void copyTexture(GLTex texture, int x, int y, int width, int height) {
+        ARBDirectStateAccess.glCopyTextureSubImage2D(texture.getId(), 0, 0, 0, x, y, width, height);
+    }
+
+    @Override
+    public void copyTextureToBuffer(GLTex texture, ByteBuffer targetBuffer) {
+        ARBDirectStateAccess.glGetTextureImage(texture.getId(), 0, texture.getColorMode().externalFormatId(), texture.getColorMode().dataType(), targetBuffer);
+    }
+
+    @Override
+    public void textureParameterInt(GLTex texture, int paramId, int value) {
+        ARBDirectStateAccess.glTextureParameteri(texture.getId(), paramId, value);
+    }
+
+    @Override
+    public void textureParameterFloat(GLTex texture, int paramId, float value) {
+        ARBDirectStateAccess.glTextureParameterf(texture.getId(), paramId, value);
     }
 }

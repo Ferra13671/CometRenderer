@@ -1,14 +1,18 @@
 package com.ferra13671.cometrenderer.texture;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
+import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
+import com.ferra13671.cometrenderer.device.GLDevice;
+import com.ferra13671.cometrenderer.device.directstate.DirectStateManager;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.Random;
 
 import static org.lwjgl.stb.STBImage.nstbi_image_free;
 
@@ -31,26 +35,27 @@ public class GLTexture implements GLTex {
     }
 
     private GLTexture create(GLTextureInfo glTextureInfo) {
+        GLDevice device = CometRenderer.getDevice();
+
         this.id = CometRenderer.getDevice().createTexture();
 
-        CometRenderer.getDevice().getPipelineStateManager().bindTexture(this.id);
-        prepareDefaultTextureParameters();
+        prepareDefaultTextureParameters(device.getDirectStateManager());
 
         this.width = glTextureInfo.width();
         this.height = glTextureInfo.height();
 
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, this.colorMode.internalFormatId(), this.width, this.height, 0, this.colorMode.externalFormatId(), this.colorMode.dataType(), (ByteBuffer) null);
+        device.getDirectStateManager().textureStorage(this);
 
-        if (glTextureInfo.pixels() != null) {
-            long bufferAddress = MemoryUtil.memAddress(glTextureInfo.pixels());
-
+        ByteBuffer pixels = glTextureInfo.pixels();
+        if (pixels != null) {
             prepareDefaultPixelStore();
-            GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, this.width, this.height, this.colorMode.externalFormatId(), this.colorMode.dataType(), bufferAddress);
+
+            device.getDirectStateManager().textureImage(this, 0, 0, pixels);
 
             if (glTextureInfo.usingStb())
-                nstbi_image_free(bufferAddress);
+                nstbi_image_free(MemoryUtil.memAddress(pixels));
             else
-                MemoryUtil.memFree(glTextureInfo.pixels());
+                MemoryUtil.memFree(pixels);
         }
 
         return this;
@@ -60,40 +65,38 @@ public class GLTexture implements GLTex {
      * Создаёт копию текущей текстуры и "обрезает" её.
      */
     public GLTexture cutTexture(float u1, float v1, float u2, float v2) {
-        GLTexture texture = new GLTexture(this.name.concat(String.format("_sub_%s", new Random().nextInt())), this.colorMode);
+        int cutWidth = (int) ((u2 - u1) * this.width);
+        int cutHeight = (int) ((v2 - v1) * this.height);
 
-        texture.id = CometRenderer.getDevice().createTexture();
+        GLTexture texture = GLTextureBuilder.empty()
+                .name(this.name.concat(String.format("_cut_%s_%s", cutWidth, cutHeight)))
+                .info(cutWidth, cutHeight)
+                .colorMode(this.colorMode)
+                .build();
 
-        int fbo = GL30.glGenFramebuffers();
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_TEXTURE_2D, this.id, 0);
+        FramebufferImpl framebuffer = new FramebufferImpl(FramebufferInfo.builder()
+                .name("cut framebuffer")
+                .width(1)
+                .height(1)
+                .useStencil(false)
+                .useDepth(false)
+                .build()
+        );
 
-        if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE)
-            throw new RuntimeException(String.format("An error occurred while creating FrameBuffer for subtexture '%s'.", texture.getName()));
+        framebuffer.getColorTexture().delete();
+        framebuffer.setColorTexture(this);
+        framebuffer.bind(true);
 
-        texture.width = (int) ((u2 - u1) * this.width);
-        texture.height = (int) ((v2 - v1) * this.height);
-
-        CometRenderer.getDevice().getPipelineStateManager().bindTexture(texture.getId());
-        prepareDefaultTextureParameters();
-        texture.setFiltering(this.filtering);
-        texture.setWrapping(this.wrapping);
-
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, texture.colorMode.internalFormatId(), texture.width, texture.height, 0, texture.colorMode.externalFormatId(), texture.colorMode.dataType(), (ByteBuffer) null);
-        prepareDefaultPixelStore();
-
-        GL11.glCopyTexSubImage2D(
-                GL11.GL_TEXTURE_2D,
-                0,
-                0,
-                0,
+        CometRenderer.getDevice().getDirectStateManager().copyTexture(
+                texture,
                 (int) (u1 * this.width),
                 (int) (v1 * this.height),
                 texture.width,
-                texture.height);
+                texture.height
+        );
 
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-        GL30.glDeleteFramebuffers(fbo);
+        framebuffer.setColorTexture(null);
+        framebuffer.delete();
 
         return texture;
     }
@@ -104,12 +107,12 @@ public class GLTexture implements GLTex {
     public GLTexture drawImage(GLTexture texture, int x, int y) {
         ByteBuffer byteBuffer = MemoryUtil.memAlloc(texture.getWidth() * texture.getHeight() * texture.getColorMode().pixelSize());
 
-        CometRenderer.getDevice().getPipelineStateManager().bindTexture(texture.getId());
-        GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, texture.getColorMode().externalFormatId(), texture.getColorMode().dataType(), byteBuffer);
+        GLDevice device = CometRenderer.getDevice();
+
+        device.getDirectStateManager().copyTextureToBuffer(texture, byteBuffer);
         byteBuffer.flip();
 
-        CometRenderer.getDevice().getPipelineStateManager().bindTexture(this.getId());
-        GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, x, y, texture.getWidth(), texture.getHeight(), texture.getColorMode().externalFormatId(),  texture.getColorMode().dataType(), MemoryUtil.memAddress(byteBuffer));
+        device.getDirectStateManager().textureImage(this, x, y, byteBuffer);
 
         setFiltering(this.filtering);
         setWrapping(this.wrapping);
@@ -119,14 +122,14 @@ public class GLTexture implements GLTex {
         return this;
     }
 
-    private static void prepareDefaultTextureParameters() {
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, 33085, 0);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, 33082, 0);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, 33083, 0);
-        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 34049, 0.0F);
+    private void prepareDefaultTextureParameters(DirectStateManager dsm) {
+        dsm.textureParameterInt(this, GL12.GL_TEXTURE_MAX_LEVEL, 0);
+        dsm.textureParameterInt(this, GL12.GL_TEXTURE_MIN_LOD, 0);
+        dsm.textureParameterInt(this, GL12.GL_TEXTURE_MAX_LOD, 0);
+        dsm.textureParameterFloat(this, GL14.GL_TEXTURE_LOD_BIAS, 0.0F);
     }
 
-    private static void prepareDefaultPixelStore() {
+    private void prepareDefaultPixelStore() {
         GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, 0);
         GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, 0);
         GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, 0);
@@ -145,14 +148,14 @@ public class GLTexture implements GLTex {
 
     @Override
     public void setFiltering(TextureFiltering filtering) {
+        DirectStateManager dsm = CometRenderer.getDevice().getDirectStateManager();
+
         if (filtering != null) {
-            bind();
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filtering.id);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filtering.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_MAG_FILTER, filtering.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_MIN_FILTER, filtering.id);
         } else if (this.filtering != null) {
-            bind();
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, TextureFiltering.DEFAULT.id);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, TextureFiltering.DEFAULT.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_MAG_FILTER, TextureFiltering.DEFAULT.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_MIN_FILTER, TextureFiltering.DEFAULT.id);
         }
 
         this.filtering = filtering;
@@ -160,14 +163,14 @@ public class GLTexture implements GLTex {
 
     @Override
     public void setWrapping(TextureWrapping wrapping) {
+        DirectStateManager dsm = CometRenderer.getDevice().getDirectStateManager();
+
         if (wrapping != null) {
-            bind();
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, wrapping.id);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, wrapping.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_WRAP_S, wrapping.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_WRAP_T, wrapping.id);
         } else if (this.wrapping != null) {
-            bind();
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, TextureWrapping.DEFAULT.id);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, TextureWrapping.DEFAULT.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_WRAP_S, TextureWrapping.DEFAULT.id);
+            dsm.textureParameterInt(this, GL11.GL_TEXTURE_WRAP_T, TextureWrapping.DEFAULT.id);
         }
 
         this.wrapping = wrapping;

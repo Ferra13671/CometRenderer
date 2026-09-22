@@ -21,6 +21,13 @@ public interface DirectStateManager {
     void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GLTex texture);
 
     void blitFramebuffer(
+            Framebuffer srcFramebuffer, Framebuffer dstFramebuffer,
+            int srcX, int srcY, int srcWidth, int srcHeight,
+            int dstX, int dstY, int dstWidth, int dstHeight,
+            int mask, int filter
+    );
+
+    void blitFramebuffer(
             int srcFramebufferId, int dstFramebufferId,
             int srcX, int srcY, int srcWidth, int srcHeight,
             int dstX, int dstY, int dstWidth, int dstHeight,
@@ -40,4 +47,16 @@ public interface DirectStateManager {
     void vertexAttributeIntFormat(int vertBufId, int attribIndex, int size, int type, int relativeOffset);
 
     void vertexAttributeBinding(int vertBufId, int attribIndex, int bindingIndex);
+
+    void textureStorage(GLTex texture);
+
+    void textureImage(GLTex texture, int x, int y, ByteBuffer pixels);
+
+    void copyTexture(GLTex texture, int x, int y, int width, int height);
+
+    void copyTextureToBuffer(GLTex texture, ByteBuffer targetBuffer);
+
+    void textureParameterInt(GLTex texture, int paramId, int value);
+
+    void textureParameterFloat(GLTex texture, int paramId, float value);
 }

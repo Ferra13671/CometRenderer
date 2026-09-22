@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer.device.directstate;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.texture.ColorMode;
 import com.ferra13671.cometrenderer.texture.GLTex;
 import org.lwjgl.opengl.*;
 
@@ -46,6 +47,17 @@ public class DefaultDirectStateManager implements DirectStateManager {
     public void attachFramebufferTexture(Framebuffer framebuffer, int attachment, GLTex texture) {
         framebuffer.bind(false);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, attachment, GL11.GL_TEXTURE_2D, texture == null ? 0 : texture.getId(), 0);
+    }
+
+    @Override
+    public void blitFramebuffer(Framebuffer srcFramebuffer, Framebuffer dstFramebuffer, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, int mask, int filter) {
+        blitFramebuffer(
+                srcFramebuffer == null ? 0 : srcFramebuffer.getId(),
+                dstFramebuffer == null ? 0 : dstFramebuffer.getId(),
+                srcX, srcY, srcWidth, srcHeight,
+                dstX, dstY, dstWidth, dstHeight,
+                mask, filter
+        );
     }
 
     @Override
@@ -96,5 +108,43 @@ public class DefaultDirectStateManager implements DirectStateManager {
     @Override
     public void vertexAttributeBinding(int vertBufId, int attribIndex, int bindingIndex) {
         ARBVertexAttribBinding.glVertexAttribBinding(attribIndex, bindingIndex);
+    }
+
+    @Override
+    public void textureStorage(GLTex texture) {
+        texture.bind();
+        ColorMode colorMode = texture.getColorMode();
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, colorMode.internalFormatId(), texture.getWidth(), texture.getHeight(), 0, colorMode.externalFormatId(), colorMode.dataType(), (ByteBuffer) null);
+    }
+
+    @Override
+    public void textureImage(GLTex texture, int x, int y, ByteBuffer pixels) {
+        texture.bind();
+        ColorMode colorMode = texture.getColorMode();
+        GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, x, y, texture.getWidth(), texture.getHeight(), colorMode.externalFormatId(), colorMode.dataType(), pixels);
+    }
+
+    @Override
+    public void copyTexture(GLTex texture, int x, int y, int width, int height) {
+        texture.bind();
+        GL11.glCopyTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
+    }
+
+    @Override
+    public void copyTextureToBuffer(GLTex texture, ByteBuffer targetBuffer) {
+        texture.bind();
+        GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, texture.getColorMode().externalFormatId(), texture.getColorMode().dataType(), targetBuffer);
+    }
+
+    @Override
+    public void textureParameterInt(GLTex texture, int paramId, int value) {
+        texture.bind();
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, paramId, value);
+    }
+
+    @Override
+    public void textureParameterFloat(GLTex texture, int paramId, float value) {
+        texture.bind();
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, paramId, value);
     }
 }

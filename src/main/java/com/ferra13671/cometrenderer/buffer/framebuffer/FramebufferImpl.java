@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.texture.TextureFiltering;
 import com.ferra13671.cometrenderer.texture.TextureWrapping;
 import com.ferra13671.cometrenderer.texture.GLTextureBuilder;
 import lombok.Getter;
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -65,18 +66,16 @@ public class FramebufferImpl implements Framebuffer {
         }
     }
 
+    @API(status = API.Status.INTERNAL, since = "3.0")
     public void setColorTexture(GLTexture colorTexture) {
-        deleteColor();
         this.colorTexture = colorTexture;
-
         CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, GL30.GL_COLOR_ATTACHMENT0, colorTexture);
     }
 
+    @API(status = API.Status.INTERNAL, since = "3.0")
     public void setDepthAndStencilTexture(GLTexture depthAndStencilTexture) {
         if (isUseDepth()) {
-            deleteDepthAndStencil();
             this.depthAndStencilTexture = depthAndStencilTexture;
-
             CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, isUseStencil() ? GL30.GL_DEPTH_STENCIL_ATTACHMENT : GL30.GL_DEPTH_ATTACHMENT, depthAndStencilTexture);
         }
     }
