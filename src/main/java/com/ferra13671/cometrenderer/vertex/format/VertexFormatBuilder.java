@@ -6,7 +6,7 @@ import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import org.apiguardian.api.API;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
         for (int i = 0; i < this.elementNames.size(); i++) {
             Pair<VertexElementType<?>, Integer> info = this.elementsInfo.get(i);
 
-            elements.add(new VertexElement(i, info.getRight(), info.getLeft()));
+            elements.add(new VertexElement(i, info.right(), info.left()));
         }
 
         return new VertexFormat(elements, this.elementNames);

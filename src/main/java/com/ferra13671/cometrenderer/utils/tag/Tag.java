@@ -6,7 +6,7 @@ import org.apiguardian.api.API;
 public record Tag<T>(String id) {
 
     @API(status = API.Status.INTERNAL)
-    public T map(Object value) {
+    public T cast(Object value) {
         return (T) value;
     }
 }

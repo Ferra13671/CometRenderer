@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.posteffects;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import org.apiguardian.api.API;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class ProgramPass {
 
         CometRenderer.setCurrentProgram(program);
         for (Pair<Integer, Function<PostEffectContext, Framebuffer>> input : inputs)
-            program.getSampler(input.getLeft()).setTextureSampler(input.getRight().apply(context).getColorTextureId(), 0);
+            program.getSampler(input.left()).setTextureSampler(input.right().apply(context).getColorTextureId(), 0);
         preRenderConsumer.accept(program);
 
         CometRenderer.draw(context.mesh(), false);

@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.minecraft.font;
 
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import io.netty.util.collection.IntObjectHashMap;
 import lombok.Getter;
 import org.apiguardian.api.API;
@@ -51,7 +51,7 @@ public class TTFFont {
         float w = 0;
 
         for (Pair<Supplier<RenderColor>, Character[]> component : text.getComponents()) {
-            for (char _char : component.getRight()) {
+            for (char _char : component.right()) {
                 if (_char == '\n') {
                     maxW = Math.max(maxW, w);
                     w = 0;

@@ -7,7 +7,7 @@ import com.ferra13671.cometrenderer.minecraft.batch.impl.ColoredTextureBatch;
 import com.ferra13671.cometrenderer.minecraft.font.Glyph;
 import com.ferra13671.cometrenderer.minecraft.font.TTFFont;
 import com.ferra13671.cometrenderer.texture.GLTexture;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import org.apiguardian.api.API;
 
 import java.util.HashMap;
@@ -43,9 +43,9 @@ public class TextBatch implements IPrimitiveBatch {
         float y = text.getY();
 
         for (Pair<Supplier<RenderColor>, Character[]> component : text.getText().getComponents()) {
-            RenderColor color = text.getColor().multiply(component.getLeft().get());
+            RenderColor color = text.getColor().multiply(component.left().get());
 
-            for (char _char : component.getRight()) {
+            for (char _char : component.right()) {
                 Glyph glyph = text.getFont() != null ? text.getFont().getGlyph(_char) : this.font.getGlyph(_char);
 
                 if (_char == '\n') {

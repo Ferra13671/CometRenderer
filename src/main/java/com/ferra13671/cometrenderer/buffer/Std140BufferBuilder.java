@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.buffer;
 
 import com.ferra13671.cometrenderer.utils.MathUtils;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import lombok.Getter;
 import org.apiguardian.api.API;
 import org.joml.*;
@@ -116,9 +116,9 @@ public class Std140BufferBuilder {
 
     public void uploadToBuffer(ByteBuffer buffer, int pos) {
         for (Pair<Integer, Object> element : this.elements) {
-            buffer.position(pos + element.getLeft());
+            buffer.position(pos + element.left());
 
-            Object o = element.getRight();
+            Object o = element.right();
 
             if (o instanceof Byte b) {
                 buffer.put(b);

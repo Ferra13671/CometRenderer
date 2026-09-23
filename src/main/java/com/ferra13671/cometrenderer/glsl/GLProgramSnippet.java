@@ -33,13 +33,13 @@ public record GLProgramSnippet(Registry registry) {
         T tagValue = this.registry.get(tag).orElseThrow();
 
         if (tag == CometTags.NAME)
-            builder.name(CometTags.NAME.map(tagValue));
+            builder.name(CometTags.NAME.cast(tagValue));
         else
         if (tag == CometTags.COMPILED_SHADERS)
-            CometTags.COMPILED_SHADERS.map(tagValue).forEach((type, shader) -> builder.shader(shader));
+            CometTags.COMPILED_SHADERS.cast(tagValue).forEach((type, shader) -> builder.shader(shader));
         else
         if (tag == CometTags.UNIFORMS)
-            CometTags.UNIFORMS.map(tagValue).forEach(builder::uniform);
+            CometTags.UNIFORMS.cast(tagValue).forEach(builder::uniform);
         else
             builder.tag(tag, tagValue);
     }

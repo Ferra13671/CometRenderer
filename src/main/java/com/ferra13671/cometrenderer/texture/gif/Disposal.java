@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.texture.gif;
 
 import com.ferra13671.cometrenderer.texture.GLTexture;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
 import lombok.AllArgsConstructor;
 import org.apiguardian.api.API;
@@ -20,12 +20,12 @@ public enum Disposal {
         Graphics2D graphics = bufferedImage.createGraphics();
 
         graphics.drawImage(prevImage, 0, 0, null);
-        graphics.drawImage(imageData.getRight(), imageData.getLeft()[0], imageData.getLeft()[1], null);
+        graphics.drawImage(imageData.right(), imageData.left()[0], imageData.left()[1], null);
         graphics.dispose();
 
         return bufferedImage;
     }, frames -> {}),
-    ToBackground((frames, imageData) -> imageData.getRight(), frames -> {
+    ToBackground((frames, imageData) -> imageData.right(), frames -> {
         GLGifFrame frame = frames.getLast();
         frames.add(new GLGifFrame(
                 GLTexture.builder(TextureLoader.BUFFERED_IMAGE)
@@ -38,7 +38,7 @@ public enum Disposal {
                 0
         ));
     }),
-    ToPrevious((frames, imageData) -> imageData.getRight(), frames -> {
+    ToPrevious((frames, imageData) -> imageData.right(), frames -> {
         GLGifFrame prevFrame = frames.get(frames.size() - 2);
         frames.add(new GLGifFrame(prevFrame.texture(), prevFrame.image(), 0));
     });

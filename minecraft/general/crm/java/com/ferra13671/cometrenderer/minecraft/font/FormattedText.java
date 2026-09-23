@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.minecraft.font;
 
 import com.ferra13671.cometrenderer.minecraft.CRM;
 import com.ferra13671.cometrenderer.minecraft.RenderColor;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import lombok.Getter;
 import org.apiguardian.api.API;
 

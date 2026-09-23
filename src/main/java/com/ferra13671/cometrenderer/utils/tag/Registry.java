@@ -1,63 +1,69 @@
 package com.ferra13671.cometrenderer.utils.tag;
 
+import com.ferra13671.cometrenderer.utils.Pair;
 import org.apiguardian.api.API;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @API(status = API.Status.MAINTAINED, since = "1.9")
 public class Registry {
-    private final HashMap<Tag<?>, TagEntry<?>> tagMap = new HashMap<>();
+    private final Map<Tag<?>, Pair<Object, Boolean>> tagMap = new HashMap<>();
 
     public Registry() {}
 
     public Registry(Registry instance) {
-        instance.forEach(this::set);
+        instance.forEach((tag, pair) -> this.tagMap.put(tag, (Pair<Object, Boolean>) pair));
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public <T> void copyValue(Registry srcRegistry, Tag<T> tag) {
+        if (srcRegistry.contains(tag))
+            set(tag, srcRegistry.get(tag).orElse(null), srcRegistry.isImmutable(tag));
     }
 
     public <T> void set(Tag<T> tag, T value) {
-        set(new DefaultTagEntry<>(tag, value));
+        set(tag, value, false);
     }
 
     public <T> void setImmutable(Tag<T> tag, T value) {
-        set(new ImmutableTagEntry<>(tag, value));
+        set(tag, value, true);
     }
 
     @API(status = API.Status.INTERNAL)
-    public <T> void set(TagEntry<T> entry) {
-        if (contains(entry.getTag()) && get(entry.getTag()).orElseThrow() instanceof ImmutableTagEntry<?>)
-            throw new UnsupportedOperationException("Unable to change value for ImmutableTagEntry");
+    public <T> void set(Tag<T> tag, T value, boolean immutable) {
+        if (isImmutable(tag))
+            throw new UnsupportedOperationException("Unable to change value for immutable tag.");
 
-        this.tagMap.put(entry.getTag(), entry);
+        this.tagMap.put(tag, new Pair<>(value, immutable));
     }
 
     public boolean contains(Tag<?> tag) {
         return this.tagMap.containsKey(tag);
     }
 
-    public <T> Optional<TagEntry<T>> getEntry(Tag<T> tag) {
-        return Optional.ofNullable((TagEntry<T>) this.tagMap.get(tag));
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public boolean isImmutable(Tag<?> tag) {
+        return contains(tag) && this.tagMap.get(tag).right();
     }
 
     public <T> Optional<T> get(Tag<T> tag) {
-        TagEntry<T> entry = getEntry(tag).orElse(null);
-        return Optional.ofNullable(entry == null ? null : entry.getValue());
+        return Optional.ofNullable(!contains(tag) ? null : tag.cast(this.tagMap.get(tag).left()));
     }
 
     public <T> T computeIfAbsent(Tag<T> tag, T value, boolean immutable) {
-        TagEntry<T> tagEntry = (TagEntry<T>) this.tagMap.get(tag);
-        if (tagEntry == null) {
-            tagEntry = immutable ? new ImmutableTagEntry<>(tag, value) : new DefaultTagEntry<>(tag, value);
-            set(tagEntry);
-        }
+        if (!contains(tag) && !isImmutable(tag))
+            set(tag, value, immutable);
 
-        return tagEntry.getValue();
+        return get(tag).orElse(null);
     }
 
-    @API(status = API.Status.INTERNAL)
-    public void forEach(Consumer<TagEntry<?>> consumer) {
-        this.tagMap.values().forEach(consumer);
+    @API(status = API.Status.MAINTAINED, since = "3.0")
+    public void forEach(BiConsumer<Tag<?>, Pair<?, Boolean>> consumer) {
+        this.tagMap.forEach(consumer);
     }
 
     public void forEachTags(Consumer<Tag<?>> consumer) {

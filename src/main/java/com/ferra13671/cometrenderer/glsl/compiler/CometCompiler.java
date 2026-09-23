@@ -122,7 +122,7 @@ public class CometCompiler {
         if (builderRegistry.contains(CometTags.TAGS_TO_COPY)) {
             for (Tag<?> tag : builderRegistry.get(CometTags.TAGS_TO_COPY).orElseThrow())
                 if (builderRegistry.contains(tag))
-                    shaderRegistry.set(builderRegistry.getEntry(tag).orElseThrow());
+                    shaderRegistry.copyValue(builderRegistry, tag);
         }
 
         GLSLFileEntry processedShader = new GLSLFileEntry(shaderEntry);

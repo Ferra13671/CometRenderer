@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.posteffects;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.Builder;
-import com.ferra13671.cometrenderer.texture.Pair;
+import com.ferra13671.cometrenderer.utils.Pair;
 import org.apiguardian.api.API;
 
 import java.util.ArrayList;

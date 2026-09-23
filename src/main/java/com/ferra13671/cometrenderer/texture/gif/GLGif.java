@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.texture.*;
 import com.ferra13671.cometrenderer.texture.loader.GifLoader;
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
+import com.ferra13671.cometrenderer.utils.Pair;
 import com.ferra13671.cometrenderer.utils.TextureUtils;
 import org.apiguardian.api.API;
 import org.w3c.dom.NamedNodeMap;
