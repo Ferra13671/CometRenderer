@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-project.ext.projectName = "comet-renderer-better-compiler"
+project.ext.projectName = "comet-renderer-glfw"
 apply from: rootProject.file("scripts/plugin.gradle")
 apply from: rootProject.file("scripts/opengl.gradle")
 apply from: rootProject.file("scripts/lwjgl-runtime.gradle")

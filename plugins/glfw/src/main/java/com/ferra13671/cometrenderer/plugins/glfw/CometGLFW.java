@@ -16,14 +16,14 @@ public class CometGLFW {
     @Getter
     private Window window;
 
-    public void init(WindowHints windowHints, FullScreenSwitchCombination fullScreenSwitchCombination, boolean debugOutput) {
+    public void init(WindowHints windowHints, FullScreenSwitchCombination fullScreenSwitchCombination, boolean debugContext) {
         //CometRenderer doesn't support context swap
         if (CometRenderer.getRegistry().contains(CometTags.INITIALIZED))
             throw new IllegalStateException("CometGLFW initialization must be called before CometRenderer initialization.");
 
         glfwInit();
 
-        window = new WindowImpl(windowHints, new KeyHandlerImpl(), new KeyHandlerImpl(), fullScreenSwitchCombination, true, debugOutput);
+        window = new WindowImpl(windowHints, new KeyHandlerImpl(), new KeyHandlerImpl(), fullScreenSwitchCombination, true, debugContext);
 
         glfwMakeContextCurrent(getWindow().getId());
         GL.createCapabilities();

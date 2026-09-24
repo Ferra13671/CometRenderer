@@ -66,14 +66,14 @@ final class WindowImpl implements Window {
     @Getter
     private boolean looped = false;
 
-    WindowImpl(WindowHints hints, KeyHandler keyboardHandler, KeyHandler mouseHandler, FullScreenSwitchCombination fullScreenSwitchCombination, boolean clearFramebuffer, boolean debugOutput) {
+    WindowImpl(WindowHints hints, KeyHandler keyboardHandler, KeyHandler mouseHandler, FullScreenSwitchCombination fullScreenSwitchCombination, boolean clearFramebuffer, boolean debugContext) {
         this.hints = hints;
         this.keyboardHandler = keyboardHandler;
         this.mouseHandler = mouseHandler;
         this.fullScreenSwitchCombination = fullScreenSwitchCombination;
         this.clearFramebuffer = clearFramebuffer;
 
-        setupHints(debugOutput);
+        setupHints(debugContext);
         this.id = glfwCreateWindow(getWidth(), getHeight(), this.title, MemoryUtil.NULL, MemoryUtil.NULL);
 
         int[] xa = new int[1], ya = new int[1];
@@ -300,7 +300,7 @@ final class WindowImpl implements Window {
         this.looped = false;
     }
 
-    void setupHints(boolean debugOutput) {
+    void setupHints(boolean debugContext) {
         glfwDefaultWindowHints();
 
         if (this.hints.getGlVersion() != null) {
@@ -318,7 +318,7 @@ final class WindowImpl implements Window {
         glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, debugOutput ? GLFW_TRUE : GLFW_FALSE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, debugContext ? GLFW_TRUE : GLFW_FALSE);
     }
 
     void setupCallbacks() {

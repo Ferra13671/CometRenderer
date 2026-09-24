@@ -26,7 +26,7 @@ public interface Window extends Closeable {
 
     int getFramebufferHeight();
 
-    com.ferra13671.cometrenderer.plugins.glfw.SizeLimits getSizeLimits();
+    SizeLimits getSizeLimits();
 
     boolean isFullScreen();
 
