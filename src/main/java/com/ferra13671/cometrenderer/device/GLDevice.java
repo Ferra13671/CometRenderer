@@ -143,6 +143,10 @@ public class GLDevice {
         return this.resourceTracker.getShaders().size();
     }
 
+    public int getTexturesCount() {
+        return this.resourceTracker.getTextures().size();
+    }
+
     public int getFramebuffersCount() {
         return this.resourceTracker.getFramebuffers().size();
     }

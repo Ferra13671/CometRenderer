@@ -634,6 +634,19 @@ public class CometRenderer {
     }
 
     /**
+     * Возвращает количество GL текстур, созданных через CometRenderer и не
+     * закрытых на данных момент.
+     * <p>
+     * Используется для отладки.
+     *
+     * @return количество открытых текстур.
+     */
+    @API(status = API.Status.EXPERIMENTAL, since = "3.0")
+    public int getTexturesCount() {
+        return device.getTexturesCount();
+    }
+
+    /**
      * Возвращает количество GL фреймбуферов, созданных через CometRenderer и не
      * закрытых на данных момент.
      * <p>
