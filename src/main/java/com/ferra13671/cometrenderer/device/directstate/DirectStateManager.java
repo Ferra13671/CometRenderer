@@ -50,7 +50,9 @@ public interface DirectStateManager {
 
     void textureStorage(GLTex texture);
 
-    void textureImage(GLTex texture, int x, int y, ByteBuffer pixels);
+    void textureImage(GLTex texture, ByteBuffer pixels);
+
+    void textureImage(GLTex texture, int x, int y, int width, int height, ByteBuffer pixels);
 
     void copyTexture(GLTex texture, int x, int y, int width, int height);
 

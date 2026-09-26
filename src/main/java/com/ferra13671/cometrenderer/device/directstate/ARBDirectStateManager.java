@@ -104,9 +104,14 @@ public class ARBDirectStateManager implements DirectStateManager {
     }
 
     @Override
-    public void textureImage(GLTex texture, int x, int y, ByteBuffer pixels) {
+    public void textureImage(GLTex texture, ByteBuffer pixels) {
+        textureImage(texture, 0, 0, texture.getWidth(), texture.getHeight(), pixels);
+    }
+
+    @Override
+    public void textureImage(GLTex texture, int x, int y, int width, int height, ByteBuffer pixels) {
         ColorMode colorMode = texture.getColorMode();
-        ARBDirectStateAccess.glTextureSubImage2D(texture.getId(), 0, x, y, texture.getWidth(), texture.getHeight(), colorMode.externalFormatId(), colorMode.dataType(), pixels);
+        ARBDirectStateAccess.glTextureSubImage2D(texture.getId(), 0, x, y, width, height, colorMode.externalFormatId(), colorMode.dataType(), pixels);
     }
 
     @Override

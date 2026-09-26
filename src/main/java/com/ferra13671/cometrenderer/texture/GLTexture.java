@@ -53,7 +53,7 @@ public class GLTexture implements GLTex {
         if (pixels != null) {
             prepareDefaultPixelStore();
 
-            device.getDirectStateManager().textureImage(this, 0, 0, pixels);
+            device.getDirectStateManager().textureImage(this, pixels);
 
             if (glTextureInfo.usingStb())
                 nstbi_image_free(MemoryUtil.memAddress(pixels));
@@ -113,7 +113,14 @@ public class GLTexture implements GLTex {
         device.getDirectStateManager().copyTextureToBuffer(texture, byteBuffer);
         byteBuffer.flip();
 
-        device.getDirectStateManager().textureImage(this, x, y, byteBuffer);
+        device.getDirectStateManager().textureImage(
+                this,
+                Math.min(getWidth(), x),
+                Math.min(getHeight(), y),
+                Math.min(texture.getWidth(), getWidth() - x),
+                Math.min(texture.getHeight(), getHeight() - y),
+                byteBuffer
+        );
 
         setFiltering(this.filtering);
         setWrapping(this.wrapping);

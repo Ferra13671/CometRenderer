@@ -118,10 +118,15 @@ public class DefaultDirectStateManager implements DirectStateManager {
     }
 
     @Override
-    public void textureImage(GLTex texture, int x, int y, ByteBuffer pixels) {
+    public void textureImage(GLTex texture, ByteBuffer pixels) {
+        textureImage(texture, 0, 0, texture.getWidth(), texture.getHeight(), pixels);
+    }
+
+    @Override
+    public void textureImage(GLTex texture, int x, int y, int width, int height, ByteBuffer pixels) {
         texture.bind();
         ColorMode colorMode = texture.getColorMode();
-        GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, x, y, texture.getWidth(), texture.getHeight(), colorMode.externalFormatId(), colorMode.dataType(), pixels);
+        GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, x, y, width, height, colorMode.externalFormatId(), colorMode.dataType(), pixels);
     }
 
     @Override

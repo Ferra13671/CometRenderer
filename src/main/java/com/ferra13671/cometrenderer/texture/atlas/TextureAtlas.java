@@ -3,10 +3,7 @@ package com.ferra13671.cometrenderer.texture.atlas;
 import com.ferra13671.cometrenderer.texture.*;
 import org.apiguardian.api.API;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @API(status = API.Status.EXPERIMENTAL, since = "3.0")
 public class TextureAtlas implements GLTex {
@@ -14,6 +11,7 @@ public class TextureAtlas implements GLTex {
     private final HashMap<String, TextureBorder> borders = new HashMap<>();
 
     public TextureAtlas(String name, List<GLTexture> textures) {
+        textures = new ArrayList<>(textures);
         textures.sort(Comparator.comparingInt(tex -> tex.getWidth() * tex.getHeight()));
         Collections.reverse(textures);
 
