@@ -135,8 +135,10 @@ public class CometCompiler {
         GL20.glCompileShader(shaderId);
 
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS));
-        if (status == CompileStatus.FAILURE)
+        if (status == CompileStatus.FAILURE) {
+            CometRenderer.getLogger().log("\n" + content.concatLines());
             ErrorHandlers.onCompileShaderError(processedShader.getName(), GL20.glGetShaderInfoLog(shaderId).trim());
+        }
 
         return new GLShader(
                 processedShader.getName(),

@@ -1,12 +1,13 @@
 package _3d;
 
 import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferImpl;
 import com.ferra13671.cometrenderer.buffer.framebuffer.FramebufferInfo;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.glfw.CometGLFW;
+import com.ferra13671.cometrenderer.texture.GLTexture;
+import com.ferra13671.cometrenderer.texture.TextureFiltering;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
@@ -15,6 +16,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL40;
 
 import java.awt.*;
 
@@ -26,16 +28,18 @@ public class World {
             .element("Normal", VertexElementType.VECTOR_3_FLOAT, 1)
             .build();
 
-    public Framebuffer shadowFramebuffer = new FramebufferImpl(FramebufferInfo.builder()
+    public FramebufferImpl shadowFramebuffer = new FramebufferImpl(FramebufferInfo.builder()
             .name("Shadow Map")
-            .width(4096)
-            .height(4096)
+            .width(2048)
+            .height(2048)
             .useStencil(false)
             .build()
     );
 
     public final float ambientLight = 0.2f;
     public final Vector3f sunVector = new Vector3f(-0.5f, -1f, -0.5f);
+    public final float shadowOrthoSize = 50f;
+    public final float compress = 10f;
 
     private final Vector3f[] cubeVertices = new Vector3f[]{
             new Vector3f(1f, 1f, 1f),
@@ -109,13 +113,18 @@ public class World {
 
     public void render() {
         shadowFramebuffer.clearAll();
+        GLTexture texture = shadowFramebuffer.getDepthAndStencilTexture();
+        texture.setFiltering(TextureFiltering.SMOOTH);
+        CometRenderer.getDevice().getDirectStateManager().textureParameterInt(texture, GL40.GL_TEXTURE_COMPARE_MODE, GL40.GL_COMPARE_REF_TO_TEXTURE);
+        CometRenderer.getDevice().getDirectStateManager().textureParameterInt(texture, GL40.GL_TEXTURE_COMPARE_FUNC, GL40.GL_LEQUAL);
+
         CometRenderer.enableDepthTest();
 
         Matrix4f projectionMatrix = Hello3D.getProjectionMatrix(
                 CometGLFW.getWindow().getFramebufferWidth(),
                 CometGLFW.getWindow().getFramebufferHeight()
         );
-        Matrix4f orthoMatrix = Hello3D.getOrthoMatrix(30);
+        Matrix4f orthoMatrix = Hello3D.getOrthoMatrix((int) shadowOrthoSize);
         Matrix4f cameraViewMatrix = Hello3D.camera.getViewMatrix();
         Matrix4f sunViewMatrix = new Matrix4f().setLookAt(
                 new Vector3f(Hello3D.camera.getPosition()).add(new Vector3f(sunVector).negate().mul(100)),
@@ -125,9 +134,13 @@ public class World {
         Matrix4f lightSpaceMatrix = new Matrix4f(orthoMatrix).mul(new Matrix4f(sunViewMatrix));
 
         shadowFramebuffer.bind(true);
-        drawFloor(Hello3D.defaultMaterialShadowProgram, orthoMatrix, sunViewMatrix, lightSpaceMatrix);
         drawStoneCube(Hello3D.defaultMaterialShadowProgram, -3, 1, -3, cubeRotateMatrix, orthoMatrix, sunViewMatrix, lightSpaceMatrix);
         drawStoneCube(Hello3D.defaultMaterialShadowProgram, -3.6f, 0.3f, -3.7f, new Matrix4f(), orthoMatrix, sunViewMatrix, lightSpaceMatrix);
+        for (int x = -50; x < 50; x += 10) {
+            for (int z = -50; z < 50; z += 10) {
+                drawStoneCube(Hello3D.defaultMaterialShadowProgram, x, 0.3f, z, new Matrix4f(), orthoMatrix, sunViewMatrix, lightSpaceMatrix);
+            }
+        }
 
         CometGLFW.getWindow().getFramebuffer().bind(true);
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -136,6 +149,11 @@ public class World {
         drawFloor(Hello3D.defaultMaterialProgram, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
         drawStoneCube(Hello3D.defaultMaterialProgram, -3, 1, -3, cubeRotateMatrix, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
         drawStoneCube(Hello3D.defaultMaterialProgram, -3.6f, 0.3f, -3.7f, new Matrix4f(), projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
+        for (int x = -50; x < 50; x += 10) {
+            for (int z = -50; z < 50; z += 10) {
+                drawStoneCube(Hello3D.defaultMaterialProgram, x, 0.3f, z, new Matrix4f(), projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
+            }
+        }
     }
 
     void drawSun(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
@@ -167,6 +185,8 @@ public class World {
         program.consumeIfUniformPresent("sunVector", UniformType.VEC3, u -> u.set(sunVector));
         program.consumeIfUniformPresent("lightSpaceMatrix", UniformType.MATRIX4, u -> u.set(lightSpaceMatrix));
         program.consumeIfUniformPresent("shadowMap", UniformType.SAMPLER, u -> u.setTexture(shadowFramebuffer.getDepthAndStencilTextureId()));
+        program.consumeIfUniformPresent("shadowTexelSize", UniformType.VEC2, u -> u.set(new Vector2f(1f / shadowFramebuffer.getWidth(), 1f / shadowFramebuffer.getHeight())));
+        program.consumeIfUniformPresent("compression", UniformType.FLOAT, u -> u.set(compress));
 
         CometRenderer.draw(CometRenderer.createMesh(DrawMode.QUADS, POSITION_COLOR_TEXTURE_NORMAL, builder ->
                 builder
@@ -198,7 +218,9 @@ public class World {
         program.consumeIfUniformPresent("sunVector", UniformType.VEC3, u -> u.set(sunVector));
         program.consumeIfUniformPresent("lightSpaceMatrix", UniformType.MATRIX4, u -> u.set(lightSpaceMatrix));
         program.consumeIfUniformPresent("shadowMap", UniformType.SAMPLER, u -> u.setTexture(shadowFramebuffer.getDepthAndStencilTextureId()));
-        program.consumeIfUniformPresent("u_Texture", UniformType.SAMPLER, u -> u.setTexture(Hello3D.stoneTexture));
+        program.consumeIfUniformPresent("shadowTexelSize", UniformType.VEC2, u -> u.set(new Vector2f(1f / shadowFramebuffer.getWidth(), 1f / shadowFramebuffer.getHeight())));
+        program.consumeIfUniformPresent("u_Texture", UniformType.SAMPLER, u -> u.setTexture(shadowFramebuffer.getDepthAndStencilTexture()));
+        program.consumeIfUniformPresent("compression", UniformType.FLOAT, u -> u.set(compress));
 
         CometRenderer.draw(CometRenderer.createMesh(DrawMode.QUADS, POSITION_COLOR_TEXTURE_NORMAL, builder -> {
             for (int i = 0; i < cubeVertices.length; i ++) {

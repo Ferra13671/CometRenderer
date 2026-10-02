@@ -1,8 +1,8 @@
 package _3d;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.glfw.*;
 import com.ferra13671.cometrenderer.texture.GLTexture;
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
@@ -28,6 +28,8 @@ public class Hello3D {
 
     public long lastRenderTime = System.currentTimeMillis();
 
+    int fps = 0;
+    long lastSecond = System.currentTimeMillis();
     public void main(String[] args) {
         CometGLFW.init(
                 WindowHints.builder().build(),
@@ -46,12 +48,14 @@ public class Hello3D {
         window.setSize(1200, 700);
         window.setMonitorCenterPosition();
 
-        CometGLFW.setVSync(VsyncMode.Adaptive);
+        CometGLFW.setVSync(VsyncMode.Disabled);
 
         camera.setPosition(new Vector3f(0f, 2f, 0f));
 
         window.setMousePosCallback(mouseListener);
         window.setFramebufferSizeCallback((width, height) -> mouseListener.reset());
+
+        System.out.println(CometRenderer.getRegistry().get(CometTags.VENDOR));
         window.setLoopCallback(() -> {
             if (tickTimer.shouldTick()) {
                 World.tick();
@@ -62,6 +66,13 @@ public class Hello3D {
             World.render();
 
             lastRenderTime = System.currentTimeMillis();
+
+            fps++;
+            if (System.currentTimeMillis() - lastSecond > 1000) {
+                lastSecond = System.currentTimeMillis();
+                System.out.println(fps);
+                fps = 0;
+            }
         });
 
         window.loop();
@@ -127,12 +138,11 @@ public class Hello3D {
                 .name("default_material")
                 .shader(shaders.defaultMaterialVertex)
                 .shader(shaders.defaultMaterialFragment)
-                .uniform("lightSpaceMatrix", UniformType.MATRIX4)
                 .build();
 
         defaultMaterialShadowProgram = GLProgram.builder()
                 .name("default_material_shadow")
-                .shader(shaders.defaultMaterialVertex)
+                .shader(shaders.defaultMaterialShadowVertex)
                 .shader(shaders.shadowTextureFragment)
                 .build();
     }
