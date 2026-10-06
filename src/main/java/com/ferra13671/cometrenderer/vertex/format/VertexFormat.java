@@ -25,16 +25,16 @@ import java.util.stream.Stream;
 public class VertexFormat implements Closeable {
     public static final VertexFormat POSITION = VertexFormat.builder().build();
     public static final VertexFormat POSITION_COLOR = VertexFormat.builder()
-            .element("Color", VertexElementType.FLOAT, 4)
+            .element("Color", VertexElementType.VECTOR_4_FLOAT, 1)
             .build();
     public static final VertexFormat POSITION_TEXTURE = VertexFormat.builder()
-            .element("Texture", VertexElementType.FLOAT, 2)
+            .element("Texture", VertexElementType.VECTOR_2_FLOAT, 1)
             .build();
     public static final VertexFormat POSITION_COLOR_TEXTURE = POSITION_COLOR.toBuilder()
-            .element("Texture", VertexElementType.FLOAT, 2)
+            .element("Texture", VertexElementType.VECTOR_2_FLOAT, 1)
             .build();
     public static final VertexFormat POSITION_TEXTURE_COLOR = POSITION_TEXTURE.toBuilder()
-            .element("Color", VertexElementType.FLOAT, 4)
+            .element("Color", VertexElementType.VECTOR_4_FLOAT, 1)
             .build();
 
     /** Массив элементов формата вершины. **/
