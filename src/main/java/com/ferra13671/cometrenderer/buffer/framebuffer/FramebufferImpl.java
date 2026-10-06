@@ -1,6 +1,7 @@
 package com.ferra13671.cometrenderer.buffer.framebuffer;
 
 import com.ferra13671.cometrenderer.CometRenderer;
+import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.texture.ColorMode;
 import com.ferra13671.cometrenderer.texture.GLTexture;
 import com.ferra13671.cometrenderer.texture.TextureFiltering;
@@ -14,6 +15,9 @@ import java.awt.*;
 
 public class FramebufferImpl implements Framebuffer {
     private final String name;
+
+    @Getter
+    private final boolean useColor;
     @Getter
     private final boolean useDepth;
     @Getter
@@ -24,19 +28,25 @@ public class FramebufferImpl implements Framebuffer {
     @Getter
     private final int id;
     @Getter
-    protected GLTexture colorTexture;
+    private GLTexture colorTexture;
     @Getter
-    protected GLTexture depthAndStencilTexture;
+    private GLTexture depthAndStencilTexture;
+
+    private GLTexture mainTexture;
 
     public FramebufferImpl(FramebufferInfo framebufferInfo) {
         this.id = CometRenderer.getDevice().createFramebuffer();
 
         this.name = framebufferInfo.getName();
+        this.useColor = framebufferInfo.isUseColor();
         this.useDepth = framebufferInfo.isUseDepth();
         this.useStencil = framebufferInfo.isUseStencil();
         this.clearColor = framebufferInfo.getClearColor();
         this.clearDepth = framebufferInfo.getClearDepth();
         this.clearStencil = framebufferInfo.getClearStencil();
+
+        if (!isUseColor() && !isUseDepth())
+            ErrorHandlers.onUnsupportedFramebufferConfiguration(this.name, "framebuffer must have at least a color or depth texture");
 
         resize(framebufferInfo.getWidth(), framebufferInfo.getHeight());
     }
@@ -45,15 +55,17 @@ public class FramebufferImpl implements Framebuffer {
     public void resize(int width, int height) {
         deleteTextures();
 
-        setColorTexture(
-                GLTexture.builder()
-                        .name(this.name + "[Color]")
-                        .info(width, height)
-                        .filtering(TextureFiltering.DEFAULT)
-                        .wrapping(TextureWrapping.DEFAULT)
-                        .build()
-        );
-        if (isUseDepth()) {
+        if (isUseColor())
+            setColorTexture(
+                    GLTexture.builder()
+                            .name(this.name + "[Color]")
+                            .info(width, height)
+                            .filtering(TextureFiltering.DEFAULT)
+                            .wrapping(TextureWrapping.DEFAULT)
+                            .build()
+            );
+
+        if (isUseDepth())
             setDepthAndStencilTexture(
                     GLTexture.builder()
                             .name(this.name + "[Depth]")
@@ -63,12 +75,13 @@ public class FramebufferImpl implements Framebuffer {
                             .wrapping(TextureWrapping.DEFAULT)
                             .build()
             );
-        }
     }
 
     @API(status = API.Status.INTERNAL, since = "3.0")
     public void setColorTexture(GLTexture colorTexture) {
         this.colorTexture = colorTexture;
+        this.mainTexture = isUseColor() ? this.colorTexture : this.depthAndStencilTexture;
+
         CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, GL30.GL_COLOR_ATTACHMENT0, colorTexture);
     }
 
@@ -76,6 +89,8 @@ public class FramebufferImpl implements Framebuffer {
     public void setDepthAndStencilTexture(GLTexture depthAndStencilTexture) {
         if (isUseDepth()) {
             this.depthAndStencilTexture = depthAndStencilTexture;
+            this.mainTexture = isUseColor() ? this.colorTexture : this.depthAndStencilTexture;
+
             CometRenderer.getDevice().getDirectStateManager().attachFramebufferTexture(this, isUseStencil() ? GL30.GL_DEPTH_STENCIL_ATTACHMENT : GL30.GL_DEPTH_ATTACHMENT, depthAndStencilTexture);
         }
     }
@@ -92,12 +107,12 @@ public class FramebufferImpl implements Framebuffer {
 
     @Override
     public int getWidth() {
-        return this.colorTexture.getWidth();
+        return this.mainTexture.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return this.colorTexture.getHeight();
+        return this.mainTexture.getHeight();
     }
 
     @Override

@@ -32,6 +32,7 @@ public class World {
             .name("Shadow Map")
             .width(2048)
             .height(2048)
+            .useColor(false)
             .useStencil(false)
             .build()
     );

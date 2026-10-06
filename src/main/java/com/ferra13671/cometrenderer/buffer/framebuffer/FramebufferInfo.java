@@ -12,6 +12,8 @@ import java.awt.*;
 public class FramebufferInfo {
     public final String name;
     @Builder.Default
+    public boolean useColor = true;
+    @Builder.Default
     public boolean useDepth = true;
     @Builder.Default
     public boolean useStencil = true;

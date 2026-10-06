@@ -101,4 +101,8 @@ public class ErrorHandlers {
     public void onUnsupportedShader(ShaderType shaderType) {
         throw new UnsupportedShaderException(shaderType);
     }
+
+    public void onUnsupportedFramebufferConfiguration(String framebufferName, String description) {
+        throw new UnsupportedFramebufferException(String.format("Unsupported configuration in '%s' framebuffer: %s.", framebufferName, description));
+    }
 }
