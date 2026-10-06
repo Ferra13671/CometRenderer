@@ -251,6 +251,57 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
                     }
             )
             .build();
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public static final VertexElementType<Matrix3fc> MATRIX_3_FLOAT = builder(Matrix3fc.class)
+            .name("Matrix3f")
+            .size(36)
+            .offset(4)
+            .glId(GL11.GL_FLOAT)
+            .uploadConsumer(
+                    (pointer, data) -> {
+                        for (int i = 0; i < data.length; i++) {
+                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].m00());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].m01());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 8L, data[i].m02());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 12L, data[i].m10());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 16L, data[i].m11());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 20L, data[i].m12());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 24L, data[i].m20());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 28L, data[i].m21());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 32L, data[i].m22());
+                        }
+                    }
+            )
+            .build();
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public static final VertexElementType<Matrix4fc> MATRIX_4_FLOAT = builder(Matrix4fc.class)
+            .name("Matrix3f")
+            .size(36)
+            .offset(4)
+            .glId(GL11.GL_FLOAT)
+            .uploadConsumer(
+                    (pointer, data) -> {
+                        for (int i = 0; i < data.length; i++) {
+                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].m00());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].m01());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 8L, data[i].m02());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 12L, data[i].m03());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 16L, data[i].m10());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 20L, data[i].m11());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 24L, data[i].m12());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 28L, data[i].m13());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 32L, data[i].m20());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 36L, data[i].m21());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 40L, data[i].m22());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 44L, data[i].m23());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 48L, data[i].m30());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 52L, data[i].m31());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 56L, data[i].m32());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 60L, data[i].m33());
+                        }
+                    }
+            )
+            .build();
     public static final VertexElementType<Color> COLOR_FLOAT = builder(Color.class)
             .name("Color float")
             .size(16)
