@@ -2,9 +2,20 @@ package com.ferra13671.cometrenderer.buffer.framebuffer;
 
 import org.apiguardian.api.API;
 
-//TODO getName, isUseColor, isUseDepth, isUseStencil
 @API(status = API.Status.STABLE, since = "2.0")
 public interface Framebuffer {
+
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    String getName();
+
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    boolean isUseColor();
+
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    boolean isUseDepth();
+
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    boolean isUseStencil();
 
     void resize(int width, int height);
 

@@ -20,6 +20,26 @@ public class MinecraftFramebuffer implements Framebuffer {
     }
 
     @Override
+    public String getName() {
+        return "<minecraft framebuffer>";
+    }
+
+    @Override
+    public boolean isUseColor() {
+        return true;
+    }
+
+    @Override
+    public boolean isUseDepth() {
+        return this.framebuffer.useDepth;
+    }
+
+    @Override
+    public boolean isUseStencil() {
+        return isUseDepth();
+    }
+
+    @Override
     public void resize(int width, int height) {
         this.framebuffer.resize(width, height);
     }

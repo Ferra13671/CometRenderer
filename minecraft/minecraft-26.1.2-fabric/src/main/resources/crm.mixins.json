@@ -13,8 +13,9 @@
     "IGlBuffer",
     "IGlCommandEncoder",
     "IGpuDevice",
-    "RenderSystemMixin",
-    "IrisRenderTargetsMixin"
+    "IRenderTarget",
+    "IrisRenderTargetsMixin",
+    "RenderSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

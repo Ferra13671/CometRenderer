@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL30;
 import java.awt.*;
 
 public class FramebufferImpl implements Framebuffer {
+    @Getter
     private final String name;
 
     @Getter

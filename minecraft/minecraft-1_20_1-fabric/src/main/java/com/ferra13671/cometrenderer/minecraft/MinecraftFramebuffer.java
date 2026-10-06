@@ -4,7 +4,6 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 public class MinecraftFramebuffer implements Framebuffer {
     private final RenderTarget framebuffer;
@@ -17,6 +16,26 @@ public class MinecraftFramebuffer implements Framebuffer {
         this.clearColor = clearColor;
         this.clearDepth = clearDepth;
         this.clearStencil = clearStencil;
+    }
+
+    @Override
+    public String getName() {
+        return "<minecraft framebuffer>";
+    }
+
+    @Override
+    public boolean isUseColor() {
+        return true;
+    }
+
+    @Override
+    public boolean isUseDepth() {
+        return this.framebuffer.useDepth;
+    }
+
+    @Override
+    public boolean isUseStencil() {
+        return isUseDepth();
     }
 
     @Override
@@ -99,7 +118,6 @@ public class MinecraftFramebuffer implements Framebuffer {
                 this.clearColor.getColor()[3]
         );
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     @Override
@@ -108,7 +126,6 @@ public class MinecraftFramebuffer implements Framebuffer {
             bind(false);
             GL11.glClearDepth(this.clearDepth);
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         }
     }
 

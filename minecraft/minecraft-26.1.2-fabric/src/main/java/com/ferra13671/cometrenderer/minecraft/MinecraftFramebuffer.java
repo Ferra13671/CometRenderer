@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.minecraft.mixins.IRenderTarget;
 import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -20,6 +21,26 @@ public class MinecraftFramebuffer implements Framebuffer {
         this.clearColor = clearColor;
         this.clearDepth = clearDepth;
         this.clearStencil = clearStencil;
+    }
+
+    @Override
+    public String getName() {
+        return ((IRenderTarget) this.framebuffer).crm$$$getLabel();
+    }
+
+    @Override
+    public boolean isUseColor() {
+        return true;
+    }
+
+    @Override
+    public boolean isUseDepth() {
+        return this.framebuffer.useDepth;
+    }
+
+    @Override
+    public boolean isUseStencil() {
+        return isUseDepth();
     }
 
     @Override
