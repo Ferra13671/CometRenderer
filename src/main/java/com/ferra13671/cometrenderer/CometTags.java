@@ -33,6 +33,4 @@ public class CometTags {
     public final Tag<Mesa3DVersion> MESA_VERSION = new Tag<>("mesa-version");
     public final Tag<String[]> GL_EXTENSIONS = new Tag<>("gl-extensions");
     public final Tag<Integer> MAX_VERTEX_ELEMENTS = new Tag<>("max-vertex-elements");
-    public final Tag<Integer> MAX_VERTICES = new Tag<>("max-vertices");
-    public final Tag<Integer> MAX_INDICES = new Tag<>("max-indices");
 }

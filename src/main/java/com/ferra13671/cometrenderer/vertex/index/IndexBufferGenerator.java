@@ -1,7 +1,5 @@
 package com.ferra13671.cometrenderer.vertex.index;
 
-import com.ferra13671.cometrenderer.CometRenderer;
-import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
@@ -73,10 +71,6 @@ public final class IndexBufferGenerator {
 
 	private GpuBuffer generateIndexBuffer(int requiredSize) {
 		requiredSize = MathUtils.roundUpToMultiple(requiredSize, this.vertexCountInTriangulated);
-
-		int maxIndices = CometRenderer.getConfig().MAX_INDICES.getValue();
-		if (requiredSize > maxIndices)
-			ErrorHandlers.onIndexOverflow(maxIndices);
 
 		this.indexType = IndexType.best(requiredSize);
 		ByteBuffer buffer = MemoryUtil.memAlloc(requiredSize * indexType.bytes);

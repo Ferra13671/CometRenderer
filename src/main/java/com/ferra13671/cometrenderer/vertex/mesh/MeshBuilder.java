@@ -1,6 +1,5 @@
 package com.ferra13671.cometrenderer.vertex.mesh;
 
-import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.utils.Builder;
@@ -126,9 +125,6 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
         assertVertexStructure();
 
         this.vertexCount++;
-        int maxVertices = CometRenderer.getConfig().MAX_VERTICES.getValue();
-        if (this.vertexCount >= maxVertices)
-            ErrorHandlers.onVertexOverflow(maxVertices);
 
         long l = this.allocator.allocate(this.vertexSize);
         this.vertexPointer = l;

@@ -16,7 +16,7 @@ import org.apiguardian.api.API;
 public class ErrorHandlers {
 
     public void onWrongBufferTarget(int givenTarget, int requiredTaget) {
-        new WrongGpuBufferTargetException(givenTarget, requiredTaget).printStackTrace();
+        new WrongGpuBufferTargetException(givenTarget, requiredTaget).printStackTrace(System.err);
     }
 
     public void onUnsupportedOpenGLVersion(GLVersion currentVersion, GLVersion minimumVersion) throws CometException {
@@ -47,20 +47,12 @@ public class ErrorHandlers {
         throw new IllegalBuilderArgumentException(message);
     }
 
-    public void onVertexOverflow(int maxVertices) {
-        throw new VertexOverflowException(maxVertices);
-    }
-
-    public void onIndexOverflow(int maxIndices) {
-        throw new IndexOverflowException(maxIndices);
-    }
-
     public void onBadVertexStructure(String missingElements) {
         throw new BadVertexStructureException(missingElements);
     }
 
     public void onIllegalVertexElementStructure(VertexElementType<?> type, String reason) {
-        new IllegalVertexElementStructureException(type, reason).printStackTrace();
+        new IllegalVertexElementStructureException(type, reason).printStackTrace(System.err);
     }
 
     public void onNoSuchVertexElement(String name) {

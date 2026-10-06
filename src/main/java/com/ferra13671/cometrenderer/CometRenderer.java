@@ -93,8 +93,6 @@ public class CometRenderer {
      * Содержит настройки, влияющие на поведение {@link #init()} и создание ресурсов:
      * минимальная версия OpenGL, проверять ли версию, размер аллокатора меша по умолчанию, максимальное
      * число вершин и индексов.
-     * <p>
-     * Значение {@link Config#MAX_VERTICES} и {@link Config#MAX_INDICES}
      */
     @Getter
     @API(status = API.Status.STABLE, since = "1.9")
@@ -237,7 +235,6 @@ public class CometRenderer {
      * <ul>
      *     <li>Проверяет, что рендерер ещё не инициализирован (иначе — исключение);</li>
      *     <li>Заполняет регистр данными о среде;</li>
-     *     <li>Переносит лимиты {@link CometTags#MAX_VERTICES} и {@link CometTags#MAX_INDICES} в {@link #getConfig()};</li>
      *     <li>Проверяет поддержку минимальной версии OpenGL, если {@link Config#CHECK_OPENGL_VERSION} включён;</li>
      *     <li>Создаёт {@link GLDevice}.</li>
      * </ul>
@@ -249,15 +246,12 @@ public class CometRenderer {
      * @throws RuntimeException если текущий OpenGL не поддерживает минимально
      *         требуемую версию (см. {@link Config#CHECK_OPENGL_VERSION}).
      */
-    //TODO предупреждение о превышении макисмального количества вершин/индексов, а не выкидывание исключения
     @API(status = API.Status.STABLE, since = "2.0")
     public void init() {
         if (registry.contains(CometTags.INITIALIZED))
             throw new IllegalStateException("CometRenderer has already initialized.");
 
         initRegistry();
-        config.MAX_VERTICES.setValue(registry.get(CometTags.MAX_VERTICES).orElseThrow());
-        config.MAX_INDICES.setValue(registry.get(CometTags.MAX_INDICES).orElseThrow());
 
         if (config.CHECK_OPENGL_VERSION.getValue()) {
             if (!GLCapabilities.supportsVersion(GLVersion.fromId(config.MINIMUM_OPENGL_VERSION.getValue())))
@@ -280,8 +274,6 @@ public class CometRenderer {
         registry.setImmutable(CometTags.GL_VERSION, GLVersion.fromString(version));
         registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
-        registry.setImmutable(CometTags.MAX_VERTICES, GL11.glGetInteger(GL12.GL_MAX_ELEMENTS_VERTICES));
-        registry.setImmutable(CometTags.MAX_INDICES, GL11.glGetInteger(GL12.GL_MAX_ELEMENTS_INDICES));
 
         int numExtensions = GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS);
         String[] extensions = new String[numExtensions];
