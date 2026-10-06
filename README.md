@@ -13,6 +13,11 @@ CometRenderer is an optimized, customized, easy-to-use, and full independent ren
 This rendering system provides a wide range of tools that can be used to easily render your projects.
 <p>
 
+## Requirements
+* Java 21 or later.
+* LWJGL 3.3.3+ with lwjgl-stb module.
+* JOML 1.10.5+
+
 ## Official CometRenderer plugins
 Several official plugins were also created for the project, expanding the functionality of the rendering system:
 * better-compiler
@@ -64,8 +69,3 @@ dependencies {
 CRM (CometRenderer Mod) is a Minecraft library mod that provides various utilities for using CometRenderer within Minecraft.
 <p>
 You can learn more about it in the <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation/crm/about">documentation</a>.
-
-## Javadoc
-Since this project was previously private, the Javadoc is written in Russian (in some classes, the Javadoc is missing because I stopped adding it).
-<p>
-I plan to completely rewrite the Javadoc into English, but given my laziness, that won't happen anytime soon.
