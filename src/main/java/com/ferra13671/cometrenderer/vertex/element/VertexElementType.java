@@ -116,7 +116,7 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
                     }
             )
             .build();
-    public static final VertexElementType<Vector2i> VECTOR_2_INT = builder(Vector2i.class)
+    public static final VertexElementType<Vector2ic> VECTOR_2_INT = builder(Vector2ic.class)
             .name("Vector2i")
             .size(8)
             .offset(4)
@@ -124,13 +124,13 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y);
+                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector2i> UNSIGNED_VECTOR_2_INT = builder(Vector2i.class)
+    public static final VertexElementType<Vector2ic> UNSIGNED_VECTOR_2_INT = builder(Vector2ic.class)
             .name("Unsigned Vector2i")
             .size(8)
             .offset(4)
@@ -138,13 +138,13 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y);
+                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector2f> VECTOR_2_FLOAT = builder(Vector2f.class)
+    public static final VertexElementType<Vector2fc> VECTOR_2_FLOAT = builder(Vector2fc.class)
             .name("Vector2f")
             .size(8)
             .offset(4)
@@ -152,13 +152,13 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].y);
+                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].y());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector3i> VECTOR_3_INT = builder(Vector3i.class)
+    public static final VertexElementType<Vector3ic> VECTOR_3_INT = builder(Vector3ic.class)
             .name("Vector3i")
             .size(12)
             .offset(4)
@@ -166,14 +166,14 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z);
+                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector3i> UNSIGNED_VECTOR_3_INT = builder(Vector3i.class)
+    public static final VertexElementType<Vector3ic> UNSIGNED_VECTOR_3_INT = builder(Vector3ic.class)
             .name("Unsigned Vector3i")
             .size(12)
             .offset(4)
@@ -181,14 +181,14 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z);
+                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector3f> VECTOR_3_FLOAT = builder(Vector3f.class)
+    public static final VertexElementType<Vector3fc> VECTOR_3_FLOAT = builder(Vector3fc.class)
             .name("Vector3f")
             .size(12)
             .offset(4)
@@ -196,14 +196,14 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].y);
-                            MemoryUtil.memPutFloat(pointer + (4L * i) + 8L, data[i].z);
+                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].y());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 8L, data[i].z());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector4i> VECTOR_4_INT = builder(Vector4i.class)
+    public static final VertexElementType<Vector4ic> VECTOR_4_INT = builder(Vector4ic.class)
             .name("Vector4i")
             .size(16)
             .offset(4)
@@ -211,15 +211,15 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 12L, data[i].w);
+                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 12L, data[i].w());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector4i> UNSIGNED_VECTOR_4_INT = builder(Vector4i.class)
+    public static final VertexElementType<Vector4ic> UNSIGNED_VECTOR_4_INT = builder(Vector4ic.class)
             .name("Unsigned Vector4i")
             .size(16)
             .offset(4)
@@ -227,15 +227,15 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z);
-                            MemoryUtil.memPutInt(pointer + (4L * i) + 12L, data[i].w);
+                            MemoryUtil.memPutInt(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 4L, data[i].y());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 8L, data[i].z());
+                            MemoryUtil.memPutInt(pointer + (4L * i) + 12L, data[i].w());
                         }
                     }
             )
             .build();
-    public static final VertexElementType<Vector4f> VECTOR_4_FLOAT = builder(Vector4f.class)
+    public static final VertexElementType<Vector4fc> VECTOR_4_FLOAT = builder(Vector4fc.class)
             .name("Vector4f")
             .size(16)
             .offset(4)
@@ -243,10 +243,10 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .uploadConsumer(
                     (pointer, data) -> {
                         for (int i = 0; i < data.length; i++) {
-                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].x);
-                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].y);
-                            MemoryUtil.memPutFloat(pointer + (4L * i) + 8L, data[i].z);
-                            MemoryUtil.memPutFloat(pointer + (4L * i) + 12L, data[i].w);
+                            MemoryUtil.memPutFloat(pointer + (4L * i), data[i].x());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 4L, data[i].y());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 8L, data[i].z());
+                            MemoryUtil.memPutFloat(pointer + (4L * i) + 12L, data[i].w());
                         }
                     }
             )
