@@ -185,7 +185,6 @@ public class World {
         program.consumeIfUniformPresent("sunVector", UniformType.VEC3, u -> u.set(sunVector));
         program.consumeIfUniformPresent("lightSpaceMatrix", UniformType.MATRIX4, u -> u.set(lightSpaceMatrix));
         program.consumeIfUniformPresent("shadowMap", UniformType.SAMPLER, u -> u.setTexture(shadowFramebuffer.getDepthAndStencilTextureId()));
-        program.consumeIfUniformPresent("shadowTexelSize", UniformType.VEC2, u -> u.set(new Vector2f(1f / shadowFramebuffer.getWidth(), 1f / shadowFramebuffer.getHeight())));
         program.consumeIfUniformPresent("compression", UniformType.FLOAT, u -> u.set(compress));
 
         CometRenderer.draw(CometRenderer.createMesh(DrawMode.QUADS, POSITION_COLOR_TEXTURE_NORMAL, builder ->
@@ -218,7 +217,6 @@ public class World {
         program.consumeIfUniformPresent("sunVector", UniformType.VEC3, u -> u.set(sunVector));
         program.consumeIfUniformPresent("lightSpaceMatrix", UniformType.MATRIX4, u -> u.set(lightSpaceMatrix));
         program.consumeIfUniformPresent("shadowMap", UniformType.SAMPLER, u -> u.setTexture(shadowFramebuffer.getDepthAndStencilTextureId()));
-        program.consumeIfUniformPresent("shadowTexelSize", UniformType.VEC2, u -> u.set(new Vector2f(1f / shadowFramebuffer.getWidth(), 1f / shadowFramebuffer.getHeight())));
         program.consumeIfUniformPresent("u_Texture", UniformType.SAMPLER, u -> u.setTexture(shadowFramebuffer.getDepthAndStencilTexture()));
         program.consumeIfUniformPresent("compression", UniformType.FLOAT, u -> u.set(compress));
 

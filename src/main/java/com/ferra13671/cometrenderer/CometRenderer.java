@@ -249,6 +249,7 @@ public class CometRenderer {
      * @throws RuntimeException если текущий OpenGL не поддерживает минимально
      *         требуемую версию (см. {@link Config#CHECK_OPENGL_VERSION}).
      */
+    //TODO предупреждение о превышении макисмального количества вершин/индексов, а не выкидывание исключения
     @API(status = API.Status.STABLE, since = "2.0")
     public void init() {
         if (registry.contains(CometTags.INITIALIZED))
@@ -269,7 +270,7 @@ public class CometRenderer {
     }
 
     private void initRegistry() {
-        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "3.0");
+        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "3.1");
 
         String vendor = GL11.glGetString(GL11.GL_VENDOR);
         String version = GL11.glGetString(GL11.GL_VERSION);

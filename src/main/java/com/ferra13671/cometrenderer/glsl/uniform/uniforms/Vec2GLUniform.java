@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
-import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.lwjgl.opengl.GL20;
 
 /**
@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL20;
  * @see GLUniform
  * @see UniformType
  */
-public class Vec2GLUniform extends OneTypeGLUniform<Vector2f> {
+public class Vec2GLUniform extends OneTypeGLUniform<Vector2fc> {
 
     public Vec2GLUniform(String name, int location) {
         super(name, location);
@@ -19,6 +19,6 @@ public class Vec2GLUniform extends OneTypeGLUniform<Vector2f> {
 
     @Override
     public void upload() {
-        GL20.glUniform2f(getLocation(), this.value.x, this.value.y);
+        GL20.glUniform2f(getLocation(), this.value.x(), this.value.y());
     }
 }

@@ -2,7 +2,7 @@ package com.ferra13671.cometrenderer.glsl.uniform.uniforms;
 
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
-import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
@@ -27,7 +27,7 @@ public class Matrix4FGLUniform extends GLUniform {
      *
      * @param matrix4f матрица, которая будет записан как параметр в униформу.
      */
-    public void set(Matrix4f matrix4f) {
+    public void set(Matrix4fc matrix4f) {
         matrix4f.get(this.buffer);
         this.program.addUpdatedUniform(this);
     }

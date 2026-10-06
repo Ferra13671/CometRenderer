@@ -98,7 +98,6 @@ public class Shaders {
                           uniform vec4 shaderColor;
                           uniform sampler2D u_Texture;
                           uniform sampler2DShadow shadowMap;
-                          uniform vec2 shadowTexelSize;
                           uniform float compression;
                           
                           out vec4 fragColor;
