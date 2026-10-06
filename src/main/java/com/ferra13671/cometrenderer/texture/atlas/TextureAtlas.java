@@ -67,6 +67,11 @@ public class TextureAtlas implements GLTex {
     }
 
     @Override
+    public String getName() {
+        return this.texture.getName();
+    }
+
+    @Override
     public void delete() {
         this.texture.delete();
     }

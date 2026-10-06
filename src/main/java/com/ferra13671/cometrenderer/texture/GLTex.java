@@ -5,6 +5,8 @@ import org.apiguardian.api.API;
 @API(status = API.Status.EXPERIMENTAL, since = "3.0")
 public interface GLTex {
 
+    String getName();
+
     void bind();
 
     TextureFiltering getFiltering();

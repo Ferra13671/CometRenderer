@@ -6,6 +6,7 @@ import com.ferra13671.cometrenderer.texture.loader.GifLoader;
 import com.ferra13671.cometrenderer.texture.loader.TextureLoader;
 import com.ferra13671.cometrenderer.utils.Pair;
 import com.ferra13671.cometrenderer.utils.TextureUtils;
+import lombok.Getter;
 import org.apiguardian.api.API;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -24,6 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @API(status = API.Status.EXPERIMENTAL, since = "3.0")
 public class GLGif implements GLTex {
+    @Getter
+    protected final String name;
     protected final List<GLGifFrame> frames = new ArrayList<>();
 
     protected GLGifFrame currentFrame;
@@ -32,6 +35,8 @@ public class GLGif implements GLTex {
     protected long lastUpdateTime = System.currentTimeMillis();
 
     public GLGif(String name, InputStream inputStream) {
+        this.name = name;
+
         try (inputStream; ImageInputStream stream = ImageIO.createImageInputStream(inputStream)) {
             Iterator<ImageReader> readers = ImageIO.getImageReaders(stream);
 
