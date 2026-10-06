@@ -8,3 +8,9 @@ plugins {
 apply from: rootProject.file("minecraft/scripts/minecraft.gradle")
 apply from: rootProject.file("minecraft/scripts/old-fabric-loader.gradle")
 apply from: rootProject.file("minecraft/scripts/mappings.gradle")
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
