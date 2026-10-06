@@ -235,7 +235,7 @@ public class CometRenderer {
      * <ul>
      *     <li>Проверяет, что рендерер ещё не инициализирован (иначе — исключение);</li>
      *     <li>Заполняет регистр данными о среде;</li>
-     *     <li>Проверяет поддержку минимальной версии OpenGL, если {@link Config#CHECK_OPENGL_VERSION} включён;</li>
+     *     <li>Проверяет поддержку минимальной версии OpenGL, если {@link Config#isCheckOpenGLVersion()} включён;</li>
      *     <li>Создаёт {@link GLDevice}.</li>
      * </ul>
      *
@@ -244,7 +244,7 @@ public class CometRenderer {
      *
      * @throws IllegalStateException если рендерер уже инициализирован.
      * @throws RuntimeException если текущий OpenGL не поддерживает минимально
-     *         требуемую версию (см. {@link Config#CHECK_OPENGL_VERSION}).
+     *         требуемую версию (см. {@link Config#isCheckOpenGLVersion()}).
      */
     @API(status = API.Status.STABLE, since = "2.0")
     public void init() {
@@ -253,8 +253,8 @@ public class CometRenderer {
 
         initRegistry();
 
-        if (config.CHECK_OPENGL_VERSION.getValue()) {
-            if (!GLCapabilities.supportsVersion(GLVersion.fromId(config.MINIMUM_OPENGL_VERSION.getValue())))
+        if (config.isCheckOpenGLVersion()) {
+            if (!GLCapabilities.supportsVersion(config.getMinimumOpenGLVersion()))
                 ErrorHandlers.onUnsupportedOpenGLVersion(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33);
         }
 

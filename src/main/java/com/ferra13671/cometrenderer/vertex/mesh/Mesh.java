@@ -73,7 +73,7 @@ public class Mesh implements IMesh {
      * @see MeshBuilder
      */
     public static MeshBuilder builder(DrawMode drawMode, VertexFormat vertexFormat) {
-        return builder(CometRenderer.getConfig().DEFAULT_MESH_ALLOCATOR_SIZE.getValue(), drawMode, vertexFormat);
+        return builder(CometRenderer.getConfig().getDefaultMeshAllocatorSize(), drawMode, vertexFormat);
     }
 
     /**
