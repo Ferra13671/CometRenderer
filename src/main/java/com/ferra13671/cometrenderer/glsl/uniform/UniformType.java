@@ -30,6 +30,8 @@ public record UniformType<T extends GLUniform>(Class<T> clazz, BiFunction<String
     public static final UniformType<IntVec2GLUniform> IVEC2 = new UniformType<>(IntVec2GLUniform.class, IntVec2GLUniform::new);
     public static final UniformType<IntVec3GLUniform> IVEC3 = new UniformType<>(IntVec3GLUniform.class, IntVec3GLUniform::new);
     public static final UniformType<IntVec4GLUniform> IVEC4 = new UniformType<>(IntVec4GLUniform.class, IntVec4GLUniform::new);
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public static final UniformType<Matrix3FGLUniform> MATRIX3 = new UniformType<>(Matrix3FGLUniform.class, Matrix3FGLUniform::new);
     public static final UniformType<Matrix4FGLUniform> MATRIX4 = new UniformType<>(Matrix4FGLUniform.class, Matrix4FGLUniform::new);
     public static final UniformType<BufferUniform> BUFFER = new UniformType<>(BufferUniform.class, BufferUniform::new);
     public static final UniformType<SamplerUniform> SAMPLER = new UniformType<>(SamplerUniform.class, SamplerUniform::new);
