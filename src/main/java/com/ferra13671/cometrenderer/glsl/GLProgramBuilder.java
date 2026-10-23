@@ -16,6 +16,7 @@ import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Сборщик программы.
@@ -25,6 +26,7 @@ import java.util.Map;
 @API(status = API.Status.MAINTAINED, since = "1.1")
 public class GLProgramBuilder extends Builder<GLProgram> {
     private final Registry registry = new Registry();
+    private Consumer<GLProgramBuilder> beforeBuildConsumer;
 
     @API(status = API.Status.INTERNAL)
     GLProgramBuilder(GLProgramSnippet... snippets) {
@@ -79,6 +81,13 @@ public class GLProgramBuilder extends Builder<GLProgram> {
         return this.registry.get(tag).orElseThrow();
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public GLProgramBuilder beforeBuildConsumer(Consumer<GLProgramBuilder> consumer) {
+        this.beforeBuildConsumer = consumer;
+
+        return this;
+    }
+
     /**
      * Добавляет униформу программе.
      *
@@ -119,6 +128,9 @@ public class GLProgramBuilder extends Builder<GLProgram> {
      */
     @Override
     public GLProgram build() {
+        if (this.beforeBuildConsumer != null)
+            this.beforeBuildConsumer.accept(this);
+
         assertNotNull(this.registry, CometTags.NAME);
 
         Map<ShaderType, GLShader> compiledShaders = this.registry.get(CometTags.COMPILED_SHADERS).orElseThrow();

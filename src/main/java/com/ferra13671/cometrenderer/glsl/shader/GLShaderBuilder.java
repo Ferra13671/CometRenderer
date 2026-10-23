@@ -19,6 +19,7 @@ import org.apiguardian.api.API;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @API(status = API.Status.MAINTAINED, since = "3.0")
 public class GLShaderBuilder<T> extends Builder<GLShader> {
@@ -26,6 +27,7 @@ public class GLShaderBuilder<T> extends Builder<GLShader> {
     private final GLSLLoader<T> loader;
     private GLSLFileEntry entry;
     private ShaderType type;
+    private Consumer<GLShaderBuilder<T>> beforeBuildConsumer;
 
 
     GLShaderBuilder(GLSLLoader<T> loader) {
@@ -70,6 +72,13 @@ public class GLShaderBuilder<T> extends Builder<GLShader> {
         return this.registry.get(tag).orElseThrow();
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public GLShaderBuilder<T> beforeBuildConsumer(Consumer<GLShaderBuilder<T>> consumer) {
+        this.beforeBuildConsumer = consumer;
+
+        return this;
+    }
+
     @NonNull
     public <S extends GLUniform> GLShaderBuilder<T> uniform(String name, UniformType<S> uniformType) {
         Map<String, UniformType<?>> uniforms = this.registry.get(CometTags.UNIFORMS).orElseThrow();
@@ -89,6 +98,9 @@ public class GLShaderBuilder<T> extends Builder<GLShader> {
 
     @Override
     public GLShader build() {
+        if (this.beforeBuildConsumer != null)
+            this.beforeBuildConsumer.accept(this);
+
         return CometCompiler.compileShader(this.entry, this.type, this.registry);
     }
 }
