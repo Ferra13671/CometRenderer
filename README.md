@@ -18,11 +18,17 @@ This rendering system provides a wide range of tools that can be used to easily 
 * LWJGL 3.3.3+ with lwjgl-stb module.
 * JOML 1.10.5+
 
+## Showcase
+### GLFW (using glfw plugin)
+![GLFW example](https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/glfw-showcase.png)
+### Minecraft (using CRM mod)
+![Minecraft example](https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/minecraft-showcase.png)
+
 ## Official CometRenderer plugins
 Several official plugins were also created for the project, expanding the functionality of the rendering system:
 * better-compiler
 * post-effects
-* lwjgl
+* glfw
 
 ## Documentation
 CometRenderer has its own documentation, which you can read on the <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation">website</a>.
