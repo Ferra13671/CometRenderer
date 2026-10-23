@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @API(status = API.Status.EXPERIMENTAL, since = "1.3")
 @UtilityClass
 public class CometCompiler {
-    private final HashMap<String, CompilerExtension> extensions = new HashMap<>();
+    private final Map<String, CompilerExtension> extensions = new LinkedHashMap<>();
     public final String DEFAULT_GLSL_FILE_ENTRY = "DEFAULT";
 
     public void addExtensions(@NonNull CompilerExtension... extensions) {

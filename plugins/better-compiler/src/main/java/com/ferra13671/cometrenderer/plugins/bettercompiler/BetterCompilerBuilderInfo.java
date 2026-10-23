@@ -3,16 +3,39 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler;
 import lombok.NonNull;
 import org.apiguardian.api.API;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @API(status = API.Status.MAINTAINED, since = "2.5")
-public class BetterCompilerProgramInfo {
+public class BetterCompilerBuilderInfo {
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    private final HashMap<String, String> definitions = new HashMap<>();
     private final HashMap<String, String> definedConstants = new HashMap<>();
     private final HashMap<String, String> definedMethods = new HashMap<>();
 
-    public void defineConstant(@NonNull String name, @NonNull String value) {
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public BetterCompilerBuilderInfo define(@NonNull String name, @NonNull String value) {
+        this.definitions.put(name, value);
+
+        return this;
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public BetterCompilerBuilderInfo define(@NonNull String name) {
+        return define(name, "");
+    }
+
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public Map<String, String> getDefinitions() {
+        return Collections.unmodifiableMap(this.definitions);
+    }
+
+    public BetterCompilerBuilderInfo defineConstant(@NonNull String name, @NonNull String value) {
         this.definedConstants.put(name, value);
+
+        return this;
     }
 
     public Optional<String> getConstant(@NonNull String name) {
@@ -23,8 +46,10 @@ public class BetterCompilerProgramInfo {
         return getConstant(name).orElse(defaultValue);
     }
 
-    public void defineMethod(@NonNull String name, @NonNull String content) {
+    public BetterCompilerBuilderInfo defineMethod(@NonNull String name, @NonNull String content) {
         this.definedMethods.put(name, content);
+
+        return this;
     }
 
     public Optional<String> getMethodContent(@NonNull String name) {

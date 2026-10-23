@@ -3,7 +3,7 @@ package com.ferra13671.cometrenderer.plugins.bettercompiler.test;
 import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
-import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerProgramInfo;
+import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerBuilderInfo;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerTags;
 import com.ferra13671.cometrenderer.utils.tag.Registry;
 
@@ -18,7 +18,7 @@ public record Test(String name, String shaderName, Consumer<Registry> shaderRegi
 
         Registry registry = new Registry();
         shaderRegistryConsumer.accept(fileEntry.getRegistry());
-        registry.set(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo()); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
+        registry.set(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerBuilderInfo()); //The plugin will automatically add this tag to the program registry, but here we need to add it ourselves.
         programRegistryConsumer.accept(registry);
         CometCompiler.processContent(fileEntry.getRegistry(), registry);
 

@@ -9,5 +9,5 @@ import org.apiguardian.api.API;
 @UtilityClass
 public class BetterCompilerTags {
     public final Tag<GLVersion> GLSL_VERSION = new Tag<>("glsl-version");
-    public final Tag<BetterCompilerProgramInfo> PROGRAM_INFO = new Tag<>("better-compiler-program-info");
+    public final Tag<BetterCompilerBuilderInfo> PROGRAM_INFO = new Tag<>("better-compiler-program-info");
 }

@@ -32,9 +32,10 @@ public class BetterCompilerPlugin {
                 new CompilerExtension("better-compiler-main") {
                     @Override
                     public void onCreateGLSLBuilder(Registry builderRegistry) {
-                        builderRegistry.setImmutable(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerProgramInfo());
+                        builderRegistry.setImmutable(BetterCompilerTags.PROGRAM_INFO, new BetterCompilerBuilderInfo());
                     }
                 },
+                DefineProcessor.getExtension(),
                 VersionProcessor.getExtension(),
                 ConstantProcessor.getExtension(),
                 AbstractMethodProcessor.getExtension(),
