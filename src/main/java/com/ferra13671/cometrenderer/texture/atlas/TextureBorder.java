@@ -4,4 +4,5 @@ import org.apiguardian.api.API;
 
 @API(status = API.Status.EXPERIMENTAL, since = "3.0")
 public record TextureBorder(float u1, float v1, float u2, float v2) {
+    public static final TextureBorder DEFAULT = new TextureBorder(0, 0, 1, 1);
 }
