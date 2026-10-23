@@ -20,9 +20,9 @@ This rendering system provides a wide range of tools that can be used to easily 
 
 ## Showcase
 ### GLFW (using glfw plugin)
-![GLFW example](https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/glfw-showcase.png)
+<img src="https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/glfw-showcase.png" style="width: 75%" alt="GLFW example"></img>
 ### Minecraft (using CRM mod)
-![Minecraft example](https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/minecraft-showcase.png)
+<img src="https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/minecraft-showcase.png" style="width: 75%" alt="Minecraft example"></img>
 
 ## Official CometRenderer plugins
 Several official plugins were also created for the project, expanding the functionality of the rendering system:
