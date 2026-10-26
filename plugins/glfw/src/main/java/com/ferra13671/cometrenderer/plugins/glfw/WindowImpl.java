@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
 import java.awt.*;
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -236,8 +237,9 @@ final class WindowImpl implements Window {
 
     @Override
     public void setIcon(GLFWImage icon) {
-        if (!this.icon.equals(icon)) {
-            this.icon.close();
+        if (!Objects.equals(this.icon, icon)) {
+            if (this.icon != null)
+                this.icon.close();
             this.icon = icon;
 
             if (this.iconBuffer != null)
