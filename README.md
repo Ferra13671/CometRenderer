@@ -4,7 +4,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/github/downloads/Ferra13671/CometRenderer/total" alt="Downloads"/>
-    <a href="https://github.com/Ferra13671/CometRenderer/blob/main/LICENSE.md"> <img src="https://img.shields.io/badge/license-EPL%202.0-blue.svg" alt="License"/> </a> 
+    <a href="https://github.com/Ferra13671/CometRenderer/blob/main/LICENSE.md"> <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License"/> </a> 
     <a href="https://github.com/Ferra13671/CometRenderer/releases"> <img src="https://img.shields.io/github/v/release/Ferra13671/CometRenderer" alt="Release"/> </a>
     <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation"> <img src="https://img.shields.io/badge/docs-GitBook-brightgreen" alt="Documentation"/> </a>
 </p>
