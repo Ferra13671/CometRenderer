@@ -1,9 +1,6 @@
 package com.ferra13671.cometrenderer.device.state;
 
-import com.ferra13671.cometrenderer.utils.CompareFunction;
-import com.ferra13671.cometrenderer.utils.Face;
-import com.ferra13671.cometrenderer.utils.FrontFace;
-import com.ferra13671.cometrenderer.utils.PolygonMode;
+import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.stencil.StencilOpAction;
@@ -37,6 +34,8 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     DstFactor dstColor = DstFactor.ZERO;
     SrcFactor srcAlpha = SrcFactor.ONE;
     DstFactor dstAlpha = DstFactor.ZERO;
+    BlendEquation colorEquation = BlendEquation.ADD;
+    BlendEquation alphaEquation = BlendEquation.ADD;
 
     final int[] scissorBox = {-1, -1, -1, -1};
     final int[] viewport = {-1, -1, -1, -1};
@@ -121,6 +120,16 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
             this.dstColor = dstColor;
             this.srcAlpha = srcAlpha;
             this.dstAlpha = dstAlpha;
+        }
+    }
+
+    @Override
+    public void setBlendEquation(BlendEquation color, BlendEquation alpha) {
+        if (this.colorEquation != color || this.alphaEquation != alpha) {
+            GL20.glBlendEquationSeparate(color.glId, alpha.glId);
+
+            this.colorEquation = color;
+            this.alphaEquation = alpha;
         }
     }
 

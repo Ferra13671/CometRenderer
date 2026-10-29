@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.utils.Bindable;
+import com.ferra13671.cometrenderer.utils.BlendEquation;
 import com.ferra13671.cometrenderer.utils.Face;
 import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
@@ -60,5 +61,5 @@ public class PipelineStateObject implements Bindable, Closeable {
     @Override
     public void close() {}
 
-    public record BlendFunc(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha) {}
+    public record BlendFunc(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha, BlendEquation colorEquation, BlendEquation alphaEquation) {}
 }

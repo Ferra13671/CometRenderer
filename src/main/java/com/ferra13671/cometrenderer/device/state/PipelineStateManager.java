@@ -1,9 +1,6 @@
 package com.ferra13671.cometrenderer.device.state;
 
-import com.ferra13671.cometrenderer.utils.CompareFunction;
-import com.ferra13671.cometrenderer.utils.Face;
-import com.ferra13671.cometrenderer.utils.FrontFace;
-import com.ferra13671.cometrenderer.utils.PolygonMode;
+import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.stencil.StencilOpAction;
@@ -27,6 +24,9 @@ public interface PipelineStateManager {
     void setBlend(boolean blend);
 
     void setBlendFunc(SrcFactor srcColor, DstFactor dstColor, SrcFactor srcAlpha, DstFactor dstAlpha);
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void setBlendEquation(BlendEquation color, BlendEquation alpha);
 
     void setScissor(boolean scissor);
 

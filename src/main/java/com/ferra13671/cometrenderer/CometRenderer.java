@@ -397,6 +397,68 @@ public class CometRenderer {
     }
 
     /**
+     * Устанавливает одно и то же уравнение смешивания для RGB и альфа-каналов.
+     * <p>
+     * Уравнение определяет <b>арифметическую операцию</b>, которая применяется
+     * к цвету источника и цвету назначения после умножения на соответствующие
+     * факторы (см. {@link #setBlend}). Стандартные уравнения:
+     * <ul>
+     *     <li>{@link BlendEquation#ADD} — сложение (по умолчанию), подходит
+     *         для обычного alpha-блендинга и аддитивного свечения;</li>
+     *     <li>{@link BlendEquation#SUBTRACT} — источник минус назначение;</li>
+     *     <li>{@link BlendEquation#REVERSE_SUBTRACT} — назначение минус источник;</li>
+     *     <li>{@link BlendEquation#MIN} и {@link BlendEquation#MAX} — затемнение
+     *         и осветление без переполнения; факторы игнорируются.</li>
+     * </ul>
+     * <p>
+     * <b>Важно:</b> метод не включает смешивание. Если blend выключен — значение
+     * кэшируется и применится при следующем {@link #setBlend} или
+     * {@link #setDefaultBlend}. Само уравнение в OpenGL применяется только при
+     * активном blend-тесте.
+     * <p>
+     * Если выбранное уравнение уже установлено, вызов — no-op.
+     *
+     * @param equation уравнение смешивания для цвета и альфы:
+     *                 {@link BlendEquation#ADD}, {@link BlendEquation#SUBTRACT},
+     *                 {@link BlendEquation#REVERSE_SUBTRACT}, {@link BlendEquation#MIN}
+     *                 или {@link BlendEquation#MAX}.
+     *
+     * @see BlendEquation
+     * @see #setBlendEquation(BlendEquation, BlendEquation)
+     * @see #setBlend(SrcFactor, DstFactor, SrcFactor, DstFactor)
+     * @see #setDefaultBlend
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void setBlendEquation(BlendEquation equation) {
+        device.getPipelineStateManager().setBlendEquation(equation, equation);
+    }
+
+    /**
+     * Устанавливает раздельные уравнения смешивания для RGB и альфа-каналов.
+     * <p>
+     * Используйте, если для цвета и альфы нужны <b>разные</b> операции. Пример —
+     * аддитивный цвет с нормальной альфой (для частиц в FBO с последующим
+     * alpha-блендингом): цвет складывается ({@link BlendEquation#ADD}), а альфа
+     * вычитается или замещается, чтобы не «выжигать» альфа-канал.
+     * <p>
+     * <b>Важно:</b> метод не включает смешивание — для этого используйте
+     * {@link #setBlend} или {@link #setDefaultBlend}.
+     * <p>
+     * Если выбранные уравнения уже установлены, вызов — no-op.
+     *
+     * @param colorEquation уравнение для RGB-каналов.
+     * @param alphaEquation уравнение для альфа-канала.
+     *
+     * @see BlendEquation
+     * @see #setBlendEquation(BlendEquation)
+     * @see #setBlend(SrcFactor, DstFactor, SrcFactor, DstFactor)
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void setBlendEquation(BlendEquation colorEquation, BlendEquation alphaEquation) {
+        device.getPipelineStateManager().setBlendEquation(colorEquation, alphaEquation);
+    }
+
+    /**
      * Отключает смешивание.
      * <p>
      * Если blend уже выключен, вызов — no-op. Множители для цвета и альфы не сбрасываются:
@@ -502,8 +564,36 @@ public class CometRenderer {
         device.getPipelineStateManager().setDepthTest(false);
     }
 
+    /**
+     * Устанавливает функцию сравнения глубины для теста глубины.
+     * <p>
+     * Функция определяет, при каких условиях фрагмент проходит тест глубины.
+     * Например, {@link CompareFunction#LESS} (значение по умолчанию) пропускает
+     * фрагмент, только если его глубина <b>меньше</b> уже записанной в буфере;
+     * {@link CompareFunction#LEQUAL} — если меньше или равна;
+     * {@link CompareFunction#ALWAYS} — пропускает всегда (полезно для
+     * принудительной перезаписи буфера).
+     * <p>
+     * <b>Важно:</b> метод не включает сам тест глубины — для этого используйте
+     * {@link #enableDepthTest()}. Если тест выключен, значение кэшируется и
+     * применится при следующем включении. Если тест уже включён, функция
+     * применяется немедленно.
+     * <p>
+     * Если выбранная функция уже установлена, вызов — no-op.
+     * <p>
+     *
+     * @param function функция сравнения глубины: {@link CompareFunction#LESS},
+     *                 {@link CompareFunction#LEQUAL}, {@link CompareFunction#GREATER},
+     *                 {@link CompareFunction#GEQUAL}, {@link CompareFunction#EQUAL},
+     *                 {@link CompareFunction#NOTEQUAL}, {@link CompareFunction#NEVER}
+     *                 или {@link CompareFunction#ALWAYS}.
+     *
+     * @see CompareFunction
+     * @see #enableDepthTest()
+     * @see #disableDepthTest()
+     */
     @API(status = API.Status.MAINTAINED, since = "3.1")
-    public void setDepthFunction(CompareFunction function) {
+    public void setDepthFunc(CompareFunction function) {
         device.getPipelineStateManager().setDepthFunc(function);
     }
 
@@ -548,9 +638,9 @@ public class CometRenderer {
     /**
      * Устанавливает, какие грани будут отсекаться при включённом culling'е.
      * <p>
-     * Значение {@link Face} определяет, какие грани считать лицевыми/тыльными
-     * при отсечении. Порядок обхода вершин (winding order) при этом не меняется и
-     * соответствует настройкам по умолчанию OpenGL.
+     * Значение {@link Face} определяет, какие грани будут отсекаться: лицевые,
+     * тыльные или обе. Какие грани считать лицевыми — зависит от текущего
+     * порядка обхода вершин, задаваемого через {@link #setFrontFace(FrontFace)}
      * <p>
      * <b>Важно:</b> сам по себе вызов не включает culling — для этого нужно
      * дополнительно вызвать {@link #enableCullFace()}. Если culling уже включён,
@@ -570,6 +660,42 @@ public class CometRenderer {
         device.getPipelineStateManager().setCullFaceMode(face);
     }
 
+    /**
+     * Устанавливает порядок обхода вершин (winding order), определяющий,
+     * какие грани считаются <b>лицевыми</b>.
+     * <p>
+     * В OpenGL грань считается лицевой, если её вершины обходятся в
+     * определённом порядке при взгляде снаружи. По умолчанию это
+     * {@link FrontFace#CounterClockwise} (против часовой стрелки). Метод
+     * позволяет изменить это на {@link FrontFace#Clockwise} — полезно, если
+     * геометрия импортирована из источника с противоположным порядком обхода
+     * (например, из DirectX/Blender с другим соглашением).
+     * <p>
+     * <b>Важно:</b> этот метод не включает и не отключает отсечение граней —
+     * он лишь определяет, <b>какие</b> грани считать лицевыми при уже включённом
+     * culling'е. Типичная связка:
+     * <ul>
+     *     <li>{@link #enableCullFace()} — включить отсечение;</li>
+     *     <li>{@link #setCullFaceMode(Face)} — какие грани отсекать
+     *         ({@link Face#Back} — тыльные, {@link Face#Front} — лицевые);</li>
+     *     <li>{@link #setFrontFace(FrontFace)} — какие грани считать лицевыми.</li>
+     * </ul>
+     * Комбинация {@code setFrontFace(Clockwise) + setCullFaceMode(Face.Back)}
+     * эквивалентна {@code setFrontFace(CounterClockwise) + setCullFaceMode(Face.Front)}
+     * для треугольников с CW-winding.
+     * <p>
+     * Если выбранный порядок уже установлен, вызов — no-op.
+     * <p>
+     *
+     * @param frontFace порядок обхода вершин: {@link FrontFace#CounterClockwise}
+     *                  (по умолчанию, против часовой стрелки) или
+     *                  {@link FrontFace#Clockwise} (по часовой стрелке).
+     *
+     * @see FrontFace
+     * @see #setCullFaceMode(Face)
+     * @see #enableCullFace()
+     * @see #disableCullFace()
+     */
     @API(status = API.Status.MAINTAINED, since = "3.1")
     public void setFrontFace(FrontFace frontFace) {
         device.getPipelineStateManager().setFrontFace(frontFace);
