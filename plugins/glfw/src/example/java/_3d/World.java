@@ -15,7 +15,6 @@ import lombok.experimental.UtilityClass;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL40;
 
 import java.awt.*;
@@ -144,7 +143,7 @@ public class World {
         }
 
         CometGLFW.getWindow().getFramebuffer().bind(true);
-        GL11.glEnable(GL11.GL_CULL_FACE);
+        CometRenderer.enableCullFace();
 
         drawSun(projectionMatrix, cameraViewMatrix);
         drawFloor(Hello3D.defaultMaterialProgram, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);

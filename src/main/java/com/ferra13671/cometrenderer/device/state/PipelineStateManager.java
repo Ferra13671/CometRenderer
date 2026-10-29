@@ -1,6 +1,8 @@
 package com.ferra13671.cometrenderer.device.state;
 
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
+import com.ferra13671.cometrenderer.utils.Face;
+import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.stencil.StencilOpAction;
@@ -8,6 +10,15 @@ import org.apiguardian.api.API;
 
 @API(status = API.Status.INTERNAL, since = "3.0")
 public interface PipelineStateManager {
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void setCullFace(boolean cullFace);
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void setCullFaceMode(Face face);
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void setPolygonMode(Face face, PolygonMode polygonMode);
 
     void setBlend(boolean blend);
 

@@ -1,6 +1,8 @@
 package com.ferra13671.cometrenderer.device.state;
 
 import com.ferra13671.cometrenderer.utils.AlphaFunction;
+import com.ferra13671.cometrenderer.utils.Face;
+import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.ferra13671.cometrenderer.stencil.StencilOpAction;
@@ -18,6 +20,12 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     boolean scissor = false;
     boolean depthTest = false;
     boolean stencil = false;
+
+    boolean cullFace = false;
+    Face cullingFace = Face.Back;
+
+    PolygonMode frontPolygonMode;
+    PolygonMode backPolygonMode;
 
     final boolean[] colorMask = {true, true, true, true};
     boolean depthMask = true;
@@ -45,6 +53,45 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     int activeTextureUnit = 0;
     final int[] boundTextures = IntStream.generate(() -> -1).limit(32).toArray();
     final int[] boundSamplers = IntStream.generate(() -> -1).limit(32).toArray();
+
+    @Override
+    public void setCullFace(boolean cullFace) {
+        if (this.cullFace != cullFace) {
+            if (cullFace)
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            else
+                GL11.glDisable(GL11.GL_CULL_FACE);
+
+            this.cullFace = cullFace;
+        }
+    }
+
+    @Override
+    public void setCullFaceMode(Face face) {
+        if (this.cullingFace != face) {
+            GL11.glCullFace(face.glId);
+
+            this.cullingFace = face;
+        }
+    }
+
+    @Override
+    public void setPolygonMode(Face face, PolygonMode polygonMode) {
+        boolean changed = false;
+
+        if (face.front && this.frontPolygonMode != polygonMode) {
+            changed = true;
+            this.frontPolygonMode = polygonMode;
+        }
+
+        if (face.back && this.backPolygonMode != polygonMode) {
+            changed = true;
+            this.backPolygonMode = polygonMode;
+        }
+
+        if (changed)
+            GL11.glPolygonMode(face.glId, polygonMode.glId);
+    }
 
     @Override
     public void setBlend(boolean blend) {

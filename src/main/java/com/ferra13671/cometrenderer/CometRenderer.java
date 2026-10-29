@@ -502,6 +502,96 @@ public class CometRenderer {
     }
 
     /**
+     * Включает отсечение граней (face culling).
+     * <p>
+     * При включённом culling'е грани, направленные в сторону от наблюдателя
+     * (в зависимости от {@link Face}, установленного через {@link #setCullFaceMode(Face)}),
+     * не растеризуются. Это стандартная оптимизация, отсекающая примерно
+     * половину треугольников закрытых мешей.
+     * <p>
+     * Если отсечение уже включено, вызов — no-op. Режим отсечения
+     * ({@link Face}) при этом не изменяется.
+     *
+     * @see #disableCullFace()
+     * @see #setCullFaceMode(Face)
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void enableCullFace() {
+        device.getPipelineStateManager().setCullFace(true);
+    }
+
+    /**
+     * Отключает отсечение граней (face culling).
+     * <p>
+     * При отключённом culling'е растеризуются все грани, независимо от их
+     * ориентации. Полезно для двусторонних объектов (трава, листва, ткань),
+     * а также при отладке.
+     * <p>
+     * Если отсечение уже отключено, вызов — no-op. Режим отсечения
+     * ({@link Face}) при этом не сбрасывается и будет применён при
+     * следующем {@link #enableCullFace()}.
+     *
+     * @see #enableCullFace()
+     * @see #setCullFaceMode(Face)
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void disableCullFace() {
+        device.getPipelineStateManager().setCullFace(false);
+    }
+
+    /**
+     * Устанавливает, какие грани будут отсекаться при включённом culling'е.
+     * <p>
+     * Значение {@link Face} определяет, какие грани считать лицевыми/тыльными
+     * при отсечении. Порядок обхода вершин (winding order) при этом не меняется и
+     * соответствует настройкам по умолчанию OpenGL.
+     * <p>
+     * <b>Важно:</b> сам по себе вызов не включает culling — для этого нужно
+     * дополнительно вызвать {@link #enableCullFace()}. Если culling уже включён,
+     * режим применяется немедленно.
+     * <p>
+     * Если выбранный режим уже установлен, вызов — no-op.
+     *
+     * @param face какие грани отсекать: {@link Face#Front}, {@link Face#Back} или
+     *             {@link Face#FrontAndBack} (последнее фактически отключает отрисовку).
+     *
+     * @see Face
+     * @see #enableCullFace()
+     * @see #disableCullFace()
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void setCullFaceMode(Face face) {
+        device.getPipelineStateManager().setCullFaceMode(face);
+    }
+
+    /**
+     * Устанавливает режим растеризации полигонов для указанных граней.
+     * <p>
+     * Позволяет переключаться между заливкой ({@link PolygonMode#Fill}),
+     * отрисовкой каркаса ({@link PolygonMode#Line}) и точками
+     * ({@link PolygonMode#Point}). Это удобно для отладочной визуализации
+     * геометрии, редакторов и специальных эффектов.
+     * <p>
+     * Параметр {@code face} позволяет задать разные режимы для лицевых и
+     * тыльных граней независимо. Чтобы изменить режим только для одной
+     * стороны, передайте {@link Face#Front} или {@link Face#Back}.
+     * <p>
+     * Если для выбранных граней уже установлен этот режим, вызов — no-op.
+     *
+     * @param face какие грани затронуть: {@link Face#Front}, {@link Face#Back}
+     *             или {@link Face#FrontAndBack}.
+     * @param polygonMode режим растеризации: {@link PolygonMode#Fill},
+     *                    {@link PolygonMode#Line} или {@link PolygonMode#Point}.
+     *
+     * @see PolygonMode
+     * @see Face
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void setPolygonMode(Face face, PolygonMode polygonMode) {
+        device.getPipelineStateManager().setPolygonMode(face, polygonMode);
+    }
+
+    /**
      * Создаёт меш с вершинами.
      * <p>
      * Метод создаёт сборщик, передаёт его в {@code buildConsumer}, и собирает меш.
