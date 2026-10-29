@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.device.state;
 
-import com.ferra13671.cometrenderer.utils.AlphaFunction;
+import com.ferra13671.cometrenderer.utils.CompareFunction;
 import com.ferra13671.cometrenderer.utils.Face;
 import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
@@ -38,7 +38,9 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     final int[] scissorBox = {-1, -1, -1, -1};
     final int[] viewport = {-1, -1, -1, -1};
 
-    AlphaFunction stencilFunc = AlphaFunction.ALWAYS;
+    CompareFunction depthFunc = CompareFunction.LESS;
+
+    CompareFunction stencilFunc = CompareFunction.ALWAYS;
     int stencilRef = 0;
     int stencilFuncMask = 0xFFFFFFFF;
     StencilOpAction stencilFailed = StencilOpAction.KEEP;
@@ -165,7 +167,7 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     }
 
     @Override
-    public void setStencilFunc(AlphaFunction function, int ref, int mask) {
+    public void setStencilFunc(CompareFunction function, int ref, int mask) {
         if (
                 this.stencilFunc != function ||
                 this.stencilRef != ref ||
@@ -220,6 +222,15 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
 
             this.depthTest = depthTest;
+        }
+    }
+
+    @Override
+    public void setDepthFunc(CompareFunction depthFunc) {
+        if (this.depthFunc != depthFunc) {
+            GL11.glDepthFunc(depthFunc.glId);
+
+            this.depthFunc = depthFunc;
         }
     }
 

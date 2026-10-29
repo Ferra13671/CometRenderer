@@ -502,6 +502,11 @@ public class CometRenderer {
         device.getPipelineStateManager().setDepthTest(false);
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void setDepthFunction(CompareFunction function) {
+        device.getPipelineStateManager().setDepthFunc(function);
+    }
+
     /**
      * Включает отсечение граней (face culling).
      * <p>

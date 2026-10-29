@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.device.state;
 
-import com.ferra13671.cometrenderer.utils.AlphaFunction;
+import com.ferra13671.cometrenderer.utils.CompareFunction;
 import com.ferra13671.cometrenderer.utils.Face;
 import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
@@ -32,13 +32,16 @@ public interface PipelineStateManager {
 
     void setStencilMask(boolean stencilMask);
 
-    void setStencilFunc(AlphaFunction function, int ref, int mask);
+    void setStencilFunc(CompareFunction function, int ref, int mask);
 
     void setStencilOp(StencilOpAction stencilFailed, StencilOpAction stencilPassedDepthFailed, StencilOpAction allPassed);
 
     void setColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 
     void setDepthTest(boolean depthTest);
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void setDepthFunc(CompareFunction func);
 
     void setDepthMask(boolean depthMask);
 

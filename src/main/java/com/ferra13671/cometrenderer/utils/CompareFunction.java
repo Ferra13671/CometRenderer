@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;
 
 @AllArgsConstructor
-public enum AlphaFunction {
+public enum CompareFunction {
     NEVER(GL11.GL_NEVER),
     LESS(GL11.GL_LESS),
     EQUAL(GL11.GL_EQUAL),

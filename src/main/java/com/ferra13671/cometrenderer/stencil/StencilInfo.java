@@ -1,6 +1,6 @@
 package com.ferra13671.cometrenderer.stencil;
 
-import com.ferra13671.cometrenderer.utils.AlphaFunction;
+import com.ferra13671.cometrenderer.utils.CompareFunction;
 import com.ferra13671.cometrenderer.utils.ColorMask;
 import lombok.Builder;
 import org.apiguardian.api.API;
@@ -12,21 +12,21 @@ public record StencilInfo(Boolean stencilMask, Boolean depthMask, ColorMask colo
             .stencilMask(true)
             .depthMask(false)
             .colorMask(new ColorMask(false, false, false, false))
-            .func(new StencilFunction(AlphaFunction.ALWAYS, 1, 255))
+            .func(new StencilFunction(CompareFunction.ALWAYS, 1, 255))
             .op(new StencilOp(StencilOpAction.KEEP, StencilOpAction.KEEP, StencilOpAction.REPLACE))
             .build();
     public static final StencilInfo READ = StencilInfo.builder()
             .stencilMask(false)
             .depthMask(true)
             .colorMask(new ColorMask(true, true, true, true))
-            .func(new StencilFunction(AlphaFunction.EQUAL, 1, 255))
+            .func(new StencilFunction(CompareFunction.EQUAL, 1, 255))
             .op(new StencilOp(StencilOpAction.KEEP, StencilOpAction.KEEP, StencilOpAction.KEEP))
             .build();
     public static final StencilInfo INVERTED_READ = StencilInfo.builder()
             .stencilMask(false)
             .depthMask(true)
             .colorMask(new ColorMask(true, true, true, true))
-            .func(new StencilFunction(AlphaFunction.EQUAL, 0, 255))
+            .func(new StencilFunction(CompareFunction.EQUAL, 0, 255))
             .op(new StencilOp(StencilOpAction.KEEP, StencilOpAction.KEEP, StencilOpAction.KEEP))
             .build();
 }
