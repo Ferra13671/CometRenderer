@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.device.state;
 
 import com.ferra13671.cometrenderer.utils.CompareFunction;
 import com.ferra13671.cometrenderer.utils.Face;
+import com.ferra13671.cometrenderer.utils.FrontFace;
 import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
@@ -23,6 +24,8 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
 
     boolean cullFace = false;
     Face cullingFace = Face.Back;
+
+    FrontFace frontFace = FrontFace.CounterClockwise;
 
     PolygonMode polygonMode;
 
@@ -73,6 +76,14 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
             GL11.glCullFace(face.glId);
 
             this.cullingFace = face;
+        }
+    }
+
+    @Override
+    public void setFrontFace(FrontFace frontFace) {
+        if (this.frontFace != frontFace) {
+            GL11.glFrontFace(frontFace.glId);
+            this.frontFace = frontFace;
         }
     }
 

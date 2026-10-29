@@ -2,6 +2,7 @@ package com.ferra13671.cometrenderer.device.state;
 
 import com.ferra13671.cometrenderer.utils.CompareFunction;
 import com.ferra13671.cometrenderer.utils.Face;
+import com.ferra13671.cometrenderer.utils.FrontFace;
 import com.ferra13671.cometrenderer.utils.PolygonMode;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
@@ -16,6 +17,9 @@ public interface PipelineStateManager {
 
     @API(status = API.Status.INTERNAL, since = "3.1")
     void setCullFaceMode(Face face);
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void setFrontFace(FrontFace frontFace);
 
     @API(status = API.Status.INTERNAL, since = "3.1")
     void setPolygonMode(PolygonMode polygonMode);

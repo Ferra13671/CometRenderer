@@ -570,6 +570,11 @@ public class CometRenderer {
         device.getPipelineStateManager().setCullFaceMode(face);
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void setFrontFace(FrontFace frontFace) {
+        device.getPipelineStateManager().setFrontFace(frontFace);
+    }
+
     /**
      * Устанавливает режим растеризации полигонов.
      * <p>
