@@ -54,6 +54,9 @@ public class FramebufferImpl implements Framebuffer {
 
     @Override
     public void resize(int width, int height) {
+        if (width <= 0 || height <= 0)
+            return;
+
         deleteTextures();
 
         if (isUseColor())
