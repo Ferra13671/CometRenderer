@@ -3,10 +3,7 @@ package com.ferra13671.cometrenderer.plugins.pso;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
-import com.ferra13671.cometrenderer.utils.Bindable;
-import com.ferra13671.cometrenderer.utils.BlendEquation;
-import com.ferra13671.cometrenderer.utils.Face;
-import com.ferra13671.cometrenderer.utils.PolygonMode;
+import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import lombok.AccessLevel;
@@ -31,7 +28,11 @@ public class PipelineStateObject implements Bindable, Closeable {
     @Builder.Default
     boolean depthMask = true;
     @Builder.Default
+    CompareFunction depthFunc = CompareFunction.LESS;
+    @Builder.Default
     Face cullFace = Face.Back;
+    @Builder.Default
+    FrontFace frontFace = FrontFace.CounterClockwise;
     @Builder.Default
     @NonNull
     PolygonMode polygonMode = PolygonMode.Fill;
