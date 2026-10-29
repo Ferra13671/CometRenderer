@@ -5,7 +5,7 @@ import com.ferra13671.cometrenderer.device.directstate.DefaultDirectStateManager
 import com.ferra13671.cometrenderer.device.directstate.DirectStateManager;
 import com.ferra13671.cometrenderer.device.state.PipelineStateManager;
 import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
-import com.ferra13671.cometrenderer.glsl.GLProgram;
+import com.ferra13671.cometrenderer.glsl.Program;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
 import com.ferra13671.cometrenderer.device.vertexformat.ARBVertexFormatManager;
@@ -36,7 +36,7 @@ public class GLDevice {
     private PipelineStateManager pipelineStateManager = new PipelineStateManagerImpl();
 
     @Getter
-    private GLProgram currentProgram;
+    private Program currentProgram;
 
     public GLDevice() {
         this.directStateManager = GLCapabilities.supportsDirectStateAccess() ?

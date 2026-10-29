@@ -1,7 +1,7 @@
 package com.ferra13671.cometrenderer.plugins.posteffects;
 
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.glsl.GLProgram;
+import com.ferra13671.cometrenderer.glsl.Program;
 import com.ferra13671.cometrenderer.utils.Builder;
 import com.ferra13671.cometrenderer.utils.Pair;
 import org.apiguardian.api.API;
@@ -15,8 +15,8 @@ import java.util.function.Function;
 public class ProgramPassBuilder extends Builder<ProgramPass> {
     private final List<Pair<Integer, Function<PostEffectContext, Framebuffer>>> inputs = new ArrayList<>();
     private Function<PostEffectContext, Framebuffer> output;
-    private GLProgram program;
-    private Consumer<GLProgram> preRenderConsumer = p -> {};
+    private Program program;
+    private Consumer<Program> preRenderConsumer = p -> {};
 
     public ProgramPassBuilder() {
         super("program pass");
@@ -42,12 +42,12 @@ public class ProgramPassBuilder extends Builder<ProgramPass> {
         return this;
     }
 
-    public ProgramPassBuilder program(GLProgram program) {
+    public ProgramPassBuilder program(Program program) {
         this.program = program;
         return this;
     }
 
-    public ProgramPassBuilder preRenderAction(Consumer<GLProgram> preRenderAction) {
+    public ProgramPassBuilder preRenderAction(Consumer<Program> preRenderAction) {
         if (preRenderAction != null)
             this.preRenderConsumer = preRenderAction;
         return this;

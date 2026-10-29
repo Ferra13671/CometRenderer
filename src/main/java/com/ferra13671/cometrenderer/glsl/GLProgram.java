@@ -4,7 +4,6 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.buffer.BufferUniform;
-import com.ferra13671.cometrenderer.utils.Bindable;
 import com.ferra13671.cometrenderer.glsl.uniform.GLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.uniforms.OneTypeGLUniform;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
@@ -14,7 +13,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apiguardian.api.API;
 
-import java.io.Closeable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -30,7 +28,7 @@ import java.util.function.Consumer;
  */
 @API(status = API.Status.MAINTAINED, since = "1.1")
 @RequiredArgsConstructor
-public class GLProgram implements Bindable, Closeable {
+public class GLProgram implements Program {
     /** Имя программы. **/
     @Getter
     private final String name;
@@ -38,7 +36,9 @@ public class GLProgram implements Bindable, Closeable {
     @Getter
     private final int id;
     /** Фрагменты программы, добавленные в программу. **/
+    @API(status = API.Status.DEPRECATED, since = "3.1")
     @Getter
+    @Deprecated(forRemoval = true)
     private final Set<GLProgramSnippet> snippets;
     /** Карта всех униформ программы, расположенных по их именам. **/
     private final Map<String, GLUniform> uniformsByName;
@@ -104,7 +104,7 @@ public class GLProgram implements Bindable, Closeable {
      * @see GLUniform
      * @see UniformType
      */
-    @API(status = API.Status.STABLE, since = "1.6")
+    @Override
     public <T extends GLUniform> T getUniform(String name, UniformType<T> type) {
         T uniform = getUniformNullable(name, type);
         if (uniform == null)
@@ -124,7 +124,7 @@ public class GLProgram implements Bindable, Closeable {
      * @see GLUniform
      * @see UniformType
      */
-    @API(status = API.Status.STABLE, since = "1.6")
+    @Override
     public <T extends GLUniform> T getUniformNullable(String name, UniformType<T> type) {
         return (T) this.uniformsByName.get(name);
     }
@@ -140,7 +140,7 @@ public class GLProgram implements Bindable, Closeable {
      * @see GLUniform
      * @see UniformType
      */
-    @API(status = API.Status.MAINTAINED, since = "1.8.3")
+    @Override
     public <T extends GLUniform> void consumeIfUniformPresent(String name, UniformType<T> type, Consumer<T> consumer) {
         T uniform = getUniformNullable(name, type);
         if (uniform != null)
@@ -156,7 +156,7 @@ public class GLProgram implements Bindable, Closeable {
      *
      * @see SamplerUniform
      */
-    @API(status = API.Status.MAINTAINED, since = "1.5")
+    @Override
     public SamplerUniform getSampler(int samplerId) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler == null)
@@ -173,7 +173,7 @@ public class GLProgram implements Bindable, Closeable {
      *
      * @see SamplerUniform
      */
-    @API(status = API.Status.MAINTAINED, since = "1.8.3")
+    @Override
     public SamplerUniform getSamplerNullable(int samplerId) {
         return samplerId < 0 || samplerId > this.samplers.size() - 1 ? null : this.samplers.get(samplerId);
     }
@@ -186,7 +186,7 @@ public class GLProgram implements Bindable, Closeable {
      *
      * @see SamplerUniform
      */
-    @API(status = API.Status.MAINTAINED, since = "1.8.3")
+    @Override
     public void consumerIfSamplerPresent(int samplerId, Consumer<SamplerUniform> consumer) {
         SamplerUniform sampler = getSamplerNullable(samplerId);
         if (sampler != null)

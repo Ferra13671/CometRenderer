@@ -3,6 +3,7 @@ package com.ferra13671.cometrenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.device.GLDevice;
+import com.ferra13671.cometrenderer.glsl.Program;
 import com.ferra13671.cometrenderer.stencil.StencilInfo;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
@@ -56,7 +57,7 @@ import java.util.function.Consumer;
  * напрямую, т.к. он является низкоуровневым API.
  * <p>
  * <b>Программы и униформы</b>. Активная программа устанавливается через
- * {@link #setCurrentProgram(GLProgram)} и применяется отложено —
+ * {@link #setCurrentProgram(Program)} и применяется отложено —
  * реальное передача программы в OpenGl и обновление униформ происходит
  * в методе {@link #draw}. До вызова {@link #draw} можно настраивать
  * униформы.
@@ -293,10 +294,10 @@ public class CometRenderer {
      * Может вернуть {@code null}, если {@link #setCurrentProgram} ещё не вызывался.
      *
      * @return текущая программа или {@code null}
-     * @see #setCurrentProgram(GLProgram)
+     * @see #setCurrentProgram(Program)
      */
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public GLProgram getCurrentProgram() {
+    public Program getCurrentProgram() {
         return device.getCurrentProgram();
     }
 
@@ -312,11 +313,11 @@ public class CometRenderer {
      * @param program программа, которая будет использоваться для следующих draw.
      *
      * @see #getCurrentProgram()
-     * @see GLProgram#bind()
+     * @see Program#bind()
      * @see #draw
      */
     @API(status = API.Status.MAINTAINED, since = "3.0")
-    public void setCurrentProgram(GLProgram program) {
+    public void setCurrentProgram(Program program) {
         device.setCurrentProgram(program);
     }
 
@@ -617,7 +618,7 @@ public class CometRenderer {
      * Эквивалентен {@code draw(mesh, true)}.
      * <p>
      * <b>Требует установленной текущей программы.</b> Если
-     * {@link #setCurrentProgram(GLProgram)} не вызывался, при попытке бинда
+     * {@link #setCurrentProgram(Program)} не вызывался, при попытке бинда
      * программы произойдёт {@link NullPointerException}.
      *
      * @param mesh меш для отрисовки.
@@ -639,7 +640,7 @@ public class CometRenderer {
      * передайте {@code false} и закройте меш самостоятельно, когда он больше не нужен.
      * <p>
      * <b>Требует установленной текущей программы.</b> Если
-     * {@link #setCurrentProgram(GLProgram)} не вызывался, при попытке бинда
+     * {@link #setCurrentProgram(Program)} не вызывался, при попытке бинда
      * программы произойдёт {@link NullPointerException}.
      *
      * @param mesh меш для отрисовки.
