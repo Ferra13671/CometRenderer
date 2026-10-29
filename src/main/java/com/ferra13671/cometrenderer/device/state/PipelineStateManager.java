@@ -18,7 +18,7 @@ public interface PipelineStateManager {
     void setCullFaceMode(Face face);
 
     @API(status = API.Status.INTERNAL, since = "3.1")
-    void setPolygonMode(Face face, PolygonMode polygonMode);
+    void setPolygonMode(PolygonMode polygonMode);
 
     void setBlend(boolean blend);
 

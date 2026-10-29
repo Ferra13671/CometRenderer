@@ -24,8 +24,7 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     boolean cullFace = false;
     Face cullingFace = Face.Back;
 
-    PolygonMode frontPolygonMode;
-    PolygonMode backPolygonMode;
+    PolygonMode polygonMode;
 
     final boolean[] colorMask = {true, true, true, true};
     boolean depthMask = true;
@@ -76,21 +75,11 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     }
 
     @Override
-    public void setPolygonMode(Face face, PolygonMode polygonMode) {
-        boolean changed = false;
-
-        if (face.front && this.frontPolygonMode != polygonMode) {
-            changed = true;
-            this.frontPolygonMode = polygonMode;
+    public void setPolygonMode(PolygonMode polygonMode) {
+        if (this.polygonMode != polygonMode) {
+            GL11.glPolygonMode(Face.FrontAndBack.glId, polygonMode.glId);
+            this.polygonMode = polygonMode;
         }
-
-        if (face.back && this.backPolygonMode != polygonMode) {
-            changed = true;
-            this.backPolygonMode = polygonMode;
-        }
-
-        if (changed)
-            GL11.glPolygonMode(face.glId, polygonMode.glId);
     }
 
     @Override

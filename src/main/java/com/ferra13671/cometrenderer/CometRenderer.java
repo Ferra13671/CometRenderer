@@ -566,21 +566,13 @@ public class CometRenderer {
     }
 
     /**
-     * Устанавливает режим растеризации полигонов для указанных граней.
+     * Устанавливает режим растеризации полигонов.
      * <p>
      * Позволяет переключаться между заливкой ({@link PolygonMode#Fill}),
      * отрисовкой каркаса ({@link PolygonMode#Line}) и точками
      * ({@link PolygonMode#Point}). Это удобно для отладочной визуализации
      * геометрии, редакторов и специальных эффектов.
-     * <p>
-     * Параметр {@code face} позволяет задать разные режимы для лицевых и
-     * тыльных граней независимо. Чтобы изменить режим только для одной
-     * стороны, передайте {@link Face#Front} или {@link Face#Back}.
-     * <p>
-     * Если для выбранных граней уже установлен этот режим, вызов — no-op.
      *
-     * @param face какие грани затронуть: {@link Face#Front}, {@link Face#Back}
-     *             или {@link Face#FrontAndBack}.
      * @param polygonMode режим растеризации: {@link PolygonMode#Fill},
      *                    {@link PolygonMode#Line} или {@link PolygonMode#Point}.
      *
@@ -588,8 +580,8 @@ public class CometRenderer {
      * @see Face
      */
     @API(status = API.Status.MAINTAINED, since = "3.1")
-    public void setPolygonMode(Face face, PolygonMode polygonMode) {
-        device.getPipelineStateManager().setPolygonMode(face, polygonMode);
+    public void setPolygonMode(PolygonMode polygonMode) {
+        device.getPipelineStateManager().setPolygonMode(polygonMode);
     }
 
     /**
