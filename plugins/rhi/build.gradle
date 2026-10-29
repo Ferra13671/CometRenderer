@@ -1,0 +1,7 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+project.ext.projectName = "comet-renderer-pso"
+apply from: rootProject.file("scripts/plugin.gradle")
