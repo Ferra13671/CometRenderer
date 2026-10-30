@@ -15,12 +15,9 @@ import org.apiguardian.api.API;
 @Getter
 @RequiredArgsConstructor
 @API(status = API.Status.INTERNAL)
-public final class VertexFormatBuffer {
+public class VertexFormatBuffer {
     /** Айди массива вершин. **/
     private final int glId;
-    /** Формат вершин. **/
-    @NonNull
-    private final VertexFormat vertexFormat;
     /** Буффер вершин. **/
     @Setter
     private GpuBuffer buffer = null;
