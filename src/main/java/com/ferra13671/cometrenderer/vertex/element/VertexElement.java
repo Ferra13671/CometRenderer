@@ -35,7 +35,7 @@ public class VertexElement {
         this.mask = 1 << this.id;
         this.count = count;
         this.typeCount = count * (type.size() / type.offset());
-        this.size = this.typeCount * type.size();
+        this.size = count * type.size();
         this.type = type;
     }
 }
