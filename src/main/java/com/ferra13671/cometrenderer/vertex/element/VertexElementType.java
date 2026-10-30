@@ -275,8 +275,8 @@ public record VertexElementType<T>(String name, int size, int offset, int glId, 
             .build();
     @API(status = API.Status.MAINTAINED, since = "3.1")
     public static final VertexElementType<Matrix4fc> MATRIX_4_FLOAT = builder(Matrix4fc.class)
-            .name("Matrix3f")
-            .size(36)
+            .name("Matrix4f")
+            .size(64)
             .offset(4)
             .glId(GL11.GL_FLOAT)
             .uploadConsumer(
