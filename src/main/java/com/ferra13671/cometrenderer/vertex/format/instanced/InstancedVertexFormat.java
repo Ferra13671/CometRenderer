@@ -39,14 +39,6 @@ public class InstancedVertexFormat implements Closeable {
     @Override
     public void close() {
         if (this.buffer != null) {
-            GpuBuffer buffer = this.buffer.getBuffer();
-            if (buffer != null)
-                buffer.close();
-
-            GpuBuffer instanceBuffer = this.buffer.getInstanceBuffer();
-            if (instanceBuffer != null)
-                instanceBuffer.close();
-
             CometRenderer.getDevice().deleteVertexArray(this.buffer.getGlId());
 
             this.buffer = null;
