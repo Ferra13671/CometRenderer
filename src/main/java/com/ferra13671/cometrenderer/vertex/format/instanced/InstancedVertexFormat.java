@@ -21,8 +21,7 @@ public class InstancedVertexFormat implements Closeable {
     private InstancedVertexFormatBuffer buffer = null;
 
     public InstancedVertexFormat(VertexFormat perVertexFormat, VertexFormat perInstanceFormat) {
-        //TODO VertexFormat.hasElement
-        if (perVertexFormat.getElement("Position") == null)
+        if (perVertexFormat.hasElement("Position"))
             ErrorHandlers.onBadVertexStructure("Position");
 
         this.perVertexFormat = perVertexFormat;

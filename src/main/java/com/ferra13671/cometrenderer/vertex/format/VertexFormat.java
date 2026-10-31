@@ -111,6 +111,17 @@ public class VertexFormat implements Closeable {
     }
 
     /**
+     * Возвращает то, есть ли элемент с нужным именем в формате вершины.
+     *
+     * @param name имя элемента.
+     * @return то, есть ли элемент в формате вершины.
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public boolean hasElement(String name) {
+        return this.elementsForNames.containsKey(name);
+    }
+
+    /**
      * Возвращает элемент формата вершины по его имени.
      * Если в формате вершины элемента с данным именем не существует, то вызовется ошибка.
      *
