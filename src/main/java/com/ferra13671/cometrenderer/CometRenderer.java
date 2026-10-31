@@ -755,7 +755,6 @@ public class CometRenderer {
      * @see #draw(IMesh, boolean)
      * @see #draw(BufferRenderer, Object, boolean)
      */
-    @Deprecated
     @API(status = API.Status.STABLE, since = "1.7")
     public void draw(IMesh mesh) {
         draw(cometBufferRenderer, mesh, true);
@@ -808,7 +807,8 @@ public class CometRenderer {
      * @see #setCurrentProgram
      * @see #getScissorStack()
      */
-    @API(status = API.Status.MAINTAINED, since = "1.7")
+    @Deprecated(forRemoval = true)
+    @API(status = API.Status.DEPRECATED, since = "3.1")
     public <T> void draw(BufferRenderer<T> bufferRenderer, T buffer, boolean close) {
         if (!scissorStack.isEmpty()) {
             device.getPipelineStateManager().setScissor(true);
