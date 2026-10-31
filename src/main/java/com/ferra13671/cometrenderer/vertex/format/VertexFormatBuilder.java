@@ -19,14 +19,17 @@ import java.util.List;
  */
 @API(status = API.Status.MAINTAINED, since = "1.4")
 public final class VertexFormatBuilder extends Builder<VertexFormat> {
+    private final VertexFormatType type;
     /** Список элементов вершин. **/
     private final List<Pair<VertexElementType<?>, Integer>> elementsInfo = new ArrayList<>();
     /** Список имен элементов вершин. **/
     private final List<String> elementNames = new ArrayList<>();
 
     @API(status = API.Status.INTERNAL)
-    VertexFormatBuilder() {
+    VertexFormatBuilder(VertexFormatType type) {
         super("vertex format");
+
+        this.type = type;
     }
 
     public VertexFormatBuilder element(String name, VertexElementType<?> type, int count) {
@@ -66,6 +69,6 @@ public final class VertexFormatBuilder extends Builder<VertexFormat> {
             elements.add(new VertexElement(i, info.right(), info.left()));
         }
 
-        return new VertexFormat(elements, this.elementNames);
+        return new VertexFormat(this.type, elements, this.elementNames);
     }
 }

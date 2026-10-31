@@ -23,11 +23,12 @@ import java.util.stream.Stream;
  */
 @API(status = API.Status.MAINTAINED, since = "1.4")
 public class VertexFormat implements Closeable {
-    public static final VertexFormat POSITION = VertexFormat.builder().build();
-    public static final VertexFormat POSITION_COLOR = VertexFormat.builder()
+    public static final VertexFormat POSITION = VertexFormat.builder(VertexFormatType.PerVertex)
+            .build();
+    public static final VertexFormat POSITION_COLOR = VertexFormat.builder(VertexFormatType.PerVertex)
             .element("Color", VertexElementType.VECTOR_4_FLOAT, 1)
             .build();
-    public static final VertexFormat POSITION_TEXTURE = VertexFormat.builder()
+    public static final VertexFormat POSITION_TEXTURE = VertexFormat.builder(VertexFormatType.PerVertex)
             .element("Texture", VertexElementType.VECTOR_2_FLOAT, 1)
             .build();
     public static final VertexFormat POSITION_COLOR_TEXTURE = POSITION_COLOR.toBuilder()
@@ -37,6 +38,9 @@ public class VertexFormat implements Closeable {
             .element("Color", VertexElementType.VECTOR_4_FLOAT, 1)
             .build();
 
+    @Getter
+    @API(status = API.Status.EXPERIMENTAL, since = "3.1")
+    private final VertexFormatType type;
     /** Массив элементов формата вершины. **/
     @Getter
     @API(status = API.Status.INTERNAL)
@@ -64,7 +68,8 @@ public class VertexFormat implements Closeable {
      * @param elementNames список имен элементов формата вершины.
      */
     @API(status = API.Status.INTERNAL)
-    public VertexFormat(List<VertexElement> vertexElements, List<String> elementNames) {
+    public VertexFormat(VertexFormatType type, List<VertexElement> vertexElements, List<String> elementNames) {
+        this.type = type;
         this.vertexElements = vertexElements.toArray(new VertexElement[0]);
         this.names = elementNames.toArray(new String[0]);
         this.elementOffsets = new int[this.vertexElements.length];
@@ -167,7 +172,7 @@ public class VertexFormat implements Closeable {
 
     @API(status = API.Status.EXPERIMENTAL, since = "2.7")
     public VertexFormatBuilder toBuilder() {
-        VertexFormatBuilder builder = new VertexFormatBuilder();
+        VertexFormatBuilder builder = new VertexFormatBuilder(this.type);
 
         for (String name : this.names) {
             VertexElement element = this.elementsForNames.get(name);
@@ -183,7 +188,12 @@ public class VertexFormat implements Closeable {
      *
      * @return новый сборщик формата вершины.
      */
-    public static VertexFormatBuilder builder() {
-        return new VertexFormatBuilder().element("Position", VertexElementType.FLOAT, 3);
+    public static VertexFormatBuilder builder(VertexFormatType type) {
+        VertexFormatBuilder builder = new VertexFormatBuilder(type);
+
+        if (type == VertexFormatType.PerVertex)
+            builder.element("Position", VertexElementType.FLOAT, 3);
+
+        return builder;
     }
 }

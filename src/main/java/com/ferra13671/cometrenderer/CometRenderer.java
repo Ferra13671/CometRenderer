@@ -209,7 +209,7 @@ public class CometRenderer {
 
         if (vertexCount > 0) {
             DrawMode drawMode = mesh.getDrawMode();
-            device.getVertexFormatManager().applyFormatToBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
+            device.getVertexFormatManager().bindFormatBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
 
             IndexBufferGenerator ibg = drawMode.indexBufferGenerator();
 
@@ -755,6 +755,7 @@ public class CometRenderer {
      * @see #draw(IMesh, boolean)
      * @see #draw(BufferRenderer, Object, boolean)
      */
+    @Deprecated
     @API(status = API.Status.STABLE, since = "1.7")
     public void draw(IMesh mesh) {
         draw(cometBufferRenderer, mesh, true);

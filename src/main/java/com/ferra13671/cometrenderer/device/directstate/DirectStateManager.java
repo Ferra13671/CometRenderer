@@ -48,6 +48,8 @@ public interface DirectStateManager {
 
     void vertexAttributeBinding(int vertBufId, int attribIndex, int bindingIndex);
 
+    void vertexBindingDivisor(int vaoId, int bindingIndex, int divisor);
+
     void textureStorage(GLTex texture);
 
     void textureImage(GLTex texture, ByteBuffer pixels);

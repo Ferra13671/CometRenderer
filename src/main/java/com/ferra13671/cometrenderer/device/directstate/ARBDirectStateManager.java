@@ -98,6 +98,11 @@ public class ARBDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public void vertexBindingDivisor(int vaoId, int bindingIndex, int divisor) {
+        ARBDirectStateAccess.glVertexArrayBindingDivisor(vaoId, bindingIndex, divisor);
+    }
+
+    @Override
     public void textureStorage(GLTex texture) {
         ColorMode colorMode = texture.getColorMode();
         ARBDirectStateAccess.glTextureStorage2D(texture.getId(), 1, colorMode.internalFormatId(), texture.getWidth(), texture.getHeight());

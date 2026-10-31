@@ -35,6 +35,10 @@ public class ErrorHandlers {
         throw new IllegalStateException("MeshBuilder has been already built.");
     }
 
+    public void onMeshFormatTypeException(String message) {
+        throw new IllegalStateException(message);
+    }
+
     public void onMeshBuilderNotBuildingVertex() {
         throw new IllegalStateException("Not currently building vertex.");
     }

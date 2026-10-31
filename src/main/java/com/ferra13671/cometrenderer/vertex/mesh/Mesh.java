@@ -9,6 +9,7 @@ import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import lombok.Getter;
+import org.apiguardian.api.API;
 
 /**
  * Основная реализация меша.
@@ -65,6 +66,21 @@ public class Mesh implements IMesh {
 
     /**
      * Создаёт новый сборщик меша с подготовленным аллокатором и размером.
+     * <p>
+     * В качестве DrawMode устанавливает TRIANGLES.
+     *
+     * @param vertexFormat формат вершин.
+     * @return новый сборщик меша.
+     *
+     * @see MeshBuilder
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public static MeshBuilder builder(VertexFormat vertexFormat) {
+        return builder(CometRenderer.getConfig().getDefaultMeshAllocatorSize(), DrawMode.TRIANGLES, vertexFormat);
+    }
+
+    /**
+     * Создаёт новый сборщик меша с подготовленным аллокатором и размером.
      *
      * @param drawMode тип отрисовки вершин.
      * @param vertexFormat формат вершин.
@@ -74,6 +90,22 @@ public class Mesh implements IMesh {
      */
     public static MeshBuilder builder(DrawMode drawMode, VertexFormat vertexFormat) {
         return builder(CometRenderer.getConfig().getDefaultMeshAllocatorSize(), drawMode, vertexFormat);
+    }
+
+    /**
+     * Создаёт новый сборщик меша с подготовленным аллокатором и данным размером.
+     * <p>
+     * В качестве DrawMode устанавливает TRIANGLES.
+     *
+     * @param size размер аллокатора.
+     * @param vertexFormat формат вершин.
+     * @return новый сборщик меша.
+     *
+     * @see MeshBuilder
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public static MeshBuilder builder(int size, VertexFormat vertexFormat) {
+        return builder(new Allocator(size), DrawMode.TRIANGLES, vertexFormat, true);
     }
 
     /**
@@ -88,6 +120,23 @@ public class Mesh implements IMesh {
      */
     public static MeshBuilder builder(int size, DrawMode drawMode, VertexFormat vertexFormat) {
         return builder(new Allocator(size), drawMode, vertexFormat, true);
+    }
+
+    /**
+     * Создаёт новый сборщик меша с данным аллокатором.
+     * <p>
+     * В качестве DrawMode устанавливает TRIANGLES.
+     *
+     * @param allocator аллокатор.
+     * @param vertexFormat формат вершин.
+     * @param closeAllocatorAfterBuild закрывать аллокатор после сборки меша или нет.
+     * @return новый сборщик меша.
+     *
+     * @see MeshBuilder
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public static MeshBuilder builder(IAllocator allocator, VertexFormat vertexFormat, boolean closeAllocatorAfterBuild) {
+        return new MeshBuilder(allocator, DrawMode.TRIANGLES, vertexFormat, closeAllocatorAfterBuild);
     }
 
     /**

@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormatType;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
@@ -56,7 +57,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
         this.vertexFormat = vertexFormat;
         this.vertexSize = vertexFormat.getVertexSize();
         this.elementOffsets = vertexFormat.getElementOffsets();
-        this.requiredMask = vertexFormat.getElementsMask() & ~1;
+        this.requiredMask = vertexFormat.getType() == VertexFormatType.PerVertex ? vertexFormat.getElementsMask() & ~1 : vertexFormat.getElementsMask();
         this.closeAllocatorAfterBuild = closeAllocatorAfterBuild;
     }
 
@@ -124,10 +125,13 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
         assertNotBuilt();
         assertVertexStructure();
 
+        this.currentMask = this.requiredMask;
+
         this.vertexCount++;
 
         long l = this.allocator.allocate(this.vertexSize);
         this.vertexPointer = l;
+
         return l;
     }
 
@@ -164,9 +168,22 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     }
 
     @Override
+    public IMeshBuilder beginInstance() {
+        if (this.vertexFormat.getType() != VertexFormatType.PerInstance)
+            ErrorHandlers.onMeshFormatTypeException("nextVertex() supports only for per-vertex meshes");
+
+        beginVertex();
+
+        return this;
+    }
+
+    @Override
     public MeshBuilder vertex(float x, float y, float z) {
+        if (this.vertexFormat.getType() != VertexFormatType.PerVertex)
+            ErrorHandlers.onMeshFormatTypeException("vertex(x, y, z) supports only for per-vertex meshes");
+
         long l = beginVertex() + this.elementOffsets[0];
-        this.currentMask = this.requiredMask;
+
         MemoryUtil.memPutFloat(l, x);
         MemoryUtil.memPutFloat(l + 4L, y);
         MemoryUtil.memPutFloat(l + 8L, z);
@@ -175,6 +192,9 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
 
     @Override
     public MeshBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
+        if (this.vertexFormat.getType() != VertexFormatType.PerVertex)
+            ErrorHandlers.onMeshFormatTypeException("vertex(matrix4f, x, y, z) supports only for per-vertex meshes");
+
         Vector3f vec = matrix4f.transformPosition(x, y, z, new Vector3f());
         return vertex(vec.x, vec.y, vec.z);
     }

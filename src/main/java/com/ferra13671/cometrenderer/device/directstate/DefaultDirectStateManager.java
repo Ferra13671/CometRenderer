@@ -111,6 +111,11 @@ public class DefaultDirectStateManager implements DirectStateManager {
     }
 
     @Override
+    public void vertexBindingDivisor(int vaoId, int bindingIndex, int divisor) {
+        ARBVertexAttribBinding.glVertexBindingDivisor(bindingIndex, divisor);
+    }
+
+    @Override
     public void textureStorage(GLTex texture) {
         texture.bind();
         ColorMode colorMode = texture.getColorMode();

@@ -17,7 +17,18 @@ public interface IMeshBuilder {
     IMesh buildNullable();
 
     /**
-     * Создаёт новую вершину в сборщике меша.
+     * Начинает новый инстанс в сборщике меша.
+     * <p>
+     * Доступен только для форматов с {@link com.ferra13671.cometrenderer.vertex.format.VertexFormatType#PerInstance}
+     *
+     * @return сборщик меша.
+     */
+    IMeshBuilder beginInstance();
+
+    /**
+     * Начинает новую вершину в сборщике меша.
+     * <p>
+     * Доступен только для форматов с {@link com.ferra13671.cometrenderer.vertex.format.VertexFormatType#PerVertex}
      *
      * @param x координата вершины по X.
      * @param y координата вершины по Y.
@@ -27,7 +38,9 @@ public interface IMeshBuilder {
     IMeshBuilder vertex(float x, float y, float z);
 
     /**
-     * Создаёт новую вершину в сборщике меша.
+     * Начинает новую вершину в сборщике меша.
+     * <p>
+     * Доступен только для форматов с {@link com.ferra13671.cometrenderer.vertex.format.VertexFormatType#PerVertex}
      *
      * @param matrix4f матрица, обрабатывающая координаты вершины.
      * @param x координата вершины по X.
