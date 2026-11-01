@@ -190,13 +190,14 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
         return this;
     }
 
+    private final Vector3f tempVector = new Vector3f();
     @Override
     public MeshBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
         if (this.vertexFormat.getType() != VertexFormatType.PerVertex)
             ErrorHandlers.onMeshStructureException("vertex(matrix4f, x, y, z) supports only for per-vertex meshes");
 
-        Vector3f vec = matrix4f.transformPosition(x, y, z, new Vector3f());
-        return vertex(vec.x, vec.y, vec.z);
+        this.tempVector.set(x, y, z).mulPosition(matrix4f);
+        return vertex(this.tempVector.x, this.tempVector.y, this.tempVector.z);
     }
 
     @Override
