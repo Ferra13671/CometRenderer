@@ -2,6 +2,8 @@ package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.buffer.allocator.AllocatorPool;
+import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.glsl.Program;
 import com.ferra13671.cometrenderer.stencil.StencilInfo;
@@ -193,6 +195,50 @@ public class CometRenderer {
             System.err.println(message);
         }
     };
+    /**
+     * Пул аллокаторов нативной памяти ({@link AllocatorPool}), используемый
+     * рендерером для сборки мешей.
+     * <p>
+     * Когда вы создаёте меш через {@link #createMesh(DrawMode, VertexFormat, Consumer)}
+     * или {@link Mesh#builder}, библиотека по умолчанию берёт аллокатор из этого пула.
+     * Это позволяет избежать накладных расходов на {@code malloc}/{@code free}
+     * при частом создании и удалении мешей — аллокатор просто возвращается
+     * в пул после {@link IMesh#close()}.
+     * <p>
+     * <b>Настройка.</b> Размер аллокатора и максимальное количество одновременно
+     * кешируемых аллокаторов задаются в {@link Config} до вызова {@link #init()}:
+     * {@link Config#getDefaultMeshAllocatorSize()} и {@link Config#getAllocatorPoolSize()}
+     * соответственно. Пул создаётся один раз в {@link #init()} и живёт до завершения
+     * приложения (либо до явного закрытия через {@link AllocatorPool#close()}).
+     * <p>
+     * Как правило, вам не нужно обращаться к этому полю
+     * напрямую — библиотека сама использует его при сборке мешей. Поле становится
+     * полезным, если вы хотите:
+     * <ul>
+     *     <li>вручную построить меш через {@link Mesh#builder(IAllocator, DrawMode, VertexFormat, boolean)},
+     *         переиспользуя аллокатор из пула;</li>
+     *     <li>собрать меш в фоновом потоке и передать его в GL-поток для {@code build()};</li>
+     *     <li>отслеживать состояние пула в отладке (например, через {@code poolSize()} или {@code pooledBytes()},
+     *         если они добавлены в {@link AllocatorPool}).</li>
+     * </ul>
+     * <p>
+     * <b>Внимание:</b> не закрывайте этот пул самостоятельно, пока приложение
+     * продолжает создавать меши через {@code CometRenderer} — это приведёт к
+     * {@link IllegalStateException} при следующем {@code acquire}. Если пул был
+     * закрыт, {@link #createMesh(DrawMode, VertexFormat, Consumer)} больше не
+     * сможет выделить память.
+     * <p>
+     * До вызова {@link #init()} поле равно {@code null}. Любое обращение
+     * до инициализации приведёт к {@link NullPointerException}.
+     *
+     * @see AllocatorPool
+     * @see Config#getDefaultMeshAllocatorSize()
+     * @see Config#getAllocatorPoolSize()
+     * @see #createMesh(DrawMode, VertexFormat, Consumer)
+     */
+    @Getter
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    private AllocatorPool allocatorPool;
 
     /**
      * Инициализирует CometRenderer.
@@ -225,6 +271,7 @@ public class CometRenderer {
         }
 
         device = new GLDevice();
+        allocatorPool = new AllocatorPool(config.getDefaultMeshAllocatorSize(), config.getAllocatorPoolSize());
 
         registry.setImmutable(CometTags.INITIALIZED, true);
     }

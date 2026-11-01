@@ -4,7 +4,6 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.BufferUsage;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
-import com.ferra13671.cometrenderer.buffer.allocator.Allocator;
 import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
@@ -105,7 +104,7 @@ public class Mesh implements IMesh {
      */
     @API(status = API.Status.MAINTAINED, since = "3.1")
     public static MeshBuilder builder(int size, VertexFormat vertexFormat) {
-        return builder(new Allocator(size), DrawMode.TRIANGLES, vertexFormat, true);
+        return builder(size, DrawMode.TRIANGLES, vertexFormat);
     }
 
     /**
@@ -119,7 +118,7 @@ public class Mesh implements IMesh {
      * @see MeshBuilder
      */
     public static MeshBuilder builder(int size, DrawMode drawMode, VertexFormat vertexFormat) {
-        return builder(new Allocator(size), drawMode, vertexFormat, true);
+        return builder(CometRenderer.getAllocatorPool().acquire(size), drawMode, vertexFormat, true);
     }
 
     /**

@@ -74,6 +74,10 @@ public class ErrorHandlers {
         throw new VertexFormatOverflowException(maxElements);
     }
 
+    public void onAllocatorClosed() {
+        throw new IllegalStateException("Allocator is closed.");
+    }
+
     public void onAllocatorOverflow(long needSize, long maxAllocatorSize, long freeSize) {
         throw new AllocatorOverflowException(needSize, maxAllocatorSize, freeSize);
     }

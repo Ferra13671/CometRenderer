@@ -12,6 +12,8 @@ public class Allocator implements IAllocator {
     private final int size;
     private final ByteBuffer cachedBuffer;
 
+    protected boolean closed;
+
     public Allocator(int size) {
         this.pointer = ALLOCATOR.malloc(size);
         this.size = size;
@@ -19,6 +21,9 @@ public class Allocator implements IAllocator {
     }
 
     public long allocate(int size) {
+        if (this.closed)
+            ErrorHandlers.onAllocatorClosed();
+
         if (this.offset + size > this.size)
             ErrorHandlers.onAllocatorOverflow(size, this.size, this.size - this.offset);
 
@@ -29,23 +34,36 @@ public class Allocator implements IAllocator {
 
     @Override
     public boolean isEmpty() {
+        if (this.closed)
+            ErrorHandlers.onAllocatorClosed();
+
         return this.offset == 0L;
     }
 
     @Override
     public void clear() {
+        if (this.closed)
+            ErrorHandlers.onAllocatorClosed();
+
         this.offset = 0L;
     }
 
     @Override
     public ByteBuffer getBuffer() {
+        if (this.closed)
+            ErrorHandlers.onAllocatorClosed();
+
         this.cachedBuffer.limit((int) this.offset);
         return this.cachedBuffer;
     }
 
     @Override
     public void close() {
-        ALLOCATOR.free(this.pointer);
-        this.pointer = 0L;
+        if (!this.closed) {
+            this.closed = true;
+
+            ALLOCATOR.free(this.pointer);
+            this.pointer = 0L;
+        }
     }
 }

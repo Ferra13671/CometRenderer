@@ -17,6 +17,8 @@ public class Config {
     private boolean compareCurrentAndShaderOpenGLVersions = true;
     @Getter
     private int defaultMeshAllocatorSize = 786432;
+    @Getter
+    private int allocatorPoolSize = 32;
 
     public void setMinimumOpenGLVersion(GLVersion version) {
         if (version.id < GLVersion.GL33.id)
@@ -27,5 +29,9 @@ public class Config {
 
     public void setDefaultMeshAllocatorSize(int defaultMeshAllocatorSize) {
         this.defaultMeshAllocatorSize = Math.clamp(defaultMeshAllocatorSize, 0, Integer.MAX_VALUE);
+    }
+
+    public void setAllocatorPoolSize(int allocatorPoolSize) {
+        this.allocatorPoolSize = Math.clamp(allocatorPoolSize, 1, 256);
     }
 }
