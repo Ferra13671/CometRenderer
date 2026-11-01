@@ -2,7 +2,6 @@ package com.ferra13671.cometrenderer.vertex.format;
 
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apiguardian.api.API;

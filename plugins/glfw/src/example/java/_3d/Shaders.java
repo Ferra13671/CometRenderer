@@ -79,6 +79,41 @@ public class Shaders {
             .uniform("view", UniformType.MATRIX4)
             .uniform("lightSpaceMatrix", UniformType.MATRIX4)
             .build();
+    public final GLShader instancedMaterialVertex = GLShader.builder(GLSLLoader.STRING)
+            .info(
+                    "default_material_vertex",
+                    """
+                            #version 330 core
+                            
+                            in vec4 position;
+                            in vec4 vertexColor_in;
+                            in vec2 texPos_in;
+                            in vec3 normal_in;
+                            in mat4 modelTransform;
+                            
+                            uniform mat4 projection;
+                            uniform mat4 view;
+                            uniform mat4 lightSpaceMatrix;
+                            
+                            out vec4 vertexColor;
+                            out vec2 texPos;
+                            out vec3 normal;
+                            out vec4 fragPosLightSpace;
+                            
+                            void main() {
+                                gl_Position = projection * view * modelTransform * position;
+                                vertexColor = vertexColor_in;
+                                texPos = texPos_in;
+                                normal = normal_in;
+                                fragPosLightSpace = lightSpaceMatrix * position;
+                            }
+                            """,
+                    ShaderType.Vertex
+            )
+            .uniform("projection", UniformType.MATRIX4)
+            .uniform("view", UniformType.MATRIX4)
+            .uniform("lightSpaceMatrix", UniformType.MATRIX4)
+            .build();
     public final GLShader defaultMaterialFragment = GLShader.builder(GLSLLoader.STRING)
             .info(
                     "default_material_fragment",
@@ -176,6 +211,53 @@ public class Shaders {
                             
                             void main() {
                                 vec4 L = lightSpaceMatrix * position;
+                                vec3 ndc = L.xyz / L.w;
+                                vec3 dndc = distortLightNDC(ndc);
+                            
+                                gl_Position = vec4(dndc, 1.0);
+                            
+                                vertexColor = vertexColor_in;
+                                texPos = texPos_in;
+                                normal = normal_in;
+                                fragPosLightSpace = L;
+                            }
+                            """,
+                    ShaderType.Vertex
+            )
+            .uniform("lightSpaceMatrix", UniformType.MATRIX4)
+            .uniform("compression", UniformType.FLOAT)
+            .build();
+    public final GLShader instancedMaterialShadowVertex = GLShader.builder(GLSLLoader.STRING)
+            .info(
+                    "default_material_vertex",
+                    """
+                            #version 330 core
+                            
+                            in vec4 position;
+                            in vec4 vertexColor_in;
+                            in vec2 texPos_in;
+                            in vec3 normal_in;
+                            in mat4 modelTransform;
+                            
+                            uniform mat4 lightSpaceMatrix;
+                            uniform float compression;
+                            
+                            out vec4 vertexColor;
+                            out vec2 texPos;
+                            out vec3 normal;
+                            out vec4 fragPosLightSpace;
+                            
+                            vec3 distortLightNDC(vec3 ndc) {
+                                float r = length(ndc.xy);
+                                if (r < 0.0001) return ndc;
+                            
+                                float newR = compression * r / (1.0 + (compression - 1.0) * r);
+                            
+                                return vec3(ndc.xy / r * newR, ndc.z);
+                            }
+                            
+                            void main() {
+                                vec4 L = lightSpaceMatrix * modelTransform * position;
                                 vec3 ndc = L.xyz / L.w;
                                 vec3 dndc = distortLightNDC(ndc);
                             

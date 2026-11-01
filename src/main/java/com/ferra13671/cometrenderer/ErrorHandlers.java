@@ -8,6 +8,7 @@ import com.ferra13671.cometrenderer.exceptions.impl.vertex.*;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.utils.GLVersion;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormatType;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
@@ -15,6 +16,7 @@ import org.apiguardian.api.API;
 @API(status = API.Status.INTERNAL, since = "3.0")
 public class ErrorHandlers {
 
+    //TODO throw
     public void onWrongBufferTarget(int givenTarget, int requiredTaget) {
         new WrongGpuBufferTargetException(givenTarget, requiredTaget).printStackTrace(System.err);
     }
@@ -35,8 +37,12 @@ public class ErrorHandlers {
         throw new IllegalStateException("MeshBuilder has been already built.");
     }
 
-    public void onMeshFormatTypeException(String message) {
+    public void onMeshStructureException(String message) {
         throw new IllegalStateException(message);
+    }
+
+    public void onWrongVertexFormatType(VertexFormatType givenType, VertexFormatType requiredType) {
+        throw new WrongVertexFormatTypeException(givenType.name(), requiredType.name());
     }
 
     public void onMeshBuilderNotBuildingVertex() {
@@ -55,6 +61,7 @@ public class ErrorHandlers {
         throw new BadVertexStructureException(missingElements);
     }
 
+    //TODO throw
     public void onIllegalVertexElementStructure(VertexElementType<?> type, String reason) {
         new IllegalVertexElementStructureException(type, reason).printStackTrace(System.err);
     }

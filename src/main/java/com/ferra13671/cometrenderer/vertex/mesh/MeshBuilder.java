@@ -170,7 +170,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     @Override
     public IMeshBuilder beginInstance() {
         if (this.vertexFormat.getType() != VertexFormatType.PerInstance)
-            ErrorHandlers.onMeshFormatTypeException("nextVertex() supports only for per-vertex meshes");
+            ErrorHandlers.onMeshStructureException("nextVertex() supports only for per-vertex meshes");
 
         beginVertex();
 
@@ -180,7 +180,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     @Override
     public MeshBuilder vertex(float x, float y, float z) {
         if (this.vertexFormat.getType() != VertexFormatType.PerVertex)
-            ErrorHandlers.onMeshFormatTypeException("vertex(x, y, z) supports only for per-vertex meshes");
+            ErrorHandlers.onMeshStructureException("vertex(x, y, z) supports only for per-vertex meshes");
 
         long l = beginVertex() + this.elementOffsets[0];
 
@@ -193,7 +193,7 @@ public class MeshBuilder extends Builder<Mesh> implements IMeshBuilder {
     @Override
     public MeshBuilder vertex(Matrix4f matrix4f, float x, float y, float z) {
         if (this.vertexFormat.getType() != VertexFormatType.PerVertex)
-            ErrorHandlers.onMeshFormatTypeException("vertex(matrix4f, x, y, z) supports only for per-vertex meshes");
+            ErrorHandlers.onMeshStructureException("vertex(matrix4f, x, y, z) supports only for per-vertex meshes");
 
         Vector3f vec = matrix4f.transformPosition(x, y, z, new Vector3f());
         return vertex(vec.x, vec.y, vec.z);

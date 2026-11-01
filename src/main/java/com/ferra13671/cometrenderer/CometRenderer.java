@@ -20,6 +20,7 @@ import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.index.IndexBufferGenerator;
 import com.ferra13671.cometrenderer.vertex.mesh.IMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.IMeshBuilder;
+import com.ferra13671.cometrenderer.vertex.mesh.InstancedMesh;
 import com.ferra13671.cometrenderer.vertex.mesh.Mesh;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import lombok.Getter;
@@ -191,42 +192,6 @@ public class CometRenderer {
         public void error(String message) {
             System.err.println(message);
         }
-    };
-    /**
-     * Отрисовщик по умолчанию для {@link IMesh}.
-     * <p>
-     * Применяет формат вершин к буферу через {@link com.ferra13671.cometrenderer.device.vertexformat.VertexFormatManager},
-     * биндит индексный буфер (если {@link DrawMode} имеет генератор индексов) и вызывает
-     * {@link GL11#glDrawElements} или {@link GL11#glDrawArrays}. По флагу {@code close} закрывает меш после
-     * отрисовки.
-     * <p>
-     * Меш не отрисовывается, если вершин нет (хотя в основной реализации ({@link Mesh}) этого не может быть),
-     * но меш всё также может быть закрыт.
-     */
-    @API(status = API.Status.INTERNAL, since = "2.0")
-    private final BufferRenderer<IMesh> cometBufferRenderer = (mesh, close) -> {
-        int vertexCount = mesh.getVertexCount();
-
-        if (vertexCount > 0) {
-            DrawMode drawMode = mesh.getDrawMode();
-            device.getVertexFormatManager().bindFormatBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
-
-            IndexBufferGenerator ibg = drawMode.indexBufferGenerator();
-
-            if (ibg != null) {
-                GpuBuffer indexBuffer = ibg.getIndexBuffer(mesh.getIndexCount());
-
-                if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
-                    ErrorHandlers.onWrongBufferTarget(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId);
-                else
-                    indexBuffer.bind();
-
-                GL11.glDrawElements(drawMode.glId(), mesh.getIndexCount(), ibg.getIndexType().glId, 0);
-            } else
-                GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
-        }
-        if (close)
-            mesh.close();
     };
 
     /**
@@ -740,6 +705,16 @@ public class CometRenderer {
         return meshBuilder.buildNullable();
     }
 
+    private void beginDraw() {
+        if (!scissorStack.isEmpty()) {
+            device.getPipelineStateManager().setScissor(true);
+            scissorStack.peek().bind();
+        } else
+            device.getPipelineStateManager().setScissor(false);
+
+        getCurrentProgram().bind();
+    }
+
     /**
      * Отрисовывает меш и закрывает его после отрисовки.
      * <p>
@@ -757,7 +732,7 @@ public class CometRenderer {
      */
     @API(status = API.Status.STABLE, since = "1.7")
     public void draw(IMesh mesh) {
-        draw(cometBufferRenderer, mesh, true);
+        draw(mesh, true);
     }
 
     /**
@@ -779,7 +754,103 @@ public class CometRenderer {
      */
     @API(status = API.Status.STABLE, since = "1.7")
     public void draw(IMesh mesh, boolean close) {
-        draw(cometBufferRenderer, mesh, close);
+        int vertexCount = mesh.getVertexCount();
+
+        if (vertexCount > 0) {
+            beginDraw();
+
+            DrawMode drawMode = mesh.getDrawMode();
+            device.getVertexFormatManager().bindFormatBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
+
+            IndexBufferGenerator ibg = drawMode.indexBufferGenerator();
+
+            if (ibg != null) {
+                int indexCount = mesh.getIndexCount();
+                GpuBuffer indexBuffer = ibg.getIndexBuffer(indexCount);
+
+                if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
+                    ErrorHandlers.onWrongBufferTarget(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId);
+                else
+                    indexBuffer.bind();
+
+                GL11.glDrawElements(drawMode.glId(), indexCount, ibg.getIndexType().glId, 0);
+            } else
+                GL11.glDrawArrays(drawMode.glId(), 0, vertexCount);
+        }
+        if (close)
+            mesh.close();
+    }
+
+    /**
+     * Отрисовывает инстансированный меш и закрывает его после отрисовки.
+     * <p>
+     * Эквивалентен вызову {@code drawInstanced(instancedMesh, true)}.
+     *
+     * @param instancedMesh инстансированный меш.
+     *
+     * @see InstancedMesh
+     * @see #drawInstanced(InstancedMesh, boolean)
+     */
+    @API(status = API.Status.EXPERIMENTAL, since = "3.1")
+    public void drawInstanced(InstancedMesh instancedMesh) {
+        drawInstanced(instancedMesh, true);
+    }
+
+    /**
+     * Отрисовывает одну и ту же геометрию несколько раз, используя инстансинг.
+     * <p>
+     * Метод выполняет следующие действия:
+     * <ol>
+     *     <li>Настраивает VAO для одновременной работы с вершинными и инстансными буферами;</li>
+     *     <li>Биндит индексный буфер базовой геометрии (если он требуется);</li>
+     *     <li>Вызывает {@link GL31#glDrawElementsInstanced} или {@link GL31#glDrawArraysInstanced}
+     *         в зависимости от наличия индексного генератора в {@link DrawMode}.</li>
+     * </ol>
+     * <p>
+     * Количество отрисовываемых копий берется из {@link InstancedMesh#instanceCount()}.
+     * Per-instance данные (например, матрицы моделей) считываются из соответствующего буфера.
+     * В шейдере к ним можно обращаться по индексу {@code gl_InstanceID}.
+     *
+     * @param instancedMesh инстансированный меш, содержащий базовую геометрию, данные инстансов и их количество.
+     * @param close закрывать ли {@code instancedMesh} после отрисовки.
+     *              Если передано {@code true}, будут освобождены ресурсы мешей, для которых в
+     *              {@link InstancedMesh} установлены флаги закрытия.
+     *
+     * @see InstancedMesh
+     * @see #setCurrentProgram(Program)
+     * @see #draw(IMesh, boolean)
+     */
+    @API(status = API.Status.EXPERIMENTAL, since = "3.1")
+    public void drawInstanced(InstancedMesh instancedMesh, boolean close) {
+        int vertexCount = instancedMesh.perVertexMesh().getVertexCount();
+
+        if (vertexCount > 0 && instancedMesh.instanceCount() > 0) {
+            beginDraw();
+
+            device.getVertexFormatManager().bindInstancedFormatBuffer(
+                    instancedMesh.perVertexMesh().getVertexBuffer(),
+                    instancedMesh.perInstanceMesh().getVertexBuffer(),
+                    instancedMesh.vertexFormat()
+            );
+
+            DrawMode drawMode = instancedMesh.perVertexMesh().getDrawMode();
+            IndexBufferGenerator ibg = drawMode.indexBufferGenerator();
+
+            if (ibg != null) {
+                int indexCount = instancedMesh.perVertexMesh().getIndexCount();
+                GpuBuffer indexBuffer = ibg.getIndexBuffer(indexCount);
+
+                if (indexBuffer.getTarget() != BufferTarget.ELEMENT_ARRAY_BUFFER)
+                    ErrorHandlers.onWrongBufferTarget(indexBuffer.getTarget().glId, BufferTarget.ELEMENT_ARRAY_BUFFER.glId);
+                else
+                    indexBuffer.bind();
+
+                GL31.glDrawElementsInstanced(drawMode.glId(), indexCount, ibg.getIndexType().glId, 0, instancedMesh.instanceCount());
+            } else
+                GL31.glDrawArraysInstanced(drawMode.glId(), 0, vertexCount, instancedMesh.instanceCount());
+        }
+        if (close)
+            instancedMesh.close();
     }
 
     /**
@@ -793,8 +864,7 @@ public class CometRenderer {
      * </ol>
      * <p>
      * Позволяет использовать собственные буферы и стратегии отрисовки, не ограничиваясь
-     * {@link IMesh}. Стандартный отрисовщик для мешей — {@link #cometBufferRenderer} —
-     * доступен только через перегрузки {@link #draw(IMesh)} и {@link #draw(IMesh, boolean)}.
+     * {@link IMesh}.
      * <p>
      * <b>Требует установки текущей программы.</b>
      *
@@ -810,13 +880,7 @@ public class CometRenderer {
     @Deprecated(forRemoval = true)
     @API(status = API.Status.DEPRECATED, since = "3.1")
     public <T> void draw(BufferRenderer<T> bufferRenderer, T buffer, boolean close) {
-        if (!scissorStack.isEmpty()) {
-            device.getPipelineStateManager().setScissor(true);
-            scissorStack.peek().bind();
-        } else
-            device.getPipelineStateManager().setScissor(false);
-
-        getCurrentProgram().bind();
+        beginDraw();
         bufferRenderer.draw(buffer, close);
     }
 

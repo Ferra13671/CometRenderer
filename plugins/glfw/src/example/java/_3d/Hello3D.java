@@ -18,7 +18,9 @@ public class Hello3D {
 
     public GLProgram positionProgram;
     public GLProgram defaultMaterialProgram;
+    public GLProgram instancedMaterialProgram;
     public GLProgram defaultMaterialShadowProgram;
+    public GLProgram instancedMaterialShadowProgram;
 
     public final float fov = 90;
 
@@ -50,7 +52,7 @@ public class Hello3D {
 
         CometGLFW.setVSync(VsyncMode.Disabled);
 
-        camera.setPosition(new Vector3f(0f, 2f, 0f));
+        camera.setPosition(new Vector3f(0f, 100f, 0f));
 
         window.setMousePosCallback(mouseListener);
         window.setFramebufferSizeCallback((width, height) -> mouseListener.reset());
@@ -58,7 +60,6 @@ public class Hello3D {
         System.out.println(CometRenderer.getRegistry().get(CometTags.VENDOR));
         window.setLoopCallback(() -> {
             if (tickTimer.shouldTick()) {
-                World.tick();
                 tickMovement(window);
                 tickTimer.reset();
             }
@@ -140,9 +141,23 @@ public class Hello3D {
                 .shader(shaders.defaultMaterialFragment)
                 .build();
 
+        instancedMaterialProgram = GLProgram.builder(
+                        CometRenderer.getColorSnippet()
+                )
+                .name("instanced_material")
+                .shader(shaders.instancedMaterialVertex)
+                .shader(shaders.defaultMaterialFragment)
+                .build();
+
         defaultMaterialShadowProgram = GLProgram.builder()
                 .name("default_material_shadow")
                 .shader(shaders.defaultMaterialShadowVertex)
+                .shader(shaders.shadowTextureFragment)
+                .build();
+
+        instancedMaterialShadowProgram = GLProgram.builder()
+                .name("instanced_material_shadow")
+                .shader(shaders.instancedMaterialShadowVertex)
                 .shader(shaders.shadowTextureFragment)
                 .build();
     }

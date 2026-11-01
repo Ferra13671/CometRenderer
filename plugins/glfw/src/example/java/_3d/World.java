@@ -11,17 +11,17 @@ import com.ferra13671.cometrenderer.texture.TextureFiltering;
 import com.ferra13671.cometrenderer.vertex.DrawMode;
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormatType;
+import com.ferra13671.cometrenderer.vertex.format.instanced.InstancedVertexFormat;
+import com.ferra13671.cometrenderer.vertex.mesh.InstancedMesh;
 import lombok.experimental.UtilityClass;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL40;
 
-import java.awt.*;
-
 @UtilityClass
 public class World {
-    private final Matrix4f cubeRotateMatrix = new Matrix4f();
 
     private final VertexFormat POSITION_COLOR_TEXTURE_NORMAL = VertexFormat.POSITION_COLOR_TEXTURE.toBuilder()
             .element("Normal", VertexElementType.VECTOR_3_FLOAT, 1)
@@ -104,12 +104,13 @@ public class World {
             new Vector2f(0, 1),
             new Vector2f(1, 1)
     };
-
-    public void tick() {
-        cubeRotateMatrix
-                .rotate((float) Math.toRadians(Hello3D.tickTimer.getTickDelay() / 10f), 0f, 0f, 1f)
-                .rotate((float) Math.toRadians(Hello3D.tickTimer.getTickDelay() / 15f), 0f, 1f, 0f);
-    }
+    private final VertexFormat perInstanceFormat = VertexFormat.builder(VertexFormatType.PerInstance)
+            .element("Model Transform", VertexElementType.MATRIX_4_FLOAT, 1)
+            .build();
+    private final InstancedVertexFormat instancedFormat = new InstancedVertexFormat(
+            POSITION_COLOR_TEXTURE_NORMAL,
+            perInstanceFormat
+    );
 
     public void render() {
         shadowFramebuffer.clearAll();
@@ -134,26 +135,14 @@ public class World {
         Matrix4f lightSpaceMatrix = new Matrix4f(orthoMatrix).mul(new Matrix4f(sunViewMatrix));
 
         shadowFramebuffer.bind(true);
-        drawStoneCube(Hello3D.defaultMaterialShadowProgram, -3, 1, -3, cubeRotateMatrix, orthoMatrix, sunViewMatrix, lightSpaceMatrix);
-        drawStoneCube(Hello3D.defaultMaterialShadowProgram, -3.6f, 0.3f, -3.7f, new Matrix4f(), orthoMatrix, sunViewMatrix, lightSpaceMatrix);
-        for (int x = -50; x < 50; x += 10) {
-            for (int z = -50; z < 50; z += 10) {
-                drawStoneCube(Hello3D.defaultMaterialShadowProgram, x, 0.3f, z, new Matrix4f(), orthoMatrix, sunViewMatrix, lightSpaceMatrix);
-            }
-        }
+        drawStoneCubes(Hello3D.instancedMaterialShadowProgram, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
 
         CometGLFW.getWindow().getFramebuffer().bind(true);
         CometRenderer.enableCullFace();
 
         drawSun(projectionMatrix, cameraViewMatrix);
         drawFloor(Hello3D.defaultMaterialProgram, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
-        drawStoneCube(Hello3D.defaultMaterialProgram, -3, 1, -3, cubeRotateMatrix, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
-        drawStoneCube(Hello3D.defaultMaterialProgram, -3.6f, 0.3f, -3.7f, new Matrix4f(), projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
-        for (int x = -50; x < 50; x += 10) {
-            for (int z = -50; z < 50; z += 10) {
-                drawStoneCube(Hello3D.defaultMaterialProgram, x, 0.3f, z, new Matrix4f(), projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
-            }
-        }
+        drawStoneCubes(Hello3D.instancedMaterialProgram, projectionMatrix, cameraViewMatrix, lightSpaceMatrix);
     }
 
     void drawSun(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
@@ -208,7 +197,7 @@ public class World {
         ));
     }
 
-    void drawStoneCube(GLProgram program, float x, float y, float z, Matrix4f matrix4f, Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f lightSpaceMatrix) {
+    void drawStoneCubes(GLProgram program, Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f lightSpaceMatrix) {
         CometRenderer.setCurrentProgram(program);
         CometRenderer.applyShaderColorUniform();
         program.consumeIfUniformPresent("projection", UniformType.MATRIX4, u -> u.set(projectionMatrix));
@@ -220,17 +209,29 @@ public class World {
         program.consumeIfUniformPresent("u_Texture", UniformType.SAMPLER, u -> u.setTexture(Hello3D.stoneTexture));
         program.consumeIfUniformPresent("compression", UniformType.FLOAT, u -> u.set(compress));
 
-        CometRenderer.draw(CometRenderer.createMesh(DrawMode.QUADS, POSITION_COLOR_TEXTURE_NORMAL, builder -> {
-            for (int i = 0; i < cubeVertices.length; i ++) {
-                Vector3f pos = new Vector3f(x, y, z).add(matrix4f.transformPosition(new Vector3f(cubeVertices[i]).mul(0.3f)));
-                Vector3f normal = matrix4f.transformPosition(new Vector3f(cubeNormals[i]));
+        CometRenderer.drawInstanced(new InstancedMesh(
+                CometRenderer.createMesh(DrawMode.QUADS, POSITION_COLOR_TEXTURE_NORMAL, builder -> {
+                    for (int i = 0; i < cubeVertices.length; i ++) {
+                        Vector3f pos = new Vector3f(cubeVertices[i]).mul(0.3f);
 
-                builder
-                        .vertex(pos.x(), pos.y(), pos.z())
-                        .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
-                        .element("Texture", VertexElementType.VECTOR_2_FLOAT, quadUV[i % 4])
-                        .element("Normal", VertexElementType.VECTOR_3_FLOAT, normal);
-            }
-        }));
+                        builder
+                                .vertex(pos.x(), pos.y(), pos.z())
+                                .element("Color", VertexElementType.FLOAT, 1f, 1f, 1f, 1f)
+                                .element("Texture", VertexElementType.VECTOR_2_FLOAT, quadUV[i % 4])
+                                .element("Normal", VertexElementType.VECTOR_3_FLOAT, cubeNormals[i]);
+                    }
+                }),
+                CometRenderer.createMesh(DrawMode.QUADS, perInstanceFormat, builder -> {
+                    for (int x = -50; x < 50; x += 10) {
+                        for (int z = -50; z < 50; z += 10) {
+                            builder
+                                    .beginInstance()
+                                    .element("Model Transform", VertexElementType.MATRIX_4_FLOAT, new Matrix4f().translate(x, 0.3f, z));
+                        }
+                    }
+                }),
+                instancedFormat,
+                100
+        ));
     }
 }

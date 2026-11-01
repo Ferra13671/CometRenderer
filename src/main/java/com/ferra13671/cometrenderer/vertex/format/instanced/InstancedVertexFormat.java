@@ -2,8 +2,8 @@ package com.ferra13671.cometrenderer.vertex.format.instanced;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
-import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormatType;
 import lombok.Getter;
 import lombok.Setter;
 import org.apiguardian.api.API;
@@ -21,8 +21,10 @@ public class InstancedVertexFormat implements Closeable {
     private InstancedVertexFormatBuffer buffer = null;
 
     public InstancedVertexFormat(VertexFormat perVertexFormat, VertexFormat perInstanceFormat) {
-        if (perVertexFormat.hasElement("Position"))
-            ErrorHandlers.onBadVertexStructure("Position");
+        if (perVertexFormat.getType() != VertexFormatType.PerVertex)
+            ErrorHandlers.onWrongVertexFormatType(perVertexFormat.getType(), VertexFormatType.PerVertex);
+        if (perInstanceFormat.getType() != VertexFormatType.PerInstance)
+            ErrorHandlers.onWrongVertexFormatType(perInstanceFormat.getType(), VertexFormatType.PerInstance);
 
         this.perVertexFormat = perVertexFormat;
         this.perInstanceFormat = perInstanceFormat;
