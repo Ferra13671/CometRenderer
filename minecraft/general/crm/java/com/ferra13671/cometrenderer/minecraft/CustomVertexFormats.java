@@ -2,14 +2,14 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.vertex.element.VertexElementType;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
-import lombok.experimental.UtilityClass;
+import com.ferra13671.cometrenderer.vertex.format.VertexFormatType;import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.MAINTAINED, since = "2.2")
 @UtilityClass
 public class CustomVertexFormats {
 
-    public VertexFormat POSITION_COLOR = VertexFormat.builder()
+    public VertexFormat POSITION_COLOR = VertexFormat.builder(VertexFormatType.PerVertex)
             .element("Color", CustomVertexElementTypes.RENDER_COLOR, 1)
             .build();
 
@@ -23,7 +23,7 @@ public class CustomVertexFormats {
             .element("Radius", VertexElementType.FLOAT, 1)
             .build();
 
-    public VertexFormat ROUNDED_BLUR = VertexFormat.builder()
+    public VertexFormat ROUNDED_BLUR = VertexFormat.builder(VertexFormatType.PerVertex)
             .element("Rect Position", VertexElementType.FLOAT, 2)
             .element("Half Size", VertexElementType.FLOAT, 2)
             .element("Radius", VertexElementType.FLOAT, 1)

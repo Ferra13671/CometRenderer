@@ -12,6 +12,7 @@
     "ICommandEncoder",
     "IGlBuffer",
     "IGlCommandEncoder",
+    "IGlStateManager",
     "IGpuDevice",
     "IRenderTarget",
     "IrisRenderTargetsMixin",

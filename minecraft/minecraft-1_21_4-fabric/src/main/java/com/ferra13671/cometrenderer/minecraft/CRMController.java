@@ -1,14 +1,16 @@
 package com.ferra13671.cometrenderer.minecraft;
 
+import com.ferra13671.cometrenderer.device.state.UncachedPipelineStateManager;
 import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GLShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.stencil.StencilOpAction;
+import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.mojang.blaze3d.ProjectionType;
@@ -19,7 +21,6 @@ import net.minecraft.client.Minecraft;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
@@ -29,7 +30,15 @@ public class CRMController extends AbstractCRMController {
     private final Stack<Matrix4f> matrix4fStack = new Stack<>();
 
     CRMController() {
-        CometRenderer.getDevice().setPipelineStateManager(new PipelineStateManagerImpl() {
+        CometRenderer.getDevice().setPipelineStateManager(new UncachedPipelineStateManager() {
+
+            @Override
+            public void setCullFace(boolean cullFace) {
+                if (cullFace)
+                    GlStateManager._enableCull();
+                else
+                    GlStateManager._disableCull();
+            }
 
             @Override
             public void setBlend(boolean blend) {
@@ -58,6 +67,28 @@ public class CRMController extends AbstractCRMController {
             }
 
             @Override
+            public void setStencilMask(boolean stencilMask) {
+                if (stencilMask)
+                    GlStateManager._stencilMask(0xFF);
+                else
+                    GlStateManager._stencilMask(0x00);
+            }
+
+            @Override
+            public void setStencilFunc(CompareFunction function, int ref, int mask) {
+                GlStateManager._stencilFunc(function.glId, ref, mask);
+            }
+
+            @Override
+            public void setStencilOp(StencilOpAction stencilFailed, StencilOpAction stencilPassedDepthFailed, StencilOpAction allPassed) {
+                GlStateManager._stencilOp(
+                        stencilFailed.glId,
+                        stencilPassedDepthFailed.glId,
+                        allPassed.glId
+                );
+            }
+
+            @Override
             public void setColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
                 GlStateManager._colorMask(red, green, blue, alpha);
             }
@@ -71,13 +102,13 @@ public class CRMController extends AbstractCRMController {
             }
 
             @Override
-            public void setDepthMask(boolean depthMask) {
-                GlStateManager._depthMask(depthMask);
+            public void setDepthFunc(CompareFunction func) {
+                GlStateManager._depthFunc(func.glId);
             }
 
             @Override
-            public void setProgram(int programId) {
-                GL20.glUseProgram(programId);
+            public void setDepthMask(boolean depthMask) {
+                GlStateManager._depthMask(depthMask);
             }
 
             @Override
@@ -103,6 +134,16 @@ public class CRMController extends AbstractCRMController {
             @Override
             public void ensureTextureUnit(int unit) {
                 GlStateManager._activeTexture(GL13.GL_TEXTURE0 + unit);
+            }
+
+            @Override
+            public void bindTexture(int textureId) {
+                GlStateManager._bindTexture(textureId);
+            }
+
+            @Override
+            public void bindSampler(int samplerId) {
+                bindSampler(GlStateManager._getActiveTexture(), samplerId);
             }
 
             @Override

@@ -1,17 +1,19 @@
 package com.ferra13671.cometrenderer.minecraft;
 
+import com.ferra13671.cometrenderer.device.state.UncachedPipelineStateManager;
 import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
-import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.glsl.GLProgramSnippet;
 import com.ferra13671.cometrenderer.glsl.compiler.GLSLFileEntry;
 import com.ferra13671.cometrenderer.glsl.uniform.UniformType;
 import com.ferra13671.cometrenderer.minecraft.mixins.ICommandEncoder;
 import com.ferra13671.cometrenderer.minecraft.mixins.IGlCommandEncoder;
+import com.ferra13671.cometrenderer.minecraft.mixins.IGlStateManager;
 import com.ferra13671.cometrenderer.minecraft.mixins.IGpuDevice;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.GLShaderLibraryBuilder;
+import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
 import com.mojang.blaze3d.ProjectionType;
@@ -44,7 +46,15 @@ public class CRMController extends AbstractCRMController {
         this.vertexArrayCache = device.vertexArrayCache();
         this.directStateAccess = device.directStateAccess();
 
-        CometRenderer.getDevice().setPipelineStateManager(new PipelineStateManagerImpl() {
+        CometRenderer.getDevice().setPipelineStateManager(new UncachedPipelineStateManager() {
+
+            @Override
+            public void setCullFace(boolean cullFace) {
+                if (cullFace)
+                    GlStateManager._enableCull();
+                else
+                    GlStateManager._disableCull();
+            }
 
             @Override
             public void setBlend(boolean blend) {
@@ -93,6 +103,11 @@ public class CRMController extends AbstractCRMController {
             }
 
             @Override
+            public void setDepthFunc(CompareFunction func) {
+                GlStateManager._depthFunc(func.glId);
+            }
+
+            @Override
             public void setDepthMask(boolean depthMask) {
                 GlStateManager._depthMask(depthMask);
             }
@@ -128,6 +143,16 @@ public class CRMController extends AbstractCRMController {
             @Override
             public void ensureTextureUnit(int unit) {
                 GlStateManager._activeTexture(GL13.GL_TEXTURE0 + unit);
+            }
+
+            @Override
+            public void bindTexture(int textureId) {
+                GlStateManager._bindTexture(textureId);
+            }
+
+            @Override
+            public void bindSampler(int samplerId) {
+                bindSampler(IGlStateManager.crm$$$getActiveTexture(), samplerId);
             }
 
             @Override

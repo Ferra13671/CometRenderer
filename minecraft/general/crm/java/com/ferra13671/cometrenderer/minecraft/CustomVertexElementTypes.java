@@ -12,8 +12,9 @@ public class CustomVertexElementTypes {
 
     public VertexElementType<RenderColor> RENDER_COLOR = VertexElementType.builder(RenderColor.class)
             .name("RenderColor")
-            .size(16)
             .offset(4)
+            .primitivesCount(4)
+            .primitivesPerAttribute(4)
             .glId(GL11.GL_FLOAT)
             .uploadConsumer(
                     (pointer, data) -> {
