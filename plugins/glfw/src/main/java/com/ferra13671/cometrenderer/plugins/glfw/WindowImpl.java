@@ -106,11 +106,12 @@ final class WindowImpl implements Window {
             this.framebuffer = new FramebufferImpl(
                     FramebufferInfo.builder()
                             .name("CometGLFW main framebuffer")
-                            .width(widtha[0])
-                            .height(heighta[0])
+                            .width(1)
+                            .height(1)
                             .clearColor(new Color(0f, 0f, 0f, 0f))
                             .build()
             );
+            resizeFramebuffer(widtha[0], heighta[0]);
 
             while (!isShouldCloseWindow()) {
                 if (this.clearFramebuffer) {
@@ -382,12 +383,19 @@ final class WindowImpl implements Window {
         });
         glfwSetFramebufferSizeCallback(getId(), (window, width, height) -> {
             if (window == getId()) {
-                if (getFramebuffer() != null)
-                    getFramebuffer().resize(width, height);
+                resizeFramebuffer(width, height);
 
                 if (this.framebufferSizeCallback != null)
                     this.framebufferSizeCallback.onSize(width, height);
             }
         });
+    }
+
+    private void resizeFramebuffer(int width, int height) {
+        if (this.framebuffer != null)
+            this.framebuffer.resize(
+                    Math.max(1, width),
+                    Math.max(1, height)
+            );
     }
 }
