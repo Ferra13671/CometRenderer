@@ -113,24 +113,29 @@ final class WindowImpl implements Window {
             );
             resizeFramebuffer(widtha[0], heighta[0]);
 
-            while (!isShouldCloseWindow()) {
-                if (this.clearFramebuffer) {
-                    glClear(GL_COLOR_BUFFER_BIT);
-                    getFramebuffer().clearAll();
-                }
-
-                if (this.loopCallback != null)
-                    this.loopCallback.onLoop();
-
-                Framebuffer framebuffer = getFramebuffer();
-                framebuffer.blit(0, framebuffer.getWidth(), framebuffer.getHeight(), false, false);
-
-                glfwSwapBuffers(getId());
-                glfwPollEvents();
+            try {
+                while (!isShouldCloseWindow())
+                    loopInternal();
+            } finally {
+                closeWindow();
             }
-
-            closeWindow();
         }
+    }
+
+    private void loopInternal() {
+        if (this.clearFramebuffer) {
+            glClear(GL_COLOR_BUFFER_BIT);
+            getFramebuffer().clearAll();
+        }
+
+        if (this.loopCallback != null)
+            this.loopCallback.onLoop();
+
+        Framebuffer framebuffer = getFramebuffer();
+        framebuffer.blit(0, framebuffer.getWidth(), framebuffer.getHeight(), false, false);
+
+        glfwSwapBuffers(getId());
+        glfwPollEvents();
     }
 
     @Override
