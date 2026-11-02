@@ -238,8 +238,6 @@ final class WindowImpl implements Window {
     @Override
     public void setIcon(GLFWImage icon) {
         if (!Objects.equals(this.icon, icon)) {
-            if (this.icon != null)
-                this.icon.close();
             this.icon = icon;
 
             if (this.iconBuffer != null)
