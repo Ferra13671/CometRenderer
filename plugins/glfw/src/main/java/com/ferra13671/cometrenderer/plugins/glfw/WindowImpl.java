@@ -359,7 +359,8 @@ final class WindowImpl implements Window {
         });
         glfwSetWindowPosCallback(getId(), (window, x, y) -> {
             if (window == getId()) {
-                setPosition(x, y);
+                this.x = x;
+                this.y = y;
 
                 if (this.windowPosCallback != null)
                     this.windowPosCallback.onPos(x, y);
@@ -367,7 +368,13 @@ final class WindowImpl implements Window {
         });
         glfwSetWindowSizeCallback(getId(), (window, width, height) -> {
             if (window == getId()) {
-                setSize(width, height);
+                if (this.fullScreen) {
+                    this.fullScreenWidth = width;
+                    this.fullScreenHeight = height;
+                } else {
+                    this.windowedWidth = width;
+                    this.windowedHeight = height;
+                }
 
                 if (this.windowSizeCallback != null)
                     this.windowSizeCallback.onSize(width, height);
