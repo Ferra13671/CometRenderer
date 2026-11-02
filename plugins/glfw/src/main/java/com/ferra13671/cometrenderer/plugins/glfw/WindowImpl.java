@@ -28,7 +28,10 @@ final class WindowImpl implements Window {
     private int x;
     @Getter
     private int y;
-    private final ScreenSize screenSize = new ScreenSize(800, 600);
+    private int windowedWidth = 800;
+    private int windowedHeight = 600;
+    private int fullScreenWidth = 0;
+    private int fullScreenHeight = 0;
     @Getter
     private SizeLimits sizeLimits;
     @Getter
@@ -131,12 +134,12 @@ final class WindowImpl implements Window {
 
     @Override
     public int getWidth() {
-        return this.screenSize.getWidth(isFullScreen());
+        return this.fullScreen ? this.fullScreenWidth : this.windowedWidth;
     }
 
     @Override
     public int getHeight() {
-        return this.screenSize.getHeight(isFullScreen());
+        return this.fullScreen ? this.fullScreenHeight : this.windowedHeight;
     }
 
     @Override
@@ -191,7 +194,11 @@ final class WindowImpl implements Window {
 
     @Override
     public void setSize(int width, int height) {
-        this.screenSize.setSize(width, height, isFullScreen());
+        if (this.fullScreen)
+            return;
+
+        this.windowedWidth = width;
+        this.windowedHeight = height;
 
         glfwSetWindowSize(getId(), width, height);
     }
@@ -227,7 +234,8 @@ final class WindowImpl implements Window {
             long monitor = glfwGetPrimaryMonitor();
             GLFWVidMode vidMode = glfwGetVideoMode(monitor);
 
-            setSize(vidMode.width(), vidMode.height());
+            this.fullScreenWidth = vidMode.width();
+            this.fullScreenHeight = vidMode.height();
             glfwSetWindowMonitor(getId(), monitor, 0, 0, vidMode.width(), vidMode.height(), GLFW_DONT_CARE);
         } else {
             glfwSetWindowMonitor(getId(), MemoryUtil.NULL, getX(), getY(), getWidth(), getHeight(), GLFW_DONT_CARE);
