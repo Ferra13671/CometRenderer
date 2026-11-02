@@ -334,7 +334,7 @@ final class WindowImpl implements Window {
             if (window == getId())
                 this.mouseHandler.onKey(button, action);
         });
-        glfwSetCharModsCallback(getId(), (window, codePoint, modifiers) -> {
+        glfwSetCharCallback(getId(), (window, codePoint) -> {
             if (window == getId() && this.charCallback != null)
                 if (Character.charCount(codePoint) == 1) {
                     this.charCallback.onChar((char) codePoint);
