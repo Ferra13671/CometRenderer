@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.device.state;
 
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
@@ -8,6 +9,12 @@ import org.apiguardian.api.API;
 
 @API(status = API.Status.INTERNAL, since = "3.0")
 public interface PipelineStateManager {
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void bindBuffer(BufferTarget target, int bufferId);
+
+    @API(status = API.Status.INTERNAL, since = "3.1")
+    void bindVAO(int vaoId);
 
     @API(status = API.Status.INTERNAL, since = "3.1")
     void setCullFace(boolean cullFace);

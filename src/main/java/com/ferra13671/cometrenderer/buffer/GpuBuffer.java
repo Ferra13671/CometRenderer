@@ -4,7 +4,6 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.utils.Bindable;
 import lombok.Getter;
 import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
 
@@ -58,7 +57,7 @@ public class GpuBuffer implements Bindable, AutoCloseable {
 
     @Override
     public void bind() {
-        GL15.glBindBuffer(this.target.glId, this.id);
+        CometRenderer.getDevice().getPipelineStateManager().bindBuffer(this.target, this.id);
     }
 
     @Override

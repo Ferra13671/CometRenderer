@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.device.state;
 
+import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.blend.DstFactor;
 import com.ferra13671.cometrenderer.utils.blend.SrcFactor;
@@ -49,6 +50,9 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     StencilOpAction stencilPassedDepthFailed = StencilOpAction.KEEP;
     StencilOpAction allPassed = StencilOpAction.KEEP;
 
+    int vaoId = 0;
+    final int[] boundBuffers = IntStream.generate(() -> -1).limit(BufferTarget.values().length).toArray();
+
     int programId = 0;
     int readFramebufferId = 0;
     int drawFramebufferId = 0;
@@ -56,6 +60,26 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     int activeTextureUnit = 0;
     final int[] boundTextures = IntStream.generate(() -> -1).limit(32).toArray();
     final int[] boundSamplers = IntStream.generate(() -> -1).limit(32).toArray();
+
+    @Override
+    public void bindBuffer(BufferTarget target, int bufferId) {
+        int index = target.ordinal();
+        if (this.boundBuffers[index] != bufferId) {
+            GL15.glBindBuffer(target.glId, bufferId);
+
+            this.boundBuffers[index] = bufferId;
+        }
+    }
+
+    @Override
+    public void bindVAO(int vaoId) {
+        if (this.vaoId != vaoId) {
+            GL30.glBindVertexArray(vaoId);
+            this.vaoId = vaoId;
+
+            this.boundBuffers[BufferTarget.ELEMENT_ARRAY_BUFFER.ordinal()] = -1;
+        }
+    }
 
     @Override
     public void setCullFace(boolean cullFace) {

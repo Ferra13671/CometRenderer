@@ -23,7 +23,7 @@ public class DefaultVertexFormatManager implements VertexFormatManager {
         VertexFormatBuffer vfb = vertexFormat.getOrCreateBuffer(
                 () -> new VertexFormatBuffer(CometRenderer.getDevice().createVertexArray()));
 
-        GL30.glBindVertexArray(vfb.getGlId());
+        CometRenderer.getDevice().getPipelineStateManager().bindVAO(vfb.getGlId());
         if (vfb.getBuffer() != vertexBuffer) {
             boolean firstSetup = vfb.getBuffer() == null;
             vertexBuffer.bind();
@@ -48,7 +48,7 @@ public class DefaultVertexFormatManager implements VertexFormatManager {
         InstancedVertexFormatBuffer buf = instancedVertexFormat.getOrCreateBuffer(
                 () -> new InstancedVertexFormatBuffer(CometRenderer.getDevice().createVertexArray()));
 
-        GL30.glBindVertexArray(buf.getGlId());
+        CometRenderer.getDevice().getPipelineStateManager().bindVAO(buf.getGlId());
 
         if (buf.getBuffer() != vertexBuffer || buf.getInstanceBuffer() != instanceBuffer) {
             setupInstancedAttributes(

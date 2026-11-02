@@ -15,7 +15,6 @@ import com.ferra13671.cometrenderer.vertex.format.instanced.InstancedVertexForma
 import com.ferra13671.cometrenderer.vertex.format.instanced.InstancedVertexFormatBuffer;
 import org.lwjgl.opengl.ARBVertexAttribBinding;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 public class ARBVertexFormatManager implements VertexFormatManager {
     private final boolean applyMesaWorkaround;
@@ -36,7 +35,7 @@ public class ARBVertexFormatManager implements VertexFormatManager {
 
         VertexFormatBuffer vertexFormatBuffer = vertexFormat.getOrCreateBuffer(() -> createVertexFormatBuffer(vertexFormat));
 
-        GL30.glBindVertexArray(vertexFormatBuffer.getGlId());
+        CometRenderer.getDevice().getPipelineStateManager().bindVAO(vertexFormatBuffer.getGlId());
         if (vertexFormatBuffer.getBuffer() != vertexBuffer) {
             if (this.applyMesaWorkaround && vertexFormatBuffer.getBuffer() != null && vertexFormatBuffer.getBuffer().getId() == vertexBuffer.getId()) {
                 ARBVertexAttribBinding.glBindVertexBuffer(0, 0, 0L, 0);
@@ -56,7 +55,7 @@ public class ARBVertexFormatManager implements VertexFormatManager {
 
         InstancedVertexFormatBuffer buffer = instancedVertexFormat.getOrCreateBuffer(() -> createInstancedVertexFormatBuffer(instancedVertexFormat));
 
-        GL30.glBindVertexArray(buffer.getGlId());
+        CometRenderer.getDevice().getPipelineStateManager().bindVAO(buffer.getGlId());
         if (buffer.getBuffer() != vertexBuffer) {
             if (this.applyMesaWorkaround && buffer.getBuffer() != null && buffer.getBuffer().getId() == vertexBuffer.getId())
                 ARBVertexAttribBinding.glBindVertexBuffer(0, 0, 0L, 0);
@@ -73,7 +72,7 @@ public class ARBVertexFormatManager implements VertexFormatManager {
     private InstancedVertexFormatBuffer createInstancedVertexFormatBuffer(InstancedVertexFormat instancedVertexFormat) {
         int vaoId = CometRenderer.getDevice().createVertexArray();
         if (!GLCapabilities.supportsDirectStateAccess())
-            GL30.glBindVertexArray(vaoId);
+            CometRenderer.getDevice().getPipelineStateManager().bindVAO(vaoId);
 
         int perVertexLocations = setupAttributes(vaoId, 0, instancedVertexFormat.getPerVertexFormat(), 0);
         setupAttributes(vaoId, 1, instancedVertexFormat.getPerInstanceFormat(), perVertexLocations);
@@ -88,7 +87,7 @@ public class ARBVertexFormatManager implements VertexFormatManager {
     private VertexFormatBuffer createVertexFormatBuffer(VertexFormat vertexFormat) {
         int vaoId = CometRenderer.getDevice().createVertexArray();
         if (!GLCapabilities.supportsDirectStateAccess())
-            GL30.glBindVertexArray(vaoId);
+            CometRenderer.getDevice().getPipelineStateManager().bindVAO(vaoId);
 
         setupAttributes(vaoId, 0, vertexFormat, 0);
 
