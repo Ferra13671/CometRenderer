@@ -114,8 +114,10 @@ final class WindowImpl implements Window {
             resizeFramebuffer(widtha[0], heighta[0]);
 
             try {
-                while (!isShouldCloseWindow())
+                while (!isShouldCloseWindow()) {
                     loopInternal();
+                    glfwPollEvents();
+                }
             } finally {
                 closeWindow();
             }
@@ -123,19 +125,19 @@ final class WindowImpl implements Window {
     }
 
     private void loopInternal() {
+        Framebuffer framebuffer = getFramebuffer();
+
         if (this.clearFramebuffer) {
             glClear(GL_COLOR_BUFFER_BIT);
-            getFramebuffer().clearAll();
+            framebuffer.clearAll();
         }
 
         if (this.loopCallback != null)
             this.loopCallback.onLoop();
 
-        Framebuffer framebuffer = getFramebuffer();
         framebuffer.blit(0, framebuffer.getWidth(), framebuffer.getHeight(), false, false);
 
         glfwSwapBuffers(getId());
-        glfwPollEvents();
     }
 
     @Override
@@ -396,6 +398,10 @@ final class WindowImpl implements Window {
                 if (this.framebufferSizeCallback != null)
                     this.framebufferSizeCallback.onSize(width, height);
             }
+        });
+        glfwSetWindowRefreshCallback(getId(), window -> {
+            if (window == getId())
+                loopInternal();
         });
     }
 
