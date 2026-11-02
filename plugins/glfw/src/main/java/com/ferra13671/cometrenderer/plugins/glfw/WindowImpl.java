@@ -257,10 +257,13 @@ final class WindowImpl implements Window {
             if (this.iconBuffer != null)
                 this.iconBuffer.close();
 
-            this.iconBuffer = GLFWImage.malloc(1);
-            this.iconBuffer.put(0, this.icon);
+            if (icon != null) {
+                this.iconBuffer = GLFWImage.malloc(1);
+                this.iconBuffer.put(0, this.icon);
 
-            glfwSetWindowIcon(getId(), this.iconBuffer);
+                glfwSetWindowIcon(getId(), this.iconBuffer);
+            } else
+                glfwSetWindowIcon(getId(), null);
         }
     }
 
