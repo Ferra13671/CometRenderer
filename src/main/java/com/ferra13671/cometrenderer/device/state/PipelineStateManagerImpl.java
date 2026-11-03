@@ -64,7 +64,7 @@ public class PipelineStateManagerImpl implements PipelineStateManager {
     @Override
     public void bindBuffer(BufferTarget target, int bufferId) {
         int index = target.ordinal();
-        if (this.boundBuffers[index] != bufferId) {
+        if (this.boundBuffers[index] != bufferId || target == BufferTarget.ELEMENT_ARRAY_BUFFER) {
             GL15.glBindBuffer(target.glId, bufferId);
 
             this.boundBuffers[index] = bufferId;
