@@ -277,7 +277,7 @@ public class CometRenderer {
     }
 
     private void initRegistry() {
-        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, "3.1-alpha.1");
+        registry.setImmutable(CometTags.COMET_RENDERER_VERSION, BuildInfo.VERSION);
 
         String vendor = GL11.glGetString(GL11.GL_VENDOR);
         String version = GL11.glGetString(GL11.GL_VERSION);

@@ -15,3 +15,26 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+
+def generateVersionSource = tasks.register('generateVersionSource') {
+    def outputDir = layout.buildDirectory.dir("generated/sources/version/java/main")
+
+    outputs.dir(outputDir)
+
+    doLast {
+        def javaFile = outputDir.get().file("com/ferra13671/cometrenderer/BuildInfo.java").asFile
+        javaFile.parentFile.mkdirs()
+        javaFile.text = """
+        package com.ferra13671.cometrenderer;
+
+        import org.apiguardian.api.API;
+
+        @API(status = API.Status.INTERNAL, since = "3.1")
+        final class BuildInfo {
+            public static final String VERSION = "${project.main_version}";
+        }
+        """.stripIndent()
+    }
+}
+
+sourceSets.main.java.srcDir generateVersionSource
