@@ -1,0 +1,34 @@
+plugins {
+    id 'java-platform'
+    id 'maven-publish'
+}
+
+javaPlatform {
+    allowDependencies()
+}
+
+dependencies {
+    constraints {
+        api project(':')
+        api project(':plugins:better-compiler')
+        api project(':plugins:glfw')
+        api project(":plugins:post-effects")
+        api project(":plugins:rhi")
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.javaPlatform
+
+            groupId = 'com.ferra13671'
+            artifactId = 'comet-renderer-bom'
+            version = project.main_version
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}

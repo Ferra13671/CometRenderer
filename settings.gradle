@@ -17,3 +17,5 @@ for (File dir : file("minecraft").listFiles()) {
     if (dir.getName().startsWith("minecraft-"))
         include "minecraft:${dir.getName()}"
 }
+
+include "bom"
