@@ -79,20 +79,42 @@ processResources {
     }
 }
 
+def buildsDir = rootProject.file("minecraft/builds")
+
+tasks.register("prepareBuildsDir") {
+    doLast {
+        buildsDir.mkdirs()
+    }
+}
+
+def registerCopyAction = { task ->
+    task.doLast {
+        copy {
+            from task.archiveFile
+            into buildsDir
+        }
+    }
+}
+
 shadowJar {
     configurations = [project.configurations.shadow]
+    dependsOn "prepareBuildsDir"
 
     if (tasks.findByName("remapJar")) {
         archiveClassifier.set('shadow')
     } else {
         archiveClassifier.set('')
+
+        registerCopyAction(it)
     }
 }
 
 if (tasks.findByName("remapJar")) {
     tasks.getByName("remapJar") {
-        dependsOn shadowJar
+        dependsOn shadowJar, "prepareBuildsDir"
         inputFile.set(shadowJar.archiveFile)
+
+        registerCopyAction(it)
     }
 } else {
     build {

@@ -3,5 +3,5 @@ plugins {
     id 'maven-publish'
 }
 
-project.ext.projectName = "comet-renderer-pso"
+project.ext.projectName = "comet-renderer-rhi"
 apply from: rootProject.file("scripts/plugin.gradle")
