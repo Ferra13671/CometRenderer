@@ -70,6 +70,8 @@ public class DefaultDirectStateManager implements DirectStateManager {
                 dstX, dstY, dstWidth, dstHeight,
                 mask, filter
         );
+
+        CometRenderer.getDevice().getPipelineStateManager().setFramebuffer(dstFramebufferId);
     }
 
     @Override

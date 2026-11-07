@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.device.directstate;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import com.ferra13671.cometrenderer.texture.ColorMode;
@@ -60,6 +61,8 @@ public class ARBDirectStateManager implements DirectStateManager {
                 dstX, dstY, dstWidth, dstHeight,
                 mask, filter
         );
+
+        CometRenderer.getDevice().getPipelineStateManager().setFramebuffer(dstFramebufferId);
     }
 
     @Override
