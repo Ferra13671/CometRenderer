@@ -126,6 +126,8 @@ final class WindowImpl implements Window {
 
     private void loopInternal() {
         Framebuffer framebuffer = getFramebuffer();
+        if (framebuffer == null)
+            return;
 
         if (this.clearFramebuffer) {
             glClear(GL_COLOR_BUFFER_BIT);
