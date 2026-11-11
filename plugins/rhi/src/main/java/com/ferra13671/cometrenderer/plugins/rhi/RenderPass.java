@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.plugins.pso;
+package com.ferra13671.cometrenderer.plugins.rhi;
 
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
 import lombok.Builder;
