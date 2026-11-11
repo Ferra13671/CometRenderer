@@ -45,6 +45,8 @@ final class WindowImpl implements Window {
     @Getter
     private CursorMode cursorMode;
     @Getter
+    private CursorType cursorType;
+    @Getter
     private float opacity;
     @Getter
     private boolean visible;
@@ -294,6 +296,19 @@ final class WindowImpl implements Window {
         if (cursorMode != null) {
             this.cursorMode = cursorMode;
             glfwSetInputMode(getId(), GLFW_CURSOR, cursorMode.id);
+        }
+    }
+
+    @Override
+    public void setCursorType(CursorType cursorType) {
+        if (cursorType != null) {
+            this.cursorType = cursorType;
+
+            long cursor = glfwCreateStandardCursor(cursorType.id);
+            if (cursor == 0 && cursorType.alternative != 0)
+                cursor = glfwCreateStandardCursor(cursorType.alternative);
+
+            glfwSetCursor(getId(), cursor);
         }
     }
 

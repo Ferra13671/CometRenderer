@@ -68,6 +68,10 @@ public interface Window extends Closeable {
 
     CursorMode getCursorMode();
 
+    void setCursorType(CursorType cursorType);
+
+    CursorType getCursorType();
+
     void setLoopCallback(LoopCallback loopCallback);
 
     void setKeyboardCallback(KeyCallback callback);

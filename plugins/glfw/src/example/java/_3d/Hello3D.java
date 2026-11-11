@@ -46,7 +46,7 @@ public class Hello3D {
         Window window = CometGLFW.getWindow();
         window.setTitle("Hello 3D");
         window.setVisible(true);
-        window.setCursorGrabbed(true);
+        window.setCursorMode(CursorMode.Disabled);
         window.setSize(1200, 700);
         window.setMonitorCenterPosition();
 
