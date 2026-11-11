@@ -90,6 +90,9 @@ public interface Window extends Closeable {
 
     void setFramebufferSizeCallback(FramebufferSizeCallback callback);
 
+    @API(status = API.Status.STABLE, since = "3.1")
+    void setFilesDropCallback(FilesDropCallback callback);
+
     void setOpacity(float opacity);
 
     void setVisible(boolean visible);

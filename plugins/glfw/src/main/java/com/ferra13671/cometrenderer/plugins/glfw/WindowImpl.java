@@ -7,6 +7,7 @@ import com.ferra13671.cometrenderer.plugins.glfw.callback.*;
 import com.ferra13671.cometrenderer.plugins.glfw.key.KeyHandler;
 import lombok.Getter;
 import lombok.Setter;
+import org.lwjgl.glfw.GLFWDropCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
@@ -74,6 +75,8 @@ final class WindowImpl implements Window {
     private WindowIconifyCallback windowIconifyCallback;
     @Setter
     private FramebufferSizeCallback framebufferSizeCallback;
+    @Setter
+    private FilesDropCallback filesDropCallback;
 
     @Getter
     private boolean looped = false;
@@ -423,6 +426,15 @@ final class WindowImpl implements Window {
 
                 if (this.framebufferSizeCallback != null)
                     this.framebufferSizeCallback.onSize(width, height);
+            }
+        });
+        glfwSetDropCallback(getId(), (window, count, names) -> {
+            if (window == getId() && this.filesDropCallback != null) {
+                String[] paths = new String[count];
+                for (int i = 0; i < count; i++)
+                    paths[i] = GLFWDropCallback.getName(names, i);
+
+                this.filesDropCallback.onFilesDropCallback(paths);
             }
         });
         glfwSetWindowRefreshCallback(getId(), window -> {
