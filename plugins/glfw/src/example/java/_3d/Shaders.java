@@ -105,7 +105,7 @@ public class Shaders {
                                 vertexColor = vertexColor_in;
                                 texPos = texPos_in;
                                 normal = normal_in;
-                                fragPosLightSpace = lightSpaceMatrix * position;
+                                fragPosLightSpace = lightSpaceMatrix * modelTransform * position;
                             }
                             """,
                     ShaderType.Vertex
