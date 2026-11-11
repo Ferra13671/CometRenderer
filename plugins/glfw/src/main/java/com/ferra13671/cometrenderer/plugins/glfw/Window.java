@@ -72,9 +72,18 @@ public interface Window extends Closeable {
 
     void setMousePosCallback(MousePosCallback callback);
 
+    @API(status = API.Status.STABLE, since = "3.1")
+    void setMouseScrollCallback(MouseScrollCallback callback);
+
     void setWindowPosCallback(WindowPosCallback callback);
 
     void setWindowSizeCallback(WindowSizeCallback callback);
+
+    @API(status = API.Status.STABLE, since = "3.1")
+    void setWindowFocusCallback(WindowFocusCallback callback);
+
+    @API(status = API.Status.STABLE, since = "3.1")
+    void setWindowIconifyCallback(WindowIconifyCallback callback);
 
     void setFramebufferSizeCallback(FramebufferSizeCallback callback);
 
