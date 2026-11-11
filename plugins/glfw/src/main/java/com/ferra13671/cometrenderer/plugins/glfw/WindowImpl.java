@@ -63,6 +63,8 @@ final class WindowImpl implements Window {
     @Setter
     private MouseScrollCallback mouseScrollCallback;
     @Setter
+    private MouseEnterCallback mouseEnterCallback;
+    @Setter
     private WindowPosCallback windowPosCallback;
     @Setter
     private WindowSizeCallback windowSizeCallback;
@@ -379,6 +381,10 @@ final class WindowImpl implements Window {
         glfwSetScrollCallback(getId(), (window, xOffset, yOffset) -> {
             if (window == getId() && this.mouseScrollCallback != null)
                 this.mouseScrollCallback.onMouseScroll(xOffset, yOffset);
+        });
+        glfwSetCursorEnterCallback(getId(), (window, entered) -> {
+            if (window == getId() && this.mouseEnterCallback != null)
+                this.mouseEnterCallback.onMouseEnter(entered);
         });
         glfwSetWindowPosCallback(getId(), (window, x, y) -> {
             if (window == getId()) {
