@@ -67,6 +67,8 @@ final class WindowImpl implements Window {
     @Setter
     private WindowSizeCallback windowSizeCallback;
     @Setter
+    private WindowFocusCallback windowFocusCallback;
+    @Setter
     private FramebufferSizeCallback framebufferSizeCallback;
 
     @Getter
@@ -384,6 +386,10 @@ final class WindowImpl implements Window {
                 if (this.windowPosCallback != null)
                     this.windowPosCallback.onPos(x, y);
             }
+        });
+        glfwSetWindowFocusCallback(getId(), (window, focused) -> {
+            if (window == getId() && this.windowFocusCallback != null)
+                this.windowFocusCallback.onFocus(focused);
         });
         glfwSetWindowSizeCallback(getId(), (window, width, height) -> {
             if (window == getId()) {
