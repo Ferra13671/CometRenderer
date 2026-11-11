@@ -43,6 +43,8 @@ final class WindowImpl implements Window {
     private GLFWImage icon;
     private GLFWImage.Buffer iconBuffer;
     @Getter
+    private CursorMode cursorMode;
+    @Getter
     private float opacity;
     @Getter
     private boolean visible;
@@ -284,7 +286,15 @@ final class WindowImpl implements Window {
 
     @Override
     public void setCursorGrabbed(boolean grabbed) {
-        glfwSetInputMode(getId(), GLFW_CURSOR, grabbed ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+        setCursorMode(grabbed ? CursorMode.Disabled : CursorMode.Normal);
+    }
+
+    @Override
+    public void setCursorMode(CursorMode cursorMode) {
+        if (cursorMode != null) {
+            this.cursorMode = cursorMode;
+            glfwSetInputMode(getId(), GLFW_CURSOR, cursorMode.id);
+        }
     }
 
     @Override

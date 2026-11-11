@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFWImage;
 
 import java.io.Closeable;
 
-@API(status = API.Status.STABLE, since = "3.0")
+@API(status = API.Status.MAINTAINED, since = "3.1")
 public interface Window extends Closeable {
 
     long getId();
@@ -60,7 +60,13 @@ public interface Window extends Closeable {
 
     void setIcon(GLFWImage icon);
 
+    @API(status = API.Status.DEPRECATED, since = "3.1")
+    @Deprecated(forRemoval = true)
     void setCursorGrabbed(boolean grabbed);
+
+    void setCursorMode(CursorMode cursorMode);
+
+    CursorMode getCursorMode();
 
     void setLoopCallback(LoopCallback loopCallback);
 
@@ -72,25 +78,20 @@ public interface Window extends Closeable {
 
     void setMousePosCallback(MousePosCallback callback);
 
-    @API(status = API.Status.STABLE, since = "3.1")
     void setMouseScrollCallback(MouseScrollCallback callback);
 
-    @API(status = API.Status.STABLE, since = "3.1")
     void setMouseEnterCallback(MouseEnterCallback callback);
 
     void setWindowPosCallback(WindowPosCallback callback);
 
     void setWindowSizeCallback(WindowSizeCallback callback);
 
-    @API(status = API.Status.STABLE, since = "3.1")
     void setWindowFocusCallback(WindowFocusCallback callback);
 
-    @API(status = API.Status.STABLE, since = "3.1")
     void setWindowIconifyCallback(WindowIconifyCallback callback);
 
     void setFramebufferSizeCallback(FramebufferSizeCallback callback);
 
-    @API(status = API.Status.STABLE, since = "3.1")
     void setFilesDropCallback(FilesDropCallback callback);
 
     void setOpacity(float opacity);
