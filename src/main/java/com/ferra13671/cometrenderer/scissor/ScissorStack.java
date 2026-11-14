@@ -28,6 +28,12 @@ public class ScissorStack extends Stack<ScissorRect> {
         return r;
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public ScissorScope scoped(ScissorRect rect) {
+        push(rect);
+        return this::pop;
+    }
+
     private void syncState() {
         if (!isEmpty()) {
             CometRenderer.getDevice().getPipelineStateManager().setScissor(true);
