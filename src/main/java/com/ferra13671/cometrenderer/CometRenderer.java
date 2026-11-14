@@ -752,16 +752,6 @@ public class CometRenderer {
         return meshBuilder.buildNullable();
     }
 
-    private void beginDraw() {
-        if (!scissorStack.isEmpty()) {
-            device.getPipelineStateManager().setScissor(true);
-            scissorStack.peek().bind();
-        } else
-            device.getPipelineStateManager().setScissor(false);
-
-        getCurrentProgram().bind();
-    }
-
     /**
      * Отрисовывает меш и закрывает его после отрисовки.
      * <p>
@@ -804,7 +794,7 @@ public class CometRenderer {
         int vertexCount = mesh.getVertexCount();
 
         if (vertexCount > 0) {
-            beginDraw();
+            getCurrentProgram().bind();
 
             DrawMode drawMode = mesh.getDrawMode();
             device.getVertexFormatManager().bindFormatBuffer(mesh.getVertexBuffer(), mesh.getVertexFormat());
@@ -872,7 +862,7 @@ public class CometRenderer {
         int vertexCount = instancedMesh.perVertexMesh().getVertexCount();
 
         if (vertexCount > 0 && instancedMesh.instanceCount() > 0) {
-            beginDraw();
+            getCurrentProgram().bind();
 
             device.getVertexFormatManager().bindInstancedFormatBuffer(
                     instancedMesh.perVertexMesh().getVertexBuffer(),
@@ -927,7 +917,7 @@ public class CometRenderer {
     @Deprecated(forRemoval = true)
     @API(status = API.Status.DEPRECATED, since = "3.1")
     public <T> void draw(BufferRenderer<T> bufferRenderer, T buffer, boolean close) {
-        beginDraw();
+        getCurrentProgram().bind();
         bufferRenderer.draw(buffer, close);
     }
 
