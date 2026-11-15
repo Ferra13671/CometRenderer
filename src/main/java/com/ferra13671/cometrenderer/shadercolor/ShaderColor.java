@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer;
+package com.ferra13671.cometrenderer.shadercolor;
 
 import org.apiguardian.api.API;
 import org.joml.Vector4f;
@@ -300,6 +300,166 @@ public final class ShaderColor {
 
         this.maskStack.pop();
         updateColorWithMask();
+    }
+
+    /**
+     * Создаёт скоуп, в котором можно свободно менять базовый цвет через
+     * {@link #setColor(Vector4fc)} / {@link #setColor(float, float, float, float)}
+     * — по выходу из блока цвет автоматически восстановится.
+     * <p>
+     * Эквивалентен {@code push()} с автоматическим {@code pop()} при закрытии
+     * скоупа. В отличие от {@link #scoped(Vector4fc)} не устанавливает новый
+     * цвет — только сохраняет текущий как точку восстановления. Это позволяет
+     * менять цвет несколько раз внутри блока и не думать о балансировке
+     * стека вручную:
+     * <pre>{@code
+     * try (var ignored = color.scoped()) {
+     *     color.setColor(1f, 0f, 0f, 1f);
+     *     drawRed();
+     *     color.setColor(0f, 1f, 0f, 1f);
+     *     drawGreen();
+     * }
+     * // цвет восстановлен
+     * }</pre>
+     * <p>
+     * <b>Вложенность.</b> Скоупы можно вкладывать — каждый сохраняет
+     * предыдущий цвет и восстанавливает его при закрытии. Стек масок
+     * скоуп не затрагивает: если внутри блока активирована маска, она
+     * сохраняется независимо.
+     * <p>
+     * <b>Баланс стека.</b> Если внутри блока вызывается {@link #push()}
+     * без парного {@link #pop()}, закрытие скоупа снимет именно этот
+     * «лишний» кадр, а не свой собственный — стек окажется испорчен.
+     * Балансируйте вложенные вызовы вручную.
+     *
+     * @return скоуп; закрытие восстанавливает цвет, сохранённый при создании.
+     *
+     * @see #scoped(Vector4fc)
+     * @see ShaderColorScope
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public ShaderColorScope scoped() {
+        push();
+        return this::pop;
+    }
+
+    /**
+     * Создаёт скоуп, в котором базовый цвет заменяется на заданный.
+     * <p>
+     * Эквивалентен {@code push() → setColor(color)} с автоматическим
+     * {@code pop()} при закрытии скоупа. Удобен для временного изменения
+     * цвета на время рендера группы объектов:
+     * <pre>{@code
+     * try (var ignored = color.scoped(new Vector4f(1f, 0f, 0f, 1f))) {
+     *     drawRedStuff();
+     * }
+     * }</pre>
+     * <p>
+     * <b>Вложенность.</b> Скоупы можно вкладывать — каждый сохраняет
+     * предыдущий цвет и восстанавливает его при закрытии. Если внутри
+     * скоупа цвета также активируется маска, она сохраняется независимо
+     * (см. {@link #scopedMask(org.joml.Vector4fc)}) и не сбрасывается
+     * при закрытии скоупа цвета.
+     * <p>
+     * <b>Безопасность исключений.</b> Если {@code color} равен {@code null},
+     * выбрасывается {@link NullPointerException} <i>до</i> сохранения
+     * в стек — состояние {@link ShaderColor} остаётся неизменным.
+     *
+     * @param color новый цвет; не должен быть {@code null}.
+     * @return скоуп; закрытие восстанавливает предыдущий базовый цвет.
+     *
+     * @throws NullPointerException если {@code color == null}.
+     *
+     * @see #scoped(float, float, float, float)
+     * @see #scopedMask(org.joml.Vector4fc)
+     * @see ShaderColorScope
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public ShaderColorScope scoped(Vector4fc color) {
+        Objects.requireNonNull(color, "color");
+
+        push();
+        setColor(color);
+        return this::pop;
+    }
+
+    /**
+     * Создаёт скоуп, в котором базовый цвет заменяется на заданный
+     * из покомпонентных значений.
+     * <p>
+     * Эквивалентен {@link #scoped(Vector4fc)}, но не требует создания
+     * временного {@link Vector4f}.
+     *
+     * @param red   красный канал.
+     * @param green зелёный канал.
+     * @param blue  синий канал.
+     * @param alpha альфа-канал.
+     * @return скоуп; закрытие восстанавливает предыдущий базовый цвет.
+     *
+     * @see #scoped(Vector4fc)
+     * @see ShaderColorScope
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public ShaderColorScope scoped(float red, float green, float blue, float alpha) {
+        push();
+        setColor(red, green, blue, alpha);
+        return this::pop;
+    }
+
+    /**
+     * Создаёт скоуп, в котором активируется заданная цветовая маска.
+     * <p>
+     * Эквивалентен {@code pushMask(mask)} с автоматическим {@code popMask()}
+     * при закрытии скоупа. Удобен для затемнения группы объектов:
+     * <pre>{@code
+     * try (var ignored = color.scopedMask(new Vector4f(0.5f, 0.5f, 0.5f, 1f))) {
+     *     drawDarkStuff();
+     * }
+     * }</pre>
+     * <p>
+     * <b>Вложенность.</b> Маски можно вкладывать — каждая последующая
+     * умножается на предыдущую (см. {@link #pushMask(Vector4fc)}).
+     * Скоуп маски не сбрасывает стек цвета, и наоборот.
+     * <p>
+     * <b>Безопасность исключений.</b> Если {@code mask} равен {@code null},
+     * выбрасывается {@link NullPointerException} <i>до</i> сохранения
+     * в стек — состояние {@link ShaderColor} остаётся неизменным.
+     *
+     * @param mask новая маска; не должна быть {@code null}.
+     * @return скоуп; закрытие восстанавливает предыдущую маску.
+     *
+     * @throws NullPointerException если {@code mask == null}.
+     *
+     * @see #scopedMask(float, float, float, float)
+     * @see #scoped(Vector4fc)
+     * @see ShaderColorScope
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public ShaderColorScope scopedMask(Vector4fc mask) {
+        pushMask(mask);
+        return this::popMask;
+    }
+
+    /**
+     * Создаёт скоуп, в котором активируется заданная цветовая маска
+     * из покомпонентных значений.
+     * <p>
+     * Эквивалентен {@link #scopedMask(Vector4fc)}, но не требует создания
+     * временного {@link Vector4f}.
+     *
+     * @param red   множитель красного канала.
+     * @param green множитель зелёного канала.
+     * @param blue  множитель синего канала.
+     * @param alpha множитель альфа-канала.
+     * @return скоуп; закрытие восстанавливает предыдущую маску.
+     *
+     * @see #scopedMask(Vector4fc)
+     * @see ShaderColorScope
+     */
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public ShaderColorScope scopedMask(float red, float green, float blue, float alpha) {
+        pushMask(red, green, blue, alpha);
+        return this::popMask;
     }
 
     private void updateColorWithMask() {

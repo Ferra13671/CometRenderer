@@ -23,12 +23,11 @@ public abstract class AbstractPrimitiveBatch implements IPrimitiveBatch {
         assertNotClosed();
 
         if (this.mesh != null) {
-            CometRenderer.getShaderColor().push();
-            this.preDrawRunnable.run();
+            try(var scope = CometRenderer.getShaderColor().scoped()) {
+                this.preDrawRunnable.run();
 
-            draw();
-
-            CometRenderer.getShaderColor().pop();
+                draw();
+            }
         }
 
         return this;

@@ -6,6 +6,7 @@ import com.ferra13671.cometrenderer.buffer.allocator.AllocatorPool;
 import com.ferra13671.cometrenderer.buffer.allocator.IAllocator;
 import com.ferra13671.cometrenderer.device.GLDevice;
 import com.ferra13671.cometrenderer.glsl.Program;
+import com.ferra13671.cometrenderer.shadercolor.ShaderColor;
 import com.ferra13671.cometrenderer.stencil.StencilInfo;
 import com.ferra13671.cometrenderer.utils.*;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;

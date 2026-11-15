@@ -149,7 +149,6 @@ public class World {
         Vector3f sunPosition = new Vector3f(sunVector).negate().mul(100);
 
         CometRenderer.setCurrentProgram(Hello3D.positionProgram);
-        CometRenderer.getShaderColor().resetColor();
         CometRenderer.applyShaderColorUniform();
         CometRenderer.getCurrentProgram().getUniform("projection", UniformType.MATRIX4).set(projectionMatrix);
         CometRenderer.getCurrentProgram().getUniform("view", UniformType.MATRIX4).set(viewMatrix);
