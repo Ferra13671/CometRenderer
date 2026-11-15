@@ -265,11 +265,6 @@ public class CometRenderer {
 
         initRegistry();
 
-        if (config.isCheckOpenGLVersion()) {
-            if (!GLCapabilities.supportsVersion(config.getMinimumOpenGLVersion()))
-                ErrorHandlers.onUnsupportedOpenGLVersion(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33);
-        }
-
         device = new GLDevice();
         allocatorPool = new AllocatorPool(config.getDefaultMeshAllocatorSize(), config.getAllocatorPoolSize());
 
@@ -286,6 +281,12 @@ public class CometRenderer {
         registry.setImmutable(CometTags.GPU, GL11.glGetString(GL11.GL_RENDERER));
         registry.setImmutable(CometTags.GL_VERSION, GLVersion.fromString(version));
         registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
+
+        if (config.isCheckOpenGLVersion()) {
+            if (!GLCapabilities.supportsVersion(config.getMinimumOpenGLVersion()))
+                ErrorHandlers.onUnsupportedOpenGLVersion(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33);
+        }
+
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
 
         int numExtensions = GL11.glGetInteger(GL30.GL_NUM_EXTENSIONS);
