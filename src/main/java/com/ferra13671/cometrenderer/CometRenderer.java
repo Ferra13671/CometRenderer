@@ -346,12 +346,15 @@ public class CometRenderer {
      */
     @API(status = API.Status.STABLE, since = "2.6")
     public void applyShaderColorUniform() {
-        getCurrentProgram().consumeIfUniformPresent(
-                "shaderColor",
-                UniformType.VEC4,
-                colorUniform ->
-                        colorUniform.set(getShaderColor().getColor())
-        );
+        Program program = getCurrentProgram();
+
+        if (program != null)
+            program.consumeIfUniformPresent(
+                    "shaderColor",
+                    UniformType.VEC4,
+                    colorUniform ->
+                            colorUniform.set(getShaderColor().getColorRef())
+            );
     }
 
     /**
