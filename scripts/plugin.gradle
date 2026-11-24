@@ -7,3 +7,9 @@ apply from: rootProject.file("scripts/publishing.gradle")
 dependencies {
     implementation rootProject
 }
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

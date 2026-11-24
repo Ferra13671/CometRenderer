@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.util.function.Function;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,34 +17,34 @@ public class BlocksConvertProcessor {
 
     final RegexCompilerExtension inputsExtension = new RegexCompilerExtension(compileExtPattern("inputs")) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            content.set(content.concatLines().replace(result.group(), parseFields("in", result, name -> name)));
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            content.set(content.concatLines().replace(matcher.group(), parseFields("in", matcher, name -> name)));
             return true;
         }
     };
 
     final RegexCompilerExtension outputsExtension = new RegexCompilerExtension(compileExtPattern("outputs")) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            content.set(content.concatLines().replace(result.group(), parseFields("out", result, name -> name)));
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            content.set(content.concatLines().replace(matcher.group(), parseFields("out", matcher, name -> name)));
             return true;
         }
     };
 
     final RegexCompilerExtension uniformsExtension = new RegexCompilerExtension(compileExtPattern("uniforms")) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            content.set(content.concatLines().replace(result.group(), parseFields("uniform", result, name -> name)));
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            content.set(content.concatLines().replace(matcher.group(), parseFields("uniform", matcher, name -> name)));
             return true;
         }
     };
 
     final RegexCompilerExtension inoutsExtension = new RegexCompilerExtension(compileExtPattern("inouts")) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            content.set(content.concatLines().replace(result.group(),
-                    parseFields("in", result, name -> name.concat("_in")) + "\n"
-                    + parseFields("out", result, name -> name)
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            content.set(content.concatLines().replace(matcher.group(),
+                    parseFields("in", matcher, name -> name.concat("_in")) + "\n"
+                    + parseFields("out", matcher, name -> name)
             ));
             return true;
         }
@@ -56,15 +55,15 @@ public class BlocksConvertProcessor {
         registerRegexExtensions(inputsExtension, outputsExtension, uniformsExtension, inoutsExtension);
     }};
 
-    private String parseFields(String fieldFlag, MatchResult result, Function<String, String> fieldNameChanger) {
-        String[] fields = result.group("fields").replace("\n", " ").strip().split(";");
+    private String parseFields(String fieldFlag, Matcher matcher, Function<String, String> fieldNameChanger) {
+        String[] fields = matcher.group("fields").replace("\n", " ").strip().split(";");
 
         StringBuilder fieldBuilder = new StringBuilder();
         for (String field : fields) {
-            Matcher matcher = fieldPattern.matcher(field.strip());
+            Matcher m2 = fieldPattern.matcher(field.strip());
 
-            if (matcher.find())
-                fieldBuilder.append(String.join(" ", fieldFlag, matcher.group("fieldtype"), fieldNameChanger.apply(matcher.group("fieldname")) + ";\n"));
+            if (m2.find())
+                fieldBuilder.append(String.join(" ", fieldFlag, m2.group("fieldtype"), fieldNameChanger.apply(m2.group("fieldname")) + ";\n"));
         }
 
         return fieldBuilder.toString();

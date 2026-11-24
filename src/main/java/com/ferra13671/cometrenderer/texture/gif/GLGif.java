@@ -114,7 +114,7 @@ public class GLGif implements GLTex {
                 reader.dispose();
             }
 
-            this.currentFrame = this.frames.getFirst();
+            this.currentFrame = this.frames.get(0);
         } catch (Exception e) {
             throw new UnsupportedOperationException(e);
         }

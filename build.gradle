@@ -10,12 +10,6 @@ apply from: file("scripts/opengl.gradle")
 apply from: file("scripts/utils.gradle")
 apply from: file("scripts/publishing.gradle")
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
 def generateVersionSource = tasks.register('generateVersionSource') {
     def outputDir = layout.buildDirectory.dir("generated/sources/version/java/main")
 

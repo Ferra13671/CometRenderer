@@ -26,7 +26,7 @@ public enum Disposal {
         return bufferedImage;
     }, frames -> {}),
     ToBackground((frames, imageData) -> imageData.right(), frames -> {
-        GLGifFrame frame = frames.getLast();
+        GLGifFrame frame = frames.get(frames.size() - 1);
         frames.add(new GLGifFrame(
                 GLTexture.builder(TextureLoader.BUFFERED_IMAGE)
                         .name(frame.texture().getName() + "-extra")

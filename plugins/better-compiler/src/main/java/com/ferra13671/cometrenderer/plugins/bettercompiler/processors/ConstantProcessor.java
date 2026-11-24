@@ -12,7 +12,6 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
 import java.util.Optional;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,21 +21,21 @@ public class ConstantProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<fieldtype>\\w+)\\h+(?<fieldname>\\w+);\\h*#constant\\h*(<(?<setts>[^<>]*)>)?", Pattern.MULTILINE)) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            Optional<String> value = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getConstant(result.group("fieldname"));
-            String defaultValue = parseDefaultConstantValue(result.group("setts"));
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            Optional<String> value = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getConstant(matcher.group("fieldname"));
+            String defaultValue = parseDefaultConstantValue(matcher.group("setts"));
 
             if (value.isEmpty() && defaultValue == null)
                 CometRenderer.getLogger().error(String.format(
                         "[better-compiler] Found #constant directive, but the value for constant with name '%s' is not specified. [%s]",
-                        result.group("fieldname"),
+                        matcher.group("fieldname"),
                         glslFileRegistry.get(CometTags.NAME).orElseThrow()
                 ));
 
             if (defaultValue == null)
                 defaultValue = "null";
 
-            content.set(content.concatLines().replace(result.group(), String.join(" ", "const", result.group("fieldtype"), result.group("fieldname"), "=", value.orElse(defaultValue)).concat(";")));
+            content.set(content.concatLines().replace(matcher.group(), String.join(" ", "const", matcher.group("fieldtype"), matcher.group("fieldname"), "=", value.orElse(defaultValue)).concat(";")));
 
             return true;
         }

@@ -7,6 +7,10 @@ import org.apiguardian.api.API;
 @API(status = API.Status.INTERNAL, since = "2.5")
 public class MathUtils {
 
+    public int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
     public int roundUpToMultiple(int value, int divisor) {
         return ceilDiv(value, divisor) * divisor;
     }

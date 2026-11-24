@@ -24,18 +24,12 @@ This rendering system provides a wide range of tools that can be used to easily 
 ### Minecraft (using CRM mod)
 <img src="https://raw.githubusercontent.com/Ferra13671/CometRenderer/main/showcase/minecraft-showcase.png" style="width: 75%" alt="Minecraft example"></img>
 
-## Official CometRenderer plugins
-Several official plugins were also created for the project, expanding the functionality of the rendering system:
-* better-compiler
-* post-effects
-* glfw
-
 ## Documentation
 CometRenderer has its own documentation, which you can read on the <a href="https://ferra13671-dev.gitbook.io/projects/main/cometrenderer-documentation">website</a>.
 
 ## Installing
 ### Gradle
-Add the Ferra13671 repository to build.gradle:
+Add the Ferra13671 repository to `build.gradle`:
 ```groovy
 repositories {
     maven {
@@ -45,29 +39,33 @@ repositories {
 }
 ```
 ### For standalone OpenGL apps
+Import the BOM (`comet-renderer-bom`) to manage module versions automatically, then add the core library and needed plugins:
 ```groovy
 dependencies {
-    implementation "com.ferra13671:comet-renderer:${comet_renderer_version}"
+    implementation platform("com.ferra13671:comet-renderer-bom:${comet_renderer_version}")
 
-    //Recommended plugin
-    implementation "com.ferra13671:comet-renderer-glfw:${comet_renderer_version}"
+    implementation "com.ferra13671:comet-renderer"
+    // Recommended plugin
+    implementation "com.ferra13671:comet-renderer-glfw"
 }
 ```
-### For Minecraft fabric mods (from CRM)
+### For Minecraft Fabric mods (from CRM)
 ```groovy
 dependencies {
     modImplementation "com.ferra13671:crm:${crm_version}"
 
-    //Include CRM as a Jar-in-Jar dependency (optional)
+    // Include CRM as a Jar-in-Jar dependency (optional)
     include "com.ferra13671:crm:${crm_version}"
 }
 ```
-### Plugins
+### Plugins (Modules)
+With the BOM imported, you can add any of the following modules without specifying their versions:
 ```groovy
 dependencies {
-    implementation "com.ferra13671:comet-renderer-better-compiler:${comet_renderer_version}" //By default it is in CRM
-    implementation "com.ferra13671:comet-renderer-post-effects:${comet_renderer_version}"
-    implementation "com.ferra13671:comet-renderer-glfw:${comet_renderer_version}"
+    implementation "com.ferra13671:comet-renderer-better-compiler" // Included by default in CRM
+    implementation "com.ferra13671:comet-renderer-post-effects"
+    implementation "com.ferra13671:comet-renderer-glfw"
+    implementation "com.ferra13671:comet-renderer-rhi"
 }
 ```
 

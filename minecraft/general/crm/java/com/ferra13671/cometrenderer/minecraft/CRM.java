@@ -2,7 +2,9 @@ package com.ferra13671.cometrenderer.minecraft;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.Config;
 import com.ferra13671.cometrenderer.buffer.framebuffer.Framebuffer;
+import com.ferra13671.cometrenderer.minecraft.event.InitializeCallback;
 import com.ferra13671.cometrenderer.minecraft.program.DefaultPrograms;
 import com.ferra13671.cometrenderer.plugins.bettercompiler.BetterCompilerPlugin;
 import com.ferra13671.cometrenderer.scissor.ScissorRect;
@@ -43,7 +45,11 @@ public class CRM {
             }
         });
 
-        CometRenderer.init();
+        Config.ConfigBuilder configBuilder = Config.builder();
+
+        InitializeCallback.EVENT.invoker().onInitialize(configBuilder);
+
+        CometRenderer.init(configBuilder.build());
 
         CometRenderer.getLogger().log(String.format("Initialized CometRenderer %s", CometRenderer.getRegistry().get(CometTags.COMET_RENDERER_VERSION).orElseThrow()));
         CometRenderer.getLogger().log(String.format("OpenGL version: %s", CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().glVersion));

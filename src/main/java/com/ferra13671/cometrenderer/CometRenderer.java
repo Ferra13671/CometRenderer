@@ -32,6 +32,7 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.*;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -45,7 +46,7 @@ import java.util.function.Consumer;
  * можно получить через {@link #getConfig()}
  * <p>
  * <b>Инициализация</b>. Перед началом работы с библиотекой её сначала нужно
- * инициализировать. Для этого вызывается метод {@link #init()}.
+ * инициализировать. Для этого вызывается метод {@link #init(Config)}.
  * Перед вызовом инициализацию большая часть библиотеки недоступна к
  * использованию.
  * <p>
@@ -80,7 +81,7 @@ public class CometRenderer {
     /**
      * Реестр изменяемых и неизменяемых сведений о среде выполнения и значений внутри рендерера.
      * <p>
-     * После вызова {@link #init()} содержит: версию рендерера, вендора, название GPU, версию OpenGL,
+     * После вызова {@link #init(Config)} содержит: версию рендерера, вендора, название GPU, версию OpenGL,
      * версию Mesa3D, список GL-расширений, максимальное число вершин и индексов, а также флаг инициализации.
      * <p>
      * Значения, помеченные как immutable, не могут быть больше изменены или удалены после их добавления.
@@ -95,13 +96,13 @@ public class CometRenderer {
     /**
      * Пользовательский конфиг рендерера.
      * <p>
-     * Содержит настройки, влияющие на поведение {@link #init()} и создание ресурсов:
+     * Содержит настройки, влияющие на поведение {@link #init(Config)} и создание ресурсов:
      * минимальная версия OpenGL, проверять ли версию, размер аллокатора меша по умолчанию, максимальное
      * число вершин и индексов.
      */
     @Getter
     @API(status = API.Status.STABLE, since = "1.9")
-    private final Config config = new Config();
+    private Config config;
     /**
      * Стек глобального шейдерного цвета.
      * <p>
@@ -160,7 +161,7 @@ public class CometRenderer {
      * <b>Низкоуровневое API</b>. Не рекомендован к использованию обычному пользователю.
      * Прямые вызовы допускаются только в библиотеке.
      * <p>
-     * До вызова {@link #init()} равен {@code null}. Любое обращение до инициализации
+     * До вызова {@link #init(Config)} равен {@code null}. Любое обращение до инициализации
      * приведёт к {@link NullPointerException}.
      *
      * @see GLDevice
@@ -207,9 +208,9 @@ public class CometRenderer {
      * в пул после {@link IMesh#close()}.
      * <p>
      * <b>Настройка.</b> Размер аллокатора и максимальное количество одновременно
-     * кешируемых аллокаторов задаются в {@link Config} до вызова {@link #init()}:
+     * кешируемых аллокаторов задаются в {@link Config} до вызова {@link #init(Config)}:
      * {@link Config#getDefaultMeshAllocatorSize()} и {@link Config#getAllocatorPoolSize()}
-     * соответственно. Пул создаётся один раз в {@link #init()} и живёт до завершения
+     * соответственно. Пул создаётся один раз в {@link #init(Config)} и живёт до завершения
      * приложения (либо до явного закрытия через {@link AllocatorPool#close()}).
      * <p>
      * Как правило, вам не нужно обращаться к этому полю
@@ -229,7 +230,7 @@ public class CometRenderer {
      * закрыт, {@link #createMesh(DrawMode, VertexFormat, Consumer)} больше не
      * сможет выделить память.
      * <p>
-     * До вызова {@link #init()} поле равно {@code null}. Любое обращение
+     * До вызова {@link #init(Config)} поле равно {@code null}. Любое обращение
      * до инициализации приведёт к {@link NullPointerException}.
      *
      * @see AllocatorPool
@@ -260,9 +261,13 @@ public class CometRenderer {
      *         требуемую версию (см. {@link Config#isCheckOpenGLVersion()}).
      */
     @API(status = API.Status.STABLE, since = "2.0")
-    public void init() {
+    public void init(Config config) {
+        Objects.requireNonNull(config, "config");
+
         if (registry.contains(CometTags.INITIALIZED))
             throw new IllegalStateException("CometRenderer has already initialized.");
+
+        CometRenderer.config = config;
 
         initRegistry();
 

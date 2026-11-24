@@ -16,7 +16,7 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
 import java.util.*;
-import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @API(status = API.Status.INTERNAL, since = "2.5")
@@ -27,10 +27,10 @@ public class ShaderLibraryProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#include\\h*<(?<libs>[^<>]*)>", Pattern.MULTILINE)) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             List<String> includedLibraries = glslFileRegistry.computeIfAbsent(INCLUDED_LIBRARIES, new ArrayList<>(), true);
             Map<String, UniformType<?>> uniforms = builderRegistry.computeIfAbsent(CometTags.UNIFORMS, new HashMap<>(), true);
-            String libsLine = result.group("libs").strip();
+            String libsLine = matcher.group("libs").strip();
 
             if (libsLine.isEmpty()) {
                 CometRenderer.getLogger().error(String.format("[better-compiler] Found empty #version directive. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow()));
@@ -70,7 +70,7 @@ public class ShaderLibraryProcessor {
             }
 
             if (!libsContent.isEmpty()) {
-                content.set(content.concatLines().replace(result.group(), libsContent.toString()));
+                content.set(content.concatLines().replace(matcher.group(), libsContent.toString()));
                 return true;
             }
 

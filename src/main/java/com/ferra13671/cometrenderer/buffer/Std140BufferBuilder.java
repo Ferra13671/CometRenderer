@@ -20,7 +20,7 @@ public class Std140BufferBuilder {
     private int offset = 0;
 
     public Std140BufferBuilder putByte(Byte b) {
-        this.elements.addLast(new Pair<>(align(4), b));
+        this.elements.add(new Pair<>(align(4), b));
 
         return this;
     }

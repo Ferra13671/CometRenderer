@@ -1,37 +1,47 @@
 package com.ferra13671.cometrenderer;
 
 import com.ferra13671.cometrenderer.utils.GLVersion;
+import com.ferra13671.cometrenderer.utils.MathUtils;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.apiguardian.api.API;
 
 @API(status = API.Status.MAINTAINED, since = "1.9")
+@Getter
+@Builder
 public class Config {
-    @Getter
-    @Setter
+    @Builder.Default
     private boolean checkOpenGLVersion = true;
-    @Getter
+    @Builder.Default
     private GLVersion minimumOpenGLVersion = GLVersion.GL33;
-    @Getter
-    @Setter
+    @Builder.Default
     private boolean compareCurrentAndShaderOpenGLVersions = true;
-    @Getter
+    @Builder.Default
     private int defaultMeshAllocatorSize = 786432;
-    @Getter
+    @Builder.Default
     private int allocatorPoolSize = 32;
 
-    public void setMinimumOpenGLVersion(GLVersion version) {
-        if (version.id < GLVersion.GL33.id)
-            new IllegalStateException("Cannot set minimum OpenGL version lower than 3.3").printStackTrace(System.err);
+    public static class ConfigBuilder {
+        public ConfigBuilder minimumOpenGLVersion(GLVersion version) {
+            if (version.id < GLVersion.GL33.id) {
+                new IllegalStateException("Cannot set minimum OpenGL version lower than 3.3").printStackTrace(System.err);
+            } else {
+                this.minimumOpenGLVersion$value = version;
+                this.minimumOpenGLVersion$set = true;
+            }
+            return this;
+        }
 
-        this.minimumOpenGLVersion = version;
-    }
+        public ConfigBuilder defaultMeshAllocatorSize(int defaultMeshAllocatorSize) {
+            this.defaultMeshAllocatorSize$value = MathUtils.clamp(defaultMeshAllocatorSize, 0, Integer.MAX_VALUE);
+            this.defaultMeshAllocatorSize$set = true;
+            return this;
+        }
 
-    public void setDefaultMeshAllocatorSize(int defaultMeshAllocatorSize) {
-        this.defaultMeshAllocatorSize = Math.clamp(defaultMeshAllocatorSize, 0, Integer.MAX_VALUE);
-    }
-
-    public void setAllocatorPoolSize(int allocatorPoolSize) {
-        this.allocatorPoolSize = Math.clamp(allocatorPoolSize, 1, 256);
+        public ConfigBuilder allocatorPoolSize(int allocatorPoolSize) {
+            this.allocatorPoolSize$value = MathUtils.clamp(allocatorPoolSize, 1, 256);
+            this.allocatorPoolSize$set = true;
+            return this;
+        }
     }
 }

@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
 import java.util.Optional;
-import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @API(status = API.Status.INTERNAL, since = "2.5")
@@ -21,15 +21,15 @@ public class AbstractMethodProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^(?<methodtype>\\w+)\\h+(?<methodname>\\w+)\\h*\\((?<args>.+)?\\);\\h+#abstractMethod", Pattern.MULTILINE)) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
-            Optional<String> methodContentOpt = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getMethodContent(result.group("methodname"));
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+            Optional<String> methodContentOpt = builderRegistry.get(BetterCompilerTags.PROGRAM_INFO).orElseThrow().getMethodContent(matcher.group("methodname"));
 
             String methodContent = "";
 
             if (methodContentOpt.isEmpty()) {
                 CometRenderer.getLogger().error(String.format(
                         "[better-compiler] Founded #abstractMethod directive, but the content for method with name '%s' is not specified. [%s]",
-                        result.group("methodname"),
+                        matcher.group("methodname"),
                         glslFileRegistry.get(CometTags.NAME).orElseThrow()
                 ));
             } else
@@ -38,10 +38,10 @@ public class AbstractMethodProcessor {
             methodContent = processContent(methodContent);
 
             content.set(content.concatLines().replace(
-                    result.group(),
-                    result.group("methodtype")
-                            .concat(" ").concat(result.group("methodname"))
-                            .concat("(").concat(Optional.ofNullable(result.group("args")).orElse("")).concat(") {\n")
+                    matcher.group(),
+                    matcher.group("methodtype")
+                            .concat(" ").concat(matcher.group("methodname"))
+                            .concat("(").concat(Optional.ofNullable(matcher.group("args")).orElse("")).concat(") {\n")
                             .concat(methodContent)
                             .concat("\n}")
             ));

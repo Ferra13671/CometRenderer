@@ -2,6 +2,7 @@ package _3d;
 
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
+import com.ferra13671.cometrenderer.Config;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
 import com.ferra13671.cometrenderer.plugins.glfw.*;
 import com.ferra13671.cometrenderer.texture.GLTexture;
@@ -38,7 +39,7 @@ public class Hello3D {
                 FullScreenSwitchCombination.F11,
                 true
         );
-        CometRenderer.init();
+        CometRenderer.init(Config.builder().build());
 
         createTextures();
         createPrograms();

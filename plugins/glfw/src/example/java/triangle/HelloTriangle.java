@@ -1,5 +1,6 @@
 package triangle;
 
+import com.ferra13671.cometrenderer.Config;
 import com.ferra13671.cometrenderer.glsl.GLSLLoader;
 import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.glsl.GLProgram;
@@ -58,7 +59,7 @@ public class HelloTriangle {
                 FullScreenSwitchCombination.F11,
                 true
         );
-        CometRenderer.init();
+        CometRenderer.init(Config.builder().build());
 
         createProgram();
 

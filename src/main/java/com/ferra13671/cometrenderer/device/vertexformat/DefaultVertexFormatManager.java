@@ -4,6 +4,7 @@ import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.buffer.BufferTarget;
 import com.ferra13671.cometrenderer.buffer.GpuBuffer;
+import com.ferra13671.cometrenderer.utils.MathUtils;
 import com.ferra13671.cometrenderer.vertex.element.VertexElement;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormat;
 import com.ferra13671.cometrenderer.vertex.format.VertexFormatBuffer;
@@ -87,7 +88,7 @@ public class DefaultVertexFormatManager implements VertexFormatManager {
             int primitivesPerAttribute = element.getType().primitivesPerAttribute();
 
             for (int i = 0; i < element.getTypeCount(); i += primitivesPerAttribute) {
-                int counts = Math.clamp(element.getTypeCount() - i, 1, primitivesPerAttribute);
+                int counts = MathUtils.clamp(element.getTypeCount() - i, 1, primitivesPerAttribute);
                 int offset = format.getElementOffset(element) + (i * element.getType().offset());
 
                 if (enableArrays)

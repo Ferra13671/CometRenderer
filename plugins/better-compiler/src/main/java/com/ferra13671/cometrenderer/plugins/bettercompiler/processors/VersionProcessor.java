@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
-import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @API(status = API.Status.INTERNAL, since = "2.5")
@@ -22,20 +22,20 @@ public class VersionProcessor {
 
     final RegexCompilerExtension regexExtension = new RegexCompilerExtension(Pattern.compile("^\\h*#version\\h+.*", Pattern.MULTILINE)) {
         @Override
-        public boolean processMatch(MatchResult result, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
+        public boolean processMatch(Matcher matcher, GLSLContent content, Registry glslFileRegistry, Registry builderRegistry) {
             glslFileRegistry.set(FOUNDED_GLSL_VERSION, true);
 
-            String version = result.group().replaceFirst("#version", "").strip();
+            String version = matcher.group().replaceFirst("#version", "").strip();
             if (version.isBlank())
                 CometRenderer.getLogger().error(String.format("[better-compiler] Found #version directive without value. [%s]", glslFileRegistry.get(CometTags.NAME).orElseThrow()));
 
             if (builderRegistry.contains(BetterCompilerTags.GLSL_VERSION)) {
-                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().glslVersion)));
+                content.set(content.concatLines().replaceAll(matcher.group(), "#version ".concat(builderRegistry.get(BetterCompilerTags.GLSL_VERSION).orElseThrow().glslVersion)));
                 return false;
             }
 
             if (version.equals("auto")) {
-                content.set(content.concatLines().replaceAll(result.group(), "#version ".concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().glslVersion)));
+                content.set(content.concatLines().replaceAll(matcher.group(), "#version ".concat(CometRenderer.getRegistry().get(CometTags.GL_VERSION).orElseThrow().glslVersion)));
                 return false;
             }
 

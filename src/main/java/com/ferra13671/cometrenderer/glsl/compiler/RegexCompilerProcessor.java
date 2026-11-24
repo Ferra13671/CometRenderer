@@ -6,9 +6,7 @@ import lombok.experimental.UtilityClass;
 import org.apiguardian.api.API;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 
 @API(status = API.Status.EXPERIMENTAL, since = "2.8")
@@ -38,19 +36,25 @@ public class RegexCompilerProcessor {
             for (RegexCompilerExtension extension : extensions) {
                 Matcher matcher = extension.getPattern().matcher(content.concatLines());
 
-                List<MatchResult> results = matcher.results().filter(s -> !exclusions.contains(s.group())).toList();
+                while (matcher.find()) {
+                    String fullMatch = matcher.group();
 
-                if (!results.isEmpty()) {
-                    needProcessing = true;
-                    while (!results.isEmpty()) {
-                        for (MatchResult result : results) {
-                            if (!extension.processMatch(result, content, glslFileRegistry, builderRegistry))
-                                exclusions.add(result.group());
+                    if (exclusions.contains(fullMatch)) {
+                        continue;
+                    }
 
-                            results = matcher.results().filter(s -> !exclusions.contains(s.group())).toList();
-                        }
+                    boolean processed = extension.processMatch(matcher, content, glslFileRegistry, builderRegistry);
+
+                    if (!processed) {
+                        exclusions.add(fullMatch);
+                    } else {
+                        needProcessing = true;
+                        break;
                     }
                 }
+
+                if (needProcessing)
+                    break;
             }
         }
     }
