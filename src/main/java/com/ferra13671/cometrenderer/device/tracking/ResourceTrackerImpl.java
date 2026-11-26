@@ -1,4 +1,4 @@
-package com.ferra13671.cometrenderer.device;
+package com.ferra13671.cometrenderer.device.tracking;
 
 import org.apiguardian.api.API;
 
@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @API(status = API.Status.INTERNAL, since = "3.0")
-class ResourceTracker {
+public class ResourceTrackerImpl implements ResourceTracker {
     private final Set<Integer> programs = new HashSet<>();
     private final Set<Integer> shaders = new HashSet<>();
     private final Set<Integer> textures = new HashSet<>();
@@ -15,75 +15,93 @@ class ResourceTracker {
     private final Set<Integer> samplers = new HashSet<>();
     private final Set<Integer> vertexArrays = new HashSet<>();
 
-    Set<Integer> getPrograms() {
+    @Override
+    public Set<Integer> getPrograms() {
         return Collections.unmodifiableSet(this.programs);
     }
 
-    Set<Integer> getShaders() {
+    @Override
+    public Set<Integer> getShaders() {
         return Collections.unmodifiableSet(this.shaders);
     }
 
-    Set<Integer> getTextures() {
+    @Override
+    public Set<Integer> getTextures() {
         return Collections.unmodifiableSet(this.textures);
     }
 
-    Set<Integer> getFramebuffers() {
+    @Override
+    public Set<Integer> getFramebuffers() {
         return Collections.unmodifiableSet(this.framebuffers);
     }
 
-    Set<Integer> getSamplers() {
+    @Override
+    public Set<Integer> getSamplers() {
         return Collections.unmodifiableSet(this.samplers);
     }
 
-    Set<Integer> getVertexArrays() {
+    @Override
+    public Set<Integer> getVertexArrays() {
         return Collections.unmodifiableSet(this.vertexArrays);
     }
 
-    void registerProgram(Integer program) {
+    @Override
+    public void registerProgram(Integer program) {
         this.programs.add(program);
     }
 
-    void unregisterProgram(Integer program) {
+    @Override
+    public void unregisterProgram(Integer program) {
         this.programs.remove(program);
     }
 
-    void registerShader(Integer shader) {
+    @Override
+    public void registerShader(Integer shader) {
         this.shaders.add(shader);
     }
 
-    void unregisterShader(Integer shader) {
+    @Override
+    public void unregisterShader(Integer shader) {
         this.shaders.remove(shader);
     }
 
-    void registerTexture(Integer texture) {
+    @Override
+    public void registerTexture(Integer texture) {
         this.textures.add(texture);
     }
 
-    void unregisterTexture(Integer texture) {
+    @Override
+    public void unregisterTexture(Integer texture) {
         this.textures.remove(texture);
     }
 
-    void registerFramebuffer(Integer framebuffer) {
+    @Override
+    public void registerFramebuffer(Integer framebuffer) {
         this.framebuffers.add(framebuffer);
     }
 
-    void unregisterFramebuffer(Integer framebuffer) {
+    @Override
+    public void unregisterFramebuffer(Integer framebuffer) {
         this.framebuffers.remove(framebuffer);
     }
 
-    void registerSampler(Integer sampler) {
+    @Override
+    public void registerSampler(Integer sampler) {
         this.samplers.add(sampler);
     }
 
-    void unregisterSampler(Integer sampler) {
+    @Override
+    public void unregisterSampler(Integer sampler) {
         this.samplers.remove(sampler);
     }
 
-    void registerVertexArray(Integer vertexArray) {
+    @Override
+    public void registerVertexArray(Integer vertexArray) {
         this.vertexArrays.add(vertexArray);
     }
 
-    void unregisterVertexArray(Integer vertexArray) {
+    @Override
+    public void unregisterVertexArray(Integer vertexArray) {
         this.vertexArrays.remove(vertexArray);
     }
 }

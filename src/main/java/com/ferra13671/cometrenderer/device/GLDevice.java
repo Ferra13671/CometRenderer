@@ -1,10 +1,14 @@
 package com.ferra13671.cometrenderer.device;
 
+import com.ferra13671.cometrenderer.Config;
 import com.ferra13671.cometrenderer.device.directstate.ARBDirectStateManager;
 import com.ferra13671.cometrenderer.device.directstate.DefaultDirectStateManager;
 import com.ferra13671.cometrenderer.device.directstate.DirectStateManager;
 import com.ferra13671.cometrenderer.device.state.PipelineStateManager;
 import com.ferra13671.cometrenderer.device.state.PipelineStateManagerImpl;
+import com.ferra13671.cometrenderer.device.tracking.NoOpResourceTracker;
+import com.ferra13671.cometrenderer.device.tracking.ResourceTracker;
+import com.ferra13671.cometrenderer.device.tracking.ResourceTrackerImpl;
 import com.ferra13671.cometrenderer.glsl.Program;
 import com.ferra13671.cometrenderer.glsl.shader.ShaderType;
 import com.ferra13671.cometrenderer.utils.GLCapabilities;
@@ -30,7 +34,7 @@ public class GLDevice {
     @Getter
     private final MeshBufferManager meshBufferManager;
 
-    private final ResourceTracker resourceTracker = new ResourceTracker();
+    private final ResourceTracker resourceTracker;
 
     @Getter
     private PipelineStateManager pipelineStateManager = new PipelineStateManagerImpl();
@@ -38,7 +42,7 @@ public class GLDevice {
     @Getter
     private Program currentProgram;
 
-    public GLDevice() {
+    public GLDevice(Config config) {
         this.directStateManager = GLCapabilities.supportsDirectStateAccess() ?
                 new ARBDirectStateManager()
                 :
@@ -53,6 +57,10 @@ public class GLDevice {
                 MeshBufferManager.ARB
                 :
                 MeshBufferManager.DEFAULT;
+        this.resourceTracker = config.isTrackingResources() ?
+                new ResourceTrackerImpl()
+                :
+                NoOpResourceTracker.INSTANCE;
     }
 
     public int createProgram() {

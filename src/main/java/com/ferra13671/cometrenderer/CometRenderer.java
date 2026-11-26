@@ -271,7 +271,7 @@ public class CometRenderer {
 
         initRegistry();
 
-        device = new GLDevice();
+        device = new GLDevice(config);
         allocatorPool = new AllocatorPool(config.getDefaultMeshAllocatorSize(), config.getAllocatorPoolSize());
 
         registry.setImmutable(CometTags.INITIALIZED, true);

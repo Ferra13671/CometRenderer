@@ -20,6 +20,8 @@ public class Config {
     private int defaultMeshAllocatorSize = 786432;
     @Builder.Default
     private int allocatorPoolSize = 32;
+    @Builder.Default
+    private boolean trackingResources = true;
 
     public static class ConfigBuilder {
         public ConfigBuilder minimumOpenGLVersion(GLVersion version) {
