@@ -249,7 +249,7 @@ public class CometRenderer {
      * <ul>
      *     <li>Проверяет, что рендерер ещё не инициализирован (иначе — исключение);</li>
      *     <li>Заполняет регистр данными о среде;</li>
-     *     <li>Проверяет поддержку минимальной версии OpenGL, если {@link Config#isCheckOpenGLVersion()} включён;</li>
+     *     <li>Проверяет поддержку минимальной версии OpenGL;</li>
      *     <li>Создаёт {@link GLDevice}.</li>
      * </ul>
      *
@@ -257,8 +257,7 @@ public class CometRenderer {
      * но до любого другого обращения к рендереру.
      *
      * @throws IllegalStateException если рендерер уже инициализирован.
-     * @throws RuntimeException если текущий OpenGL не поддерживает минимально
-     *         требуемую версию (см. {@link Config#isCheckOpenGLVersion()}).
+     * @throws RuntimeException если текущий OpenGL не поддерживает минимально требуемую версию.
      */
     @API(status = API.Status.STABLE, since = "2.0")
     public void init(Config config) {
@@ -288,10 +287,8 @@ public class CometRenderer {
         registry.setImmutable(CometTags.GL_VERSION, GLVersion.fromString(version));
         registry.setImmutable(CometTags.MESA_VERSION, Mesa3DVersion.fromString(version, vendor));
 
-        if (config.isCheckOpenGLVersion()) {
-            if (!GLCapabilities.supportsVersion(config.getMinimumOpenGLVersion()))
-                ErrorHandlers.onUnsupportedOpenGLVersion(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33);
-        }
+        if (!GLCapabilities.supportsVersion(config.getMinimumOpenGLVersion()))
+            ErrorHandlers.onUnsupportedOpenGLVersion(registry.get(CometTags.GL_VERSION).orElseThrow(), GLVersion.GL33);
 
         registry.setImmutable(CometTags.MAX_VERTEX_ELEMENTS, GL11.glGetInteger(GL20.GL_MAX_VERTEX_ATTRIBS));
 

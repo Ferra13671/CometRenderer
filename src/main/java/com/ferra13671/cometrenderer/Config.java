@@ -13,8 +13,6 @@ import java.awt.*;
 @Builder
 public class Config {
     @Builder.Default
-    private boolean checkOpenGLVersion = true;
-    @Builder.Default
     private GLVersion minimumOpenGLVersion = GLVersion.GL33;
     @Builder.Default
     private int defaultMeshAllocatorSize = 786432;
