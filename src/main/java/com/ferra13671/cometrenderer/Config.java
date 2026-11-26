@@ -16,10 +16,16 @@ public class Config {
     private GLVersion minimumOpenGLVersion = GLVersion.GL33;
     @Builder.Default
     private int defaultMeshAllocatorSize = 786432;
+    @API(status = API.Status.MAINTAINED, since = "3.1")
     @Builder.Default
     private int allocatorPoolSize = 32;
+    @API(status = API.Status.MAINTAINED, since = "3.1")
     @Builder.Default
     private boolean trackingResources = true;
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    @Builder.Default
+    private boolean logShaderSources = false;
+
 
     public static class ConfigBuilder {
         public ConfigBuilder minimumOpenGLVersion(GLVersion version) {

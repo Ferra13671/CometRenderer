@@ -128,17 +128,26 @@ public class CometCompiler {
         GLSLFileEntry processedShader = new GLSLFileEntry(shaderEntry);
         processContent(processedShader.getRegistry(), builderRegistry);
         GLSLContent content = processedShader.getRegistry().get(CometTags.CONTENT).orElseThrow();
+        String source = content.concatLines();
 
         int shaderId = CometRenderer.getDevice().createShader(shaderType);
 
-        GL20.glShaderSource(shaderId, content.concatLines());
+        GL20.glShaderSource(shaderId, source);
         GL20.glCompileShader(shaderId);
 
         CompileStatus status = CompileStatus.fromStatusId(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS));
-        if (status == CompileStatus.FAILURE) {
-            CometRenderer.getLogger().log("\n" + content.concatLines());
-            ErrorHandlers.onCompileShaderError(processedShader.getName(), GL20.glGetShaderInfoLog(shaderId).trim());
-        }
+        if (status == CompileStatus.FAILURE)
+            ErrorHandlers.onCompileShaderError(processedShader.getName(), GL20.glGetShaderInfoLog(shaderId).trim(), source);
+        else if (CometRenderer.getConfig().isLogShaderSources())
+            CometRenderer.getLogger().log(String.format(
+                    """
+                    Shader with name '%s' compiled successfully.
+                    --- Source ---
+                    %s
+                    --------------""",
+                    processedShader.getName(),
+                    source
+            ));
 
         return new GLShader(
                 processedShader.getName(),

@@ -32,8 +32,8 @@ public class ErrorHandlers {
         throw new CompileProgramException(programName, reason);
     }
 
-    public void onCompileShaderError(String shaderName, String reason) throws CometException {
-        throw new CompileShaderException(shaderName, reason);
+    public void onCompileShaderError(String shaderName, String reason, String source) throws CometException {
+        throw new CompileShaderException(shaderName, reason, source);
     }
 
     public void onMeshBuilderAlreadyBuilt() {
