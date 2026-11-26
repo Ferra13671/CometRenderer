@@ -15,8 +15,6 @@ public class Config {
     @Builder.Default
     private GLVersion minimumOpenGLVersion = GLVersion.GL33;
     @Builder.Default
-    private boolean compareCurrentAndShaderOpenGLVersions = true;
-    @Builder.Default
     private int defaultMeshAllocatorSize = 786432;
     @Builder.Default
     private int allocatorPoolSize = 32;

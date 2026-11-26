@@ -1,7 +1,6 @@
 package com.ferra13671.cometrenderer.glsl.shader;
 
 import com.ferra13671.cometrenderer.glsl.GLSLLoader;
-import com.ferra13671.cometrenderer.CometRenderer;
 import com.ferra13671.cometrenderer.CometTags;
 import com.ferra13671.cometrenderer.ErrorHandlers;
 import com.ferra13671.cometrenderer.glsl.compiler.CometCompiler;
@@ -50,10 +49,8 @@ public class GLShaderBuilder<T> extends Builder<GLShader> {
 
     @NonNull
     public GLShaderBuilder<T> info(GLSLFileEntry entry, ShaderType type) {
-        if (CometRenderer.getConfig().isCompareCurrentAndShaderOpenGLVersions()) {
-            if (!GLCapabilities.supportsShader(type))
-                ErrorHandlers.onUnsupportedShader(type);
-        }
+        if (!GLCapabilities.supportsShader(type))
+            ErrorHandlers.onUnsupportedShader(type);
 
         this.entry = entry;
         this.type = type;
