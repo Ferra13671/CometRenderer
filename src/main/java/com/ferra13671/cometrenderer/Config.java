@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.apiguardian.api.API;
 
+import java.awt.*;
+
 @API(status = API.Status.MAINTAINED, since = "1.9")
 @Getter
 @Builder
@@ -25,7 +27,15 @@ public class Config {
     @API(status = API.Status.MAINTAINED, since = "3.1")
     @Builder.Default
     private boolean logShaderSources = false;
-
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    @Builder.Default
+    private Color defaultClearColor = new Color(255, 255, 255, 0);
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    @Builder.Default
+    private double defaultClearDepth = 1;
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    @Builder.Default
+    private int defaultClearStencil = 0;
 
     public static class ConfigBuilder {
         public ConfigBuilder minimumOpenGLVersion(GLVersion version) {

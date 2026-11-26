@@ -1,5 +1,6 @@
 package com.ferra13671.cometrenderer.buffer.framebuffer;
 
+import com.ferra13671.cometrenderer.CometRenderer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,9 +21,9 @@ public class FramebufferInfo {
     public final int width;
     public final int height;
     @Builder.Default
-    public Color clearColor = new Color(255, 255, 255, 0);
+    public Color clearColor = CometRenderer.getConfig().getDefaultClearColor();
     @Builder.Default
-    public double clearDepth = 1;
+    public double clearDepth = CometRenderer.getConfig().getDefaultClearDepth();
     @Builder.Default
-    public int clearStencil = 0;
+    public int clearStencil = CometRenderer.getConfig().getDefaultClearStencil();
 }
