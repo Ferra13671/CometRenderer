@@ -24,6 +24,10 @@ public class ErrorHandlers {
         throw new UnsupportedOpenGLVersionException(currentVersion, minimumVersion);
     }
 
+    public void onSetUnsupportedOpenGLVersion(GLVersion currentVersion, GLVersion minimumVersion) throws CometException {
+        throw new UnsupportedOpenGLVersionException(String.format("It is not possible to set the minimum OpenGL version to '%s', because the minimum required version is '%s'.", currentVersion.glVersion, minimumVersion.glVersion));
+    }
+
     public void onCompileProgramError(String programName, String reason) throws CometException {
         throw new CompileProgramException(programName, reason);
     }

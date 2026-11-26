@@ -24,7 +24,7 @@ public class Config {
     public static class ConfigBuilder {
         public ConfigBuilder minimumOpenGLVersion(GLVersion version) {
             if (version.id < GLVersion.GL33.id) {
-                new IllegalStateException("Cannot set minimum OpenGL version lower than 3.3").printStackTrace(System.err);
+                ErrorHandlers.onSetUnsupportedOpenGLVersion(version, GLVersion.GL33);
             } else {
                 this.minimumOpenGLVersion$value = version;
                 this.minimumOpenGLVersion$set = true;
