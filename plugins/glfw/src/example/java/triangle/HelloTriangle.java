@@ -55,7 +55,7 @@ public class HelloTriangle {
 
     public void main(String[] args) {
         CometGLFW.init(
-                WindowHints.builder().build(),
+                WindowHints.DEFAULT,
                 FullScreenSwitchCombination.F11,
                 true
         );

@@ -35,7 +35,7 @@ public class Hello3D {
     long lastSecond = System.currentTimeMillis();
     public void main(String[] args) {
         CometGLFW.init(
-                WindowHints.builder().build(),
+                WindowHints.DEFAULT,
                 FullScreenSwitchCombination.F11,
                 true
         );

@@ -10,6 +10,8 @@ import org.apiguardian.api.API;
 @Builder
 @Getter
 public class WindowHints {
+    public static final WindowHints DEFAULT = WindowHints.builder().build();
+
     @Builder.Default
     private GLVersion glVersion = null;
     @Builder.Default
