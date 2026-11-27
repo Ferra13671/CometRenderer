@@ -41,6 +41,16 @@ public class Registry {
         this.tagMap.put(tag, new Pair<>(value, immutable));
     }
 
+    @API(status = API.Status.MAINTAINED, since = "3.1")
+    public void remove(Tag<?> tag) {
+        if (contains(tag)) {
+            if (isImmutable(tag))
+                throw new UnsupportedOperationException("Unable to remove value for immutable tag.");
+
+            this.tagMap.remove(tag);
+        }
+    }
+
     public boolean contains(Tag<?> tag) {
         return this.tagMap.containsKey(tag);
     }
