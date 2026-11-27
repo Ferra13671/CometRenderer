@@ -59,7 +59,7 @@ public class HelloTriangle {
                 FullScreenSwitchCombination.F11,
                 true
         );
-        CometRenderer.init(Config.builder().build());
+        CometRenderer.init(Config.DEFAULT);
 
         createProgram();
 

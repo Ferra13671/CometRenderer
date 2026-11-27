@@ -39,7 +39,7 @@ public class Hello3D {
                 FullScreenSwitchCombination.F11,
                 true
         );
-        CometRenderer.init(Config.builder().build());
+        CometRenderer.init(Config.DEFAULT);
 
         createTextures();
         createPrograms();

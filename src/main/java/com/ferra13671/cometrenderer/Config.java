@@ -12,6 +12,8 @@ import java.awt.*;
 @Getter
 @Builder
 public class Config {
+    public static final Config DEFAULT = Config.builder().build();
+
     @Builder.Default
     private GLVersion minimumOpenGLVersion = GLVersion.GL33;
     @Builder.Default
